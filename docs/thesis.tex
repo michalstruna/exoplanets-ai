@@ -1,0 +1,101 @@
+
+% VYSOKOŠKOLSKÁ KVALIFIKAČNÍ PRÁCE
+% autor: Michal Struna
+% název: Umělá inteligence pro detekci exoplanet z dat pořízených metodou transit
+% kódování zdroje: UTF-8
+
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{vskpupa}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Zdrojový kód}
+\renewcommand{\lstlistlistingname}{Seznam zdrojových kódů}
+
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks%  save the current one
+  \do\-}
+
+\let\oldlstlistoflistings\lstlistoflistings
+\renewcommand{\lstlistoflistings}{%
+  \begingroup%
+  \let\oldnumberline\numberline%
+  \renewcommand{\numberline}{\lstlistingname~\oldnumberline}%
+  \oldlstlistoflistings%
+  \endgroup}
+
+\usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{gray}{rgb}{0.6, 0.6, 0.6}
+
+\titleformat{\section}
+	{\Large\bfseries}
+	{\thesection}
+	{1em}
+	{\MakeUppercase}		% titulky sekcí verzálkami
+\titleformat*{\subsection}{\large\rmfamily\bfseries}
+\titleformat*{\subsubsection}{\normalsize\rmfamily\bfseries}
+
+% ÚDAJE O PRÁCI
+\def\jmenoFakulty{Fakulta elektrotechniky a informatiky}
+\def\jmenoAutora{Michal Struna}
+\def\nazevPrace{Umělá inteligence pro detekci exoplanet z~dat pořízených metodou transit}
+\def\typPrace{Diplomová práce}
+\def\rok{2021}
+\def\prefixZadani{img/zadani}	% cesta a začátek jména, bude doplněno číslo strany
+\def\suffixZadani{.jpg}		% doplní se ke každému jménu souboru zadání
+\def\datumOdevzdaniPrace{9.\,5.\,2021}
+
+\long\def\textPodekovani{...}
+
+
+\long\def\anotace{
+...
+}
+\def\klicovaSlova{exoplanety, extrasolární planety, kepler, umělá inteligence, python}
+\def\title{Artificial intelligence for exoplanet detection from transit data}
+\long\def\annotation{
+...
+}
+\def\keywords{exoplanet, extrasolar planets, kepler, artificial intelligence, python}
+
+\hypersetup{hidelinks} % Odkazy bez rámečků
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ZAČÁTEK DOKUMENTU
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ÚVODNÍ STRANY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\desky
+\titulniStrana
+\generujZadani
+\generujProhlaseni
+\podekovaniDolu
+\generujPodekovani
+\generujAnotaci	
+\generujAnnotation
+\generujObsah
+\generujSeznamObrazku
+\lstlistoflistings
+\seznamZkratek
+
+\begin{description}[font=\mdseries,leftmargin=6em,labelwidth=!,]
+\item[SHORT]		Full
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ÚVOD
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\pagestyle{plain}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% KONEC DOKUMENTU
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
