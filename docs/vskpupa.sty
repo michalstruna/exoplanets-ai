@@ -323,7 +323,11 @@
 
 \newcommand{\generujSeznamTabulek}{%
 	\clearpage \phantomsection \addcontentsline{toc}{section}{\listtablename}
-	\listoftables
+	{%  
+		\let\oldnumberline\numberline%  
+		\renewcommand{\numberline}{\tablename~\oldnumberline}%  
+		\listoftables%  
+	}
 }
 
 \newcommand{\seznamZkratek}{%

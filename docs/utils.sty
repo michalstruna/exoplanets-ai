@@ -1,0 +1,65 @@
+% List of source codes.
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Zdrojový kód}
+\renewcommand{\lstlistlistingname}{Seznam zdrojových kódů}
+
+% Add lstlistingname before item in list of source codes.
+\let\oldlstlistoflistings\lstlistoflistings
+\renewcommand{\lstlistoflistings}{%
+  \begingroup%
+  \let\oldnumberline\numberline%
+  \renewcommand{\numberline}{\lstlistingname~\oldnumberline}%
+  \oldlstlistoflistings%
+  \endgroup
+}
+
+\lstset{
+   basicstyle=\footnotesize\ttfamily,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+% List of source codes paadding.
+\usepackage{xpatch}
+\makeatletter
+\xpatchcmd\l@lstlisting{1.5em}{0em}{}{}
+\makeatother
+
+% Links without border.
+\hypersetup{hidelinks}
+
+% Render image fugire.
+% \img[Short caption]{Full caption}{Path of grahics}
+\newcommand{\img}[3][]{    
+	\begin{figure}[!htb]
+		\begin{center}
+			\includegraphics[width=\textwidth]{#3}
+		\end{center}
+		\caption[#2]{#2\ifx&#1&\else~\footnotemark[#1]\fi}
+	\end{figure}
+}
+
+\newcommand{\tab}[3][]{
+	\begin{table}[ht]
+		\begin{center}
+			#3
+		\end{center}
+		\caption[#2]{#2\ifx&#1&\else~\footnotemark[#1]\fi}
+	\end{table}
+}
+
+% Insert page note with reference to draw.io and GIMP.
+\newcommand{\drawgimp}[1][1]{\footnotetext[#1]{Vytvořeno autorem v \url{https://www.draw.io} a GIMP.}}
+
+% Insert page note with reference to dataset.
+\newcommand{\dataplot}[1][1]{\footnotetext[#1]{Vytvořeno autorem za využití datasetu TODO: REF}}
+
+
+% Render bibitem for online source.
+% \onlinesource[Author]{id}{Article}{Page}{Date}{CitationDate}{Url}
+\newcommand{\onlinesource}[7][]{
+	\bibitem{#2}
+	#1\ifx&#1&\else.\fi #3. \textit{#4.} [online]. #5. [cit. #6]. Dostupné z: \url{#7}
+}
