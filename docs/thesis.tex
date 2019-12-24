@@ -5,7 +5,6 @@
 
 \documentclass[a4paper,12pt]{article}
 
-\usepackage{vskpupa}
 \usepackage{utils}
 \usepackage{titletoc}
 
@@ -13,18 +12,6 @@
 \expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks%  save the current one
   \do\-}
 
-\usepackage{color}
-\definecolor{lightgray}{rgb}{.9,.9,.9}
-\definecolor{darkgray}{rgb}{.4,.4,.4}
-\definecolor{gray}{rgb}{0.6, 0.6, 0.6}
-
-\titleformat{\section}
-	{\Large\bfseries}
-	{\thesection}
-	{1em}
-	{\MakeUppercase}		% titulky sekcí verzálkami
-\titleformat*{\subsection}{\large\rmfamily\bfseries}
-\titleformat*{\subsubsection}{\normalsize\rmfamily\bfseries}
 
 % ÚDAJE O PRÁCI
 \def\jmenoFakulty{Fakulta elektrotechniky a informatiky}
@@ -55,23 +42,18 @@
 
 \begin{document}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ÚVODNÍ STRANY
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\desky
-\titulniStrana
-\generujZadani
-\generujProhlaseni
-\podekovaniDolu
-\generujPodekovani
-\generujAnotaci	
-\generujAnnotation
-\generujObsah
-\generujSeznamObrazku
-\generujSeznamTabulek
-\lstlistoflistings
-\seznamZkratek
+\deskpage
+\mainpage
+\assignment
+\statement
+\acknowledgment
+\annotationcs	
+\annotationen
+\content
+\imglist
+\tablelist
+\codelist
+\shortlist
 
 \begin{description}[font=\mdseries,leftmargin=6em,labelwidth=!,]
 \item[ly]		Light year
@@ -143,7 +125,7 @@ Pokud tedy přicházející světlo hvězdy postupně zvětšuje a~zmenšuje svo
 \lstinputlisting[caption={Spuštění programu}]{codes/usage.txt}
 
 
-\addcontentsline{toc}{section}{Použití literatura}
+\addcontentsline{toc}{section}{Použitá literatura}
 \begin{thebibliography}{99}	% parametr určuje nejširší položku
 
 \onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
