@@ -53,6 +53,7 @@
 \imglist
 \tablelist
 \codelist
+\formulalist
 \shortlist
 
 \begin{description}[font=\mdseries,leftmargin=6em,labelwidth=!,]
@@ -66,7 +67,7 @@
 
 \section{Metody hledání exoplanet}
 
-Exoplanety není možné pozorovat přímo vizuálně, protože neemitují žádné světlo a~nachází se ve velkých vzdálenostech od Země. Lze ovšem pozorovat jejich působení na blízké hvězdy nebo jiné útvary, jež jsou pro nás viditelné. K~tomuto účelu se používá několik metod popsaných v této kapitole.
+Exoplanety není téměř vůbec možné pozorovat přímo vizuálně, protože neemitují žádné světlo a~nachází se ve velkých vzdálenostech od Země. Lze ovšem pozorovat jejich působení na blízké hvězdy nebo jiné útvary, jež jsou pro nás viditelné. K~tomuto účelu se používá několik metod popsaných v této kapitole.
 
 Zdaleka nejvýznamnější je tranzitní metoda, kterou byla objevena většina exoplanet. Velké množství planet bylo objeveno taktéž metodou radiálních vzdáleností. Pomocí ní byly objevovány planety především blízko Země.
 
@@ -86,7 +87,7 @@ Málo hmotné planety byly objevovány jak tranzitní metodou, tak i~metodou rad
 
 Někdy se může exoplaneta při obíhání dostat mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu této hvězdy (obvykle v jednotkách procent). Pokud je hvězda teleskopem sledována dlouhodobě, je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost nějakého tělesa v~blízkosti této hvězdy.
 
-Tyto změny však nemusí být vždy pravidelné, stejně velké a~na první pohled viditelné. V~systému hvězdy může být více planet, které hvězdu ovlivňují v~různých periodických intervalech, nebo jasnost hvězdy mohou ovlivňovat i~jiné jevy, než obíhající tělesa.
+Tyto změny však nemusí být vždy stejně velké a~na první pohled viditelné. V~systému hvězdy může být více planet, které hvězdu ovlivňují v~různých periodických intervalech, nebo jasnost hvězdy mohou ovlivňovat i~jiné jevy, než obíhající tělesa.
 
 \img[1]{Tranzitní metoda}{img/transit.png}
 
@@ -98,17 +99,74 @@ Tranzitní metoda vzbuzuje velký zájem především kvůli možnosti objevovat
 
 \subsection{Metoda radiálních rychlostí}
 
-Stejně jako hvězda ovlivňuje obíhající planetu, tak i~planeta gravitačně ovlivňuje svou hvězdu a~obě tělesa obíhají kolem společného těžiště. Tento pohyb se může projevit jako opakované přibližování a~vzdálování hvězdy vůči pozorovateli na Zemi.
+Stejně jako hvězda ovlivňuje obíhající planetu, tak i~planeta gravitačně ovlivňuje svou hvězdu a~obě tělesa obíhají kolem společného těžiště. Tento pohyb se může projevit jako opakované přibližování a~vzdálování hvězdy vůči pozorovateli na Zemi.~\cite{methods}
 
-Pokud se zdroj elektromagnetického vlnění (hvězda) přibližuje vůči pozorovateli, vlnění má kratší vlnovou délku a~jeví se více do modra, protože právě modrá barva má malou vlnovou délku. Obdobná situace nastává při vzdálování se zdroje vlnění od pozorovatele. Vlnová délka se zvětšuje a~barva jde do červena. Tomuto efektu se říká Dopplerův jev.
-
-Lze ho pozorovat např. u velmi vzdálených těles, která se vlivem expanze vesmíru rychle vzdalují a jsou červeně zabarvená. Dopplerův jev není aplikovatelný pouze na elektromagnetické záření, ale např. i na vlnění prostředí (zvuk). Zvuk přibližujícího se zdroje vnímáme zpravidla s~vyšším tónem než vzdalující se zdroj stejného zvuku.
-
-Pokud tedy přicházející světlo hvězdy postupně zvětšuje a~zmenšuje svou vlnovou délku, mohlo by se jednat o~důsledek obíhajícího tělesa kolem této hvězdy.
+Pokud se zdroj elektromagnetického vlnění (hvězda) přibližuje vůči pozorovateli, vlnění má menší vlnovou délku a~jeví se více do modra, protože právě modrá barva má z~viditelného spektra nejmenší vlnovou délku. Obdobná situace nastává při vzdálování se zdroje vlnění od pozorovatele. Vlnová délka se zvětšuje a~barva jde do červena. Tomuto efektu se říká červený (resp. modrý) posuv.~\cite{methods}
 
 \img[1]{Metoda radiálních vzdáleností}{img/radial_velocity.png}
-
 \drawgimp
+
+Dopplerův jev tvrdí, že podobný efekt lze zaznamenat nejen u elektromagnetického vlnění, ale i~u~vlnění prostředí (zvuku). Pokud se k~nám zdroj zvuku přibližuje, zvuk zpravidla vnímáme vyšším tónem, protože má menší vlnovou délku (vyšší frekvenci). Při vzdalování zdroje má zvuk větší vlnovou délku a je vnímán hlubším tónem. [TODO]
+
+Opakující se změny ve vlnové délce jejího záření tak mohou být důsledkem obíhajícího tělesa kolem této hvězdy.~\cite{methods}
+
+Vztah změny rychlosti hvězdy, hmotnosti hvězdy a~hmotnosti planety je dán vzorcem:
+
+\formula[\cite{methods}]{Radiální rychlost}{K = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}}{
+\begin{tabular}{lll}
+	K = amplituda změny rychlosti & $M_s$ = hmotnost hvězdy & $M_p$ = hmotnost planety \\
+	sin(i) = sklon dráhy vůči pozorovateli & e = excentricita dráhy & T = oběžná doba \\
+\end{tabular}
+}
+
+Z~radiální rychlosti lze vypočítat změnu vlnové délky záření:
+
+\formula{Změna vlnové délky na základě rychlosti}{\Delta\lambda = \lambda_0 * \frac{v}{c}}{
+\begin{tabular}{lll}
+	$\Delta\lambda$ = změna vlnové délky & $\lambda_0$ = klidová vlnová délka & v = rychlost \
+\end{tabular}
+}
+
+Dle něj lze vypočítat, jak některé planety ovlivňují radiální rychlost své hvězdy. Z~tabulky níže je patrné, 
+
+{ % TODO
+\catcode`\-=12
+\tab{Příklady ovlivňování radiální rychlosti hvězd planetami}{
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline	
+		\rowcolor{lightgray}
+		Těleso & Hvězda & $M_p$ [kg] & $M_s$ [kg] & sin(i) & e & T [r] & \textbf{K [$\frac{m}{s}$]} \\	
+		\hline	
+		Země & \multirow{3}{*}{Slunce} & $5,97 * 10^{24}$ & \multirow{3}{*}{$1,99 * 10^{30}$} & 1 & 0,017 & 1 & \textbf{0,1} \\
+		\cline{1-1}\cline{3-3}\cline{5-8}
+		Jupiter & & $1,9 * 10^{27}$ & & 1 & 0,048 & 11,86 & \textbf{12,5} \\
+		\cline{1-1}\cline{3-3}\cline{5-8}
+		\cline{1-1}\cline{3-3}\cline{5-8}
+		Pluto & & $1,9 * 10^{27}$ & & 1 & 0,048 & 11,86 & \textbf{12,5} \\
+		\cline{1-1}\cline{3-3}\cline{5-8}
+		\hline
+
+
+		$\alpha$ Cen Bb & $\alpha$ Cen B & $6.75 * 10^{24}$ & $1.8 * 10^{30}$ & 1 & 0 & 0,0089 & \textbf{0,51} \\		
+		\hline	
+	\end{tabular}
+}
+}
+
+Radiální rychlost známe právě díky metodě radiálních rychlostí. Z~rovnice lze vyjádřit a vypočítat hmotnost planety $M_p$. Pokud Země neleží přímo v rovině oběžné dráhy planety, kvůli $sin(i)$ nabízí metoda radiálních rychlost výpočet pouze minimální hmotnost planety.
+
+\subsection{Astrometrická metoda}
+
+Astrometrická metoda využívá stejné vlastnosti vzájemného působení těles jako metoda radiálních rychlostí. Namísto zkoumání vlnové délky záření se však zaměřuje na polohu hvězdy. Hvězda, kolem níž obíhá dostatečně hmotné těleso, se bude v~důsledku působení tělesa nepatrně vychylovat ze své pozice~--~bude obíhat kolem těžiště soustavy.~\cite{methods}
+
+\img[1]{Astrometrie}{img/astrometry.png}
+
+Pohyb hvězdy tak není přímočarý, ale vlnitý. Kolísání hvězdy je však pro pozorovatele na Zemi často pouze v~řádu stovek úhlových mikrovteřin až jednotek milivteřin.~\cite{methods} Z~tohoto důvodu byla astrometrickou metodou dosud objevena pouze jediná exoplaneta.~\cite{nasadata}
+
+\img[1]{Kolísání hvězdy Gliese~876~s~planetou}{img/astrometry_trajectory.png}
+\drawgimp
+
+Dá se však očekávat, že se zlepšující se technikou bude tato metoda úspěšnější.
 
 \tab{Ukázková tabulka}{
 	\begin{tabular}{|l|l|c|c|c|c|c|c|}
@@ -130,6 +188,14 @@ Pokud tedy přicházející světlo hvězdy postupně zvětšuje a~zmenšuje svo
 
 \onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
 
+\onlinesource{nasadata}{NASA Exoplanet Archive}{NASA Exoplanet Science Insititute}{12.~8.~2019}{25.~12.~2019}{https://exoplanetarchive.ipac.caltech.edu/docs/program_interfaces.html}
+
+\onlinesource[LOVIS, Christophe, FISCHER, Debra A]{radialvelocity}{Radial Velocity}{Yale Astronomy}{??.~?.~????}{25.~12.~2019}{http://exoplanets.astro.yale.edu/workshop/EPRV/Bibliography_files/Radial_Velocity.pdf}
+
 \end{thebibliography}
+
+Exoplanets data \url{http://exoplanets.org/detail/alpha_Cen_B_b}
+
+Wavelength \url{http://spiff.rit.edu/classes/phys240/lectures/expand/expand.html}
 
 \end{document}

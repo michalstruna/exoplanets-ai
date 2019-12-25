@@ -35,7 +35,13 @@
 \usepackage{longtable}
 \usepackage{etoolbox}
 \usepackage{caption}
+
+\DeclareCaptionType{eq}[Vzorec][Seznam vzorců]
 \captionsetup{font=footnotesize,justification=centering,margin=\parindent}
+
+
+\usepackage{array,multirow}
+\definecolor{lightgray}{rgb}{0.8,0.8,0.8}
 
 % Typography.
 \clubpenalty=10000			% zákaz sirotků
@@ -52,7 +58,6 @@
 \smallskipamount = 1.5\smallskipamount	% dtto \smallskip
 \intextsep = 1\bigskipamount		% odsazení plovoucích objektů
 
-
 % Table setup.
 \AtBeginEnvironment{tabular}{\footnotesize}
 \AtBeginEnvironment{longtable}{\footnotesize}
@@ -61,7 +66,6 @@
 
 \pagestyle{empty}			% strany nečíslovat až do úvodu
 \raggedbottom				% neroztahovat stránku k dolnímu okraji
-% \raggedbottom nefunguje na plovoucí obrázky a tabulky, oprava:
 \setlength{\@fptop}{0pt}		% odsazení shora pro plovoucí objekty
 \setlength{\@fpsep}{18pt plus 12pt}	% mezera mezi plovoucími objekty
 
@@ -88,10 +92,6 @@
 \setlist[itemize]{leftmargin=2\parindent}
 \setlist[enumerate]{leftmargin=2\parindent}
 \setlist[enumerate,2]{label={\theenumii)}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ZADÁNÍ
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcount\strZadani
 \def\zadaniLabel{%
@@ -120,31 +120,6 @@
 		\clearpage\null\clearpage
 	\repeat
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 % List of source codes.
 \usepackage{listings}
@@ -185,7 +160,9 @@
 		\begin{center}
 			\includegraphics[width=\textwidth]{#3}
 		\end{center}
+		\vspace{-5pt}
 		\caption[#2]{#2\ifx&#1&\else~\footnotemark[#1]\fi}
+		\vspace{-15pt}
 	\end{figure}
 }
 
@@ -194,9 +171,33 @@
 		\begin{center}
 			#3
 		\end{center}
+		\vspace{-5pt}
 		\caption[#2]{#2\ifx&#1&\else~\footnotemark[#1]\fi}
+		\vspace{-15pt}
 	\end{table}
 }
+
+% Table color.
+\usepackage{color, colortbl}
+\definecolor{lightgray}{rgb}{0.8,0.8,0.8}
+
+% Math mode.
+\newcommand{\formula}[4][]{
+	\begin{eq}[!ht]
+		\vspace{-5pt}
+		\begin{equation}
+			 #3
+		\end{equation}
+		\vspace{-20pt}
+		\caption[#2]{#2\ifx&#1&\else~#1\fi}
+		\vspace{-5pt}
+		\begin{center}
+		{#4}
+		\end{center}
+		\vspace{-15pt}
+	\end{eq}
+}
+
 
 % Insert page note with reference to draw.io and GIMP.
 \newcommand{\drawgimp}[1][1]{\footnotetext[#1]{Vytvořeno autorem v \url{https://www.draw.io} a GIMP.}}
@@ -285,6 +286,11 @@
 \newcommand{\codelist}{
 	\lstlistoflistings
 	\addcontentsline{toc}{section}{Seznam zdrojových kódů}
+}
+
+\newcommand{\formulalist}{
+	\listofeq
+	\addcontentsline{toc}{section}{Seznam vzorců}
 }
 
 \newcommand{\annotationcs}{%
