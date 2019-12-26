@@ -16,6 +16,9 @@
 % Fonts Latin Modern.
 \usepackage{lmodern}
 
+% Show subsubsection in list.
+\setcounter{tocdepth}{4}
+
 % Section titles.
 \usepackage{titlesec}
 \titleformat{\section}
@@ -190,7 +193,6 @@
 		\end{equation}
 		\vspace{-20pt}
 		\caption[#2]{#2\ifx&#1&\else~#1\fi}
-		\vspace{-5pt}
 		\begin{center}
 		{#4}
 		\end{center}

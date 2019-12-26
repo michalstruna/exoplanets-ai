@@ -65,6 +65,11 @@
 \section*{Úvod}
 \label{uvod}
 
+\section{Exoplanety}
+\subsection{Důvody hledání}
+
+\subsection{Statistické údaje o exoplanetách}
+
 \section{Metody hledání exoplanet}
 
 Exoplanety není téměř vůbec možné pozorovat přímo vizuálně, protože neemitují žádné světlo a~nachází se ve velkých vzdálenostech od Země. Lze ovšem pozorovat jejich působení na blízké hvězdy nebo jiné útvary, jež jsou pro nás viditelné. K~tomuto účelu se používá několik metod popsaných v této kapitole.
@@ -82,7 +87,6 @@ Málo hmotné planety byly objevovány jak tranzitní metodou, tak i~metodou rad
 \dataplot
 
 \clearpage
-
 \subsection{Tranzitní metoda}
 
 Někdy se může exoplaneta při obíhání dostat mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu této hvězdy (obvykle v jednotkách procent). Pokud je hvězda teleskopem sledována dlouhodobě, je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost nějakého tělesa v~blízkosti této hvězdy.
@@ -95,8 +99,10 @@ Tyto změny však nemusí být vždy stejně velké a~na první pohled viditeln�
 
 Tranzitní metoda vzbuzuje velký zájem především kvůli možnosti objevovat i~malé planety podobné Zemi~--~takové planety by mohly spíše splňovat podmínky pro život. Úspěšnost této metody však silně závisí na geometrii přechodu planety přes hvězdu a~poklesu jasu hvězdy.
 
-\clearpage
+\subsubsection{Měření jasu hvězdy}
+\subsubsection{Výpočet údajů o~exoplanetě}
 
+\clearpage
 \subsection{Metoda radiálních rychlostí}
 
 Stejně jako hvězda ovlivňuje obíhající planetu, tak i~planeta gravitačně ovlivňuje svou hvězdu a~obě tělesa obíhají kolem společného těžiště. Tento pohyb se může projevit jako opakované přibližování a~vzdálování hvězdy vůči pozorovateli na Zemi.~\cite{methods}
@@ -110,24 +116,50 @@ Dopplerův jev tvrdí, že podobný efekt lze zaznamenat nejen u elektromagnetic
 
 Opakující se změny ve vlnové délce jejího záření tak mohou být důsledkem obíhajícího tělesa kolem této hvězdy.~\cite{methods}
 
-Vztah změny rychlosti hvězdy, hmotnosti hvězdy a~hmotnosti planety je dán vzorcem:
+\subsubsection{Měření vlnové délky hvězdy}
 
-\formula[\cite{methods}]{Radiální rychlost}{K = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}}{
+TODO: Rozklad na složky.
+
+\subsubsection{Výpočet radiální rychlosti hvězdy}
+
+Vztah radiální rychlosti a~změny vlnové délky je dán následujícím vzorcem:
+
+\formula{Změna vlnové délky záření na základě radiální rychlosti zdroje} {\Delta\lambda = \lambda_0 * \frac{v}{c}}{
 \begin{tabular}{lll}
-	K = amplituda změny rychlosti & $M_s$ = hmotnost hvězdy & $M_p$ = hmotnost planety \\
+	$\Delta\lambda$ = změna vlnové délky & $\lambda_0$ = klidová vlnová délka & v = radiální rychlost \
+\end{tabular}
+}
+
+Z~něj lze po vyjádření vypočítat radiální rychlost. V~tabulce níže je uvedena amplituda radiální rychlosti několika reálných hvězd.
+
+% TODO
+\tab{Radiální rychlosti hvězd v~závislosti na změnách vlnové délky záření}{
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		\rowcolor{lightgray}
+		Hvězda (složka) & $\lambda_0 $ [nm] & $\Delta\lambda$ [nm] & $\Delta\ v_{max}$ [$\frac{m}{s}$] \\
+		\hline
+		Slunce (1) & 0 & 0 & 0 \\
+		\hline
+		Slunce (2) & 0 & 0 & 0 \\
+		\hline
+		51 Pegasi b & 0 & 0 & 0 \\
+		\hline
+	\end{tabular}
+}
+
+\subsubsection{Výpočet hmotnosti exoplanety}
+
+Ze vzorce níže lze odvodit hmotnost planety. Ke skutečné hmotnosti lze ovšem dojít pouze pokud známe sklon dráhy planety vůči pozorovateli $sin(i)$. To v~praxi příliš často neplatí, a~proto metoda radiálních rychlostí umožňuje výpočet pouze dolní hranice hmotnosti planety.
+
+\formula[\cite{methods}]{Radiální rychlost}{\Delta v_{max} = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}}{
+\begin{tabular}{lll}
+	$\Delta v_{max}$ = amplituda změny rychlosti & $M_s$ = hmotnost hvězdy & $M_p$ = hmotnost planety \\
 	sin(i) = sklon dráhy vůči pozorovateli & e = excentricita dráhy & T = oběžná doba \\
 \end{tabular}
 }
 
-Z~radiální rychlosti lze vypočítat změnu vlnové délky záření:
-
-\formula{Změna vlnové délky na základě rychlosti}{\Delta\lambda = \lambda_0 * \frac{v}{c}}{
-\begin{tabular}{lll}
-	$\Delta\lambda$ = změna vlnové délky & $\lambda_0$ = klidová vlnová délka & v = rychlost \
-\end{tabular}
-}
-
-Dle něj lze vypočítat, jak některé planety ovlivňují radiální rychlost své hvězdy. Z~tabulky níže je patrné, 
+Níže je uveden příklad výpočtu hmotností několika exoplanet. Pro jednoduchost předpokládejme, že se pozorovatel nachází přímo v~rovině oběžné dráhy planety.
 
 { % TODO
 \catcode`\-=12
@@ -135,31 +167,31 @@ Dle něj lze vypočítat, jak některé planety ovlivňují radiální rychlost 
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline	
 		\rowcolor{lightgray}
-		Těleso & Hvězda & $M_p$ [kg] & $M_s$ [kg] & sin(i) & e & T [r] & \textbf{K [$\frac{m}{s}$]} \\	
+		Těleso & Hvězda & $M_p$ [kg] & $M_s$ [kg] & sin(i) & e & T [r] & \textbf{$\Delta v_{max}$ [$\frac{m}{s}$]} \\	
 		\hline	
-		Země & \multirow{3}{*}{Slunce} & $5,97 * 10^{24}$ & \multirow{3}{*}{$1,99 * 10^{30}$} & 1 & 0,017 & 1 & \textbf{0,1} \\
-		\cline{1-1}\cline{3-3}\cline{5-8}
-		Jupiter & & $1,9 * 10^{27}$ & & 1 & 0,048 & 11,86 & \textbf{12,5} \\
-		\cline{1-1}\cline{3-3}\cline{5-8}
-		\cline{1-1}\cline{3-3}\cline{5-8}
-		Pluto & & $1,9 * 10^{27}$ & & 1 & 0,048 & 11,86 & \textbf{12,5} \\
-		\cline{1-1}\cline{3-3}\cline{5-8}
+		Země & \multirow{3}{*}{Slunce} & $5,97 * 10^{24}$ & \multirow{3}{*}{$2 * 10^{30}$} & \multirow{5}{*}{1} & 0,017 & 1 & \textbf{0,089} \\
+		\cline{1-1}\cline{3-3}\cline{6-8}
+		Jupiter & & $1,9 * 10^{27}$ & & & 0,048 & 11,86 & \textbf{12,4} \\
+		\cline{1-1}\cline{3-3}\cline{6-8}
+		\cline{1-1}\cline{3-3}\cline{6-8}
+		Pluto & & $1,3 * 10^{22}$ & & & 0,247 & 247,41 & \textbf{0,00003} \\
+		\cline{1-1}\cline{3-3}\cline{6-8}
+		\cline{1-4}\cline{6-8}
+
+
+		$\alpha$ Cen Bb & $\alpha$ Cen B & $6,75 * 10^{24}$ & $1,8 * 10^{30}$ & & 0 & 0,0089 & \textbf{0,51} \\	
+		\cline{1-4}\cline{6-8}
+		51 Pegasi b & 51 Pegasi & $0,88 * 10^{27}$ & $2,22 * 10^{30}$ & & 0,013 & 0,0116 & \textbf{55,9}  \\		
 		\hline
-
-
-		$\alpha$ Cen Bb & $\alpha$ Cen B & $6.75 * 10^{24}$ & $1.8 * 10^{30}$ & 1 & 0 & 0,0089 & \textbf{0,51} \\		
-		\hline	
 	\end{tabular}
 }
-}
 
-Radiální rychlost známe právě díky metodě radiálních rychlostí. Z~rovnice lze vyjádřit a vypočítat hmotnost planety $M_p$. Pokud Země neleží přímo v rovině oběžné dráhy planety, kvůli $sin(i)$ nabízí metoda radiálních rychlost výpočet pouze minimální hmotnost planety.
-
+\clearpage
 \subsection{Astrometrická metoda}
 
 Astrometrická metoda využívá stejné vlastnosti vzájemného působení těles jako metoda radiálních rychlostí. Namísto zkoumání vlnové délky záření se však zaměřuje na polohu hvězdy. Hvězda, kolem níž obíhá dostatečně hmotné těleso, se bude v~důsledku působení tělesa nepatrně vychylovat ze své pozice~--~bude obíhat kolem těžiště soustavy.~\cite{methods}
 
-\img[1]{Astrometrie}{img/astrometry.png}
+\img[1]{Astrometrická metoda}{img/astrometry.png}
 
 Pohyb hvězdy tak není přímočarý, ale vlnitý. Kolísání hvězdy je však pro pozorovatele na Zemi často pouze v~řádu stovek úhlových mikrovteřin až jednotek milivteřin.~\cite{methods} Z~tohoto důvodu byla astrometrickou metodou dosud objevena pouze jediná exoplaneta.~\cite{nasadata}
 
@@ -182,6 +214,25 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 
 \lstinputlisting[caption={Spuštění programu}]{codes/usage.txt}
 
+\subsection{Gravitační mikročočky}
+\subsection{Přímé zobrazení}
+\subsection{Pulsar timing}
+
+\section{Satelity hledající exoplanety}
+\subsection{Kepler}
+\subsubsection{Mise K2}
+\subsection{TESS}
+
+\section{Umělá inteligence}
+
+\section{Použité technologie}
+\section{Návrh~a~vývoj aplikace}
+\section{Rozvržení aplikace}
+
+\addcontentsline{toc}{section}{Závěr}
+\section*{Závěr}
+
+\section{Problémy řešené při implementaci}
 
 \addcontentsline{toc}{section}{Použitá literatura}
 \begin{thebibliography}{99}	% parametr určuje nejširší položku
