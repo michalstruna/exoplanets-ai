@@ -68,7 +68,11 @@
 \section{Exoplanety}
 \subsection{Důvody hledání}
 
-\subsection{Statistické údaje o exoplanetách}
+\subsection{Objevené exoplanety}
+
+TODO: Statistické údaje, nejdůležitější exoplanety.
+
+\subsection{Pojmenovávání exoplanet}
 
 \section{Metody hledání exoplanet}
 
@@ -116,13 +120,18 @@ Dopplerův jev tvrdí, že podobný efekt lze zaznamenat nejen u elektromagnetic
 
 Opakující se změny ve vlnové délce jejího záření tak mohou být důsledkem obíhajícího tělesa kolem této hvězdy.~\cite{methods}
 
-\subsubsection{Měření vlnové délky hvězdy}
+\subsubsection{Měření vlnové délky záření hvězdy}
 
-TODO: Rozklad na složky.
+Hvězdy nevyzařují světlo pouze jedné jediné vlnové délky, nýbrž celé spektrum. Tento efekt lze vidět např. u~duhy v~zemské atmosféře, kdy jsou jednotlivé složky slunečního světla odděleny. Záření z~hvězd se dokonce neomezuje pouze na viditelné světlo, ale pokrívá značnou část celého elektromagnetického spektra. Jak velká část záření přísluší jednotlivým vlnovým délkám lze měřit pomocí spektrometru.
+
+\img[1]{Spektrum slunečního záření}{stats/sunlight_spectrum.png}
+\footnotetext[1]{Vytvořeno autorem za využití datasetu \cite{sunlight}.}
+
+Změna vlnové délky záření se projevuje jako horizontální posun barevného spektra hvězdy. Nutno podotknout, že zemská atmosféra některé vlnové délky pohlcuje. Proto i~přesto, že Slunce má barvu spíše do zelena vidíme tuto hvězdu ze Země žlutě.
 
 \subsubsection{Výpočet radiální rychlosti hvězdy}
 
-Vztah radiální rychlosti a~změny vlnové délky je dán následujícím vzorcem:
+Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek záření hvězdy může dojít k~vypočítání změn radiální rychlosti v~čase. Lze tak učinit dle následujícího vzorce. Platí, že radiální rychlost je kladná, pokud se zdroj od pozorovatele vzdaluje a~záporná pokud se přibližuje.\clearpage
 
 \formula{Změna vlnové délky záření na základě radiální rychlosti zdroje} {\Delta\lambda = \lambda_0 * \frac{v}{c}}{
 \begin{tabular}{lll}
@@ -130,7 +139,11 @@ Vztah radiální rychlosti a~změny vlnové délky je dán následujícím vzorc
 \end{tabular}
 }
 
-Z~něj lze po vyjádření vypočítat radiální rychlost. V~tabulce níže je uvedena amplituda radiální rychlosti několika reálných hvězd.
+Reálný graf znázorňující radiální rychlost hvězdy 51~Pegasi může vypadat takto:
+
+TODO: Graf.
+
+V~tabulce níže je dále uvedena amplituda radiální rychlosti několika reálných hvězd.
 
 % TODO
 \tab{Radiální rychlosti hvězd v~závislosti na změnách vlnové délky záření}{
@@ -238,14 +251,19 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 
 \onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
 
-\onlinesource{nasadata}{NASA Exoplanet Archive}{NASA Exoplanet Science Insititute}{12.~8.~2019}{25.~12.~2019}{https://exoplanetarchive.ipac.caltech.edu/docs/program_interfaces.html}
+\onlinesource{nasadata}{NASA Exoplanet Archive}{NASA Exoplanet Science Insititute}{12.~8.~2019}{25.~12.~2019}{https://exoplanetarchive.ipac.caltech.edu/docs/API_exoplanet_columns.html}
 
 \onlinesource[LOVIS, Christophe, FISCHER, Debra A]{radialvelocity}{Radial Velocity}{Yale Astronomy}{??.~?.~????}{25.~12.~2019}{http://exoplanets.astro.yale.edu/workshop/EPRV/Bibliography_files/Radial_Velocity.pdf}
+
+\onlinesource{sunlight}{Reference Solar Spectral Irradiance: ASTM G-173}{nrel}{??.~?.~????}{27.~12.~2019}{https://rredc.nrel.gov/solar//spectra/am1.5/ASTMG173/ASTMG173.html}
 
 \end{thebibliography}
 
 Exoplanets data \url{http://exoplanets.org/detail/alpha_Cen_B_b}
 
 Wavelength \url{http://spiff.rit.edu/classes/phys240/lectures/expand/expand.html}
+
+\clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Seznam příloh}
+\section*{Seznam příloh}
 
 \end{document}

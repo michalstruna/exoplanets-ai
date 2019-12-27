@@ -54,9 +54,24 @@ fig.save("count_by_method.pdf")
 
 fig = format_plot(ggplot(aes(x = "pl_orbper", y = "pl_bmasse", color = "pl_shortdiscmethod"), data = data) +\
     geom_point(stroke = 2, size = 1, alpha = 0.2) +\
-    labs(x = "Doba oběhu [pozemské dny]", y = "Hmotnost [hmotnost Země]", color = "Metoda")) +\
+    labs(x = "Doba oběhu [pozemské dny]", y = "Hmotnost [hmotnost Země]", color = "Metoda") +\
     scale_x_log10(labels = suffix_format) +\
     scale_y_log10(labels = suffix_format) +\
-    scale_color_manual(values = ["orange", "blue", "gray", "chartreuse", "gold", "cyan", "deeppink", "black", "red", "darkgreen", "purple"])
+    scale_color_manual(values = ["orange", "blue", "gray", "chartreuse", "gold", "cyan", "deeppink", "black", "red", "darkgreen", "purple"]))
 
 fig.save("period_by_mass_by_method.pdf")
+
+
+
+########## SUNLIGHT SPECTRUM ##########
+
+spectrum = pd.melt(pd.read_csv("sunlight_spectrum.csv"), id_vars = ["wavelength"], value_vars = ["intensity", "intensity2"])
+
+fig = format_plot(ggplot(spectrum, aes(x = "wavelength")) +\
+    geom_line(aes(y = "value", group = "variable", color = "variable")) +\
+    xlim(280, 2000) +\
+    labs(x = "Vlnová délka [nm]", y = "Intenzita [W / (m^2 * nm)]") +\
+    scale_color_manual(values = ["red", "blue"], name = "Oblast", labels = ["Ve vesmíru", "Na zemi"])) +\
+    theme(plot_background = element_rect(alpha = 0), panel_background = element_rect(alpha = 0), legend_background = element_rect(alpha = 0))
+
+fig.save("sunlight_spectrum.png", format = "png")
