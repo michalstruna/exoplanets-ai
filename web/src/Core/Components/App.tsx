@@ -1,5 +1,7 @@
 import React from 'react'
 
+import GlobalStyle from './GlobalStyle'
+
 interface Static {
 
 }
@@ -12,6 +14,7 @@ const App: React.FC<Props> & Static = ({ children }) => {
 
     return (
         <>
+            <GlobalStyle />
             {children}
         </>
     )
