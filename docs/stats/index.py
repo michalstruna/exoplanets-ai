@@ -3,6 +3,7 @@
 import pandas as pd
 import numpy as np
 from plotnine import *
+import math
 
 def get_name_by_interval(value, edges, names):
     for i, edge in enumerate(edges):
@@ -74,4 +75,40 @@ fig = format_plot(ggplot(spectrum, aes(x = "wavelength")) +\
     scale_color_manual(values = ["red", "blue"], name = "Oblast", labels = ["Ve vesmíru", "Na zemi"])) +\
     theme(plot_background = element_rect(alpha = 0), panel_background = element_rect(alpha = 0), legend_background = element_rect(alpha = 0))
 
-fig.save("sunlight_spectrum.png", format = "png")
+#fig.save("sunlight_spectrum.png", format = "png") # Uncomment for save plot without color spectrum.
+
+########## 51 PEGASI RADIAL VELOCITY ##########
+
+velocity_period = 4.2311 * 2 # Show 2 periods (1 period = 4.2311 days).
+velocity = pd.read_csv("51_pegasi_radial_velocity.csv")
+velocity["date"] = velocity["date"] % velocity_period
+velocity.loc[:, "data"] = "1" # TODO: Refactor.
+velocity.loc[:, "calc"] = "0"
+
+fig = format_plot(ggplot( velocity, aes(x = "date", y = "velocity")) +\
+    stat_smooth(aes(color = "calc"), method = "gpr") +\
+    geom_point(aes(color = "data")) +\
+    geom_errorbar(aes(ymax = "velocity+error", ymin = "velocity-error", color = "data"), width = 0.2) +\
+    labs(x = "Den", y = "Radiální rychlost [m/s]") +\
+    scale_color_manual(name = "Data", values = ["red", "blue"], labels = ["Dopočítáno", "Naměřeno"]) +\
+    scale_x_continuous(breaks = range(0, math.ceil(velocity_period))) +\
+    scale_y_continuous(breaks = range(-80, 90, 20))) # TODO: Legend item backgound transparent.
+
+fig.save("51_pegasi_radial_velocity.pdf")
+
+########## SINUS ##########
+x = np.linspace(0, 12, 100)
+y1 = 2 * np.sin(x)
+y2 = np.sin(5 * x)
+sinus = pd.DataFrame({ "x": x, "y1": y1, "y2": y2, "y3": y1 + y2, "y1c": "1", "y2c": "2", "y3c": "3" }) # TODO: Refactor.
+
+fig = format_plot(ggplot(sinus, aes(x = "x")) +\
+    geom_line(aes(y = "y1", color = "y1c")) +\
+    geom_line(aes(y = "y2", color = "y2c")) +\
+    geom_line(aes(y = "y3", color = "y3c"), size = 2) +\
+    labs(x = "x", y = "y") +\
+    scale_color_manual(name = "Funkce", values = ["blue", "green", "red"], labels = ["y1 = 2sin(x)", "y2 = sin(5x)", "y3 = y1 + y2"]) +\
+    scale_x_continuous(breaks = range(0, 12)) +\
+    scale_y_continuous(breaks = range(-3, 3)))
+
+fig.save("sinus.pdf")
