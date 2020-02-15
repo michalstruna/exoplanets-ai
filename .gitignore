@@ -1,2 +1,6 @@
 /docs/thesis*
 !/docs/thesis.tex
+
+.idea
+index.min.js
+node_modules
