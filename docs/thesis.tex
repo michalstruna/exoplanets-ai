@@ -1,44 +1,22 @@
 
 % VYSOKOŠKOLSKÁ KVALIFIKAČNÍ PRÁCE
 % autor: Michal Struna
-% název: Umělá inteligence pro detekci exoplanet z dat pořízených tranzitní metodou
-% kódování zdroje: UTF-8
+% název: Umělá inteligence pro detekci exoplanet
 
 \documentclass[a4paper,12pt]{article}
 
-\usepackage{vskpupa}
-\usepackage{listings}
-\renewcommand{\lstlistingname}{Zdrojový kód}
-\renewcommand{\lstlistlistingname}{Seznam zdrojových kódů}
+\usepackage{utils}
+\usepackage{titletoc}
+
 
 \expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks%  save the current one
   \do\-}
 
-\let\oldlstlistoflistings\lstlistoflistings
-\renewcommand{\lstlistoflistings}{%
-  \begingroup%
-  \let\oldnumberline\numberline%
-  \renewcommand{\numberline}{\lstlistingname~\oldnumberline}%
-  \oldlstlistoflistings%
-  \endgroup}
-
-\usepackage{color}
-\definecolor{lightgray}{rgb}{.9,.9,.9}
-\definecolor{darkgray}{rgb}{.4,.4,.4}
-\definecolor{gray}{rgb}{0.6, 0.6, 0.6}
-
-\titleformat{\section}
-	{\Large\bfseries}
-	{\thesection}
-	{1em}
-	{\MakeUppercase}		% titulky sekcí verzálkami
-\titleformat*{\subsection}{\large\rmfamily\bfseries}
-\titleformat*{\subsubsection}{\normalsize\rmfamily\bfseries}
 
 % ÚDAJE O PRÁCI
 \def\jmenoFakulty{Fakulta elektrotechniky a informatiky}
 \def\jmenoAutora{Michal Struna}
-\def\nazevPrace{Umělá inteligence pro detekci exoplanet z~dat pořízených tranzitní metodou}
+\def\nazevPrace{Umělá inteligence pro detekci exoplanet}
 \def\typPrace{Diplomová práce}
 \def\rok{2021}
 \def\prefixZadani{img/zadani}	% cesta a začátek jména, bude doplněno číslo strany
@@ -58,126 +36,249 @@
 }
 \def\keywords{exoplanet, extrasolar planets, kepler, artificial intelligence, python}
 
-\hypersetup{hidelinks} % Odkazy bez rámečků
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ZAČÁTEK DOKUMENTU
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ÚVODNÍ STRANY
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\desky
-\titulniStrana
-\generujZadani
-\generujProhlaseni
-\podekovaniDolu
-\generujPodekovani
-\generujAnotaci	
-\generujAnnotation
-\generujObsah
-\generujSeznamObrazku
-\lstlistoflistings
-\seznamZkratek
+\deskpage
+\mainpage
+\assignment
+\statement
+\acknowledgment
+\annotationcs	
+\annotationen
+\content
+\imglist
+\tablelist
+\codelist
+\formulalist
+\shortlist
 
 \begin{description}[font=\mdseries,leftmargin=6em,labelwidth=!,]
-\item[ly]		Light year~--~vzdálenost, kterou světlo ve vakuu urazí za rok
-\item[AU]		Astronomical unit~--~Vzdálenost Země od Slunce (149 597 870 km)
+\item[ly]		Light year
+\item[AU]		Astronomical unit
 \end{description}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ÚVOD
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Úvod}
+\section*{Úvod}
+\label{uvod}
 
-\clearpage
-\pagestyle{plain}
+\section{Exoplanety}
+\subsection{Důvody hledání}
+
+TODO: Většina hvězd má planetu.
+
+\subsection{Objevené exoplanety}
+
+TODO: Statistické údaje, nejdůležitější exoplanety.
+
+\subsection{Pojmenovávání exoplanet}
 
 \section{Metody hledání exoplanet}
 
-Exoplanety není možné pozorovat přímo vizuálně, protože neemitují žádné světlo a~nachází se ve velkých vzdálenostech od Země. Lze ovšem pozorovat jejich působení na blízké hvězdy nebo jiné útvary, jež jsou pro nás viditelné. K~tomuto účelu se používá několik metod popsaných v této kapitole.
+Exoplanety není téměř vůbec možné pozorovat přímo vizuálně, protože neemitují žádné světlo a~nachází se ve velkých vzdálenostech od Země. Lze ovšem pozorovat jejich působení na blízké hvězdy nebo jiné útvary, jež jsou pro nás viditelné. K~tomuto účelu se používá několik metod popsaných v této kapitole.
 
 Zdaleka nejvýznamnější je tranzitní metoda, kterou byla objevena většina exoplanet. Velké množství planet bylo objeveno taktéž metodou radiálních vzdáleností. Pomocí ní byly objevovány planety především blízko Země.
 
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=\textwidth]{stats/count_by_method.pdf}
-\caption[Vlastnosti planet v závislosti na metodě objevení]{Vlastnosti planet v závislosti na metodě objevení}
-\end{center}
-\end{figure}
+\img[1]{Vlastnosti planet v závislosti na metodě objevení}{stats/count_by_method.pdf}
+
+\dataplot
 
 Málo hmotné planety byly objevovány jak tranzitní metodou, tak i~metodou radiálních rychlostí. Naproti tomu hmotné planety blízko své hvězdy byly objeveny především tranzitní metodou, kdežto hmotné planety daleko od své hvězdy metodou radiálních rychlostí. Nejvzdálenější planety od hvězdy byly pak objevovány metodou přímého zobrazení.
 
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=\textwidth]{stats/period_by_mass_by_method.pdf}
-\caption[Závislost hmotnosti, periody oběhu a metody objevení planety]{Závislost hmotnosti, periody oběhu a metody objevení planety}
-\end{center}
-\end{figure}
+\img[1]{Závislost hmotnosti, periody oběhu a metody objevení planety}{stats/period_by_mass_by_method.pdf}
+
+\dataplot
 
 \clearpage
-
 \subsection{Tranzitní metoda}
 
-Někdy se může exoplaneta při obíhání dostat mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu této hvězdy. Pokud je hvězda teleskopem sledována dlouhodobě, je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost nějakého tělesa v~blízkosti této hvězdy.
+Někdy se může exoplaneta při obíhání dostat mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu této hvězdy (obvykle v jednotkách procent). Pokud je hvězda teleskopem sledována dlouhodobě, je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost nějakého tělesa v~blízkosti této hvězdy.
 
-Tyto změny však nemusí být vždy pravidelné, stejně velké a~na první pohled viditelné. V~systému hvězdy může být více planet, které hvězdu ovlivňují v~různých periodických intervalech, nebo jasnost hvězdy mohou ovlivňovat i~jiné jevy, než obíhající tělesa.
+Tyto změny však nemusí být vždy stejně velké a~na první pohled viditelné. V~systému hvězdy může být více planet, které hvězdu ovlivňují v~různých periodických intervalech, nebo jasnost hvězdy mohou ovlivňovat i~jiné jevy, než obíhající tělesa.
 
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=\textwidth]{img/transit.png}
-\caption[Tranzitní metoda]{Tranzitní metoda \footnotemark[1]}
-\end{center}
-\end{figure}
-
-\footnotetext[1]{Vytvořeno autorem v \url{https://www.draw.io} a GIMP.}
+\img[1]{Tranzitní metoda}{img/transit.png}
+\drawgimp
 
 Tranzitní metoda vzbuzuje velký zájem především kvůli možnosti objevovat i~malé planety podobné Zemi~--~takové planety by mohly spíše splňovat podmínky pro život. Úspěšnost této metody však silně závisí na geometrii přechodu planety přes hvězdu a~poklesu jasu hvězdy.
 
+\subsubsection{Měření jasu hvězdy}
+
+\img[1]{Rozklad periodické funkce na složky}{stats/sinus.pdf}
+\footnotetext[1]{Vytvořeno autorem.}
+
+\subsubsection{Výpočet údajů o~exoplanetě}
 
 \clearpage
-
 \subsection{Metoda radiálních rychlostí}
 
-Stejně jako hvězda ovlivňuje obíhající planetu, tak i~planeta gravitačně ovlivňuje svou hvězdu a~obě tělesa obíhají kolem společného těžiště. Tento pohyb se může projevit jako opakované přibližování a~vzdálování hvězdy vůči pozorovateli na Zemi.
+Stejně jako hvězda ovlivňuje obíhající planetu, tak i~planeta gravitačně ovlivňuje svou hvězdu a~obě tělesa obíhají kolem společného těžiště. Tento pohyb se může projevit jako opakované přibližování a~vzdálování hvězdy vůči pozorovateli na Zemi. Právě pojem radiální rychlost označuje rychlost pohybu ve směru přímky k~pozorovateli.~\cite{methods}
 
-Pokud se zdroj elektromagnetického vlnění (hvězda) přibližuje vůči pozorovateli, vlnění má kratší vlnovou délku a~jeví se více do modra, protože právě modrá barva má malou vlnovou délku. Obdobná situace nastává při vzdálování se zdroje vlnění od pozorovatele. Vlnová délka se zvětšuje a~barva jde do červena. Tomuto efektu se říká Dopplerův jev.
+Pokud se zdroj elektromagnetického záření (hvězda) přibližuje vůči pozorovateli, záření má menší vlnovou délku a~jeví se více do modra, protože právě modrá (a~fialová) barva má z~viditelného spektra nejmenší vlnovou délku. Obdobná situace nastává při vzdálování se zdroje vlnění od pozorovatele. Vlnová délka se zvětšuje a~barva jde do červena. Tomuto efektu se říká červený (resp. modrý) posuv.~\cite{methods}
 
-Lze ho pozorovat např. u velmi vzdálených těles, která se vlivem expanze vesmíru rychle vzdalují a jsou červeně zabarvená. Dopplerův jev není aplikovatelný pouze na elektromagnetické záření, ale např. i na vlnění prostředí (zvuk). Zvuk přibližujícího se zdroje vnímáme zpravidla s~vyšším tónem než vzdalující se zdroj stejného zvuku.
+\img[1]{Metoda radiálních vzdáleností}{img/radial_velocity.png}
+\drawgimp
 
-Pokud tedy přicházející světlo hvězdy postupně zvětšuje a~zmenšuje svou vlnovou délku, mohlo by se jednat o~důsledek obíhajícího tělesa kolem této hvězdy.
+Dopplerův jev tvrdí, že podobný efekt lze zaznamenat nejen u elektromagnetického vlnění, ale i~u~vlnění prostředí (zvuku). Pokud se k~nám zdroj zvuku přibližuje (např. siréna na jedoucím autě), zvuk zpravidla vnímáme vyšším tónem, protože má menší vlnovou délku (vyšší frekvenci). Při vzdalování zdroje má zvuk větší vlnovou délku a je vnímán hlubším tónem. [TODO]
 
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=\textwidth]{img/radial_velocity.png}
-\caption[Metoda radiálních vzdáleností]{Metoda radiálních vzdáleností \footnotemark[1]}
-\end{center}
-\end{figure}
+Opakující se změny ve vlnové délce záření hvězdy tak mohou být důsledkem existence tělesa v této soustavě.~\cite{methods}
 
-\footnotetext[1]{Vytvořeno autorem v \url{https://www.draw.io} a GIMP.}
+\subsubsection{Měření vlnové délky záření hvězdy}
+
+Hvězdy nevyzařují světlo pouze jedné jediné vlnové délky, nýbrž celé spektrum. Tento efekt lze vidět  u~duhy v~zemské atmosféře, kdy jsou jednotlivé složky slunečního světla odděleny. Záření z~hvězd se dokonce neomezuje pouze na viditelné světlo, ale pokrývá značnou část celého elektromagnetického spektra. Jak velká část záření přísluší jednotlivým vlnovým délkám lze měřit pomocí spektrometru.
+
+\img[1]{Spektrum slunečního záření}{stats/sunlight_spectrum.png}
+\footnotetext[1]{Vytvořeno autorem za využití datasetu \cite{sunlight}.}
+
+Změna vlnové délky záření se projevuje jako horizontální posun barevného spektra hvězdy. Nutno podotknout, že zemská atmosféra některé vlnové délky pohlcuje. Proto i~přesto, že Slunce má barvu spíše do zelena vidíme tuto hvězdu ze Země žlutě.
+
+\subsubsection{Výpočet radiální rychlosti hvězdy}
+
+Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek záření hvězdy může dojít k~vypočítání změn radiální rychlosti v~čase. Lze tak učinit dle následujícího vzorce. Platí, že radiální rychlost je kladná, pokud se zdroj od pozorovatele vzdaluje a~záporná pokud se přibližuje.
+
+\formula{Radiální rychlost na základě změny vlnové délky} {v = c * \frac{\Delta\lambda}{\lambda_0}}{
+\begin{tabular}{lll}
+	$\Delta\lambda$ = změna vlnové délky & $\lambda_0$ = klidová vlnová délka & v = radiální rychlost \
+\end{tabular}
+}
+
+Graf znázorňující radiální rychlost hvězdy 51~Pegasi může vypadat takto:
+
+\img[1]{Radiální rychlost hvězdy 51 Pegasi}{stats/51_pegasi_radial_velocity.pdf}
+\footnotetext[1]{Vytvořeno autorem za využití dat z~\cite{51pegasi}.}
+
+Na první pohled je patrná jedna periodická složka s periodou 4,23 dne a~amplitudou 56,04 $\frac{m}{s}$, která značí, že kolem této hvězdy obíhá jedna planeta. Pokud zde jsou přítomna i~jiná tělesa, důvodů, proč je metoda radiálních rychlostí neodhalila může být několik:
+
+\items{
+\item Hmotnost tělesa je vůči hmotnosti hvězdy zanedbatelná,
+
+\item Perioda oběhu tělesa je příliš velká (desítky let a~více), a~proto se ji nepodařilo zachytit na tak krátkém časovém úseku,
+
+\item Těleso obíhá po dráze, jejíž rovina je kolmá k~přímce směrem~k pozorovateli (k Zemi). To vede k~tomu, že je hvězda vychylována takovým směrem, který nemá vliv na radiální rychlost hvězdy vůči Zemi.
+}
+
+V případě, kdy by kolem hvězdy obíhalo více planet by se průběh změn radiální rychlosti musel rozložit na jednotlivé složky stejně jako v~případě metody tranzitu v~grafu TODO.
+
+\subsubsection{Výpočet údajů o~exoplanetě}
+
+Z~pozorování hvězdy metodou radiálních vzdáleností lze získat mnohé informace o~planetě, která tuto hvězdu obíhá.
+
+\items{
+\item Perioda oběhu hvězdy T = perioda změn radiální rychlosti hvězdy,
+
+\item Velká poloosa dráhy
+
+\item Excentricita dráhy
+
+\item Povrchová teplota planety
+
+\item Minimální hmotnost planety $M_p$ lze odvodit z rovnice:
+
+\formula[\cite{methods}]{Radiální rychlost}{\Delta v_{max} = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}}{
+\begin{tabular}{lll}
+	$\Delta v_{max}$ = amplituda změny rychlosti & $M_s$ = hmotnost hvězdy & $M_p$ = hmotnost planety \\
+	sin(i) = sklon dráhy vůči pozorovateli & e = excentricita dráhy & T = oběžná doba \\
+\end{tabular}
+}
+
+}
+
+Níže jsou uvedeny vlastnosti některých těles, na něž mohla být aplikována metoda radiálních vzdáleností. Ne všechna tělesa však byla touto metodou prvně objevena.
+
+{ % TODO
+\catcode`\-=12
+\tab{Příklady údajů těles po aplikování metody radiálních vzdáleností}{
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline	
+		\rowcolor{lightgray}
+		Těleso & Hvězda & $M_p$ [kg] & $M_s$ [kg] & sin(i) & e & T [r] & \textbf{$\Delta v_{max}$ [$\frac{m}{s}$]} \\	
+		\hline	
+		Země & \multirow{3}{*}{Slunce} & $5,97 * 10^{24}$ & \multirow{3}{*}{$2 * 10^{30}$} & \multirow{5}{*}{1} & 0,017 & 1 & \textbf{0,089} \\
+		\cline{1-1}\cline{3-3}\cline{6-8}
+		Jupiter & & $1,9 * 10^{27}$ & & & 0,048 & 11,86 & \textbf{12,4} \\
+		\cline{1-1}\cline{3-3}\cline{6-8}
+		\cline{1-1}\cline{3-3}\cline{6-8}
+		Pluto & & $1,3 * 10^{22}$ & & & 0,247 & 247,41 & \textbf{0,00003} \\
+		\cline{1-1}\cline{3-3}\cline{6-8}
+		\cline{1-4}\cline{6-8}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% POUŽITÁ LITERATURA
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		$\alpha$ Cen Bb & $\alpha$ Cen B & $6,75 * 10^{24}$ & $1,8 * 10^{30}$ & & 0 & 0,0089 & \textbf{0,51} \\	
+		\cline{1-4}\cline{6-8}
+		51 Pegasi b & 51 Pegasi & $0,88 * 10^{27}$ & $2,22 * 10^{30}$ & & 0,013 & 0,0116 & \textbf{55,9}  \\		
+		\hline
+	\end{tabular}
+}
 
-\clearpage \phantomsection \addcontentsline{toc}{section}{\refname}
+\clearpage
+\subsection{Astrometrická metoda}
 
+Astrometrická metoda využívá stejné vlastnosti vzájemného působení těles jako metoda radiálních rychlostí. Namísto zkoumání vlnové délky záření se však zaměřuje na polohu hvězdy. Hvězda, kolem níž obíhá dostatečně hmotné těleso, se bude v~důsledku působení tělesa nepatrně vychylovat ze své pozice~--~bude obíhat kolem těžiště soustavy.~\cite{methods}
+
+\img[1]{Astrometrická metoda}{img/astrometry.png}
+
+Pohyb hvězdy tak není přímočarý, ale vlnitý. Kolísání hvězdy je však pro pozorovatele na Zemi často pouze v~řádu stovek úhlových mikrovteřin až jednotek milivteřin.~\cite{methods} Z~tohoto důvodu byla astrometrickou metodou dosud objevena pouze jediná exoplaneta.~\cite{nasadata}
+
+\img[1]{Kolísání hvězdy Gliese~876~s~planetou}{img/astrometry_trajectory.png}
+\drawgimp
+
+Dá se však očekávat, že se zlepšující se technikou bude tato metoda úspěšnější.
+
+\tab{Ukázková tabulka}{
+	\begin{tabular}{|l|l|c|c|c|c|c|c|}
+		\hline	
+		Data -0& Data 1& Data 2 & Data 3 & Data 4 & Data 5 \\
+		\hline	
+		Data 0& Data 1& Data 2 & Data 3 & Data 4 & Data 5 \\
+		\hline	
+		Data 0& Data 1& Data 2 & Data 3 & Data 4 & Data 5 \\
+		\hline
+	\end{tabular}
+}
+
+\lstinputlisting[caption={Spuštění programu}]{codes/usage.txt}
+
+\subsection{Gravitační mikročočky}
+\subsection{Přímé zobrazení}
+\subsection{Pulsar timing}
+
+\section{Satelity hledající exoplanety}
+\subsection{Kepler}
+\subsubsection{Mise K2}
+\subsection{TESS}
+
+\section{Umělá inteligence}
+
+\section{Použité technologie}
+\section{Návrh~a~vývoj aplikace}
+\section{Rozvržení aplikace}
+\section{Problémy řešené při implementaci}
+
+\clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
+\section*{Závěr}
+
+\addcontentsline{toc}{section}{Použitá literatura}
 \begin{thebibliography}{99}	% parametr určuje nejširší položku
 
-% nezlomitelné spojovníky lze zapisovat zkratkou "- nebo příkazem \babelhyphen{nobreak}
+\onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
 
-\bibitem{methods}
-Metody objevování planet.
-\textit{Astronomia.} [online]. 23.~1.~2013. [cit.\,23.~12.~2019].
-Dostupné z: {\ttfamily \url{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}}.
+\onlinesource{nasadata}{NASA Exoplanet Archive}{NASA Exoplanet Science Insititute}{12.~8.~2019}{25.~12.~2019}{https://exoplanetarchive.ipac.caltech.edu/docs/API_exoplanet_columns.html}
+
+\onlinesource[LOVIS, Christophe, FISCHER, Debra A]{radialvelocity}{Radial Velocity}{Yale Astronomy}{??.~?.~????}{25.~12.~2019}{http://exoplanets.astro.yale.edu/workshop/EPRV/Bibliography_files/Radial_Velocity.pdf}
+
+\onlinesource{sunlight}{Reference Solar Spectral Irradiance: ASTM G-173}{nrel}{??.~?.~????}{27.~12.~2019}{https://rredc.nrel.gov/solar//spectra/am1.5/ASTMG173/ASTMG173.html}
+
+\onlinesource{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088/pdf}
 
 \end{thebibliography}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% KONEC DOKUMENTU
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Exoplanets data \url{http://exoplanets.org/detail/alpha_Cen_B_b}
+
+Wavelength \url{http://spiff.rit.edu/classes/phys240/lectures/expand/expand.html}
+
+\clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Seznam příloh}
+\section*{Seznam příloh}
 
 \end{document}
