@@ -1,0 +1,19 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "jsx": "react",
+    "lib": [
+      "es5",
+      "es6",
+      "dom",
+      "es2017",
+      "es2016.array.include",
+      "es2015.promise"
+    ],
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "outDir": "temp",
+    "target": "es5",
+    "esModuleInterop": true
+  }
+}
