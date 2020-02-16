@@ -1,7 +1,7 @@
 enum Language {
 
-    CS,
-    EN
+    CS = 'cs',
+    EN = 'en'
 
 }
 

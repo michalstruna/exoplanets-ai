@@ -25,6 +25,7 @@ const GlobalStyle = createGlobalStyle`
         background-color: transparent;
         border: inherit;
         color: inherit;
+        font-family: Montserrat, Arial;
         font-size: inherit;
         line-height: inherit;
         outline: inherit;

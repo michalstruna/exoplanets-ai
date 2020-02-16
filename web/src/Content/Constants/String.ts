@@ -13,6 +13,17 @@ export default {
         toggle: {
             [CS]: 'Změnit jazyk',
             [EN]: 'Change language'
+        },
+        help: {
+            [CS]: 'Nápověda',
+            [EN]: 'Help'
+        }
+    },
+
+    help: {
+        home: {
+            [CS]: 'Domů',
+            [EN]: 'Home'
         }
     }
 

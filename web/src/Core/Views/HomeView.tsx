@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { useLanguage, useStrings, setLanguage, Language } from '../../Content'
+import { Link, Url } from '../../Routing'
 
 interface Static {
 
@@ -22,10 +23,15 @@ const HomeView: React.FC<Props> & Static = () => {
         <>
             Language: {language}
             <br />
-            {strings.title}
             <button onClick={() => actions.setLanguage(language === Language.EN ? Language.CS : Language.EN)}>
                 {strings.toggle}
             </button>
+            <br />
+            {strings.title}
+            <br />
+            <Link pathname={Url.HELP}>
+                {strings.help}
+            </Link>
         </>
     )
 
