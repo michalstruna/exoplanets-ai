@@ -1,7 +1,9 @@
 enum Url {
 
     HOME = '/',
-    HELP = '/help'
+    HELP = '/help',
+    DATABASE = '/db',
+    AI = '/ai'
 
 }
 

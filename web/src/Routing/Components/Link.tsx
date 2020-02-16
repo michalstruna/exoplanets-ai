@@ -11,7 +11,7 @@ export interface Static {
     ACTIVE: string
 }
 
-export interface Props extends Target, React.HTMLProps<HTMLLinkElement> {
+export interface Props extends Target, React.ComponentPropsWithoutRef<'a'> {
     replace?: boolean
 }
 
@@ -37,7 +37,7 @@ const Link: Type = ({ hash, query, pathname, replace, ...props }) => {
     const { location } = useRouter()
     const target = { hash, query, pathname }
 
-    const handleClick = (event: React.MouseEvent<HTMLLinkElement>) => {
+    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
 
         if (props.onClick) {
@@ -53,13 +53,13 @@ const Link: Type = ({ hash, query, pathname, replace, ...props }) => {
 
     if (pathname && (Validator.isUrl(pathname) || /.pdf$/.test(pathname))) {
         return (
-            <AbsoluteRoot {...props as any} href={pathname} target='_blank' />
+            <AbsoluteRoot {...props} href={pathname} target='_blank' />
         )
     }
 
     if (pathname && Validator.isEmail(pathname)) {
         return (
-            <AbsoluteRoot {...props as any} href={`mailto:${pathname}`} />
+            <AbsoluteRoot {...props} href={`mailto:${pathname}`} />
         )
     }
 

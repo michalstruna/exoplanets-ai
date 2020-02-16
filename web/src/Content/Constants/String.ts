@@ -1,9 +1,18 @@
 import Language from './Language'
+import Url from '../../Routing/Constants/Url'
 
 const CS = Language.CS
 const EN = Language.EN
 
 export default {
+
+    nav: {
+        links: [
+            { text: { [CS]: 'Přehled', [EN]: 'Overview' }, pathname: Url.HOME, icon: 'Overview' },
+            { text: { [CS]: 'Databáze', [EN]: 'Database' }, pathname: Url.DATABASE, icon: 'Database' },
+            { text: { [CS]: 'Učení', [EN]: 'Learning' }, pathname: Url.AI, icon: 'AI' }
+        ]
+    },
 
     home: {
         title: {
