@@ -22,17 +22,19 @@ module Languages {
     export const localize = (source: any, language: Language) => {
         source = typeof source === 'object' ? JSON.parse(JSON.stringify(source)) : source
 
-        if (source instanceof Object) {
+        if (source instanceof Array) {
+            //console.log(777, source)
+            for (const i in source) {
+                source[i] = localize(source[i], language)
+            }
+        } else if (source instanceof Object) {
+            //console.log(888, source)
             if (source[Language.CS] || source[Language.EN]) {
                 source = source[language] || source[Language.CS]
             } else {
                 for (const i in source) {
                     source[i] = localize(source[i], language)
                 }
-            }
-        } else if (source instanceof Array) {
-            for (const i in source) {
-                source[i] = localize(source[i], language)
             }
         }
 
