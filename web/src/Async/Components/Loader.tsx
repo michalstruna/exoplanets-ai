@@ -7,13 +7,13 @@ export interface Static {
 
 }
 
-export interface Props/* extends React.HTMLProps<HTMLElement>*/ {
+interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
 
 export type Type = React.FC<Props> & Static
 
-const Root = Styled.div<any>`
+const Root = Styled.div`
     ${Mixin.FlexCenter()}
     ${Mixin.Size('100%')}
     animation: ${Keyframe.FadeIn} ${Duration.SLOW};
