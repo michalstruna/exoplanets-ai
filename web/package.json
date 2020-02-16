@@ -22,6 +22,7 @@
   "homepage": "https://github.com/michal-struna/react-redux-template",
   "dependencies": {
     "@reduxjs/toolkit": "^1.2.5",
+    "axios": "^0.19.2",
     "email-validator": "^2.0.4",
     "is-valid-http-url": "^1.0.3",
     "path": "^0.12.7",

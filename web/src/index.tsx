@@ -3,9 +3,8 @@ import { render } from 'react-dom'
 import { Router, Switch, Route, Redirect } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
-import { App, HomeView, Store } from './Core'
+import { App, HomeView, HelpView, Store } from './Core'
 import { History, Url } from './Routing'
-import HelpView from './Core/Views/HelpView'
 
 render(
     <Provider store={Store}>

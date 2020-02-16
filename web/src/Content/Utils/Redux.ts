@@ -58,6 +58,12 @@ module Redux {
         }
     })
 
+    export const getAsyncData = (data: any = null) => ({
+        isSent: true,
+        payload: data,
+        error: null
+    })
+
 }
 
 export default Redux

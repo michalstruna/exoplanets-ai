@@ -1,9 +1,9 @@
 import Language from './Constants/Language'
 
-export type AsyncData<T> = {
+export type AsyncData<TData, TError = string | number | Error> = {
     isSent?: boolean
-    payload?: T
-    error?: any
+    payload?: TData
+    error?: TError
 }
 
 export type ContentState = {
