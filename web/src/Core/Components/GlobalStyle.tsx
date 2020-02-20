@@ -23,13 +23,26 @@ const GlobalStyle = createGlobalStyle`
     
     button, input, textarea, select {
         background-color: transparent;
-        border: inherit;
+        border: none;
+        border-bottom: 1px solid ${Color.MEDIUM_LIGHT};
         color: inherit;
         font-family: Montserrat, Arial;
         font-size: inherit;
         line-height: inherit;
         outline: inherit;
+        padding: 0.75rem 0.5rem;
         -webkit-appearance: none;
+    }
+    
+    option {
+        background-color: ${Color.MEDIUM_DARK};
+        border: none;
+        padding: 0.5rem;
+        outline: none;
+        
+        &:hover, &:focus, &:active, &:checked {
+           background: ${Color.DARKEST};
+        }
     }
     
      button {
@@ -37,6 +50,7 @@ const GlobalStyle = createGlobalStyle`
         cursor: pointer;
         outline: none;
         text-align: center;
+        user-select: none;
      }
       
     p, h1, h2, h3, h4, h5, h6 {

@@ -12,3 +12,4 @@ export { default as ZIndex } from './Constants/ZIndex'
  * Utils.
  */
 export { default as Validator } from './Utils/Validator'
+export { default as Arrays } from './Utils/Arrays'

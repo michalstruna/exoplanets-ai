@@ -34,6 +34,15 @@ export default {
             [CS]: 'Domů',
             [EN]: 'Home'
         }
+    },
+
+    database: {
+        filter: {
+            value: {
+                [CS]: 'Hodnota filtru...',
+                [EN]: 'Filter value...'
+            }
+        }
     }
 
 }
