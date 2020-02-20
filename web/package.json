@@ -27,6 +27,7 @@
     "formik": "^2.1.4",
     "is-valid-http-url": "^1.0.3",
     "path": "^0.12.7",
+    "query-string": "^6.11.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-redux": "^7.1.3",

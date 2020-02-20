@@ -63,6 +63,12 @@ module Queries {
         for (const i in changes) {
             if (changes[i] === null) {
                 params.delete(i)
+            } else if (Array.isArray(changes[i])) {
+                params.delete(i)
+
+                for (const value of changes[i]) {
+                    params.append(i, value)
+                }
             } else {
                 params.set(i, changes[i])
             }
