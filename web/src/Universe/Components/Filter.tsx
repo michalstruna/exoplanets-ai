@@ -231,8 +231,7 @@ const Filter: React.FC<Props> & Static = ({ defaultRelation, attributes, initial
 
 Filter.defaultProps = {
     defaultRelation: Validator.Relation.CONTAINS,
-    keys: { attribute: 'attribute', relation: 'relation', value: 'value' },
-    onChange: () => null
+    keys: { attribute: 'attribute', relation: 'relation', value: 'value' }
 }
 
 export default Filter
