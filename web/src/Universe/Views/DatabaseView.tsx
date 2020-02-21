@@ -22,47 +22,43 @@ const DatabaseView: React.FC<Props> & Static = ({ ...props }) => {
 
     const { location } = useRouter()
 
+    const initialFilter = React.useMemo(() => {
+        const query = QueryString.parse(location.search)
+
+        return {
+            attribute: query[Query.FILTER_ATTRIBUTE],
+            relation: query[Query.FILTER_RELATION],
+            value: query[Query.FILTER_VALUE]
+        }
+    }, [])
+
+    const [filter, setFilter] = React.useState(initialFilter)
+
     const handleFilter = filter => {
+        setFilter(filter)
+
         Urls.replace({
             query: {
-                [Query.FILTER_ATTRIBUTE]: filter.map(item => item.attribute),
-                [Query.FILTER_RELATION]: filter.map(item => item.relation),
-                [Query.FILTER_VALUE]: filter.map(item => item.value)
+                [Query.FILTER_ATTRIBUTE]: filter.attribute,
+                [Query.FILTER_RELATION]: filter.relation,
+                [Query.FILTER_VALUE]: filter.value
             }
         })
     }
 
-    const initFilter = React.useMemo(() => {
-        const _query = QueryString.parse(location.search)
-        const query = {}
-        let length = 0
-
-        for (const i in _query) {
-            query[i] = Array.isArray(_query[i]) ? _query[i] : [_query[i]]
-
-            if (!length) {
-                length = query[i].length
-            }
-
-            if (length !== query[i].length) {
-                return undefined
-            }
-        }
-
-        if (!query[Query.FILTER_ATTRIBUTE]) {
-            return undefined
-        }
-
-        return query[Query.FILTER_ATTRIBUTE].map((value, i) => ({
-            attribute: query[Query.FILTER_ATTRIBUTE][i],
-            relation: query[Query.FILTER_RELATION][i],
-            value: query[Query.FILTER_VALUE][i]
-        }))
-    }, [])
+    const list = React.useMemo(() => {
+        return null
+    }, [filter])
 
     return (
         <Root {...props}>
-            <Filter handleChange={handleFilter} initialValues={initFilter} />
+            <Filter
+                attributes={['starName', 'starMass']}
+                keys={{ attribute: [Query.FILTER_ATTRIBUTE], relation: [Query.FILTER_RELATION], value: [Query.FILTER_VALUE] }}
+                onChange={handleFilter}
+                initialValues={initialFilter}
+            />
+            {list}
         </Root>
     )
 

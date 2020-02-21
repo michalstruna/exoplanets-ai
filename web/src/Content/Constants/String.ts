@@ -1,5 +1,6 @@
 import Language from './Language'
 import Url from '../../Routing/Constants/Url'
+import { Validator } from '../../Utils'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -36,12 +37,20 @@ export default {
         }
     },
 
-    database: {
-        filter: {
-            value: {
-                [CS]: 'Hodnota filtru...',
-                [EN]: 'Filter value...'
+    filter: {
+        relations: {
+            [Validator.Relation.CONTAINS]: {
+                [CS]: 'Obsahuje',
+                [EN]: 'Contains'
+            },
+            [Validator.Relation.EQUALS]: {
+                [CS]: 'Rovná se',
+                [EN]: 'Equals'
             }
+        },
+        value: {
+            [CS]: 'Hodnota filtru...',
+            [EN]: 'Filter value...'
         }
     }
 
