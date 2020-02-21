@@ -31,6 +31,8 @@ module Validator {
     export const is = <T>(value: T, predicate: Predicate<T>) => {
         if (predicate instanceof RegExp) {
             return predicate.test(value.toString())
+        } else if (Array.isArray(predicate)) {
+            return predicate.includes(value)
         } else if (typeof predicate === 'function') {
             return (predicate as Function)(value)
         } else {

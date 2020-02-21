@@ -5,11 +5,7 @@ import { Arrays, Duration, Mixin, Validator } from '../../Utils'
 import { useStrings } from '../../Content'
 import { Field, FieldArray, Formik } from 'formik'
 
-type BrokenObjectFilter = {
-    attribute: string | string[]
-    relation: string | string[] | number | number[]
-    value: any | any[]
-}
+type BrokenObjectFilter = any
 
 type ObjectFilter = {
     attribute: string[]
@@ -79,9 +75,26 @@ const Row = Styled.div<RowProps>`
 `
 
 
-const Filter: React.FC<Props> & Static = ({ defaultRelation, attributes, initialValues: _initialValues, onChange, keys, ...props }) => {
+const Filter: React.FC<Props> & Static = ({ defaultRelation, attributes, initialValues, onChange, keys, ...props }) => {
 
     const strings = useStrings().filter
+
+    const handleChange = (filter: ArrayFilter): void => {
+        if (onChange) {
+            const values = mapKeysOut(getObjectFilter(getWithoutLast(filter)))
+            onChange(values)
+        }
+    }
+
+    const mapKeysIn = (filter: any): ObjectFilter => ({
+        attribute: filter[keys.attribute] || [],
+        relation: filter[keys.relation] || [],
+        value: filter[keys.value] || []
+    })
+
+    const mapKeysOut = (filter: ObjectFilter): any => (
+        { [keys.attribute]: filter.attribute, [keys.relation]: filter.relation, [keys.value]: filter.value }
+    )
 
     const getHandleFieldChange = (values, handleChange, helpers, i) => (
         event => {
@@ -122,7 +135,7 @@ const Filter: React.FC<Props> & Static = ({ defaultRelation, attributes, initial
         }
     }
 
-    const getWithoutLast = values => {
+    const getWithoutLast = (values: ArrayFilter): ArrayFilter => {
         const result = [...values]
         result.pop()
         return result
@@ -138,14 +151,34 @@ const Filter: React.FC<Props> & Static = ({ defaultRelation, attributes, initial
         return result as ObjectFilter
     }
 
-    const initialValues = React.useMemo(() => {
-        const objectFilter = forceArray(_initialValues)
-        const arrayFilter = getArrayFilter(objectFilter)
+    const fixFilter = (values: ObjectFilter): ObjectFilter => {
+        const result = { attribute: [], relation: [], value: [] }
+
+        if (values.attribute.length !== values.relation.length || values.relation.length !== values.value.length) {
+            return result
+        }
+
+        for (const i in values.attribute) {
+            if (Validator.is(values.attribute[i], attributes) && Validator.is(values.relation[i], Object.values(Validator.Relation))) {
+                result.attribute.push(values.attribute[i])
+                result.relation.push(values.relation[i])
+                result.value.push(values.value[i])
+            }
+        }
+
+        return result
+    }
+
+    const initialFilter = React.useMemo(() => {
+        const objectFilter = mapKeysIn(forceArray(initialValues))
+        const safeFilter = fixFilter(objectFilter)
+        const arrayFilter = getArrayFilter(safeFilter)
         arrayFilter.push({ attribute: attributes[0], relation: defaultRelation, value: '' })
+        handleChange(arrayFilter)
         return arrayFilter
     }, [])
 
-    const remove = (values, helpers, i, withUpdate = false) => {
+    const remove = (values, helpers, i) => {
         const last = Arrays.findLastIndex<any>(values.filter, (item, j) => item.value && i !== j)
         const toRemove = values.filter.length - last - 3
 
@@ -159,8 +192,8 @@ const Filter: React.FC<Props> & Static = ({ defaultRelation, attributes, initial
     return (
         <Formik
             onSubmit={() => null}
-            initialValues={{ filter: initialValues }}
-            validate={onChange ? (values => onChange(getObjectFilter(getWithoutLast(values.filter)))) : undefined}>
+            initialValues={{ filter: initialFilter }}
+            validate={values => handleChange(values.filter)}>
             {({ values, handleChange }) => (
                 <Root {...props}>
                     <FieldArray name='filter'>
@@ -183,7 +216,7 @@ const Filter: React.FC<Props> & Static = ({ defaultRelation, attributes, initial
                                             name={`filter.${i}.value`}
                                             placeholder={strings.value}
                                             onChange={getHandleFieldChange(values, handleChange, helpers, i)} />
-                                        <Delete onClick={() => remove(values, helpers, i, true)} />
+                                        <Delete onClick={() => remove(values, helpers, i)} />
                                     </Row>
                                 ))}
                             </>
@@ -197,9 +230,9 @@ const Filter: React.FC<Props> & Static = ({ defaultRelation, attributes, initial
 }
 
 Filter.defaultProps = {
-    initialValues: { attribute: [], relation: [], value: [] },
     defaultRelation: Validator.Relation.CONTAINS,
-    keys: { attribute: 'attribute', relation: 'relation', value: 'value' }
+    keys: { attribute: 'attribute', relation: 'relation', value: 'value' },
+    onChange: () => null
 }
 
 export default Filter
