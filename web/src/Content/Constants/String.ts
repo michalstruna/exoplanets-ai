@@ -1,5 +1,6 @@
 import Language from './Language'
 import Url from '../../Routing/Constants/Url'
+import { Validator } from '../../Utils'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -33,6 +34,39 @@ export default {
         home: {
             [CS]: 'Domů',
             [EN]: 'Home'
+        }
+    },
+
+    filter: {
+        relations: {
+            [Validator.Relation.CONTAINS]: {
+                [CS]: 'Obsahuje',
+                [EN]: 'Contains'
+            },
+            [Validator.Relation.EQUALS]: {
+                [CS]: 'Rovná se',
+                [EN]: 'Equals'
+            },
+            [Validator.Relation.ENDS_WITH]: {
+                [CS]: 'Končí na',
+                [EN]: 'Ends with'
+            },
+            [Validator.Relation.STARTS_WITH]: {
+                [CS]: 'Začíná na',
+                [EN]: 'Starts with'
+            },
+            [Validator.Relation.LESS_THAN]: {
+                [CS]: 'Je menší než',
+                [EN]: 'Is less than'
+            },
+            [Validator.Relation.MORE_THAN]: {
+                [CS]: 'Je větší než',
+                [EN]: 'Is more than'
+            }
+        },
+        value: {
+            [CS]: 'Hodnota filtru...',
+            [EN]: 'Filter value...'
         }
     }
 
