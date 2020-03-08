@@ -5,6 +5,7 @@ import QueryString from 'query-string'
 
 import Filter from '../Components/Filter'
 import { Query, Urls } from '../../Routing'
+import Database from '../Components/Database'
 
 interface Static {
 
@@ -33,10 +34,6 @@ const DatabaseView: React.FC<Props> & Static = ({ ...props }) => {
         Urls.replace({ query: filter })
     }
 
-    const list = React.useMemo(() => {
-        return null
-    }, [filter])
-
     return (
         <Root {...props}>
             <Filter
@@ -45,7 +42,7 @@ const DatabaseView: React.FC<Props> & Static = ({ ...props }) => {
                 onChange={handleFilter}
                 initialValues={initialFilter}
             />
-            {list}
+            <Database />
         </Root>
     )
 

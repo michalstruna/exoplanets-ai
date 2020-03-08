@@ -3,7 +3,7 @@ import StarType from './Constants/StarType'
 import SpectralType from './Constants/SpectralType'
 
 export interface Planet {
-    radius?: number
+    diameter?: number
     mass?: number
     orbitalPeriod?: number
     semiMajorAxis?: number
@@ -16,12 +16,12 @@ export interface Planet {
 export interface Star {
     name: string
     mass?: number
-    radius?: number
+    diameter?: number
     temperature?: number
     luminosity?: number
     absoluteMagnitude?: number
-    color?: string
     spectralClass?: SpectralType
     planets?: Planet[]
     type?: StarType
+    distance?: number
 }

@@ -21,8 +21,8 @@ const Root = Styled.div`
 const Content = Styled.div`
     background-color: ${Color.MEDIUM_DARK};
     height: calc(100% - ${Dimensions.NAV_HEIGHT});
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
 `
 
