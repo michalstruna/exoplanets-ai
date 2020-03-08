@@ -1,6 +1,7 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
-import { Color, Mixin } from '../../Utils'
+
+import { Color, Mixin, ZIndex } from '../../Utils'
 
 interface Static {
     Cell: string
@@ -15,6 +16,7 @@ interface Column<TItem, TValue> {
     accessor: (item: TItem) => TValue
     render?: (value: TValue, item: TItem) => React.ReactNode
     icon?: string
+    headerIcon?: string
 }
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
@@ -76,6 +78,7 @@ const Secondary = Styled.div`
 const Header = Styled(Row)`
     position: sticky;
     top: 0;
+    z-index: ${ZIndex.TABLE_HEADER};
 
     && {
         background-color: ${Color.DARKEST};
@@ -89,7 +92,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, ...props }
             <>
                 <Primary>
                     {levels[levelIndex].columns.map((column: Column<any, any>, i) => (
-                        <Cell key={i} icon={column.icon}>
+                        <Cell key={i} icon={column.headerIcon || column.icon} data-level={levelIndex} data-header>
                             {column.title}
                         </Cell>
                     ))}
@@ -115,7 +118,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, ...props }
                 <Row key={i}>
                     <Primary>
                         {levels[levelIndex].columns.map((column, j) => (
-                            <Cell key={j} icon={column.icon}>
+                            <Cell key={j} icon={column.icon} data-level={levelIndex}>
                                 {column.render ? column.render(column.accessor(item), item) : column.accessor(item)}
                             </Cell>
                         ))}

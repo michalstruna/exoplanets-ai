@@ -18,6 +18,7 @@ export { default as SpectralType } from './Constants/SpectralType'
 export { default as Filter } from './Components/Filter'
 export { default as Database } from './Components/Database'
 export { default as HierarchicalTable } from './Components/HierarchicalTable'
+export { default as MiniGraph } from './Components/MiniGraph'
 
 /**
  * Utils.
