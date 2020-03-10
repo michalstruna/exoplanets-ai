@@ -165,6 +165,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, ...props }
     // TODO: Refactor. List autoheight.
     return (
         <Root {...props}>
+            {renderedHeader}
             <InfiniteLoader
                 isItemLoaded={index => !!itemStatusMap[index]}
                 loadMoreItems={loadMoreItems}
