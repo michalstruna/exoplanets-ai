@@ -100,7 +100,7 @@ const Table = Styled(HierarchicalTable)`
     }
 `
 
-const data = new Array(10).fill({
+const data = new Array(20).fill({
     name: 'VY Canis Majoris',
     mass: 1.28,
     diameter: 2.36,
@@ -127,28 +127,47 @@ const data = new Array(10).fill({
 
 const starColumns = [
     { title: <Image />, accessor: star => star.type, render: () => <Image /> },
-    { title: 'Hvězda', accessor: star => star.name, render: (name, star) => <>{name}<br />{'Žlutý trpaslík M5,5Ve'}</> },
-    { title: 'Průměr', accessor: star => star.diameter, icon: '/img/Universe/Database/Diameter.svg', render: () => '1,98G km' },
+    {
+        title: 'Hvězda',
+        accessor: star => star.name,
+        render: (name, star) => <>{name}<br />{'Žlutý trpaslík M5,5Ve'}</>
+    },
+    {
+        title: 'Průměr',
+        accessor: star => star.diameter,
+        icon: '/img/Universe/Database/Diameter.svg',
+        render: () => '1,98G km'
+    },
     { title: 'Hmotnost', accessor: star => star.mass, icon: '/img/Universe/Database/Mass.svg' },
     { title: 'Teplota', accessor: star => star.temperature, icon: '/img/Universe/Database/Temperature.svg' },
     { title: 'Zářivý výkon', accessor: star => star.luminosity, icon: '/img/Universe/Database/Luminosity.svg' },
     { title: 'Vzdálenost', accessor: star => star.distance, icon: '/img/Universe/Database/Distance.svg' },
     { title: 'Planet', accessor: star => star.planets.length, icon: '/img/Universe/Database/Planet.svg' },
     { title: '', accessor: star => star.planets.length, icon: '', render: value => '' },
-    { title: 'Pozorování', accessor: () => null, render: (value, star) => <MiniGraph data={star} left='transit' right='radialVelocity' />, headerIcon: '/img/Universe/Database/Discovery.svg' }
+    {
+        title: 'Pozorování',
+        accessor: () => null,
+        render: (value, star) => <MiniGraph data={star} left='transit' right='radialVelocity' />,
+        headerIcon: '/img/Universe/Database/Discovery.svg'
+    }
 ]
 
 const planetColumns = [
     { title: <PlanetImage />, accessor: planet => planet.type, render: () => <PlanetImage /> },
     { title: 'Planeta', accessor: planet => planet.type, render: () => 'Horký jupiter' },
-    { title: 'Průměr', accessor: planet => planet.diameter, icon: '/img/Universe/Database/Diameter.svg'  },
+    { title: 'Průměr', accessor: planet => planet.diameter, icon: '/img/Universe/Database/Diameter.svg' },
     { title: 'Hmotnost', accessor: planet => planet.mass, icon: '/img/Universe/Database/Mass.svg' },
     { title: 'Teplota', accessor: planet => planet.surfaceTemperature, icon: '/img/Universe/Database/Temperature.svg' },
     { title: 'Perioda', accessor: planet => planet.orbitalPeriod, icon: '/img/Universe/Database/Period.svg' },
     { title: 'Poloosa', accessor: planet => planet.semiMajorAxis, icon: '/img/Universe/Database/Orbit.svg' },
     { title: 'Rychlost', accessor: planet => planet.orbitalVelocity, icon: '/img/Universe/Database/Velocity.svg' },
     { title: 'Život', accessor: () => 'Vyloučen', icon: '/img/Universe/Database/Life.svg' },
-    { title: 'Metoda', accessor: () => null, render: () => <>Tranzit<br />Radiální rychlost</>, icon: '/img/Universe/Database/Discovery.svg' }
+    {
+        title: 'Metoda',
+        accessor: () => null,
+        render: () => <>Tranzit<br />Radiální rychlost</>,
+        icon: '/img/Universe/Database/Discovery.svg'
+    }
 ]
 
 const Database: React.FC<Props> & Static = ({ ...props }) => {
@@ -157,7 +176,7 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
         <Table
             items={data}
             levels={[
-                { columns: starColumns, },
+                { columns: starColumns },
                 { columns: planetColumns, accessor: star => star.planets }
             ]} />
     )

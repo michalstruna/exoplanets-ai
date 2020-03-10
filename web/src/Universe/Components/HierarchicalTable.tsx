@@ -1,14 +1,14 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
+import InfiniteLoader from 'react-window-infinite-loader'
+import { VariableSizeList as List } from 'react-window'
 
 import { Color, Mixin, ZIndex } from '../../Utils'
 
 interface Static {
     Cell: string
     Header: string
-    Primary: string
     Row: string
-    Secondary: string
 }
 
 interface Column<TItem, TValue> {
@@ -30,16 +30,20 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 const Root = Styled.div`
 `
 
-const Row = Styled.div`    
-    &:nth-of-type(2n + 1) {
-        background-color: rgba(0, 0, 0, 0.15);
-    }
-`
+interface RowProps {
+    isOdd?: boolean
+}
 
-const Primary = Styled.div`
-    ${Mixin.Size()}
-    overflow: hidden;
+const Row = Styled.div<RowProps>`    
     white-space: nowrap;
+    
+    ${props => props.isOdd && `
+        background-color: rgba(0, 0, 0, 0.15);
+    `}
+
+    &:nth-of-type(2n + 1) {
+        
+    }
 `
 
 interface CellProps {
@@ -69,12 +73,6 @@ const Cell = Styled.div<CellProps>`
     `}
 `
 
-const Secondary = Styled.div`
-    ${Row}:nth-of-type(2n + 1) {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-`
-
 const Header = Styled(Row)`
     position: sticky;
     top: 0;
@@ -85,23 +83,39 @@ const Header = Styled(Row)`
     }
 `
 
+let itemStatusMap = {}
+
+const loadMoreItems = (start, stop) => {
+    console.log(start, stop)
+
+    for (let i = start; i < stop; i++) {
+        itemStatusMap[i] = 2
+    }
+
+    return new Promise(resolve => {
+        setTimeout(() => {
+            for (let i = start; i < stop; i++) {
+                itemStatusMap[i] = 2
+            }
+
+            resolve()
+        }, 1)
+    })
+}
+
 const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, ...props }) => {
 
     const renderedHeader = React.useMemo(() => {
         const renderHeader = (levelIndex: number) => (
             <>
-                <Primary>
+                <Header>
                     {levels[levelIndex].columns.map((column: Column<any, any>, i) => (
                         <Cell key={i} icon={column.headerIcon || column.icon} data-level={levelIndex} data-header>
                             {column.title}
                         </Cell>
                     ))}
-                </Primary>
-                {levelIndex < levels.length - 1 && (
-                    <Secondary>
-                        {renderHeader(levelIndex + 1)}
-                    </Secondary>
-                )}
+                </Header>
+                {levelIndex < levels.length - 1 && renderHeader(levelIndex + 1)}
             </>
         )
 
@@ -112,33 +126,57 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, ...props }
         )
     }, [])
 
-    const renderedItems = React.useMemo(() => {
-        const renderItems = (items: any[], levelIndex: number) => {
-            return items.map((item, i) => (
-                <Row key={i}>
-                    <Primary>
-                        {levels[levelIndex].columns.map((column, j) => (
-                            <Cell key={j} icon={column.icon} data-level={levelIndex}>
-                                {column.render ? column.render(column.accessor(item), item) : column.accessor(item)}
-                            </Cell>
-                        ))}
-                    </Primary>
-                    {levelIndex < levels.length - 1 && (
-                        <Secondary>
-                            {renderItems(levels[levelIndex + 1].accessor(item), levelIndex + 1)}
-                        </Secondary>
-                    )}
-                </Row>
-            ))
+    const rows = React.useMemo(() => {
+        const rows = []
+
+        const process = (items, level) => {
+            items.map(item => {
+                rows.push({ level, item })
+
+                if (level < levels.length - 1) {
+                    process(levels[level + 1].accessor(item), level + 1)
+                }
+            })
         }
 
-        return renderItems(items, 0)
+        process(items, 0)
+
+        return rows
     }, [])
 
+    const renderRow = ({ index, style }) => {
+        const { item, level } = rows[index]
+
+        if (itemStatusMap[index] !== 2) {
+            return null
+        }
+
+        return (
+            <Row key={index} style={style} isOdd={index % 2 === 1}>
+                {levels[level].columns.map((column, j) => (
+                    <Cell key={j} icon={column.icon} data-level={level}>
+                        {column.render ? column.render(column.accessor(item), item) : column.accessor(item)}
+                    </Cell>
+                ))}
+            </Row>
+        )
+    }
+
+    // TODO: Refactor. List autoheight.
     return (
         <Root {...props}>
-            {renderedHeader}
-            {renderedItems}
+            <InfiniteLoader
+                isItemLoaded={index => !!itemStatusMap[index]}
+                loadMoreItems={loadMoreItems}
+                itemCount={items.length}>
+                {({ onItemsRendered, ref }) => (
+                    <List itemSize={index => rows[index].level === 0 ? 96 : 72} height={1700} itemCount={items.length}
+                          onItemsRendered={onItemsRendered}
+                          width={1920} ref={ref}>
+                        {renderRow}
+                    </List>
+                )}
+            </InfiniteLoader>
         </Root>
     )
 
@@ -146,8 +184,6 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, ...props }
 
 HierarchicalTable.Cell = Cell
 HierarchicalTable.Header = Header
-HierarchicalTable.Primary = Primary
 HierarchicalTable.Row = Row
-HierarchicalTable.Secondary = Secondary
 
 export default HierarchicalTable
