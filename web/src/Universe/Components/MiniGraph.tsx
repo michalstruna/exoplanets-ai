@@ -6,11 +6,17 @@ interface Static {
 
 }
 
-interface Props extends React.ComponentPropsWithoutRef<'div'> {
+interface Props extends React.ComponentPropsWithoutRef<'canvas'> {
     data: any
-    left: string
-    right: string
+    width: number
+    height: number
+    lines: string[]
+    labels?: string[]
 }
+
+const Root = Styled.canvas`
+
+`
 
 const LegendItem = Styled.span`
     display: inline-block;
@@ -18,23 +24,25 @@ const LegendItem = Styled.span`
     margin-top: 0.25rem;
 `
 
-const MiniGraph: React.FC<Props> & Static = ({ data, left, right, ...props }) => {
+const MiniGraph: React.FC<Props> & Static = ({ data, lines, labels, ...props }) => {
 
-    const items = data[left].map((item, i) => ({ [left]: data[left][i], [right]: data[right][i] }))
-
-    const renderYAxis = (orientation: 'left' | 'right' = 'left', color: string) => (
+    const renderYAxis = (orientation: string = 'left', color: string) => (
         <YAxis
+            axisLine={false}
+            tickLine={false}
             type='number'
+            tickCount={10}
+            interval={'preserveStartEnd'}
             domain={['dataMin', 'dataMax']}
             yAxisId={orientation}
             tick={{ fill: color, fontSize: 13 }}
-            orientation={orientation} />
+            orientation={orientation as 'left' | 'right'} />
     )
 
     const renderLine = (name, key, color, axisId) => (
         <Line
             name={name}
-            type='basis'
+            type='monotone'
             dataKey={key}
             stroke={color}
             strokeWidth={2}
@@ -44,19 +52,20 @@ const MiniGraph: React.FC<Props> & Static = ({ data, left, right, ...props }) =>
             isAnimationActive={false} />
     )
 
-    return (
-        <ResponsiveContainer width='100%' height='100%'>
-            <LineChart data={items}>
-                {renderLine('Tranzit [%]', left, '#77CC77', 'left')}
-                {renderYAxis('left', '#77CC77')}
-                {renderLine('Radiální rychlost [m/s]', right, '#CC7777', 'right')}
-                {renderYAxis('right', '#AA5555')}
-                <YAxis type='number' domain={['dataMin', 'dataMax']} yAxisId='right' orientation='right' />
-                <Legend formatter={(value, entry) => <LegendItem style={{ color: entry.color }}>{value}</LegendItem>} />
-            </LineChart>
-        </ResponsiveContainer>
-    )
+    const withLeft = data && data[0][lines[0]]
 
+    return React.useMemo(() => (
+        <LineChart data={data} width={320} height={80}>
+            {renderLine(labels[0] || lines[0], lines[0], '#77CC77', withLeft ? 'left' : 'right')}
+            {renderYAxis(withLeft ? 'left' : 'right', '#77CC77')}
+            {renderLine(labels[1] || lines[1], lines[1], '#CC7777', withLeft ? 'right' : 'left')}
+            {renderYAxis(withLeft ? 'right' : 'left', '#CC7777')}
+        </LineChart>
+    ), [data, lines])
+}
+
+MiniGraph.defaultProps = {
+    labels: []
 }
 
 export default MiniGraph
