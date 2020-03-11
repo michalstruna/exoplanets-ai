@@ -34,13 +34,14 @@ const MiniGraph: React.FC<Props> & Static = ({ data, left, right, ...props }) =>
     const renderLine = (name, key, color, axisId) => (
         <Line
             name={name}
-            type='monotone'
+            type='basis'
             dataKey={key}
             stroke={color}
             strokeWidth={2}
             opacity={0.7}
             dot={false}
-            yAxisId={axisId} />
+            yAxisId={axisId}
+            isAnimationActive={false} />
     )
 
     return (

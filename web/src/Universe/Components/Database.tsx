@@ -2,7 +2,6 @@ import React from 'react'
 import Styled from 'styled-components'
 import { Dimensions, Mixin } from '../../Utils'
 import SpectralType from '../Constants/SpectralType'
-import StarType from '../Constants/StarType'
 import { Planet } from '../types'
 import HierarchicalTable from './HierarchicalTable'
 import MiniGraph from './MiniGraph'
@@ -20,11 +19,11 @@ const Root = Styled.div`
     width: 100%;
 `
 
-const colors = ['#FF0', '#FFF', '#9FF']
+const colors = ['#A50', '#FFF', '#A00', '#CC0']
 
 const Image = Styled.div`
     ${Mixin.Size('4rem')}
-    background-image: radial-gradient(${props => colors[Math.floor(Math.random() * colors.length)]}, #000);
+    background-image: radial-gradient(${colors[3]}, #000);
     border-radius: 100%;
     display: inline-block;
 `
@@ -100,30 +99,34 @@ const Table = Styled(HierarchicalTable)`
     }
 `
 
-const data = new Array(20).fill({
-    name: 'VY Canis Majoris',
-    mass: 1.28,
-    diameter: 2.36,
-    temperature: '5536 K',
-    luminosity: 128,
-    absoluteMagnitude: 12,
-    color: '#FFAA00',
-    spectralClass: SpectralType.A,
-    transit: [100, 100, 99.8, 99.2, 99.3, 99.9, 100, 100, 100, 100, 99.6, 99.3],
-    radialVelocity: [60, 61.3, 62.4, 63, 62.9, 62.4, 61.5, 60.2, 60.2, 61, 62.2, 62.3],
-    planets: new Array(2).fill({
-        diameter: 12475,
-        mass: 1234,
-        surfaceTemperature: '128 °C',
-        orbitalPeriod: 1234,
-        semiMajorAxis: 123456,
-        orbitalVelocity: 72,
-        density: 1154,
-        type: 1
-    }),
-    type: StarType.YELLOW_DWARF,
-    distance: 5
-})
+const data = []
+
+for (let i = 0; i < 20; i++) {
+    data.push({
+        name: 'VY Canis Majoris',
+        mass: 1.28,
+        diameter: 2.36,
+        temperature: '5536 K',
+        luminosity: 128,
+        absoluteMagnitude: 12,
+        color: '#FFAA00',
+        spectralClass: SpectralType.A,
+        transit: [100, 100, 99.8, 99.2, 99.3, 99.9, 100, 100, 100, 100, 99.6, 99.3],
+        radialVelocity: [60, 61.3, 62.4, 63, 62.9, 62.4, 61.5, 60.2, 60.2, 61, 62.2, 62.3],
+        planets: new Array(0).fill({
+            diameter: 12475,
+            mass: 1234,
+            surfaceTemperature: '128 °C',
+            orbitalPeriod: 1234,
+            semiMajorAxis: 123456,
+            orbitalVelocity: 72,
+            density: 1154,
+            type: 1
+        }),
+        type: Math.floor(Math.random() * 5),
+        distance: 5
+    })
+}
 
 const starColumns = [
     { title: <Image />, accessor: star => star.type, render: () => <Image /> },

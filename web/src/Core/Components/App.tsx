@@ -42,7 +42,7 @@ const App: React.FC<Props> & Static = ({ children, ...props }) => {
 
                     </>
                 )} />
-            <Content>
+            <Content id='scrollable-root'>
                 {children}
             </Content>
         </Root>
