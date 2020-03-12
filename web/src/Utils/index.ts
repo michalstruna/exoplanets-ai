@@ -22,4 +22,4 @@ export { default as VirtualizedList } from './Components/VirtualizedList'
 /**
  * Hooks.
  */
-export { default as useOnScroll } from './Hooks/UseOnScroll'
+export { default as useOnEvent } from './Hooks/UseOnEvent'

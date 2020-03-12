@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import useOnScroll from '../Hooks/UseOnScroll'
+import { useOnEvent } from '../index'
 
 interface Static {
 
@@ -28,7 +28,7 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
         const start = Math.min(totalHeight, Math.max(0, x - offsetTop))
         const end = Math.min(totalHeight, Math.max(0, x - offsetTop + scrollableHeight))
 
-        return [getIndexByOffset(start), getIndexByOffset(end)]
+        return [Math.max(0, getIndexByOffset(start) - 1), getIndexByOffset(end)]
     }
 
     const getIndexByOffset = (offset: number) => {
@@ -59,7 +59,10 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
 
     const [indexRange, setIndexRange] = React.useState(getIndexRange(0))
 
-    useOnScroll(React.useCallback(x => setIndexRange(getIndexRange(x)), []), scrollable)
+
+    const events = React.useMemo<[Element | Window, string][]>(() => ([[scrollable, 'scroll'], [window, 'resize']]), [scrollable])
+    const updateIndexRange = React.useCallback(() => setIndexRange(getIndexRange(scrollable.scrollTop)), [scrollable])
+    useOnEvent(updateIndexRange, events)
 
     const renderedItems = React.useMemo(() => {
         const renderedItems = []

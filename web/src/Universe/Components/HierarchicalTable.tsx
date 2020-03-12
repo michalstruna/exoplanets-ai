@@ -26,6 +26,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = Styled.div`
+
 `
 
 interface RowProps {
@@ -132,25 +133,11 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, ...props }
             </Row>
         )
     }
-
+    
     // TODO: InfiniteLoader.
     return (
         <Root {...props}>
             {renderedHeader}
-            {/*
-            <InfiniteLoader
-                isItemLoaded={index => !!itemStatusMap[index]}
-                loadMoreItems={loadMoreItems}
-                itemCount={items.length}>
-                {({ onItemsRendered, ref }) => (
-                    <List itemSize={index => rows[index].level === 0 ? 96 : 72} height={1700} itemCount={items.length}
-                          onItemsRendered={onItemsRendered}
-                          width={1920} ref={ref}>
-                        {renderRow}
-                    </List>
-                )}
-            </InfiniteLoader>
-            */}
             <VirtualizedList
                 itemsCount={rows.length}
                 itemRenderer={renderRow}
