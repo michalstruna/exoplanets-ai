@@ -8,6 +8,8 @@
 \usepackage{utils}
 \usepackage{titletoc}
 
+\def\code#1{\texttt{#1}}
+
 
 \expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks%  save the current one
   \do\-}
@@ -255,6 +257,21 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 \section{Návrh~a~vývoj aplikace}
 \section{Rozvržení aplikace}
 \section{Problémy řešené při implementaci}
+
+\subsection{Virtualizace vykreslovaného seznamu}
+
+Hvězdy i~detekované exoplanety jsou v aplikaci vykreslovány do tabulky. Z~praktických důvodů není tato tabulka rozdělena na stránky, mezi nimiž uživatel přepíná, ale je využita technika tzv. nekonečného scrollování (infinite scroll). Ta při načtení stránky zobrazí pouze několik prvních řádků a~teprve když uživatel doscrolluje dolů dojde k~načtení dalších několika řádků. Po dostatečně dlouhém scrollování tak může tabulka obsahovat velké množství řádků, jejichž vykreslování se negativně projeví na výkonu aplikace.
+
+Z~tohoto důvodu je nutné, aby tabulka vykreslovala pouze ty řádky, které jsou viditelné a~nevykreslovala ty, jenž jsou mimo obrazovku. To povede k vykreslení vždy pouze několika řádků (v~závislosti na výšce řádků a~obrazovky) i~v~případě, kdy by tabulka obsahovala tisíce záznamů.
+
+
+I~přesto, že pro JavaScript existují knihovny poskytující funkcionalitu virtualizovaného seznamu, žádná z~nich plně nevyhovuje potřebám aplikace, a~proto došklo k~vytvoření vlastní komponenty \code{VirtualizedList}.
+
+\lstinputlisting[caption={Přiklad použití vlastní komponenty VirtualizedList}]{codes/virtualized_list.txt}
+
+Komponenta si sama spočítá velikost obrazovky a~nutný počet vykreslovaných položek. Při scrollování dolů začne odebírat položky shora a~přidávat je dolů a~při scrollování nahoru naopak.
+
+\img[1]{Porovnání klasického a~virtualizovaného seznamu}{img/virtualized_list.png}
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
