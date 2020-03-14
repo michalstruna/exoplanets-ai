@@ -1,9 +1,7 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
-import InfiniteLoader from 'react-window-infinite-loader'
-import { VariableSizeList as List } from 'react-window'
 
-import { Color, Mixin, ZIndex } from '../../Utils'
+import { Color, Mixin, ZIndex, VirtualizedList } from '../../Utils'
 
 interface Static {
     Cell: string
@@ -28,6 +26,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = Styled.div`
+
 `
 
 interface RowProps {
@@ -36,14 +35,11 @@ interface RowProps {
 
 const Row = Styled.div<RowProps>`    
     white-space: nowrap;
+    min-width: 100%;
     
     ${props => props.isOdd && `
         background-color: rgba(0, 0, 0, 0.15);
     `}
-
-    &:nth-of-type(2n + 1) {
-        
-    }
 `
 
 interface CellProps {
@@ -52,10 +48,11 @@ interface CellProps {
 
 const Cell = Styled.div<CellProps>`
     align-items: center;
+    box-sizing: border-box;
     display: inline-flex;
     padding: 0.5rem 1rem;
     vertical-align: middle;
-    width: 8rem;
+    width: 10rem;
     
     &:not(:first-of-type):nth-of-type(2n + 1) {
         background-color: rgba(0, 0, 0, 0.07);
@@ -78,30 +75,10 @@ const Header = Styled(Row)`
     top: 0;
     z-index: ${ZIndex.TABLE_HEADER};
 
-    && {
+    &&, ${Cell} {
         background-color: ${Color.DARKEST};
     }
 `
-
-let itemStatusMap = {}
-
-const loadMoreItems = (start, stop) => {
-    console.log(start, stop)
-
-    for (let i = start; i < stop; i++) {
-        itemStatusMap[i] = 2
-    }
-
-    return new Promise(resolve => {
-        setTimeout(() => {
-            for (let i = start; i < stop; i++) {
-                itemStatusMap[i] = 2
-            }
-
-            resolve()
-        }, 1)
-    })
-}
 
 const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, ...props }) => {
 
@@ -147,10 +124,6 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, ...props }
     const renderRow = ({ index, style }) => {
         const { item, level } = rows[index]
 
-        if (itemStatusMap[index] !== 2) {
-            return null
-        }
-
         return (
             <Row key={index} style={style} isOdd={index % 2 === 1}>
                 {levels[level].columns.map((column, j) => (
@@ -161,23 +134,16 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, ...props }
             </Row>
         )
     }
-
-    // TODO: Refactor. List autoheight.
+    
+    // TODO: InfiniteLoader.
     return (
         <Root {...props}>
             {renderedHeader}
-            <InfiniteLoader
-                isItemLoaded={index => !!itemStatusMap[index]}
-                loadMoreItems={loadMoreItems}
-                itemCount={items.length}>
-                {({ onItemsRendered, ref }) => (
-                    <List itemSize={index => rows[index].level === 0 ? 96 : 72} height={1700} itemCount={items.length}
-                          onItemsRendered={onItemsRendered}
-                          width={1920} ref={ref}>
-                        {renderRow}
-                    </List>
-                )}
-            </InfiniteLoader>
+            <VirtualizedList
+                itemsCount={rows.length}
+                itemRenderer={renderRow}
+                itemHeight={index => rows[index].level === 0 ? 96 : 72}
+                scrollable={document.querySelector('#scrollable-root')} />
         </Root>
     )
 
