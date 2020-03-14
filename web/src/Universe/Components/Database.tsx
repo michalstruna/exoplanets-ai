@@ -35,7 +35,7 @@ const PlanetImage = Styled(Image)`
 
 const Table = Styled(HierarchicalTable)`
     ${HierarchicalTable.Cell} {
-        height: 5rem;
+        height: 6rem;
         
         &:first-of-type {
             padding-right: 0;
@@ -44,11 +44,11 @@ const Table = Styled(HierarchicalTable)`
         }
     
         &:nth-of-type(2) {
-            width: 14rem;
+            width: 16rem;
         }
         
         &:nth-of-type(10) {
-            width: 20rem;
+            width: 22rem;
             
             &:not([data-header])[data-level="0"] {
                 padding-left: 0;
@@ -57,14 +57,14 @@ const Table = Styled(HierarchicalTable)`
         }
         
         &[data-level="1"] {
-            height: 3.5rem;
+            height: 4.5rem;
         
             &:first-of-type {
                 margin-left: 3rem;
             }
             
             &:nth-of-type(2) {
-                width: 12.5rem;
+                width: 14.5rem;
             }
         }
         
@@ -74,7 +74,7 @@ const Table = Styled(HierarchicalTable)`
         
             &[data-level="0"] {
                 &:nth-of-type(2) {
-                    width: 15.5rem;
+                    width: 17.5rem;
                 }
             
                 ${Image} {
@@ -88,7 +88,7 @@ const Table = Styled(HierarchicalTable)`
                 padding-top: 0;
             
                 &:nth-of-type(2) {
-                    width: 13.5rem;
+                    width: 15.5rem;
                 }
             
                 ${Image} {

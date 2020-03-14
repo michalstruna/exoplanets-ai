@@ -35,7 +35,7 @@ interface RowProps {
 
 const Row = Styled.div<RowProps>`    
     white-space: nowrap;
-    width: 100%;
+    min-width: 100%;
     
     ${props => props.isOdd && `
         background-color: rgba(0, 0, 0, 0.15);
@@ -48,10 +48,11 @@ interface CellProps {
 
 const Cell = Styled.div<CellProps>`
     align-items: center;
+    box-sizing: border-box;
     display: inline-flex;
     padding: 0.5rem 1rem;
     vertical-align: middle;
-    width: 8rem;
+    width: 10rem;
     
     &:not(:first-of-type):nth-of-type(2n + 1) {
         background-color: rgba(0, 0, 0, 0.07);
@@ -74,7 +75,7 @@ const Header = Styled(Row)`
     top: 0;
     z-index: ${ZIndex.TABLE_HEADER};
 
-    && {
+    &&, ${Cell} {
         background-color: ${Color.DARKEST};
     }
 `
