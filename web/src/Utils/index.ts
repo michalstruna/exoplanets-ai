@@ -23,3 +23,4 @@ export { default as VirtualizedList } from './Components/VirtualizedList'
  * Hooks.
  */
 export { default as useOnEvent } from './Hooks/UseOnEvent'
+export { default as useSort } from './Hooks/UseSort'

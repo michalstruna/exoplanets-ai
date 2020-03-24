@@ -72,7 +72,7 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
         }
 
         return renderedItems
-    }, [indexRange[0], indexRange[1]])
+    }, [indexRange[0], indexRange[1], itemRenderer])
 
     return (
         <Root {...props} style={{ height: totalHeight }} ref={root}>

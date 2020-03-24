@@ -54,6 +54,10 @@ module Validator {
         // TODO
     }
 
+    export const safe = <T>(value: T, predicate: Predicate<T>, defaultValue: T) => {
+        return is(value, predicate) ? value : defaultValue
+    }
+
 }
 
 export default Validator

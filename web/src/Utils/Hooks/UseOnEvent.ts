@@ -11,8 +11,6 @@ export default (handler: Handler, eventInstances: EventInstance[]) => {
 
 
     React.useEffect(() => {
-        console.log(444)
-
         for (const [element, event] of instances) {
             if (element) {
                 element.addEventListener(event, handler)
