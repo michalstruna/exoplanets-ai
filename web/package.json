@@ -21,7 +21,7 @@
   "license": "UNLICENSED",
   "homepage": "https://github.com/michal-struna/react-redux-template",
   "dependencies": {
-    "@reduxjs/toolkit": "^1.2.5",
+    "@reduxjs/toolkit": "^1.3.0",
     "axios": "^0.19.2",
     "email-validator": "^2.0.4",
     "formik": "^2.1.4",
@@ -47,7 +47,7 @@
     "@types/styled-components": "^4.4.3",
     "@types/webpack-dev-server": "^2.9.6",
     "ts-loader": "^5.2.1",
-    "typescript": "^3.1.1",
+    "typescript": "^3.8.3",
     "webpack": "^4.20.2",
     "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.1.2",

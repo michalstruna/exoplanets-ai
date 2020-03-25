@@ -1,8 +1,8 @@
 /**
  * Redux.
  */
-export { default as ContentReducer } from './Redux/Reducer'
-export * from './Redux/Actions'
+export { default as Reducer } from './Redux/Reducer'
+export * from './Redux/Reducer'
 export * from './Redux/Selectors'
 
 /**
@@ -15,7 +15,6 @@ export { default as String } from './Constants/String'
  * Utils.
  */
 export { default as Languages } from './Utils/Languages'
-export { default as Redux } from './Utils/Redux'
 
 /**
  * Types.

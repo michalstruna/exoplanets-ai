@@ -1,6 +1,15 @@
 import { useSelector } from 'react-redux'
+import { createSelector } from '@reduxjs/toolkit'
 
-// TODO: Importing of store state will cause circular dependency.
-export const useStrings = (): any => useSelector<any>(({ content }) => content.strings)
+import Languages from '../Utils/Languages'
 
-export const useLanguage = (): any => useSelector<any>(({ content }) => content.language)
+const selectStrings = state => state.content.strings
+const selectLanguage = state => state.content.language
+
+const selectLocalizedStrings = createSelector(
+    [selectStrings, selectLanguage],
+    (strings, language) => Languages.localize(strings, language)
+)
+
+export const useStrings = () => useSelector(selectLocalizedStrings)
+export const useLanguage = () => useSelector(selectLanguage)

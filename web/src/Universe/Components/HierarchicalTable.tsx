@@ -127,17 +127,18 @@ const compare = (a, b) => {
 const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, ...props }) => {
 
     const getSortedItems = () => {
+        const copyItems = JSON.parse(JSON.stringify(items)) // TODO: Deep clone.
+
         // TODO: Generalize. Now it's working only for two levels.
-        // TODO: Deep array copy?
         const accessor = levels[sortedLevel].columns[sortedColumn].accessor
 
         if (sortedLevel === 0) {
-            return [...items].sort((a, b) => compare(accessor(a), accessor(b)) * (isAsc ? 1 : -1))
+            return [...copyItems].sort((a, b) => compare(accessor(a), accessor(b)) * (isAsc ? 1 : -1))
         } else if (sortedLevel === 1) {
             const levelAccessor = levels[sortedLevel].accessor
             const defaultValue = isAsc ? Infinity : -Infinity
 
-            const result = [...items]
+            const result = [...copyItems]
 
             for (const item of result) {
                 levelAccessor(item).sort((a, b) => compare(accessor(a), accessor(b)) * (isAsc ? 1 : -1))
@@ -163,7 +164,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
 
         setSortedItems(getSortedItems())
 
-    }, [sortedLevel, sortedColumn, isAsc])
+    }, [sortedLevel, sortedColumn, isAsc, items])
 
     const renderedHeader = React.useMemo(() => {
         const renderHeader = (levelIndex: number) => (
