@@ -1,5 +1,6 @@
 import SpectralType from '../Constants/SpectralType'
 import { Redux } from '../../Utils'
+import { PayloadAction } from '@reduxjs/toolkit'
 
 
 function xmur3(str) {
@@ -80,21 +81,21 @@ for (const i in data) {
     }
 }
 
-const fetchBodies = async () => new Promise(resolve => {
+const fetchBodies = async (orderBy: string, isAsc: boolean, filter: any[], limit: number, offset: number) => new Promise(resolve => {
     setTimeout(() => {
         resolve(data)
     }, 2000)
 })
 
-const { reducer, actions } = Redux.reducer(
+const Reducer = Redux.reducer(
     'universe',
     {
         bodies: Redux.async()
     },
     {
-        getBodies: { bodies: () => fetchBodies() }
+        getBodies: ['bodies', fetchBodies]
     }
 )
 
-export default reducer
-export const { getBodies } = actions
+export default Reducer.reducer
+export const { getBodies } = Reducer.actions

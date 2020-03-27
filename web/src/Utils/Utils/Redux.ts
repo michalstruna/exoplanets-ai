@@ -1,9 +1,9 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 
 export const async = <T>(payload: T = null) => ({ pending: false, payload, error: null })
 
-type Case<State> = (state: State, action: any) => any
-type AsyncCase<State> = Record<keyof State, Case<State>>
+type Case<State> = (state: State, action: PayloadAction<any>) => any
+type AsyncCase<State> = [keyof State, any]
 
 export const reducer = <State extends Record<string, any>, Actions extends Record<string, Case<State> | AsyncCase<State>>>(name: string, initialState: State, actions: Actions) => {
 
@@ -12,9 +12,9 @@ export const reducer = <State extends Record<string, any>, Actions extends Recor
     const extraActions = {}
 
     for (const [key, value] of Object.entries(actions)) {
-        if (typeof value === 'object') {
-            const field = Object.keys(value)[0]
-            const action = createAsyncThunk(name + '/' + key, value[field])
+        if (Array.isArray(value)) {
+            const [field, func] = value
+            const action = createAsyncThunk(name + '/' + key, func as any)
 
             extraActions[key] = action
 
@@ -34,15 +34,16 @@ export const reducer = <State extends Record<string, any>, Actions extends Recor
             }
 
         } else {
-            reducers[key] = value
+            reducers[key] = (state, action) => {
+                value(state, action)
+            }
         }
     }
-
 
     const slice = createSlice({ name, initialState, reducers, extraReducers })
 
     return {
-        actions: { ...slice.actions, ...extraActions } as { [T in keyof Actions]: any },//  Record<keyof Actions, any>,
+        actions: { ...slice.actions, ...extraActions } as { [T in keyof Actions]: Actions[T] extends [string, infer Func] ? Func : Actions[T] extends (state: State, action: PayloadAction<infer P>) => any ? (payload: P) => any : never },
         reducer: slice.reducer
     }
 

@@ -199,7 +199,7 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
 
     return (
         <Async
-            data={[bodies, getBodies, []]}
+            data={[bodies, () => getBodies(null, null, null, null, null), []]}
             success={() => (
                 <Table
                     items={bodies.payload}
