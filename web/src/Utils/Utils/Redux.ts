@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 
 export const async = <T>(payload: T = null) => ({ pending: false, payload, error: null })
 
@@ -8,7 +8,7 @@ type Options<State, Payload> = {
     onError?: (state: State, action: Action<Payload>) => any
 }
 
-export type Action<Payload = void> = { payload: Payload }
+export type Action<Payload = void> = PayloadAction<Payload, string, Payload>
 type Case<State> = (state: State, action: Action<any>) => any
 
 type Reducer<State, Actions> = {

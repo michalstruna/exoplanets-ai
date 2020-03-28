@@ -35,7 +35,7 @@ const get = (val, i = 0) => Math.round(val * rand())
 
 const data = []
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 100; i++) {
     data.push({
         name: 'VY Canis Majoris',
         mass: get(128, i),
@@ -102,9 +102,12 @@ const compare = (a, b) => {
     }
 }
 
+const starColumns = ['type', 'name', 'diameter', 'mass', 'temperature', 'luminosity', 'distance', 'planets.length', '']
+const planetColumns = ['type', 'type', 'diameter', 'mass', 'surfaceTemperature', 'orbitalPeriod', 'semiMajorAxis', 'orbitalVelocity', '']
+
 const getSortedItems = (items, sort) => { // TODO: Refactor.
     const copyItems = JSON.parse(JSON.stringify(items)) // TODO: Deep clone.
-    const accessor = body => body[sort.column]
+    const accessor = body => body[sort.level === 0 ? starColumns[sort.column] : planetColumns[sort.column]]
 
     if (sort.level === 0) {
         return [...copyItems].sort((a, b) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1))
@@ -141,7 +144,7 @@ const Reducer = Redux.reducer(
                 resolve(getSortedItems(data, sort))
             }, 1000)
         }), {
-            //onPending: (state, action) => null
+            //onPending: (state, action) => console.log(action)
         }],
 
         setBodiesFilter: (state, action: Redux.Action<Filter>) => state.filter = action.payload,

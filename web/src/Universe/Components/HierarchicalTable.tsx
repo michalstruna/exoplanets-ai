@@ -11,7 +11,6 @@ interface Static {
 }
 
 interface Column<TItem, TValue> {
-    id?: string
     title: React.ReactNode
     accessor: (item: TItem) => TValue
     render?: (value: TValue, item: TItem) => React.ReactNode
@@ -124,7 +123,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
 
     React.useEffect(() => {
         if (onSort) {
-            onSort({ column: levels[sortedLevel].columns[sortedColumn].id || sortedColumn.toString(), isAsc, level: sortedLevel })
+            onSort({ column: sortedColumn, isAsc, level: sortedLevel })
         }
 
     }, [sortedLevel, sortedColumn, isAsc, items])

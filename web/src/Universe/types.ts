@@ -26,12 +26,12 @@ export interface Star {
     distance?: number
 }
 
-export type Filter<Column = string> = {
+export type Filter = {
 
 }
 
-export type Sort<Column = string> = {
-    column: Column
+export type Sort = {
+    column: number
     isAsc: boolean
     level: number
 }
