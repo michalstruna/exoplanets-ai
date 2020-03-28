@@ -1,6 +1,6 @@
 import SpectralType from '../Constants/SpectralType'
 import { Redux } from '../../Utils'
-import { Filter, IndexedFilter, IndexedSort, Sort } from '../types'
+import { Filter, Sort } from '../types'
 import { Query, Urls } from '../../Routing'
 
 
@@ -92,25 +92,61 @@ const fetchBodies = async (orderBy: string, isAsc: boolean, filter: any[], limit
     }, 2000)
 })
 
+const compare = (a, b) => {
+    if (a > b) {
+        return 1
+    } else if (a < b) {
+        return -1
+    } else {
+        return 0
+    }
+}
+
+const getSortedItems = (items, sort) => { // TODO: Refactor.
+    const copyItems = JSON.parse(JSON.stringify(items)) // TODO: Deep clone.
+    const accessor = body => body[sort.column]
+
+    if (sort.level === 0) {
+        return [...copyItems].sort((a, b) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1))
+    } else if (sort.level === 1) {
+        const levelAccessor = star => star.planets
+        const defaultValue = sort.isAsc ? Infinity : -Infinity
+
+        const result = [...copyItems]
+
+        for (const item of result) {
+            levelAccessor(item).sort((a, b) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1))
+        }
+
+        result.sort((a, b) => (
+            compare(levelAccessor(a)[0] ? accessor(levelAccessor(a)[0]) : defaultValue, levelAccessor(b)[0] ? accessor(levelAccessor(b)[0]) : defaultValue) * (sort.isAsc ? 1 : -1)
+        ))
+
+        return result
+    }
+
+    return items
+}
+
 const Reducer = Redux.reducer(
     'universe',
     {
         bodies: Redux.async<any /* TODO: Body[] */>(),
-        filter: null as IndexedFilter,
-        sort: { column: 0, isAsc: true, level: 0 } as IndexedSort
+        filter: null as Filter,
+        sort: { column: null, isAsc: true, level: 0 } as Sort
     },
     {
         getBodies: ['bodies', ({ sort, filter }: { sort: Sort, filter: Filter }) => new Promise(resolve => {
             setTimeout(() => {
-                resolve(data)
-            }, 2000)
+                resolve(getSortedItems(data, sort))
+            }, 1000)
         }), {
-            onPending: (state, action) => null
+            //onPending: (state, action) => null
         }],
 
-        setBodiesFilter: (state, action: Redux.Action<IndexedFilter>) => state.filter = action.payload,
+        setBodiesFilter: (state, action: Redux.Action<Filter>) => state.filter = action.payload,
 
-        setBodiesSort: (state, action: Redux.Action<IndexedSort>) => {
+        setBodiesSort: (state, action: Redux.Action<Sort>) => {
             state.sort = action.payload
 
             Urls.replace({

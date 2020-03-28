@@ -2,6 +2,7 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 
 import { Color, Mixin, ZIndex, VirtualizedList, Duration, useSort } from '../../Utils'
+import { Sort } from '../types'
 
 interface Static {
     Cell: string
@@ -10,6 +11,7 @@ interface Static {
 }
 
 interface Column<TItem, TValue> {
+    id?: string
     title: React.ReactNode
     accessor: (item: TItem) => TValue
     render?: (value: TValue, item: TItem) => React.ReactNode
@@ -23,7 +25,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
         columns: Column<any, string | number | boolean>[] // TODO: Remove any.
         accessor?: (item: any) => any[]
     }[]
-    onSort?: (sortedIndex: number, isAsc: boolean, sortedLevel: number) => void
+    onSort?: (sort: Sort) => void
     defaultSort?: { column: number, isAsc: boolean, level: number }
     renderBody?: (body: React.ReactNode) => React.ReactNode
 }
@@ -115,55 +117,15 @@ const Header = Styled(Row)`
      }
 `
 
-const compare = (a, b) => {
-    if (a > b) {
-        return 1
-    } else if (a < b) {
-        return -1
-    } else {
-        return 0
-    }
-}
-
+// TODO: Generic types. Current = level == 0 ? T1 : T2?
 const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, renderBody, ...props }) => {
 
-    const getSortedItems = () => {
-        const copyItems = JSON.parse(JSON.stringify(items)) // TODO: Deep clone.
-
-        // TODO: Generalize. Now it's working only for two levels.
-        const accessor = levels[sortedLevel].columns[sortedColumn].accessor
-
-        if (sortedLevel === 0) {
-            return [...copyItems].sort((a, b) => compare(accessor(a), accessor(b)) * (isAsc ? 1 : -1))
-        } else if (sortedLevel === 1) {
-            const levelAccessor = levels[sortedLevel].accessor
-            const defaultValue = isAsc ? Infinity : -Infinity
-
-            const result = [...copyItems]
-
-            for (const item of result) {
-                levelAccessor(item).sort((a, b) => compare(accessor(a), accessor(b)) * (isAsc ? 1 : -1))
-            }
-
-            result.sort((a, b) => (
-                compare(levelAccessor(a)[0] ? accessor(levelAccessor(a)[0]) : defaultValue, levelAccessor(b)[0] ? accessor(levelAccessor(b)[0]) : defaultValue) * (isAsc ? 1 : -1)
-            ))
-
-            return result
-        }
-
-        return items
-    }
-
     const { sort, sortedLevel, sortedColumn, isAsc } = useSort(defaultSort.column, defaultSort.isAsc, defaultSort.level)
-    const [sortedItems, setSortedItems] = React.useState(getSortedItems())
 
     React.useEffect(() => {
         if (onSort) {
-            onSort(sortedColumn, isAsc, sortedLevel)
+            onSort({ column: levels[sortedLevel].columns[sortedColumn].id || sortedColumn.toString(), isAsc, level: sortedLevel })
         }
-
-        setSortedItems(getSortedItems())
 
     }, [sortedLevel, sortedColumn, isAsc, items])
 
@@ -207,10 +169,10 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
             })
         }
 
-        process(sortedItems, 0)
+        process(items, 0)
 
         return rows
-    }, [sortedItems])
+    }, [items])
 
     const renderRow = ({ index, style }) => {
         const { item, level } = rows[index]

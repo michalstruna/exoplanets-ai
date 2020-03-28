@@ -43,7 +43,7 @@ const Root = Styled.div`
 `
 
 const Delete = Styled.button`
-    ${Mixin.Image('Universe/IndexedFilter/Delete.svg', '70%')}
+    ${Mixin.Image('Universe/Filter/Delete.svg', '70%')}
     ${Mixin.OpacityHover()}
     ${Mixin.Size('3rem !important')}
 `

@@ -26,22 +26,12 @@ export interface Star {
     distance?: number
 }
 
-export type IndexedFilter = {
+export type Filter<Column = string> = {
 
 }
 
-export type IndexedSort = {
-    column: number
+export type Sort<Column = string> = {
+    column: Column
     isAsc: boolean
     level: number
 }
-
-export type Filter = {
-
-}
-
-export type Sort = {
-
-}
-
-// TODO: Add Sort nad Filter.
