@@ -49,12 +49,12 @@ const Async: Type<any> = <T extends any>({ data: rawData, pending, success, fail
 
     const { isPending, error, hasPayloads } = getState()
 
-    if (isPending) {
-        return pending ? pending() : <Loader />
-    } else if (error) {
+    if (error) {
         return fail ? fail() : error.toString()
     } else if (hasPayloads) {
         return success ? success() : null
+    } else if (isPending) {
+        return pending ? pending() : <Loader />
     }
 
     return null

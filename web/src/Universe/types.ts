@@ -25,3 +25,23 @@ export interface Star {
     type?: StarType
     distance?: number
 }
+
+export type IndexedFilter = {
+
+}
+
+export type IndexedSort = {
+    column: number
+    isAsc: boolean
+    level: number
+}
+
+export type Filter = {
+
+}
+
+export type Sort = {
+
+}
+
+// TODO: Add Sort nad Filter.

@@ -25,6 +25,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
     }[]
     onSort?: (sortedIndex: number, isAsc: boolean, sortedLevel: number) => void
     defaultSort?: { column: number, isAsc: boolean, level: number }
+    renderBody?: (body: React.ReactNode) => React.ReactNode
 }
 
 const Root = Styled.div`
@@ -124,7 +125,7 @@ const compare = (a, b) => {
     }
 }
 
-const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, ...props }) => {
+const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, renderBody, ...props }) => {
 
     const getSortedItems = () => {
         const copyItems = JSON.parse(JSON.stringify(items)) // TODO: Deep clone.
@@ -225,15 +226,19 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
         )
     }
 
+    const bodyRenderer = renderBody ? renderBody : body => body
+
     // TODO: InfiniteLoader.
     return (
         <Root {...props}>
             {renderedHeader}
-            <VirtualizedList
-                itemsCount={rows.length}
-                itemRenderer={renderRow}
-                itemHeight={index => rows[index].level === 0 ? 96 : 72}
-                scrollable={document.querySelector('#scrollable-root')} />
+            {bodyRenderer(
+                <VirtualizedList
+                    itemsCount={rows.length}
+                    itemRenderer={renderRow}
+                    itemHeight={index => rows[index].level === 0 ? 96 : 72}
+                    scrollable={document.querySelector('#scrollable-root')} />
+            )}
         </Root>
     )
 

@@ -1,12 +1,14 @@
 import React from 'react'
 import Styled from 'styled-components'
+import { bindActionCreators } from 'redux'
+import { useDispatch } from 'react-redux'
 
 import { Dimensions, Mixin, Validator } from '../../Utils'
 import { Planet } from '../types'
 import HierarchicalTable from './HierarchicalTable'
 import MiniGraph from './MiniGraph'
 import { Query, Urls } from '../../Routing'
-import { useBodies, getBodies } from '..'
+import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort } from '..'
 import { Async } from '../../Async'
 
 interface Static {
@@ -186,26 +188,26 @@ const defaultSort = {
 const Database: React.FC<Props> & Static = ({ ...props }) => {
 
     const bodies = useBodies()
+    const filter = useBodiesFilter()
+    const sort = useBodiesSort()
+    const actions = bindActionCreators({ setBodiesSort }, useDispatch())
 
     const handleSort = (column: number, isAsc: boolean, level: number) => {
-        Urls.replace({
-            query: {
-                [Query.ORDER_COLUMN]: column,
-                [Query.ORDER_IS_ASC]: +isAsc,
-                [Query.ORDER_LEVEL]: level
-            }
-        })
+        if (column !== sort.column || isAsc !== sort.isAsc || level !== sort.level) {
+            actions.setBodiesSort({ column, isAsc, level })
+        }
     }
 
     return (
-        <Async
-            data={[bodies, () => getBodies(null, null, null, null, null), []]}
-            success={() => (
-                <Table
-                    items={bodies.payload}
-                    levels={levels}
-                    onSort={handleSort}
-                    defaultSort={defaultSort} />
+        <Table
+            items={bodies.payload || []}
+            levels={levels}
+            onSort={handleSort}
+            defaultSort={defaultSort}
+            renderBody={body => (
+                <Async
+                    data={[bodies, () => getBodies({ sort, filter }), [sort, filter]]}
+                    success={() => body} />
             )} />
     )
 
