@@ -35,3 +35,14 @@ export type Sort = {
     isAsc: boolean
     level: number
 }
+
+export type Position = {
+    offset: number
+    limit: number
+}
+
+export type Cursor = {
+    filter: Filter
+    sort: Sort
+    position: Position
+}

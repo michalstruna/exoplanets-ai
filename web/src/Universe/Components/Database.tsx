@@ -226,7 +226,8 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     const bodies = useBodies()
     const filter = useBodiesFilter()
     const sort = useBodiesSort()
-    const actions = bindActionCreators({ setBodiesSort }, useDispatch())
+    const actions = bindActionCreators({ getBodies, setBodiesSort }, useDispatch())
+    const position = { offset: bodies.payload ? bodies.payload.length : 0, limit: 20 }
 
     const handleSort = newSort => {
         if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level) {
@@ -242,7 +243,7 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
             defaultSort={defaultSort}
             renderBody={body => (
                 <Async
-                    data={[bodies, () => getBodies({ sort, filter }), [sort, filter]]}
+                    data={[bodies, () => getBodies({ sort, filter, position }), [sort, filter]]}
                     success={() => body} />
             )} />
     )

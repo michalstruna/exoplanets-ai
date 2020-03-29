@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
 
-import { Color, Mixin, ZIndex, VirtualizedList, Duration, useSort } from '../../Utils'
+import { Color, Mixin, ZIndex, VirtualizedList, Duration, useSort, useElement } from '../../Utils'
 import { Sort } from '../types'
 
 interface Static {
@@ -120,6 +120,7 @@ const Header = Styled(Row)`
 const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, renderBody, ...props }) => {
 
     const { sort, sortedLevel, sortedColumn, isAsc } = useSort(defaultSort.column, defaultSort.isAsc, defaultSort.level)
+    const { app } = useElement()
 
     React.useEffect(() => {
         if (onSort) {
@@ -198,7 +199,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
                     itemsCount={rows.length}
                     itemRenderer={renderRow}
                     itemHeight={index => rows[index].level === 0 ? 96 : 72}
-                    scrollable={document.querySelector('#scrollable-root')} />
+                    scrollable={app} />
             )}
         </Root>
     )

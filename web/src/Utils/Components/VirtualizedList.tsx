@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useOnEvent } from '../index'
+import { useEvent } from '../index'
 
 interface Static {
 
@@ -59,10 +59,9 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
 
     const [indexRange, setIndexRange] = React.useState(getIndexRange(0))
 
-    const events = React.useMemo<[Element | Window, string][]>(() => ([[scrollable, 'scroll'], [window, 'resize']]), [scrollable])
-
     const updateIndexRange = () => setIndexRange(getIndexRange(scrollable.scrollTop))
-    useOnEvent(updateIndexRange, events)
+    useEvent(scrollable, 'scroll', updateIndexRange)
+    useEvent(window, 'resize', updateIndexRange)
 
     React.useEffect(() => {
         if (scrollable) {
