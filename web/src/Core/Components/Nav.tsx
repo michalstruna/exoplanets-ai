@@ -18,6 +18,7 @@ const Root = Styled.nav`
     ${Mixin.Size('35rem', Dimensions.NAV_HEIGHT, true)}
     display: flex;
     justify-content: space-around;
+    user-select: none;
 `
 
 interface NavLinkProps {

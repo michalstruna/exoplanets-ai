@@ -179,7 +179,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
         const { item, level } = rows[index]
 
         return (
-            <Row key={index} style={style} isOdd={index % 2 === 1}>
+            <Row key={index} style={style} isOdd={index % 2 === 1} data-is-odd={index % 2 === 1}>
                 {levels[level].columns.map((column, j) => (
                     <Cell key={j} icon={column.icon} data-level={level}>
                         {column.render ? column.render(column.accessor(item), item) : column.accessor(item)}

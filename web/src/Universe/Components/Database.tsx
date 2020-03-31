@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 import { bindActionCreators } from 'redux'
 import { useDispatch } from 'react-redux'
 
-import { Dimensions, Mixin, Validator } from '../../Utils'
+import { Dimensions, Mixin, useDrag, useElement, Validator } from '../../Utils'
 import { Planet } from '../types'
 import HierarchicalTable from './HierarchicalTable'
 import MiniGraph from './MiniGraph'
@@ -20,7 +20,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = Styled.div`
-    height: calc(100% - ${Dimensions.NAV_HEIGHT});
+    user-select: none;
 `
 
 const colors = ['#A50', '#FFF', '#A00', '#CC0']
@@ -38,15 +38,34 @@ const PlanetImage = Styled(Image)`
 `
 
 const Table = Styled(HierarchicalTable)`
+    ${HierarchicalTable.Row} {
+        &[data-is-odd="true"] {
+            ${HierarchicalTable.Cell}:nth-of-type(2):not([data-header]) {
+                background-color: #2F2F2F;
+            }
+        }
+    
+        &[data-is-odd="false"] {
+            ${HierarchicalTable.Cell}:nth-of-type(2):not([data-header]) {
+                background-color: #383838;
+            }
+        }
+    }
+
     ${HierarchicalTable.Cell} {
         height: 6rem;
         
         &:first-of-type {
             padding-right: 0;
+            position: relative;
             text-align: right;
+            z-index: 1;
         }
     
         &:nth-of-type(2) {
+            border-right: 2px solid black;
+            left: 0;
+            position: sticky;
             width: 16.5rem;
         }
         
@@ -78,7 +97,8 @@ const Table = Styled(HierarchicalTable)`
             }
             
             &:nth-of-type(2) {
-                width: 14.5rem;
+                margin-left: -2rem;
+                padding-left: 3rem;
             }
         }
         
@@ -88,10 +108,6 @@ const Table = Styled(HierarchicalTable)`
             padding-bottom: 0;
         
             &[data-level="0"] {                            
-                &:nth-of-type(2) {
-                    width: 16.5rem;
-                }
-            
                 ${Image} {
                     ${Mixin.Size('2.5rem')}
                 }
@@ -99,10 +115,6 @@ const Table = Styled(HierarchicalTable)`
             
             &[data-level="1"] {
                 height: 2rem;
-            
-                &:nth-of-type(2) {
-                    width: 14.5rem;
-                }
             
                 ${Image} {
                     ${Mixin.Size('1.5rem')}
@@ -227,6 +239,12 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     const sort = useBodiesSort()
     const actions = bindActionCreators({ getBodies, setBodiesSort }, useDispatch())
     const position = { offset: bodies.payload ? bodies.payload.length : 0, limit: 20 }
+    const { app } = useElement()
+
+    const dragHandlers = useDrag(({ delta, data }) => {
+        app.scrollLeft = data.x - delta.x
+        app.scrollTop = data.y - delta.y
+    }, () => ({ x: app.scrollLeft, y: app.scrollTop }))
 
     const handleSort = newSort => {
         if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level) {
@@ -235,7 +253,7 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     }
 
     return (
-        <Root {...props}>
+        <Root {...props} {...dragHandlers}>
             <Table
                 items={bodies.payload || []}
                 levels={levels}

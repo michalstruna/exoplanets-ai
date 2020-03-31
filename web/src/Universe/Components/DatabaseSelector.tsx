@@ -22,7 +22,7 @@ const DatabaseSelector: React.FC<Props> & Static = ({ ...props }) => {
 
     return (
         <Root {...props} ref={root}>
-            Database selector
+            SELECT [STARS_AND_PLANETS] WHERE [STAR.DIAMETER > 1000] ORDER BY [STAR.PLANETS] LIMIT [50] OFFSET [20]
         </Root>
     )
 
