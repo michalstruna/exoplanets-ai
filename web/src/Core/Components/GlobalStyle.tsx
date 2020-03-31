@@ -79,11 +79,12 @@ const GlobalStyle = createGlobalStyle`
     }
     
     #app {
-        background-color: ${Color.MEDIUM_DARK};
+         background-color: ${Color.MEDIUM_DARK};
          height: calc(100vh - ${Dimensions.NAV_HEIGHT});
          overflow-x: auto;
          overflow-y: auto;
          position: relative;
+         width: 100%;
     }
 `
 export default GlobalStyle

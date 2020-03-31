@@ -21,7 +21,6 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 const Root = Styled.div`
     height: calc(100% - ${Dimensions.NAV_HEIGHT});
-    width: 100%;
 `
 
 const colors = ['#A50', '#FFF', '#A00', '#CC0']
@@ -236,16 +235,18 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     }
 
     return (
-        <Table
-            items={bodies.payload || []}
-            levels={levels}
-            onSort={handleSort}
-            defaultSort={defaultSort}
-            renderBody={body => (
-                <Async
-                    data={[bodies, () => getBodies({ sort, filter, position }), [sort, filter]]}
-                    success={() => body} />
-            )} />
+        <Root {...props}>
+            <Table
+                items={bodies.payload || []}
+                levels={levels}
+                onSort={handleSort}
+                defaultSort={defaultSort}
+                renderBody={body => (
+                    <Async
+                        data={[bodies, () => getBodies({ sort, filter, position }), [sort, filter]]}
+                        success={() => body} />
+                )} />
+        </Root>
     )
 
 }

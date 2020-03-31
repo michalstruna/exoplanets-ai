@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
 
-import { Color, Mixin, ZIndex, VirtualizedList, Duration, useSort, useElement } from '../../Utils'
+import { Color, Mixin, VirtualizedList, Duration, useSort, useElement, ZIndex } from '../../Utils'
 import { Sort } from '../types'
 
 interface Static {
@@ -27,6 +27,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
     onSort?: (sort: Sort) => void
     defaultSort?: { column: number, isAsc: boolean, level: number }
     renderBody?: (body: React.ReactNode) => React.ReactNode
+    renderHeader?: (header: React.ReactNode) => React.ReactNode
 }
 
 const Root = Styled.div`
@@ -117,7 +118,7 @@ const Header = Styled(Row)`
 `
 
 // TODO: Generic types. Current = level == 0 ? T1 : T2?
-const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, renderBody, ...props }) => {
+const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, renderBody, renderHeader, ...props }) => {
 
     const { sort, sortedLevel, sortedColumn, isAsc } = useSort(defaultSort.column, defaultSort.isAsc, defaultSort.level)
     const { app } = useElement()
@@ -188,12 +189,13 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
         )
     }
 
+    const headerRenderer = renderHeader ? renderHeader : header => header
     const bodyRenderer = renderBody ? renderBody : body => body
 
     // TODO: InfiniteLoader.
     return (
         <Root {...props}>
-            {renderedHeader}
+            {headerRenderer(renderedHeader)}
             {bodyRenderer(
                 <VirtualizedList
                     itemsCount={rows.length}
@@ -209,5 +211,9 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
 HierarchicalTable.Cell = Cell
 HierarchicalTable.Header = Header
 HierarchicalTable.Row = Row
+
+HierarchicalTable.defaultProps = {
+    defaultSort: { column: 0, isAsc: true, level: 0 }
+}
 
 export default HierarchicalTable

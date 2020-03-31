@@ -1,4 +1,4 @@
-const app = document.querySelector('#app')
-const nav = document.querySelector('#nav')
+const app: HTMLElement = document.querySelector('#app')
+const nav: HTMLElement = document.querySelector('#nav')
 
 export default () => ({ app, nav })

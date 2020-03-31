@@ -6,6 +6,7 @@ import QueryString from 'query-string'
 import Filter from '../Components/Filter'
 import { Query, Urls } from '../../Routing'
 import Database from '../Components/Database'
+import DatabaseSelector from '../Components/DatabaseSelector'
 
 interface Static {
 
@@ -34,14 +35,18 @@ const DatabaseView: React.FC<Props> & Static = ({ ...props }) => {
         Urls.replace({ query: filter })
     }
 
+    /**
+     <Filter
+     attributes={['starName', 'starMass']}
+     keys={{ attribute: Query.FILTER_ATTRIBUTE, relation: Query.FILTER_RELATION, value: Query.FILTER_VALUE }}
+     onChange={handleFilter}
+     initialValues={initialFilter}
+     />
+     */
+
     return (
         <Root {...props}>
-            <Filter
-                attributes={['starName', 'starMass']}
-                keys={{ attribute: Query.FILTER_ATTRIBUTE, relation: Query.FILTER_RELATION, value: Query.FILTER_VALUE }}
-                onChange={handleFilter}
-                initialValues={initialFilter}
-            />
+            <DatabaseSelector />
             <Database />
         </Root>
     )
