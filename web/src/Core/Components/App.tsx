@@ -33,7 +33,7 @@ const App: React.FC<Props> & Static = ({ children, ...props }) => {
 
                         </>
                     )} />
-            ), nav)}
+            ), nav.current)}
             {children}
         </>
     )
