@@ -35,15 +35,6 @@ const DatabaseView: React.FC<Props> & Static = ({ ...props }) => {
         Urls.replace({ query: filter })
     }
 
-    /**
-     <Filter
-     attributes={['starName', 'starMass']}
-     keys={{ attribute: Query.FILTER_ATTRIBUTE, relation: Query.FILTER_RELATION, value: Query.FILTER_VALUE }}
-     onChange={handleFilter}
-     initialValues={initialFilter}
-     />
-     */
-
     return (
         <Root {...props}>
             <DatabaseSelector />

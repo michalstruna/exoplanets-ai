@@ -1,5 +1,5 @@
 import SpectralType from '../Constants/SpectralType'
-import { Redux } from '../../Utils'
+import { Redux, Validator } from '../../Utils'
 import { Filter, Sort, Position, Cursor } from '../types'
 import { Query, Urls } from '../../Routing'
 
@@ -102,15 +102,17 @@ const compare = (a, b) => {
     }
 }
 
-const starColumns = ['type', 'name', 'diameter', 'mass', 'temperature', 'luminosity', 'distance', 'planets.length', '']
-const planetColumns = ['type', 'type', 'diameter', 'mass', 'surfaceTemperature', 'orbitalPeriod', 'semiMajorAxis', 'orbitalVelocity', '']
+const starColumns = ['', 'type', 'name', 'diameter', 'mass', 'temperature', 'luminosity', 'distance', 'planets.length', '']
+const planetColumns = ['', 'type', 'type', 'diameter', 'mass', 'surfaceTemperature', 'orbitalPeriod', 'semiMajorAxis', 'orbitalVelocity', '']
 
 const getSortedItems = (items, sort) => { // TODO: Refactor.
     const copyItems = JSON.parse(JSON.stringify(items)) // TODO: Deep clone.
     const accessor = body => body[sort.level === 0 ? starColumns[sort.column] : planetColumns[sort.column]]
 
     if (sort.level === 0) {
-        return [...copyItems].sort((a, b) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1))
+        const result = [...copyItems].sort((a, b) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1))
+        addIndex(result)
+        return result
     } else if (sort.level === 1) {
         const levelAccessor = star => star.planets
         const defaultValue = sort.isAsc ? Infinity : -Infinity
@@ -125,18 +127,41 @@ const getSortedItems = (items, sort) => { // TODO: Refactor.
             compare(levelAccessor(a)[0] ? accessor(levelAccessor(a)[0]) : defaultValue, levelAccessor(b)[0] ? accessor(levelAccessor(b)[0]) : defaultValue) * (sort.isAsc ? 1 : -1)
         ))
 
+        addIndex(result.reduce((total, current) => total.concat(current.planets), []).sort((a, b) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1)))
+
         return result
     }
+
 
     return items
 }
 
+const addIndex = items => {
+    for (const i in items) {
+        items[i].index = parseInt(i)
+    }
+}
+
+const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
+
+const queryUtils = new URLSearchParams(window.location.search)
+
+const defaultLevel = Validator.safe(parseInt(queryUtils.get(Query.ORDER_LEVEL)), v => Number.isInteger(v) && v >= 0 && v < levels.length, 0)
+
+const defaultSort = {
+    column: Validator.safe(parseInt(queryUtils.get(Query.ORDER_COLUMN)), v => Number.isInteger(v) && v > 0 && v < levels[defaultLevel].columns.length, 1),
+    isAsc: Validator.safe(parseInt(queryUtils.get(Query.ORDER_IS_ASC)), v => v === 1 || v === 0, 1) === 1,
+    level: defaultLevel
+}
+
+
+// TODO: Add "connect with url query"? sort: { isAsc: Redux.connectWithQuery(queryName, Validator) }
 const Reducer = Redux.reducer(
     'universe',
     {
         bodies: Redux.async<any /* TODO: Body[] */>(),
         filter: null as Filter,
-        sort: { column: null, isAsc: true, level: 0 } as Sort,
+        sort: defaultSort as Sort,
         position: { offset: 0, limit: 20 } as Position
     },
     {
@@ -165,6 +190,7 @@ const Reducer = Redux.reducer(
 
         setBodiesSort: (state, action: Redux.Action<Sort>) => {
             state.sort = action.payload
+            state.position.offset = 0
 
             Urls.replace({
                 query: {
