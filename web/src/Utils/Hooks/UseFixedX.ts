@@ -1,11 +1,11 @@
 import { useElement, useEvent } from '../index'
 
-export default (element: HTMLElement) => {
+export default (element: React.RefObject<HTMLElement>) => {
     const { app } = useElement()
 
     useEvent(app, 'scroll', () => {
-        if (element) {
-            element.style.transform = `translateX(${app.scrollLeft}px)`
+        if (element.current) {
+            element.current.style.transform = `translateX(${app.scrollLeft}px)`
         }
     })
 }

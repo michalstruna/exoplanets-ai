@@ -22,19 +22,6 @@ const Root = Styled.div`
 
 const DatabaseView: React.FC<Props> & Static = ({ ...props }) => {
 
-    const { location } = useRouter()
-
-    const initialFilter = React.useMemo(() => (
-        QueryString.parse(location.search, { parseNumbers: true })
-    ), [])
-
-    const [filter, setFilter] = React.useState(initialFilter)
-
-    const handleFilter = filter => {
-        setFilter(filter)
-        Urls.replace({ query: filter })
-    }
-
     return (
         <Root {...props}>
             <DatabaseSelector />

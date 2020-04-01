@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 import { bindActionCreators } from 'redux'
 import { useDispatch } from 'react-redux'
 
-import { Mixin, useDrag, useElement } from '../../Utils'
+import { Mixin, useDrag, useElement, ZIndex } from '../../Utils'
 import { Planet } from '../types'
 import HierarchicalTable from './HierarchicalTable'
 import MiniGraph from './MiniGraph'
@@ -64,7 +64,7 @@ const Table = Styled(HierarchicalTable)`
             padding-right: 0;
             position: relative;
             text-align: right;
-            z-index: 1;
+            z-index: ${ZIndex.TABLE_BODY_ICON};
         }
     
         &:nth-of-type(3) {
@@ -72,6 +72,7 @@ const Table = Styled(HierarchicalTable)`
             left: 0;
             position: sticky;
             width: 16.5rem;
+            z-index: ${ZIndex.TABLE_BODY_NAME};
         }
         
         &:nth-of-type(7) {

@@ -18,8 +18,8 @@ const Root = Styled.div`
 
 const DatabaseSelector: React.FC<Props> & Static = ({ ...props }) => {
 
-    const root = React.useRef<HTMLDivElement>()
-    useFixedX(root.current)
+    const root = React.useRef()
+    useFixedX(root)
 
     const handleFilter = () => {
 
