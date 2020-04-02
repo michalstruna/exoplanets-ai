@@ -2,7 +2,7 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 
 import { Color, Mixin, VirtualizedList, Duration, useSort, useElement, ZIndex } from '../../Utils'
-import { Sort } from '../types'
+import { Sort } from '../index'
 
 interface Static {
     Cell: string

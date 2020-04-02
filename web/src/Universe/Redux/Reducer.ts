@@ -1,6 +1,6 @@
 import SpectralType from '../Constants/SpectralType'
 import { Redux, Validator } from '../../Utils'
-import { Filter, Sort, Segment, Cursor } from '../types'
+import { Filter, Sort, Segment, Cursor } from '../../Data'
 import { Query, Urls } from '../../Routing'
 
 
@@ -85,12 +85,6 @@ for (const i in data) {
 
     }
 }
-
-const fetchBodies = async (orderBy: string, isAsc: boolean, filter: any[], limit: number, offset: number) => new Promise(resolve => {
-    setTimeout(() => {
-        resolve(data)
-    }, 2000)
-})
 
 const compare = (a, b) => {
     if (a > b) {

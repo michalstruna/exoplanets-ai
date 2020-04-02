@@ -1,9 +1,9 @@
 import React from 'react'
 import Styled from 'styled-components'
+import { Field, FieldArray, Formik } from 'formik'
 
 import { Arrays, Duration, Mixin, Validator } from '../../Utils'
 import { useStrings } from '../../Content'
-import { Field, FieldArray, Formik } from 'formik'
 
 type BrokenObjectFilter = any
 
@@ -75,7 +75,7 @@ const Row = Styled.div<RowProps>`
 `
 
 
-const Filter: React.FC<Props> & Static = ({ defaultRelation, attributes, initialValues, onChange, keys, ...props }) => {
+const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, initialValues, onChange, keys, ...props }) => {
 
     const strings = useStrings().filter
 
@@ -229,9 +229,9 @@ const Filter: React.FC<Props> & Static = ({ defaultRelation, attributes, initial
 
 }
 
-Filter.defaultProps = {
+FilterForm.defaultProps = {
     defaultRelation: Validator.Relation.CONTAINS,
     keys: { attribute: 'attribute', relation: 'relation', value: 'value' }
 }
 
-export default Filter
+export default FilterForm

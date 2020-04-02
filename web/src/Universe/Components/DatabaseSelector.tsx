@@ -1,8 +1,8 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Paginator, useActions, useFixedX } from '../../Utils'
-import Filter from './Filter'
+import { useActions, useFixedX } from '../../Utils'
+import { Paginator, FilterForm } from '../../Data'
 import { setBodiesSegment, setBodiesFilter } from'../Redux/Reducer'
 import { useBodies, useBodiesSegment } from '..'
 
@@ -45,7 +45,7 @@ const DatabaseSelector: React.FC<Props> & Static = ({ ...props }) => {
                     <option>Planety</option>
                 </select>
             </div>
-            <Filter
+            <FilterForm
                 attributes={['starName', 'starMass']}
                 onChange={actions.setBodiesFilter}
             />

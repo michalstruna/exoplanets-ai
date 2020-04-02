@@ -2,11 +2,10 @@ import React from 'react'
 import Styled from 'styled-components'
 import Paginate from 'react-paginate'
 
-import Color from '../Constants/Color'
-import Mixin from '../Constants/Mixin'
-import Duration from '../Constants/Duration'
-import { Segment } from '../../Universe/types'
-import { Async } from '../../Async' // TODO: Move to utils or create another module?
+import Color from '../../Utils/Constants/Color'
+import Mixin from '../../Utils/Constants/Mixin'
+import Duration from '../../Utils/Constants/Duration'
+import { Segment } from '../index'
 
 interface Static {
 
@@ -112,6 +111,9 @@ const Paginator: React.FC<Props> & Static = ({ onChange, page, itemsCount, freez
             onChange({ index, size: page.size })
         }
     }
+
+    // TODO: Localize strings.
+    // TODO: Use icons instead of < and >.
 
     return (
         <Root {...props}>

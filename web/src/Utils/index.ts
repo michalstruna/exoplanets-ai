@@ -19,7 +19,6 @@ export * as Redux from './Utils/Redux'
  * Components.
  */
 export { default as VirtualizedList } from './Components/VirtualizedList'
-export { default as Paginator } from './Components/Paginator'
 
 /**
  * Hooks.

@@ -3,8 +3,7 @@ import Styled from 'styled-components'
 
 import { Mixin, useActions, useDrag, useElement, ZIndex } from '../../Utils'
 import { Planet } from '../types'
-import HierarchicalTable from './HierarchicalTable'
-import MiniGraph from './MiniGraph'
+import { HierarchicalTable, MiniGraph } from '../../Data'
 import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort, useBodiesSegment } from '..'
 import { Async } from '../../Async'
 
