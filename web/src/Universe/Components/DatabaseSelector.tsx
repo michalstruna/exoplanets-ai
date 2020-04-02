@@ -1,9 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { bindActionCreators } from 'redux'
-import { useDispatch } from 'react-redux'
 
-import { Paginator, useFixedX } from '../../Utils'
+import { Paginator, useActions, useFixedX } from '../../Utils'
 import Filter from './Filter'
 import { setBodiesSegment, setBodiesFilter } from'../Redux/Reducer'
 import { useBodies, useBodiesSegment } from '..'
@@ -30,7 +28,7 @@ const Root = Styled.div`
 
 const DatabaseSelector: React.FC<Props> & Static = ({ ...props }) => {
 
-    const actions = bindActionCreators({ setBodiesSegment, setBodiesFilter }, useDispatch())
+    const actions = useActions({ setBodiesSegment, setBodiesFilter })
 
     const root = React.useRef()
     useFixedX(root)
@@ -41,7 +39,11 @@ const DatabaseSelector: React.FC<Props> & Static = ({ ...props }) => {
     return (
         <Root {...props} ref={root}>
             <div>
-                SELECT [STARS_AND_PLANETS] WHERE [STAR.DIAMETER > 1000] ORDER BY [STAR.PLANETS] LIMIT [50] OFFSET [20]
+                <select>
+                    <option>Hvězdy a planety</option>
+                    <option>Hvězdy</option>
+                    <option>Planety</option>
+                </select>
             </div>
             <Filter
                 attributes={['starName', 'starMass']}

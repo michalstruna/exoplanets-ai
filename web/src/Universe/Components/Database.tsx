@@ -1,9 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { bindActionCreators } from 'redux'
-import { useDispatch } from 'react-redux'
 
-import { Mixin, useDrag, useElement, ZIndex } from '../../Utils'
+import { Mixin, useActions, useDrag, useElement, ZIndex } from '../../Utils'
 import { Planet } from '../types'
 import HierarchicalTable from './HierarchicalTable'
 import MiniGraph from './MiniGraph'
@@ -240,9 +238,8 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     const bodies = useBodies()
     const filter = useBodiesFilter()
     const sort = useBodiesSort()
-    //const actions = useActions({ getBodies, setBodiesSort })
+    const actions = useActions({ getBodies, setBodiesSort })
 
-    const actions = bindActionCreators({ setBodiesSort }, useDispatch())
     const segment = useBodiesSegment()
     const { app } = useElement()
 
