@@ -36,13 +36,13 @@ export type Sort = {
     level: number
 }
 
-export type Position = {
-    offset: number
-    limit: number
+export type Segment = {
+    index: number
+    size: number
 }
 
 export type Cursor = {
     filter: Filter
     sort: Sort
-    position: Position
+    segment: Segment
 }

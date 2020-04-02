@@ -7,7 +7,7 @@ import { Mixin, useDrag, useElement, ZIndex } from '../../Utils'
 import { Planet } from '../types'
 import HierarchicalTable from './HierarchicalTable'
 import MiniGraph from './MiniGraph'
-import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort, useBodiesPosition } from '..'
+import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort, useBodiesSegment } from '..'
 import { Async } from '../../Async'
 
 interface Static {
@@ -240,8 +240,10 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     const bodies = useBodies()
     const filter = useBodiesFilter()
     const sort = useBodiesSort()
-    const actions = bindActionCreators({ getBodies, setBodiesSort }, useDispatch())
-    const position = useBodiesPosition()
+    //const actions = useActions({ getBodies, setBodiesSort })
+
+    const actions = bindActionCreators({ setBodiesSort }, useDispatch())
+    const segment = useBodiesSegment()
     const { app } = useElement()
 
     const dragHandlers = useDrag(({ delta, data }) => {
@@ -258,13 +260,13 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     return (
         <Root {...props} {...dragHandlers}>
             <Table
-                items={bodies.payload || []}
+                items={bodies.payload ? bodies.payload.list : []}
                 levels={levels}
                 onSort={handleSort}
                 defaultSort={sort}
                 renderBody={body => (
                     <Async
-                        data={[bodies, () => getBodies({ sort, filter, position }), [sort, filter]]}
+                        data={[bodies, () => getBodies({ sort, filter, segment }), [sort, filter, segment]]}
                         success={() => body} />
                 )} />
         </Root>

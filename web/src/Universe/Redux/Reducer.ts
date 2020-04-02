@@ -1,6 +1,6 @@
 import SpectralType from '../Constants/SpectralType'
 import { Redux, Validator } from '../../Utils'
-import { Filter, Sort, Position, Cursor } from '../types'
+import { Filter, Sort, Segment, Cursor } from '../types'
 import { Query, Urls } from '../../Routing'
 
 
@@ -35,7 +35,7 @@ const get = (val, i = 0) => Math.round(val * rand())
 
 const data = []
 
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 256; i++) {
     data.push({
         name: 'VY Canis Majoris',
         mass: get(128, i),
@@ -148,10 +148,15 @@ const queryUtils = new URLSearchParams(window.location.search)
 
 const defaultLevel = Validator.safe(parseInt(queryUtils.get(Query.ORDER_LEVEL)), v => Number.isInteger(v) && v >= 0 && v < levels.length, 0)
 
-const defaultSort = {
+const defaultSort: Sort = {
     column: Validator.safe(parseInt(queryUtils.get(Query.ORDER_COLUMN)), v => Number.isInteger(v) && v > 0 && v < levels[defaultLevel].columns.length, 1),
     isAsc: Validator.safe(parseInt(queryUtils.get(Query.ORDER_IS_ASC)), v => v === 1 || v === 0, 1) === 1,
     level: defaultLevel
+}
+
+const defaultSegment: Segment = {
+    index: Validator.safe(parseInt(queryUtils.get(Query.SEGMENT_START)), v => Number.isInteger(v) && v >= 0, 1),
+    size: Validator.safe(parseInt(queryUtils.get(Query.SEGMENT_END)), v => Number.isInteger(v) && v > 0 && v <= 100, 20)
 }
 
 
@@ -161,28 +166,18 @@ const Reducer = Redux.reducer(
     {
         bodies: Redux.async<any /* TODO: Body[] */>(),
         filter: null as Filter,
-        sort: defaultSort as Sort,
-        position: { offset: 0, limit: 20 } as Position
+        sort: defaultSort,
+        segment: defaultSegment
     },
     {
-        getBodies: ['bodies', ({ sort, filter, position }: Cursor) => new Promise(resolve => {
+        getBodies: ['bodies', ({ sort, filter, segment }: Cursor) => new Promise(resolve => {
             setTimeout(() => {
-                resolve(getSortedItems(data, sort).slice(position.offset, position.offset + position.limit))
+                resolve({
+                    list: getSortedItems(data, sort).slice(segment.index * segment.size, (segment.index + 1) * segment.size),
+                    count: data.length
+                })
             }, 1000)
-        }), {
-            onPending: (state, action) => {
-                if (action.meta.arg.position.offset === 0) {
-                    state.bodies.payload = null
-                }
-            },
-            onSuccess: (state, action) => {
-                if (action.meta.arg.position.offset === 0) {
-                    state.bodies.payload = action.payload
-                } else {
-                    state.bodies.payload.push(...action.payload)
-                }
-            }
-        }],
+        })],
 
         setBodiesFilter: (state, action: Redux.Action<Filter>) => {
 
@@ -190,7 +185,6 @@ const Reducer = Redux.reducer(
 
         setBodiesSort: (state, action: Redux.Action<Sort>) => {
             state.sort = action.payload
-            state.position.offset = 0
 
             Urls.replace({
                 query: {
@@ -199,9 +193,21 @@ const Reducer = Redux.reducer(
                     [Query.ORDER_LEVEL]: action.payload.level
                 }
             })
+        },
+
+        setBodiesSegment: (state, action: Redux.Action<Segment>) => {
+            state.segment = action.payload
+
+            Urls.replace({
+                query: {
+                    [Query.SEGMENT_START]: action.payload.index,
+                    [Query.SEGMENT_END]: action.payload.size
+                }
+            })
         }
+
     }
 )
 
 export default Reducer.reducer
-export const { getBodies, setBodiesFilter, setBodiesSort } = Reducer.actions
+export const { getBodies, setBodiesFilter, setBodiesSort, setBodiesSegment } = Reducer.actions

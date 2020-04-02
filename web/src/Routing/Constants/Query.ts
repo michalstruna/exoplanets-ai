@@ -5,7 +5,10 @@ enum Query {
 
     ORDER_COLUMN = 'oc',
     ORDER_IS_ASC = 'oa',
-    ORDER_LEVEL = 'ov'
+    ORDER_LEVEL = 'ov',
+
+    SEGMENT_START = 'ss',
+    SEGMENT_END = 'se'
 }
 
 export default Query
