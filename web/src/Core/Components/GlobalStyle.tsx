@@ -1,7 +1,7 @@
 import React from 'react'
 import { createGlobalStyle } from 'styled-components'
 
-import { Color, Mixin } from '../../Utils'
+import { Color, Dimensions, Mixin } from '../../Utils'
 
 const GlobalStyle = createGlobalStyle`
      ${Mixin.FontFace('Montserrat', 'Montserrat.woff2')}
@@ -76,6 +76,15 @@ const GlobalStyle = createGlobalStyle`
         &:hover {
             background-color: #888;
         }
+    }
+    
+    #app {
+         background-color: ${Color.MEDIUM_DARK};
+         height: calc(100vh - ${Dimensions.NAV_HEIGHT});
+         overflow-x: auto;
+         overflow-y: auto;
+         position: relative;
+         width: 100%;
     }
 `
 export default GlobalStyle

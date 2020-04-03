@@ -1,9 +1,8 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
 import { useLanguage, useStrings, setLanguage, Language } from '../../Content'
 import { Link, Url } from '../../Routing'
+import { useActions } from '../../Utils'
 
 interface Static {
 
@@ -17,7 +16,7 @@ const HomeView: React.FC<Props> & Static = () => {
 
     const strings = useStrings().home
     const language = useLanguage()
-    const actions = bindActionCreators({ setLanguage }, useDispatch())
+    const actions = useActions({ setLanguage })
 
     return (
         <>

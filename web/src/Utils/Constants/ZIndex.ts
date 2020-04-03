@@ -1,5 +1,7 @@
 enum ZIndex {
-    TABLE_HEADER = 2
+    TABLE_BODY_NAME = 1,
+    TABLE_BODY_ICON,
+    TABLE_HEADER,
 }
 
 export default ZIndex

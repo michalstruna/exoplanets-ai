@@ -1,9 +1,9 @@
 import React from 'react'
-import Styled from 'styled-components'
+import ReactDOM from 'react-dom'
 
 import GlobalStyle from './GlobalStyle'
 import Nav from './Nav'
-import { Color, Dimensions, Mixin } from '../../Utils'
+import { useElement } from '../../Utils'
 import Header from './Header'
 
 interface Static {
@@ -14,38 +14,28 @@ interface Props {
 
 }
 
-const Root = Styled.div`
-    ${Mixin.Size('100%', '100vh')}
-`
-
-const Content = Styled.div`
-    background-color: ${Color.MEDIUM_DARK};
-    height: calc(100% - ${Dimensions.NAV_HEIGHT});
-    overflow-x: auto;
-    overflow-y: auto;
-    position: relative;
-`
-
 const App: React.FC<Props> & Static = ({ children, ...props }) => {
 
-    return (
-        <Root {...props}>
-            <GlobalStyle />
-            <Header
-                left={(
-                    <>
-                        <Nav />
-                    </>
-                )}
-                right={(
-                    <>
+    const { nav } = useElement()
 
-                    </>
-                )} />
-            <Content id='scrollable-root'>
-                {children}
-            </Content>
-        </Root>
+    return (
+        <>
+            <GlobalStyle />
+            {ReactDOM.createPortal((
+                <Header
+                    left={(
+                        <>
+                            <Nav />
+                        </>
+                    )}
+                    right={(
+                        <>
+
+                        </>
+                    )} />
+            ), nav.current)}
+            {children}
+        </>
     )
 }
 

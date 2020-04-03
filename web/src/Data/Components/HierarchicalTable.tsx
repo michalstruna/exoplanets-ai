@@ -1,8 +1,8 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
 
-import { Color, Mixin, ZIndex, VirtualizedList, Duration, useSort } from '../../Utils'
-import { Sort } from '../types'
+import { Color, Mixin, VirtualizedList, Duration, useSort, useElement, ZIndex } from '../../Utils'
+import { Sort } from '../index'
 
 interface Static {
     Cell: string
@@ -27,6 +27,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
     onSort?: (sort: Sort) => void
     defaultSort?: { column: number, isAsc: boolean, level: number }
     renderBody?: (body: React.ReactNode) => React.ReactNode
+    renderHeader?: (header: React.ReactNode) => React.ReactNode
 }
 
 const Root = Styled.div`
@@ -117,9 +118,10 @@ const Header = Styled(Row)`
 `
 
 // TODO: Generic types. Current = level == 0 ? T1 : T2?
-const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, renderBody, ...props }) => {
+const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, renderBody, renderHeader, ...props }) => {
 
     const { sort, sortedLevel, sortedColumn, isAsc } = useSort(defaultSort.column, defaultSort.isAsc, defaultSort.level)
+    const { app } = useElement()
 
     React.useEffect(() => {
         if (onSort) {
@@ -177,7 +179,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
         const { item, level } = rows[index]
 
         return (
-            <Row key={index} style={style} isOdd={index % 2 === 1}>
+            <Row key={index} style={style} isOdd={index % 2 === 1} data-is-odd={index % 2 === 1}>
                 {levels[level].columns.map((column, j) => (
                     <Cell key={j} icon={column.icon} data-level={level}>
                         {column.render ? column.render(column.accessor(item), item) : column.accessor(item)}
@@ -187,18 +189,19 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
         )
     }
 
+    const headerRenderer = renderHeader ? renderHeader : header => header
     const bodyRenderer = renderBody ? renderBody : body => body
 
     // TODO: InfiniteLoader.
     return (
         <Root {...props}>
-            {renderedHeader}
+            {headerRenderer(renderedHeader)}
             {bodyRenderer(
                 <VirtualizedList
                     itemsCount={rows.length}
                     itemRenderer={renderRow}
                     itemHeight={index => rows[index].level === 0 ? 96 : 72}
-                    scrollable={document.querySelector('#scrollable-root')} />
+                    scrollable={app} />
             )}
         </Root>
     )
@@ -208,5 +211,9 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
 HierarchicalTable.Cell = Cell
 HierarchicalTable.Header = Header
 HierarchicalTable.Row = Row
+
+HierarchicalTable.defaultProps = {
+    defaultSort: { column: 0, isAsc: true, level: 0 }
+}
 
 export default HierarchicalTable

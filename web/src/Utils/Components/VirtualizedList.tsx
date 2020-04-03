@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useOnEvent } from '../index'
+import { useEvent } from '../index'
 
 interface Static {
 
@@ -11,7 +11,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
     itemsCount: number
     itemRenderer: ({ index: number, style: object }) => React.ReactNode
     itemHeight: number | ((index: number) => number)
-    scrollable?: Element
+    scrollable?: React.RefObject<HTMLElement>
 }
 
 const Root = Styled.div`
@@ -24,7 +24,7 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
 
     const getIndexRange = x => {
         const offsetTop = root.current ? root.current.offsetTop : 0
-        const scrollableHeight = scrollable ? scrollable.getBoundingClientRect().height : window.innerHeight
+        const scrollableHeight = scrollable ? scrollable.current.getBoundingClientRect().height : window.innerHeight
         const start = Math.min(totalHeight, Math.max(0, x - offsetTop))
         const end = Math.min(totalHeight, Math.max(0, x - offsetTop + scrollableHeight))
 
@@ -59,10 +59,9 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
 
     const [indexRange, setIndexRange] = React.useState(getIndexRange(0))
 
-    const events = React.useMemo<[Element | Window, string][]>(() => ([[scrollable, 'scroll'], [window, 'resize']]), [scrollable])
-
-    const updateIndexRange = () => setIndexRange(getIndexRange(scrollable.scrollTop))
-    useOnEvent(updateIndexRange, events)
+    const updateIndexRange = () => setIndexRange(getIndexRange(scrollable.current.scrollTop))
+    useEvent(scrollable.current, 'scroll', updateIndexRange)
+    useEvent(window, 'resize', updateIndexRange)
 
     React.useEffect(() => {
         if (scrollable) {
@@ -89,7 +88,7 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
 }
 
 VirtualizedList.defaultProps = {
-    scrollable: document.body
+    scrollable: { current: document.body }
 }
 
 export default VirtualizedList

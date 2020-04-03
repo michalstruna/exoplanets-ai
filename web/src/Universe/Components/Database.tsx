@@ -1,14 +1,10 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { bindActionCreators } from 'redux'
-import { useDispatch } from 'react-redux'
 
-import { Dimensions, Mixin, Validator } from '../../Utils'
+import { Mixin, useActions, useDrag, useElement, ZIndex } from '../../Utils'
 import { Planet } from '../types'
-import HierarchicalTable from './HierarchicalTable'
-import MiniGraph from './MiniGraph'
-import { Query } from '../../Routing'
-import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort } from '..'
+import { HierarchicalTable, MiniGraph } from '../../Data'
+import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort, useBodiesSegment } from '..'
 import { Async } from '../../Async'
 
 interface Static {
@@ -20,8 +16,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = Styled.div`
-    height: calc(100% - ${Dimensions.NAV_HEIGHT});
-    width: 100%;
+    user-select: none;
 `
 
 const colors = ['#A50', '#FFF', '#A00', '#CC0']
@@ -39,23 +34,49 @@ const PlanetImage = Styled(Image)`
 `
 
 const Table = Styled(HierarchicalTable)`
+    ${HierarchicalTable.Row} {
+        &[data-is-odd="true"] {
+            ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
+                background-color: #2F2F2F;
+            }
+        }
+    
+        &[data-is-odd="false"] {
+            ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
+                background-color: #383838;
+            }
+        }
+    }
+
     ${HierarchicalTable.Cell} {
         height: 6rem;
         
         &:first-of-type {
-            padding-right: 0;
-            text-align: right;
-        }
-    
-        &:nth-of-type(2) {
-            width: 16.5rem;
+            font-size: 85%;
+            pointer-events: none;
+            width: 3rem;
         }
         
-        &:nth-of-type(6) {
+        &:nth-of-type(2) {
+            padding-right: 0;
+            position: relative;
+            text-align: right;
+            z-index: ${ZIndex.TABLE_BODY_ICON};
+        }
+    
+        &:nth-of-type(3) {
+            border-right: 2px solid black;
+            left: 0;
+            position: sticky;
+            width: 16.5rem;
+            z-index: ${ZIndex.TABLE_BODY_NAME};
+        }
+        
+        &:nth-of-type(7) {
             width: 11rem;
         }
         
-        &:nth-of-type(10) {
+        &:nth-of-type(11) {
             width: 22rem;
             
             &:not([data-header])[data-level="0"] {
@@ -65,7 +86,7 @@ const Table = Styled(HierarchicalTable)`
         }
         
         &[data-level="0"] {
-            &:first-of-type {
+            &:nth-of-type(2) {
                 width: 5rem;
             }
         }
@@ -73,13 +94,14 @@ const Table = Styled(HierarchicalTable)`
         &[data-level="1"] {
             height: 4.5rem;
         
-            &:first-of-type {
+            &:nth-of-type(2) {
                 padding-left: 4rem;
                 width: 7rem;
             }
             
-            &:nth-of-type(2) {
-                width: 14.5rem;
+            &:nth-of-type(3) {
+                margin-left: -2rem;
+                padding-left: 3rem;
             }
         }
         
@@ -89,21 +111,18 @@ const Table = Styled(HierarchicalTable)`
             padding-bottom: 0;
         
             &[data-level="0"] {                            
-                &:nth-of-type(2) {
-                    width: 16.5rem;
-                }
-            
                 ${Image} {
                     ${Mixin.Size('2.5rem')}
+                }
+                
+                &:first-of-type {
+                    font-size: 110%;
+                    transform: translateY(30%);
                 }
             }
             
             &[data-level="1"] {
                 height: 2rem;
-            
-                &:nth-of-type(2) {
-                    width: 14.5rem;
-                }
             
                 ${Image} {
                     ${Mixin.Size('1.5rem')}
@@ -125,6 +144,7 @@ const lines = ['transit', 'radialVelocity']
 const labels = ['Tranzit [%]', 'Radiální rychlost [m/s]']
 
 const starColumns = [
+    { title: '#', accessor: star => star.index + 1, render: index => index || '' },
     { title: <Image />, accessor: star => star.type, render: () => <Image /> },
     {
         title: 'Hvězda',
@@ -169,6 +189,7 @@ const starColumns = [
 ]
 
 const planetColumns = [
+    { title: '', accessor: planet => planet.index + 1, render: index => index || '' },
     { title: <PlanetImage />, accessor: planet => planet.type, render: () => <PlanetImage /> },
     { title: 'Planeta', accessor: planet => planet.type, render: () => 'Horký jupiter' },
     {
@@ -211,22 +232,20 @@ const levels = [
     { columns: planetColumns, accessor: star => star.planets }
 ]
 
-const queryUtils = new URLSearchParams(window.location.search)
-
-const defaultLevel = Validator.safe(parseInt(queryUtils.get(Query.ORDER_LEVEL)), v => Number.isInteger(v) && v >= 0 && v < levels.length, 0)
-
-const defaultSort = {
-    column: Validator.safe(parseInt(queryUtils.get(Query.ORDER_COLUMN)), v => Number.isInteger(v) && v >= 0 && v < levels[defaultLevel].columns.length, 0),
-    isAsc: Validator.safe(parseInt(queryUtils.get(Query.ORDER_IS_ASC)), v => v === 1 || v === 0, 1) === 1,
-    level: defaultLevel
-}
-
 const Database: React.FC<Props> & Static = ({ ...props }) => {
 
     const bodies = useBodies()
     const filter = useBodiesFilter()
     const sort = useBodiesSort()
-    const actions = bindActionCreators({ setBodiesSort }, useDispatch())
+    const actions = useActions({ getBodies, setBodiesSort })
+
+    const segment = useBodiesSegment()
+    const { app } = useElement()
+
+    const dragHandlers = useDrag(({ delta, data }) => {
+        app.current.scrollLeft = data.x - delta.x
+        app.current.scrollTop = data.y - delta.y
+    }, () => ({ x: app.current.scrollLeft, y: app.current.scrollTop }))
 
     const handleSort = newSort => {
         if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level) {
@@ -235,16 +254,18 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     }
 
     return (
-        <Table
-            items={bodies.payload || []}
-            levels={levels}
-            onSort={handleSort}
-            defaultSort={defaultSort}
-            renderBody={body => (
-                <Async
-                    data={[bodies, () => getBodies({ sort, filter }), [sort, filter]]}
-                    success={() => body} />
-            )} />
+        <Root {...props} {...dragHandlers}>
+            <Table
+                items={bodies.payload ? bodies.payload.list : []}
+                levels={levels}
+                onSort={handleSort}
+                defaultSort={sort}
+                renderBody={body => (
+                    <Async
+                        data={[bodies, () => getBodies({ sort, filter, segment }), [sort, filter, segment]]}
+                        success={() => body} />
+                )} />
+        </Root>
     )
 
 }
