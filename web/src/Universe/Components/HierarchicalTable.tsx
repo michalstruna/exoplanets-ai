@@ -2,6 +2,7 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 
 import { Color, Mixin, ZIndex, VirtualizedList, Duration, useSort } from '../../Utils'
+import { Sort } from '../types'
 
 interface Static {
     Cell: string
@@ -23,8 +24,9 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
         columns: Column<any, string | number | boolean>[] // TODO: Remove any.
         accessor?: (item: any) => any[]
     }[]
-    onSort?: (sortedIndex: number, isAsc: boolean, sortedLevel: number) => void
+    onSort?: (sort: Sort) => void
     defaultSort?: { column: number, isAsc: boolean, level: number }
+    renderBody?: (body: React.ReactNode) => React.ReactNode
 }
 
 const Root = Styled.div`
@@ -114,56 +116,17 @@ const Header = Styled(Row)`
      }
 `
 
-const compare = (a, b) => {
-    if (a > b) {
-        return 1
-    } else if (a < b) {
-        return -1
-    } else {
-        return 0
-    }
-}
-
-const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, ...props }) => {
-
-    const getSortedItems = () => {
-        // TODO: Generalize. Now it's working only for two levels.
-        // TODO: Deep array copy?
-        const accessor = levels[sortedLevel].columns[sortedColumn].accessor
-
-        if (sortedLevel === 0) {
-            return [...items].sort((a, b) => compare(accessor(a), accessor(b)) * (isAsc ? 1 : -1))
-        } else if (sortedLevel === 1) {
-            const levelAccessor = levels[sortedLevel].accessor
-            const defaultValue = isAsc ? Infinity : -Infinity
-
-            const result = [...items]
-
-            for (const item of result) {
-                levelAccessor(item).sort((a, b) => compare(accessor(a), accessor(b)) * (isAsc ? 1 : -1))
-            }
-
-            result.sort((a, b) => (
-                compare(levelAccessor(a)[0] ? accessor(levelAccessor(a)[0]) : defaultValue, levelAccessor(b)[0] ? accessor(levelAccessor(b)[0]) : defaultValue) * (isAsc ? 1 : -1)
-            ))
-
-            return result
-        }
-
-        return items
-    }
+// TODO: Generic types. Current = level == 0 ? T1 : T2?
+const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, renderBody, ...props }) => {
 
     const { sort, sortedLevel, sortedColumn, isAsc } = useSort(defaultSort.column, defaultSort.isAsc, defaultSort.level)
-    const [sortedItems, setSortedItems] = React.useState(getSortedItems())
 
     React.useEffect(() => {
         if (onSort) {
-            onSort(sortedColumn, isAsc, sortedLevel)
+            onSort({ column: sortedColumn, isAsc, level: sortedLevel })
         }
 
-        setSortedItems(getSortedItems())
-
-    }, [sortedLevel, sortedColumn, isAsc])
+    }, [sortedLevel, sortedColumn, isAsc, items])
 
     const renderedHeader = React.useMemo(() => {
         const renderHeader = (levelIndex: number) => (
@@ -205,10 +168,10 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
             })
         }
 
-        process(sortedItems, 0)
+        process(items, 0)
 
         return rows
-    }, [sortedItems])
+    }, [items])
 
     const renderRow = ({ index, style }) => {
         const { item, level } = rows[index]
@@ -224,15 +187,19 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
         )
     }
 
+    const bodyRenderer = renderBody ? renderBody : body => body
+
     // TODO: InfiniteLoader.
     return (
         <Root {...props}>
             {renderedHeader}
-            <VirtualizedList
-                itemsCount={rows.length}
-                itemRenderer={renderRow}
-                itemHeight={index => rows[index].level === 0 ? 96 : 72}
-                scrollable={document.querySelector('#scrollable-root')} />
+            {bodyRenderer(
+                <VirtualizedList
+                    itemsCount={rows.length}
+                    itemRenderer={renderRow}
+                    itemHeight={index => rows[index].level === 0 ? 96 : 72}
+                    scrollable={document.querySelector('#scrollable-root')} />
+            )}
         </Root>
     )
 

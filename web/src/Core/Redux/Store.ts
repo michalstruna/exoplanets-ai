@@ -1,16 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
-import { ContentState, ContentReducer } from '../../Content'
-import { AuthReducer, AuthState } from '../../Auth'
+import { Reducer as AuthReducer } from '../../Auth'
+import { Reducer as ContentReducer } from '../../Content'
+import { Reducer as UniverseReducer } from '../../Universe'
 
-type State = {
-    auth: AuthState
-    content: ContentState
-}
+const RootReducer = combineReducers({
+    auth: AuthReducer,
+    content: ContentReducer,
+    universe: UniverseReducer
+})
 
-export default configureStore<State>({
-    reducer: {
-        auth: AuthReducer,
-        content: ContentReducer
-    }
+export default configureStore<typeof RootReducer>({
+    reducer: RootReducer
 })

@@ -59,10 +59,16 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
 
     const [indexRange, setIndexRange] = React.useState(getIndexRange(0))
 
-
     const events = React.useMemo<[Element | Window, string][]>(() => ([[scrollable, 'scroll'], [window, 'resize']]), [scrollable])
-    const updateIndexRange = React.useCallback(() => setIndexRange(getIndexRange(scrollable.scrollTop)), [scrollable])
+
+    const updateIndexRange = () => setIndexRange(getIndexRange(scrollable.scrollTop))
     useOnEvent(updateIndexRange, events)
+
+    React.useEffect(() => {
+        if (scrollable) {
+            updateIndexRange()
+        }
+    }, [totalHeight])
 
     const renderedItems = React.useMemo(() => {
         const renderedItems = []

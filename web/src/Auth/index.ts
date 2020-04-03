@@ -6,7 +6,7 @@ export { default as UserRole } from './Constants/UserRole'
 /**
  * Redux.
  */
-export { default as AuthReducer } from './Redux/Reducer'
+export { default as Reducer } from './Redux/Reducer'
 export * from './Redux/Actions'
 export * from './Redux/Selectors'
 

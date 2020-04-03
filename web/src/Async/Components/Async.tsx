@@ -10,7 +10,7 @@ export interface Static<T> {
 
 export interface Props<T> {
     data: AsyncDataAction<T> | AsyncDataAction<T>[]
-    sent?: () => React.ReactNode
+    pending?: () => React.ReactNode
     success?: () => React.ReactNode
     fail?: () => React.ReactNode
 }
@@ -23,7 +23,7 @@ type AsyncDataAction<TPayload, TError = string> = {
     2?: any[] // Array of updaters.
 }
 
-const Async: Type<any> = <T extends any>({ data: rawData, sent, success, fail }) => {
+const Async: Type<any> = <T extends any>({ data: rawData, pending, success, fail }) => {
     const isSingle = !Array.isArray(rawData) || (('payload' in rawData[0]) && typeof rawData[1] === 'function')
     const data = (isSingle ? [rawData] : rawData).map(item => Array.isArray(item) ? item : [item])
     const dispatch = useDispatch()
@@ -34,7 +34,7 @@ const Async: Type<any> = <T extends any>({ data: rawData, sent, success, fail })
     }
 
     const getState = () => ({
-        isSent: !!data.find(item => item[0].isSent),
+        isPending: !!data.find(item => item[0].pending),
         error: findError(data),
         hasPayloads: !data.find(item => !item[0].payload)
     })
@@ -47,14 +47,14 @@ const Async: Type<any> = <T extends any>({ data: rawData, sent, success, fail })
         }, item[2] || [])
     }
 
-    const { isSent, error, hasPayloads } = getState()
+    const { isPending, error, hasPayloads } = getState()
 
-    if (isSent) {
-        return sent ? sent() : <Loader />
-    } else if (error) {
+    if (error) {
         return fail ? fail() : error.toString()
     } else if (hasPayloads) {
         return success ? success() : null
+    } else if (isPending) {
+        return pending ? pending() : <Loader />
     }
 
     return null
