@@ -2,8 +2,6 @@ import React from 'react'
 import Styled from 'styled-components'
 import io from 'socket.io-client'
 
-import LoginForm from '../../Auth/Components/LoginForm'
-
 interface Static {
 
 }
@@ -28,7 +26,7 @@ const AIView: React.FC<Props> & Static = ({ ...props }) => {
 
     return (
         <Root {...props}>
-            <LoginForm />
+
         </Root>
     )
 

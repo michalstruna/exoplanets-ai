@@ -49,6 +49,7 @@ const GlobalStyle = createGlobalStyle`
         border: none;
         cursor: pointer;
         outline: none;
+        padding: 0;
         text-align: center;
         user-select: none;
      }

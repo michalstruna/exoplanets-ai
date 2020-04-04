@@ -1,17 +1,25 @@
 import React from 'react'
 import Styled from 'styled-components'
 
+import Nav from './Nav'
+import { Window } from '../../Layout'
+import { LoginForm } from '../../Auth'
+import { Dimensions, Mixin } from '../../Utils'
+
 interface Static {
 
 }
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    left?: React.ReactElement
-    right?: React.ReactElement
+
+}
+
+interface ControlProps {
+    icon: string
 }
 
 const Root = Styled.div`
-    overflow: hidden;
+
 `
 
 const Left = Styled.div`
@@ -20,17 +28,32 @@ const Left = Styled.div`
 
 const Right = Styled(Left)`
     float: right;
+    padding-right: 1.5rem;
 `
 
-const Header: React.FC<Props> & Static = ({ left, right, ...props }) => {
+const Control = Styled.button<ControlProps>`
+    ${props => Mixin.Image(props.icon, 'auto 1.2rem', 'left center')}
+    ${Mixin.Size('auto', Dimensions.NAV_HEIGHT, true)}
+    ${Mixin.OpacityHover()}
+    padding-left: 2rem;
+`
+
+const Header: React.FC<Props> & Static = ({ ...props }) => {
 
     return (
         <Root {...props}>
             <Left>
-                {left}
+                <Nav />
             </Left>
             <Right>
-                {right}
+                <Window
+                    renderButton={() => (
+                        <Control icon='Auth/User.svg'>
+                            Přihlášení
+                        </Control>
+                    )}>
+                    <LoginForm />
+                </Window>
             </Right>
         </Root>
     )

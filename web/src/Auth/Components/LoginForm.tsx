@@ -22,7 +22,7 @@ interface ForgotProps {
 const Root = Styled(Form)`
     box-sizing: border-box;
     text-align: center;
-    width: 16rem;
+    width: 18rem;
 `
 
 const Forgot = Styled.button<ForgotProps>`
@@ -37,7 +37,6 @@ const Forgot = Styled.button<ForgotProps>`
 const External = Styled.section`
     display: flex;
     justify-content: center;
-    padding: 0 1rem;
     
     & > button {
         width: 100%;
