@@ -1,4 +1,6 @@
-import { Redux } from '../../Utils'
+import Cookies from 'js-cookie'
+
+import { Redux, Cookie } from '../../Utils'
 import UserRole from '../Constants/UserRole'
 import { Credentials, Identity } from '../types'
 
@@ -20,11 +22,10 @@ const demoIdentity: Identity = {
     }
 }
 
-
 const Reducer = Redux.reducer(
     'auth',
     {
-        identity: Redux.async()
+        identity: Redux.async(Cookies.getJSON(Cookie.IDENTITY.name))
     },
     {
         login: ['identity', ({ email, password }: Credentials) => new Promise((resolve, reject) => {
@@ -32,13 +33,17 @@ const Reducer = Redux.reducer(
             setTimeout(() => {
                 if (email === 'm@m.cz' && password === '123') {
                     resolve(demoIdentity)
+                    Cookies.set(Cookie.IDENTITY.name, demoIdentity, { expires: Cookie.IDENTITY.expiration })
                 } else {
                     reject('Bad identity.')
                 }
             }, 1000)
         })],
 
-        logout: state => state.identity.payload = null
+        logout: state => {
+            state.identity.payload = null
+            Cookies.remove(Cookie.IDENTITY.name)
+        }
 
     }
 )

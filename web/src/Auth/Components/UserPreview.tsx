@@ -37,11 +37,19 @@ const Avatar = Styled.img`
     max-width: 7rem;
 `
 
+const ItemValue = Styled.div`
+    font-weight: bold;
+`
+
 const Left = Styled.div`
     box-shadow: 0 0 0.25rem ${Color.DARK};
     box-sizing: border-box;
     padding: 0.5rem;
     width: 11rem;
+    
+    ${ItemValue} {
+        font-size: 115%;
+    }
 `
 
 const Right = Styled.div`
@@ -84,11 +92,6 @@ const Stats = Styled.div`
             width: 34%;
         }
     }
-`
-
-const ItemValue = Styled.div`
-    font-size: 115%;
-    font-weight: bold;
 `
 
 const Rank = Styled.div`
@@ -166,7 +169,7 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
                     <Item title='Aktivní' value={'Před ' + 23 + ' m'} icon='Auth/Online.svg' />
                     <Item title='Členem' value='2,2 roku' icon='Auth/Origin.svg' />
                 </Row>
-                <div style={{ height: '8.5rem' }}>
+                <div style={{ height: '8.8rem' }}>
 
                 </div>
                 <RightMenu>
