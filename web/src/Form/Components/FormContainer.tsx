@@ -30,7 +30,7 @@ const Submit = Styled.button`
     width: 100%;
     
     &:hover {
-        background-color: ${Color.DARK};
+        background-color: ${Color.DARKEST_HOVER};
     }
     
     &[disabled] {

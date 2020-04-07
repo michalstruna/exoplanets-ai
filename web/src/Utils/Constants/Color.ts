@@ -14,7 +14,9 @@ enum Color {
     FACEBOOK_HOVER = '#4C6AA9',
     GOOGLE = '#EEE',
     GOOGLE_HOVER = '#CCC',
-    GOOGLE_FOREGROUND = '#737373'
+    GOOGLE_FOREGROUND = '#737373',
+
+    DARKEST_HOVER = '#252525'
 }
 
 export default Color

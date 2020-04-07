@@ -87,5 +87,9 @@ const GlobalStyle = createGlobalStyle`
          position: relative;
          width: 100%;
     }
+    
+    p {
+        user-select: text;   
+    }
 `
 export default GlobalStyle

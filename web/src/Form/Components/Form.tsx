@@ -11,7 +11,6 @@ interface Props extends React.ComponentPropsWithoutRef<'form'> {
 }
 
 const Root = Styled(FormikForm)`
-    padding: 1rem;
     position: relative
 `
 
