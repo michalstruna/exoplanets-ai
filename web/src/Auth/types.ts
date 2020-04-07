@@ -30,3 +30,8 @@ export type UserSimple = {
 export type Identity = UserSimple & {
     token: string
 }
+
+export type Credentials = {
+    email: string,
+    password: string
+}

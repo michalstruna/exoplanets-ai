@@ -1,8 +1,6 @@
-import { createReducer } from '@reduxjs/toolkit'
-
 import { Redux } from '../../Utils'
 import UserRole from '../Constants/UserRole'
-import { Identity } from '../types'
+import { Credentials, Identity } from '../types'
 
 const demoIdentity: Identity = {
     id: 'abc',
@@ -23,9 +21,27 @@ const demoIdentity: Identity = {
 }
 
 
-export default createReducer(
+const Reducer = Redux.reducer(
+    'auth',
     {
-        identity: Redux.async(demoIdentity)
+        identity: Redux.async()
     },
-    {}
+    {
+        login: ['identity', ({ email, password }: Credentials) => new Promise((resolve, reject) => {
+            // TODO: Cookies
+            setTimeout(() => {
+                if (email === 'm@m.cz' && password === '123') {
+                    resolve(demoIdentity)
+                } else {
+                    reject('Bad identity.')
+                }
+            }, 1000)
+        })],
+
+        logout: state => state.identity.payload = null
+
+    }
 )
+
+export default Reducer.reducer
+export const { login, logout } = Reducer.actions

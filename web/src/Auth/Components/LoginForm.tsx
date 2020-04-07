@@ -4,7 +4,8 @@ import Styled from 'styled-components'
 import { Field, FieldType, Form, FormContainer } from '../../Form'
 import FacebookLogin from './FacebookLogin'
 import GoogleLogin from './GoogleLogin'
-import { Color, Mixin } from '../../Utils'
+import { Color, Mixin, useActions } from '../../Utils'
+import { login } from '../Redux/Reducer'
 
 interface Props extends React.ComponentPropsWithoutRef<'form'> {
 
@@ -15,20 +16,16 @@ interface Values {
     password: string
 }
 
-interface ForgotProps {
-    isError: boolean
-}
-
 const Root = Styled(Form)`
     box-sizing: border-box;
+    padding: 1rem;
     text-align: center;
     width: 18rem;
 `
 
-const Forgot = Styled.button<ForgotProps>`
+const Forgot = Styled.button`
     ${Mixin.OpacityHover()}
     border-bottom: 1px solid transparent;
-    color: ${({ isError }) => isError ? Color.RED : 'inherit'};
     font-size: 90%;
     margin-top: -1rem;
     text-align: center;
@@ -69,15 +66,21 @@ const HorizontalTextLine = Styled.div`
     }
 `
 
+const Error = Styled.p`
+    color: ${Color.RED};
+    font-size: 90%;
+    margin-bottom: 0.5rem;
+`
+
 const LoginForm: React.FC<Props> = ({ ...props }) => {
 
+    const actions = useActions({ login })
+
     const handleSubmit = async (values: Values) => {
-        try {
-            await new Promise((resolve, reject) => {
-                setTimeout(() => reject(), 2000)
-            })
-        } catch (error) {
-            throw error
+        const action = await actions.login(values)
+
+        if (action.error) {
+            throw strings.error
         }
     }
 
@@ -90,7 +93,11 @@ const LoginForm: React.FC<Props> = ({ ...props }) => {
         email: 'Email',
         password: 'Heslo',
         submit: 'Připojit se',
-        forgotPassword: 'Zapomenuté heslo?'
+        forgotPassword: 'Zapomenuté heslo?',
+        error: 'Špatné přihlašovací údaje.',
+        missingEmail: 'Napište svůj email',
+        invalidEmail: 'Napište email ve tvaru email@doména.',
+        missingPassword: 'Napište své heslo'
     } as any // TODO
 
     return (
@@ -118,8 +125,13 @@ const LoginForm: React.FC<Props> = ({ ...props }) => {
                         required={strings.missingPassword}
                         name='password' />
                     {renderSubmit(strings.submit)}
-                    <Forgot isError={!!globalError}>
-                        {globalError ? strings.errorForgotPassword : strings.forgotPassword}
+                    {globalError && (
+                        <Error>
+                            {globalError}
+                        </Error>
+                    )}
+                    <Forgot>
+                        {strings.forgotPassword}
                     </Forgot>
                 </Root>
             )}
