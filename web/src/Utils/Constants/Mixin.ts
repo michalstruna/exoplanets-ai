@@ -40,6 +40,13 @@ module Mixin {
         }
     `
 
+    export const ThreeDots = () => css`
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+    `
+
 }
 
 export default Mixin

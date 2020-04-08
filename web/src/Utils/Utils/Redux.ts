@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 export const async = <T>(payload: T = null) => ({ pending: false, payload, error: null })
 
@@ -8,7 +8,12 @@ type Options<State, Payload> = {
     onError?: (state: State, action: Action<Payload>) => any
 }
 
-export type Action<Payload = void> = PayloadAction<Payload, string, Payload>
+export type Action<Payload = void, Error = { message: string }> = {
+    payload?: Payload
+    type: string
+    error?: Error
+}
+
 type Case<State> = (state: State, action: Action<any>) => any
 
 type Reducer<State, Actions> = {
@@ -52,7 +57,7 @@ export const reducer = <State extends Record<string, any>, Actions extends Reduc
 
             extraReducers[action.rejected.type] = (state, action) => {
                 state[field].pending = false
-                state[field].error = action.payload
+                state[field].error = action.error.message
 
                 if (options && options.onError) {
                     options.onError(state, action)
@@ -69,7 +74,7 @@ export const reducer = <State extends Record<string, any>, Actions extends Reduc
     const slice = createSlice({ name, initialState, reducers, extraReducers })
 
     return {
-        actions: { ...slice.actions, ...extraActions } as { [T in keyof Actions]: Actions[T] extends [string, infer Func, any?] ? Func : Actions[T] extends (state: State, action: Action<infer P>) => any ? (payload: P) => any : never },
+        actions: { ...slice.actions, ...extraActions } as { [T in keyof Actions]: Actions[T] extends [string, (payload: infer Payload) => any, any?] ? (p: Payload) => Action : Actions[T] extends (state: State, action: Action<infer P>) => any ? (payload?: P) => any : never },
         reducer: slice.reducer
     }
 

@@ -6,8 +6,17 @@ enum Color {
     MEDIUM_LIGHT = '#888',
     LIGHT = '#CCC',
     LIGHTEST = '#EEE',
+    RED = '#D00',
 
-    BACKGROUND = '#252A25'
+    BACKGROUND = '#252A25',
+
+    FACEBOOK = '#3B5998',
+    FACEBOOK_HOVER = '#4C6AA9',
+    GOOGLE = '#EEE',
+    GOOGLE_HOVER = '#CCC',
+    GOOGLE_FOREGROUND = '#737373',
+
+    DARKEST_HOVER = '#252525'
 }
 
 export default Color

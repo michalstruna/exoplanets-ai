@@ -49,6 +49,7 @@ const GlobalStyle = createGlobalStyle`
         border: none;
         cursor: pointer;
         outline: none;
+        padding: 0;
         text-align: center;
         user-select: none;
      }
@@ -85,6 +86,10 @@ const GlobalStyle = createGlobalStyle`
          overflow-y: auto;
          position: relative;
          width: 100%;
+    }
+    
+    p {
+        user-select: text;   
     }
 `
 export default GlobalStyle

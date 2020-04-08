@@ -1,17 +1,19 @@
 import React from 'react'
 import Styled from 'styled-components'
 
+import Nav from './Nav'
+import AuthControl from '../../Auth/Components/AuthControl'
+
 interface Static {
 
 }
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    left?: React.ReactElement
-    right?: React.ReactElement
+
 }
 
 const Root = Styled.div`
-    overflow: hidden;
+
 `
 
 const Left = Styled.div`
@@ -20,17 +22,20 @@ const Left = Styled.div`
 
 const Right = Styled(Left)`
     float: right;
+    padding-right: 1.5rem;
 `
 
-const Header: React.FC<Props> & Static = ({ left, right, ...props }) => {
+
+
+const Header: React.FC<Props> & Static = ({ ...props }) => {
 
     return (
         <Root {...props}>
             <Left>
-                {left}
+                <Nav />
             </Left>
             <Right>
-                {right}
+                <AuthControl />
             </Right>
         </Root>
     )
