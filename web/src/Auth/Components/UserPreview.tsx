@@ -5,7 +5,7 @@ import Countries from 'emoji-flags'
 import { IconButton } from '../../Control'
 import Auth from './Auth'
 import { UserSimple } from '../types'
-import { Color, Mixin, useActions } from '../../Utils'
+import { Mixin, useActions } from '../../Utils'
 import { logout } from '../Redux/Reducer'
 
 interface Static {
@@ -42,10 +42,9 @@ const ItemValue = Styled.div`
 `
 
 const Left = Styled.div`
-    box-shadow: 0 0 0.25rem ${Color.DARK};
     box-sizing: border-box;
     padding: 0.5rem;
-    width: 11rem;
+    width: 12rem;
     
     ${ItemValue} {
         font-size: 115%;
@@ -177,7 +176,7 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
                         Detail
                     </IconButton>
                     <Auth identityId={user.id} when={() => (
-                        <IconButton icon='Auth/Logout.svg' onClick={actions.logout}>
+                        <IconButton icon='Auth/Logout.svg' onClick={() => actions.logout()}>
                             Odhlásit se
                         </IconButton>
                     )} />

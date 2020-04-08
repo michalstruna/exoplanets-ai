@@ -45,7 +45,9 @@ const FormLoader = Styled(Loader)`
 
 const ErrorContainer = Styled.p`
     color: ${Color.RED};
+    font-size: 90%;
     margin: 0 auto;
+    margin-bottom: 0.5rem;
     text-align: center;
 `
 

@@ -66,12 +66,6 @@ const HorizontalTextLine = Styled.div`
     }
 `
 
-const Error = Styled.p`
-    color: ${Color.RED};
-    font-size: 90%;
-    margin-bottom: 0.5rem;
-`
-
 const LoginForm: React.FC<Props> = ({ ...props }) => {
 
     const actions = useActions({ login })
@@ -125,11 +119,7 @@ const LoginForm: React.FC<Props> = ({ ...props }) => {
                         required={strings.missingPassword}
                         name='password' />
                     {renderSubmit(strings.submit)}
-                    {globalError && (
-                        <Error>
-                            {globalError}
-                        </Error>
-                    )}
+                    {globalError}
                     <Forgot>
                         {strings.forgotPassword}
                     </Forgot>

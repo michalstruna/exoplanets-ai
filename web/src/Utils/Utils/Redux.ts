@@ -9,7 +9,7 @@ type Options<State, Payload> = {
 }
 
 export type Action<Payload = void, Error = { message: string }> = {
-    payload: Payload
+    payload?: Payload
     type: string
     error?: Error
 }
@@ -74,7 +74,7 @@ export const reducer = <State extends Record<string, any>, Actions extends Reduc
     const slice = createSlice({ name, initialState, reducers, extraReducers })
 
     return {
-        actions: { ...slice.actions, ...extraActions } as { [T in keyof Actions]: Actions[T] extends [string, (payload: infer Payload) => any, any?] ? (p: Payload) => Action : Actions[T] extends (state: State, action: Action<infer P>) => any ? (payload: P) => any : never },
+        actions: { ...slice.actions, ...extraActions } as { [T in keyof Actions]: Actions[T] extends [string, (payload: infer Payload) => any, any?] ? (p: Payload) => Action : Actions[T] extends (state: State, action: Action<infer P>) => any ? (payload?: P) => any : never },
         reducer: slice.reducer
     }
 
