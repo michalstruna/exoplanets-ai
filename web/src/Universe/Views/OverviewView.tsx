@@ -1,6 +1,8 @@
 import React from 'react'
 import Styled from 'styled-components'
+
 import { Color, Dimensions, Mixin } from '../../Utils'
+import { TopLevelStats } from '../../Stats'
 
 interface Static {
 
@@ -58,6 +60,7 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
     return (
         <Root {...props}>
             <Left>
+                <TopLevelStats data={{ discoveredPlanets: 16, exploredStars: 2793, computingTime: 5235.231465, volunteers: 123 }} />
                 Objevených planet celkem | transit | radial velocity
                 <br />
                 Z toho potenciálně obyvatelných
@@ -74,6 +77,7 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
                     Záložky:
                     - Chat + online uživatelé,
                     - Historie (objevené planety, zpracované hvězdy) - za posledních 100 dnů
+                    - Hw info
                 </Todo1>
             </Center>
             <Right>

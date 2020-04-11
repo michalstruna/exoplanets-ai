@@ -68,6 +68,30 @@ export default {
             [CS]: 'Hodnota filtru...',
             [EN]: 'Filter value...'
         }
+    },
+
+    stats: {
+        topLevelStats: {
+            units: {
+                computingTime: 'h'
+            },
+            discoveredPlanets: {
+                [CS]: 'Objevených planet',
+                [EN]: 'Discovered planets'
+            },
+            exploredStars: {
+                [CS]: 'Zpracovaných hvězd',
+                [EN]: 'Explored Stars'
+            },
+            computingTime: {
+                [CS]: 'Výpočetní čas',
+                [EN]: 'Computing time'
+            },
+            volunteers: {
+                [CS]: 'Registrovaných dobrovolníků',
+                [EN]: 'REgistered volunteers'
+            }
+        }
     }
 
 }
