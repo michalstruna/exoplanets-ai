@@ -3,6 +3,8 @@ import Styled from 'styled-components'
 
 import { Color, Dimensions, Mixin } from '../../Utils'
 import { Chart, TopLevelStats } from '../../Stats'
+import { Table, ToggleLine } from '../../Layout'
+import { Url } from '../../Routing'
 
 interface Static {
 
@@ -56,12 +58,17 @@ const Todo1 = Styled(Block)`
 `
 
 const Todo2 = Styled(Block)`
-    ${Mixin.Size('100%', `calc(100% - 33rem)`)}
+    ${Mixin.Size('100%', `calc(100% - 32rem)`)}
 `
 
 const News = Styled(Block)`
-    ${Mixin.Size('100%', '30rem')}
+    ${Mixin.Size('100%', '29rem')}
     margin-top: 1.5rem;
+    padding: 0;
+    
+    ${Table.Root} {
+        width: calc(100% - 3rem);
+    }
 `
 
 const FlexContainer = Styled.div`
@@ -76,6 +83,16 @@ const FlexContainer = Styled.div`
             margin-right: 0;
         }
     }
+`
+
+const Image = Styled.div`
+    ${Mixin.Size('4rem')}
+    ${Mixin.Size('2.5rem')}
+    background-image: radial-gradient(#CA0, #000);
+    border-radius: 100%;
+    display: inline-block;
+    margin-right: 0.5rem;
+    vertical-align: middle;
 `
 
 const randomPlanets = []
@@ -96,8 +113,25 @@ const barData = [
     { size: '> 15', count: 160 }
 ]
 
+const planets = [
+    { name: 'Proxima Centauri b', distance: 4.2, diameter: 15535 },
+    { name: 'VY Canis Majors', distance: 5.2, diameter: 8963 },
+    { name: 'Proxima Centauri b', distance: 4.2, diameter: 12411 },
+    { name: 'VY Canis Majors', distance: 5.2, diameter: 13691 },
+    { name: 'Proxima Centauri b', distance: 4.2, diameter: 15741 }
+]
+
 
 const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
+
+    const earthLike = React.useMemo(() => (
+        <Table items={planets} columns={[
+            { accessor: (planet, index) => index + 1, title: '#' },
+            { accessor: planet => planet.name, title: 'Planeta', render: name => <><Image />{name}</> },
+            { accessor: planet => planet.diameter, title: 'Průměr' },
+            { accessor: planet => planet.distance, title: 'Vzdálenost' }
+        ]} />
+    ), [])
 
     return (
         <Root {...props}>
@@ -147,7 +181,13 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
             </Center>
             <Right>
                 <Todo2 />
-                <News />
+                <News>
+                    <ToggleLine items={[
+                        { header: 'Zemi nejpodobnější exoplanety', content: earthLike, link: { pathname: Url.DATABASE } },
+                        { header: 'Nejbližší exoplanety', content: earthLike, link: { pathname: Url.DATABASE } },
+                        { header: 'Největší exoplanety', content: earthLike, link: { pathname: Url.DATABASE } }
+                    ]} />
+                </News>
             </Right>
         </Root>
     )
