@@ -16,10 +16,8 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = Styled.div`
-    box-sizing: border-box;
     display: flex;
     overflow: hidden;
-    padding: 1rem;
     width: 100%;
 `
 
@@ -45,7 +43,7 @@ const TopLevelStats: React.FC<Props> & Static = ({ data, ...props }) => {
     const renderedStats = React.useMemo(() => {
 
         return Object.keys(data).map((key, i) => (
-            <Item key={key}>
+            <Item key={i}>
                 <Name>
                     {strings[key]}
                 </Name>

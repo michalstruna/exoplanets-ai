@@ -12,6 +12,10 @@ module Numbers {
         return Numeral(value).format(pattern)
     }
 
+    export const toExponential = (value: number): string => {
+        return Math.abs(value) < 1000 ? value.toString() : Numeral(value).format('0,0[e+0]')
+    }
+
 }
 
 export default Numbers
