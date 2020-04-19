@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 
 import { App, HelpView, Store } from './Core'
 import { History, Url } from './Routing'
-import { AIView, DatabaseView, OverviewView } from './Universe'
+import { AIView, DatabaseView, OverviewView } from './Database'
 
 render(
     <Provider store={Store}>
