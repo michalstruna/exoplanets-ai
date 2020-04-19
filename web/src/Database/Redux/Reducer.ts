@@ -161,7 +161,8 @@ const Reducer = Redux.reducer(
         bodies: Redux.async<any /* TODO: Body[] */>(),
         filter: null as Filter,
         sort: defaultSort,
-        segment: defaultSegment
+        segment: defaultSegment,
+        usersRank: 0
     },
     {
         getBodies: ['bodies', ({ sort, filter, segment }: Cursor) => new Promise(resolve => {

@@ -5,6 +5,7 @@ import { Color, Dimensions, Mixin } from '../../Utils'
 import { Chart, TopLevelStats } from '../../Stats'
 import { Table, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
+import UsersList from '../Components/UsersList'
 
 interface Static {
 
@@ -48,7 +49,7 @@ const Right = Styled.div`
     margin-right: 1rem;
 `
 
-const Users = Styled(Block)`
+const Users = Styled(UsersList)`
     ${Mixin.Size('100%', `30rem`)}
 `
 
@@ -126,7 +127,7 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
 
     const earthLike = React.useMemo(() => (
         <Table items={planets} columns={[
-            { accessor: (planet, index) => index + 1, title: '#' },
+            { accessor: (planet, index) => index + 1, title: '#', render: index => index + '.' },
             { accessor: planet => planet.name, title: 'Planeta', render: name => <><Image />{name}</> },
             { accessor: planet => planet.diameter, title: 'Průměr' },
             { accessor: planet => planet.distance, title: 'Vzdálenost' }
@@ -168,6 +169,7 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
             </Left>
             <Center>
                 <Users>
+                    <UsersList />
                     &lt; Stránka &gt; Časový interval
                     Pořadí. Ikona username ... score přírustek
                     Vpravo: Objevených planet, Prozkoumaných hvězd, Výpočetní čas, ???

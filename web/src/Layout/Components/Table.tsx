@@ -5,6 +5,7 @@ import { Mixin } from '../../Utils'
 interface Props<Item> extends React.ComponentPropsWithoutRef<'div'> {
     items: Item[]
     columns: Column<Item>[]
+    withHeader?: boolean
 }
 
 interface Column<Item> {
@@ -27,8 +28,11 @@ const Row = Styled.div`
 `
 
 const Cell = Styled.div`
+    ${Mixin.ThreeDots()}
     display: table-cell;
+    overflow: hidden;
     padding: 0.5rem;
+    width: auto;
     
     &:first-of-type {
         padding-left: 1rem;
@@ -47,9 +51,9 @@ const HeaderCell = Styled(Cell)`
 
 `
 
-function Table<Item>({ columns, items, ...props }: Props<Item>) {
+function Table<Item>({ columns, items, withHeader, ...props }: Props<Item>) {
 
-    const renderedHeader = React.useMemo(() => (
+    const renderedHeader = React.useMemo(() => withHeader && (
         <HeaderRow>
             {columns.map((column, i) => (
                 <HeaderCell key={i}>
@@ -57,7 +61,7 @@ function Table<Item>({ columns, items, ...props }: Props<Item>) {
                 </HeaderCell>
             ))}
         </HeaderRow>
-    ), [columns])
+    ), [columns, withHeader])
 
     const renderedItems = React.useMemo(() => (
         items.map((item, i) => (
@@ -84,5 +88,9 @@ Table.Row = Row
 Table.Cell = Cell
 Table.HeaderRow = HeaderRow
 Table.HeaderCell = HeaderCell
+
+Table.defaultProps = {
+    withHeader: true
+}
 
 export default Table
