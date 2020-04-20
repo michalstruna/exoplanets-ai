@@ -27,6 +27,7 @@
     "use-react-router": "^1.0.7"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.5.0",
     "@types/emoji-flags": "^1.2.0",
     "@types/js-cookie": "^2.2.5",
     "@types/numeral": "0.0.26",

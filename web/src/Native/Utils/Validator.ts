@@ -21,6 +21,9 @@ export const isEmail = (text: string): boolean => (
     EmailValidator.validate(text)
 )
 
+/**
+ * Check value against predicate.
+ */
 export const is = <T>(value: T, predicate: Predicate<T>) => {
     if (predicate instanceof RegExp) {
         return predicate.test((value as any).toString())
@@ -47,6 +50,9 @@ export const compare = <T>(value: T, relation: Relation, value2: T) => {
     // TODO
 }
 
+/**
+ * If value not match predicate, replace it by default value.
+ */
 export const safe = <T>(value: T, predicate: Predicate<T>, defaultValue: T) => {
     return is(value, predicate) ? value : defaultValue
 }
