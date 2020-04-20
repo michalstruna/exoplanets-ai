@@ -1,9 +1,9 @@
 import React from 'react'
-import * as serviceWorker from './serviceWorker'
 import ReactDOM from 'react-dom'
 import { Router, Switch, Route, Redirect } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
+import * as serviceWorker from './serviceWorker'
 import { App, HelpView, Store } from './Core'
 import { History, Url } from './Routing'
 import { AIView, DatabaseView, OverviewView } from './Database'
