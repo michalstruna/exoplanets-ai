@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { useActions, useFixedX } from '../../Utils'
-import { Paginator, FilterForm } from '../../Data'
+import { Paginator, FilterForm } from '../../Layout'
 import { setBodiesSegment, setBodiesFilter } from'../Redux/Reducer'
 import { useBodies, useBodiesSegment } from '..'
 

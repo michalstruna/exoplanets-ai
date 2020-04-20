@@ -1,9 +1,11 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useActions, useDrag, useElement } from '../../Utils'
+import { useActions } from '../../Utils'
+import { useDrag, useElement } from '../../Native'
 import { ZIndex, size } from '../../Style'
-import { HierarchicalTable, MiniGraph } from '../../Data'
+import { MiniGraph } from '../../Stats'
+import { HierarchicalTable } from '../../Layout'
 import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort, useBodiesSegment } from '..'
 import { Async } from '../../Async'
 

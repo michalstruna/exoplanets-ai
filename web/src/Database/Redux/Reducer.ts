@@ -1,6 +1,6 @@
 import SpectralType from '../Constants/SpectralType'
 import { Redux, Validator } from '../../Utils'
-import { Filter, Sort, Segment, Cursor } from '../../Data'
+import { Filter, Sort, Segment, Cursor } from '../../Layout'
 import { Query, Urls } from '../../Routing'
 
 const get = (val: any, i = 0) => Math.round(val * Math.random())

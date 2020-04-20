@@ -2,7 +2,7 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 import Countries from 'emoji-flags'
 
-import { IconButton } from '../../Control'
+import { IconButton } from '../../Layout'
 import Auth from './Auth'
 import { UserSimple } from '../types'
 import { useActions } from '../../Utils'

@@ -1,9 +1,11 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
 
-import { VirtualizedList, useSort, useElement } from '../../Utils'
+import { useSort } from '../../Utils'
 import { Color, size, image, Duration, ZIndex } from '../../Style'
-import { Sort } from '../index'
+import { Sort } from '../types'
+import { useElement } from '../../Native'
+import VirtualizedList from './VirtualizedList'
 
 interface Static {
     Cell: string

@@ -2,8 +2,7 @@ import React from 'react'
 
 import Auth from './Auth'
 import UserRole from '../Constants/UserRole'
-import { Window } from '../../Layout'
-import { IconButton } from '../../Control'
+import { Window, IconButton } from '../../Layout'
 import { LoginForm, useIdentity } from '../index'
 import UserPreview from './UserPreview'
 

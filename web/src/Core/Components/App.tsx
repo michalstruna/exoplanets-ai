@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import GlobalStyle from './GlobalStyle'
-import { useElement } from '../../Utils'
+import { useElement } from '../../Native'
 import Header from './Header'
 
 interface Static {

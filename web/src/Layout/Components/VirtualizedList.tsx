@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useEvent } from '../index'
+import { useEvent } from '../../Native'
 
 interface Static {
 
