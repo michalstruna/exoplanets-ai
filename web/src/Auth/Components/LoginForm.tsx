@@ -4,7 +4,7 @@ import Styled from 'styled-components'
 import { Field, FieldType, Form, FormContainer } from '../../Form'
 import FacebookLogin from './FacebookLogin'
 import GoogleLogin from './GoogleLogin'
-import { useActions } from '../../Utils'
+import { useActions } from '../../Data'
 import { Color, opacityHover, size } from '../../Style'
 import { login } from '../Redux/Reducer'
 

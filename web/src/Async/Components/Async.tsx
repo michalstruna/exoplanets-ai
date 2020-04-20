@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useDispatch } from 'react-redux'
 
 import Loader from './Loader'
-import { AsyncData } from '../../Content'
+import { AsyncData } from '../../Data'
 
 export interface Static<T> {
 

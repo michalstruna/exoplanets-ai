@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 import { Reducer as AuthReducer } from '../../Auth'
-import { Reducer as ContentReducer } from '../../Content'
+import { Reducer as ContentReducer } from '../../Data'
 import { Reducer as DatabaseModule } from '../../Database'
 
 const RootReducer = combineReducers({

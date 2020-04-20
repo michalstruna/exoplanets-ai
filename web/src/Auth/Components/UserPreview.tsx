@@ -5,7 +5,7 @@ import Countries from 'emoji-flags'
 import { IconButton } from '../../Layout'
 import Auth from './Auth'
 import { UserSimple } from '../types'
-import { useActions } from '../../Utils'
+import { useActions } from '../../Data'
 import { image } from '../../Style'
 import { logout } from '../Redux/Reducer'
 

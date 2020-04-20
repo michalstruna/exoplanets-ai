@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
 
-import { useSort } from '../../Utils'
+import { useSort } from '../../Data'
 import { Color, size, image, Duration, ZIndex } from '../../Style'
 import { Sort } from '../types'
 import { useElement } from '../../Native'

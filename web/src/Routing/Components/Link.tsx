@@ -4,7 +4,7 @@ import Styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 
 import { Target } from '../types'
-import { Validator } from '../../Utils'
+import { Validator } from '../../Native'
 import * as Urls from '../Utils/Urls'
 
 export interface Static {

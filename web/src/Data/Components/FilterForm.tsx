@@ -2,9 +2,9 @@ import React from 'react'
 import Styled from 'styled-components'
 import { Field, FieldArray, Formik } from 'formik'
 
-import { Arrays, Validator } from '../../Utils'
+import { Arrays, Validator } from '../../Native'
 import { Duration, image, opacityHover, size } from '../../Style'
-import { useStrings } from '../../Content'
+import { useStrings } from '../index'
 
 type BrokenObjectFilter = any
 

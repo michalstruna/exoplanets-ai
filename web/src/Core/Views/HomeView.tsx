@@ -1,8 +1,7 @@
 import React from 'react'
 
-import { useLanguage, useStrings, setLanguage, Language } from '../../Content'
+import { useLanguage, useStrings, setLanguage, Language, useActions } from '../../Data'
 import { Link, Url } from '../../Routing'
-import { useActions } from '../../Utils'
 
 interface Static {
 

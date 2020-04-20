@@ -1,4 +1,4 @@
-import { Validator } from '../../Utils'
+import { Validator } from '../../Native'
 
 export default {
 

@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 
 import { Cookie } from '../../Native'
-import { Redux } from '../../Utils'
+import { Redux } from '../../Data'
 import UserRole from '../Constants/UserRole'
 import { Credentials, Identity } from '../types'
 

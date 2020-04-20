@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 import Paginate from 'react-paginate'
 
 import { size, Color, Duration } from '../../Style'
-import { Segment } from '../types'
+import { Segment } from '../../Layout/types'
 
 interface Static {
 

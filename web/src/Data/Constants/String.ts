@@ -1,6 +1,6 @@
 import Language from './Language'
 import Url from '../../Routing/Constants/Url'
-import { Validator } from '../../Utils'
+import { Validator } from '../../Native'
 
 const CS = Language.CS
 const EN = Language.EN

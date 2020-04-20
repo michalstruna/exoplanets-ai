@@ -1,8 +1,8 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useActions, useFixedX } from '../../Utils'
-import { Paginator, FilterForm } from '../../Layout'
+import { useFixedX } from '../../Style'
+import { Paginator, FilterForm, useActions } from '../../Data'
 import { setBodiesSegment, setBodiesFilter } from'../Redux/Reducer'
 import { useBodies, useBodiesSegment } from '..'
 

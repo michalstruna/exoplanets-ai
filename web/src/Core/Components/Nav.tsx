@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Dimension, Duration, size, image, Color } from '../../Style'
-import { useStrings } from '../../Content'
+import { useStrings } from '../../Data'
 import { Link } from '../../Routing'
 
 interface Static {

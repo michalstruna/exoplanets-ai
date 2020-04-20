@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useActions } from '../../Utils'
+import { useActions } from '../../Data'
 import { useDrag, useElement } from '../../Native'
 import { ZIndex, size } from '../../Style'
 import { MiniGraph } from '../../Stats'
