@@ -2,7 +2,6 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Mixin, useActions, useDrag, useElement, ZIndex } from '../../Utils'
-import { Planet } from '../types'
 import { HierarchicalTable, MiniGraph } from '../../Data'
 import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort, useBodiesSegment } from '..'
 import { Async } from '../../Async'

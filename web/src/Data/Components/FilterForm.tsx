@@ -79,22 +79,22 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
 
     const strings = useStrings().filter
 
-    const handleChange = (filter: ArrayFilter): void => {
+    const mapKeysIn = React.useCallback((filter: any): ObjectFilter => ({
+        attribute: filter[keys.attribute] || [],
+        relation: filter[keys.relation] || [],
+        value: filter[keys.value] || []
+    }), [keys.attribute, keys.relation, keys.value])
+
+    const mapKeysOut = React.useCallback((filter: ObjectFilter): any => (
+        { [keys.attribute]: filter.attribute, [keys.relation]: filter.relation, [keys.value]: filter.value }
+    ), [keys.attribute, keys.relation, keys.value])
+
+    const handleChange = React.useCallback((filter: ArrayFilter): void => {
         if (onChange) {
             const values = mapKeysOut(getObjectFilter(getWithoutLast(filter)))
             onChange(values)
         }
-    }
-
-    const mapKeysIn = (filter: any): ObjectFilter => ({
-        attribute: filter[keys.attribute] || [],
-        relation: filter[keys.relation] || [],
-        value: filter[keys.value] || []
-    })
-
-    const mapKeysOut = (filter: ObjectFilter): any => (
-        { [keys.attribute]: filter.attribute, [keys.relation]: filter.relation, [keys.value]: filter.value }
-    )
+    }, [mapKeysOut, onChange])
 
     const getHandleFieldChange = (values: any, handleChange: any, helpers: any, i: any) => (
         (event: any) => {
@@ -151,7 +151,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
         return result as ObjectFilter
     }
 
-    const fixFilter = (values: ObjectFilter): ObjectFilter => {
+    const fixFilter = React.useCallback((values: ObjectFilter): ObjectFilter => {
         const result = { attribute: [], relation: [], value: [] } as any
 
         if (values.attribute.length !== values.relation.length || values.relation.length !== values.value.length) {
@@ -167,7 +167,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
         }
 
         return result
-    }
+    }, [attributes])
 
     const initialFilter = React.useMemo(() => {
         const objectFilter = mapKeysIn(forceArray(initialValues))
@@ -176,7 +176,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
         arrayFilter.push({ attribute: attributes[0], relation: defaultRelation, value: '' })
         handleChange(arrayFilter)
         return arrayFilter
-    }, [])
+    }, [attributes, defaultRelation, fixFilter, handleChange, initialValues, mapKeysIn])
 
     const remove = (values: any, helpers: any, i: any) => {
         const last = Arrays.findLastIndex<any>(values.filter, (item, j) => item.value && i !== j)

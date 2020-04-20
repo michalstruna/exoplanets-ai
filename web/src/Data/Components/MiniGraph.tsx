@@ -1,6 +1,5 @@
 import React from 'react'
-import Styled from 'styled-components'
-import { LineChart, Line, YAxis, Legend, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, YAxis } from 'recharts'
 
 interface Static {
 
@@ -13,16 +12,6 @@ interface Props extends React.ComponentPropsWithoutRef<'canvas'> {
     lines: string[]
     labels?: string[]
 }
-
-const Root = Styled.canvas`
-
-`
-
-const LegendItem = Styled.span`
-    display: inline-block;
-    font-size: 80%;
-    margin-top: 0.25rem;
-`
 
 const MiniGraph: React.FC<Props> & Static = ({ data, lines, labels, ...props }) => {
 
@@ -61,7 +50,7 @@ const MiniGraph: React.FC<Props> & Static = ({ data, lines, labels, ...props }) 
             {renderLine((labels as any)[1] || lines[1], lines[1], '#CC7777', withLeft ? 'right' : 'left')}
             {renderYAxis(withLeft ? 'right' : 'left', '#CC7777')}
         </LineChart>
-    ), [data, lines])
+    ), [data, lines, labels, withLeft])
 }
 
 MiniGraph.defaultProps = {

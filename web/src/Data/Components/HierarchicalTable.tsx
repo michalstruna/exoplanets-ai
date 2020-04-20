@@ -128,7 +128,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
             onSort({ column: sortedColumn, isAsc, level: sortedLevel })
         }
 
-    }, [sortedLevel, sortedColumn, isAsc, items])
+    }, [sortedLevel, sortedColumn, isAsc, items, onSort])
 
     const renderedHeader = React.useMemo(() => {
         const renderHeader = (levelIndex: number): React.ReactNode => (
@@ -155,25 +155,25 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
                 {renderHeader(0)}
             </Header>
         )
-    }, [sort])
+    }, [sort, isAsc, levels, sortedColumn, sortedLevel])
 
     const rows = React.useMemo(() => {
         const rows = [] as any
 
         const process = (items: any, level: any) => {
-            items.map((item: any) => {
+            for (const item of items) {
                 rows.push({ level, item })
 
                 if (level < levels.length - 1) {
                     process((levels as any)[level + 1].accessor(item), level + 1)
                 }
-            })
+            }
         }
 
         process(items, 0)
 
         return rows
-    }, [items])
+    }, [items, levels])
 
     const renderRow = ({ index, style }: any) => {
         const { item, level } = rows[index]

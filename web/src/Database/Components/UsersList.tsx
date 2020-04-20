@@ -187,7 +187,7 @@ const UsersList: React.FC<Props> & Static = ({ ...props }) => {
         }
 
         return result
-    }, [identity, data])
+    }, [identity])
 
     return (
         <Root {...props}>

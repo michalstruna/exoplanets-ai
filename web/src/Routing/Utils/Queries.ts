@@ -81,7 +81,7 @@ export const merge = (source: string, changes: QuerySet): string => {
  * @returns Query object.
  */
 export const parse = (source: string): QuerySet => {
-    const result = {} as any
+    const result: Record<string, string> = {}
 
     new URLSearchParams(source).forEach((value: string, key: string) => {
         result[key] = value

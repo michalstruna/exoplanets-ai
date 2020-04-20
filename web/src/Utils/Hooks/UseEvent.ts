@@ -29,7 +29,7 @@ export default (element: Target, event: string, handler: Handler, options: Optio
                 element.removeEventListener(event, handlerRef.current)
             }
         }
-    }, [handler, options.throttle])
+    }, [handler, options.throttle, element, event])
 
     React.useEffect(() => {
         function current() {
@@ -53,6 +53,6 @@ export default (element: Target, event: string, handler: Handler, options: Optio
                 element.removeEventListener(event, current)
             }
         }
-    }, [element, event, handlerRef, options.active, options.immediate])
+    }, [element, event, handlerRef, options.active, options.immediate, options.passive])
 
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Color, Duration, Mixin, ZIndex } from '../../Utils'
+import { Color, Duration, ZIndex } from '../../Utils'
 
 interface Static {
     Content: string

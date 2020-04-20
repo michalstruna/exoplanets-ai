@@ -4,7 +4,7 @@ import Styled from 'styled-components'
 import { Dimensions, Duration, Mixin } from '../../Utils'
 import Color from '../../Utils/Constants/Color'
 import { useStrings } from '../../Content'
-import { Link, LinkData } from '../../Routing'
+import { Link } from '../../Routing'
 
 interface Static {
 

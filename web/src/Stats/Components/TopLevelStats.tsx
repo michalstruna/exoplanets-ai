@@ -52,7 +52,7 @@ const TopLevelStats: React.FC<Props> & Static = ({ data, ...props }) => {
                 </Value>
             </Item>
         ))
-    }, [data])
+    }, [data, strings])
 
     return (
         <Root {...props}>

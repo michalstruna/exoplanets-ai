@@ -87,7 +87,7 @@ const PerPage = Styled.select`
 
 const Paginator: React.FC<Props> & Static = ({ onChange, page, itemsCount, freeze, ...props }) => {
 
-    const getPagesCount = () => Math.ceil(itemsCount / page.size)
+    const getPagesCount = React.useCallback(() => Math.ceil(itemsCount / page.size), [itemsCount, page.size])
     const getCache = () => ({ pages: getPagesCount(), itemsCount })
 
     const [cache, setCache] = React.useState(getCache())
@@ -98,7 +98,7 @@ const Paginator: React.FC<Props> & Static = ({ onChange, page, itemsCount, freez
         if (!freeze && itemsCount > 0) {
             setCache({ pages: newPagesCount, itemsCount })
         }
-    }, [itemsCount, page, freeze])
+    }, [itemsCount, page, freeze, getPagesCount])
 
     const handleChangeSize = (size: number) => {
         if (size !== page.size) {

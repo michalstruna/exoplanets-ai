@@ -59,7 +59,7 @@ export const toString = (location: Location): string => {
  * @return Merged location.
  */
 export const merge = (target: Target, source: Location = History.location): Location => { // TODO
-    const result: Location = {} as any // TODO
+    const result: Location = {} as any
 
     if (target.pathname || source.pathname) {
         const pathname = target.pathname || source.pathname

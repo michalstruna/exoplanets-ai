@@ -25,6 +25,6 @@ export default <T>(handler: Handler<T>, getData: DataGetter<T>) => {
         },
         onMouseUp: () => setStart(null),
         onMouseLeave: () => setStart(null)
-    }), [handler])
+    }), [handler, data, getData, start])
 
 }

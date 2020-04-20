@@ -45,7 +45,7 @@ const Async: any = <T extends any>({ data: rawData, pending, success, fail }: Pr
                 dispatch(item[1]())
             }
         }
-    }, [JSON.stringify(data.map((item: any) => item[2]))]) // TODO
+    }, [data, dispatch]) // TODO
 
     const { isPending, error, hasPayloads } = getState()
 
