@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Color, Dimensions, Mixin } from '../../Utils'
+import { Color, Dimension, Mixins } from '../../Style'
 import { Chart, TopLevelStats } from '../../Stats'
 import { Table, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const Root = Styled.div`
-    ${Mixin.Size('100%', `calc(100vh - ${Dimensions.NAV_HEIGHT})`)}
+    ${Mixins.Size('100%', `calc(100vh - ${Dimension.NAV_HEIGHT})`)}
     background-color: ${Color.BACKGROUND};
     display: flex;
 `
@@ -28,7 +28,7 @@ const Block = Styled.div`
 `
 
 const Left = Styled(Block)`
-    ${Mixin.Size('40rem', '100%')}
+    ${Mixins.Size('40rem', '100%')}
     
     & > div {
         margin-bottom: 0.5rem;
@@ -40,30 +40,30 @@ const Left = Styled(Block)`
 `
 
 const Center = Styled.div`
-    ${Mixin.Size('calc((100vw - 40rem) * 0.4)', '100%')}
+    ${Mixins.Size('calc((100vw - 40rem) * 0.4)', '100%')}
     margin: 0 1.5rem;
 `
 
 const Right = Styled.div`
-    ${Mixin.Size('calc((100vw - 40rem) * 0.6)', '100%')}
+    ${Mixins.Size('calc((100vw - 40rem) * 0.6)', '100%')}
     margin-right: 1rem;
 `
 
 const Users = Styled(UsersList)`
-    ${Mixin.Size('100%', `30rem`)}
+    ${Mixins.Size('100%', `30rem`)}
 `
 
 const Todo1 = Styled(Block)`
-    ${Mixin.Size('100%', `calc(100% - 33rem)`)}
+    ${Mixins.Size('100%', `calc(100% - 33rem)`)}
     margin-top: 1.5rem;
 `
 
 const Todo2 = Styled(Block)`
-    ${Mixin.Size('100%', `calc(100% - 32rem)`)}
+    ${Mixins.Size('100%', `calc(100% - 32rem)`)}
 `
 
 const News = Styled(Block)`
-    ${Mixin.Size('100%', '29rem')}
+    ${Mixins.Size('100%', '29rem')}
     margin-top: 1.5rem;
     padding: 0;
     
@@ -87,8 +87,8 @@ const FlexContainer = Styled.div`
 `
 
 const Image = Styled.div`
-    ${Mixin.Size('4rem')}
-    ${Mixin.Size('2.5rem')}
+    ${Mixins.Size('4rem')}
+    ${Mixins.Size('2.5rem')}
     background-image: radial-gradient(#CA0, #000);
     border-radius: 100%;
     display: inline-block;

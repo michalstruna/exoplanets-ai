@@ -1,6 +1,6 @@
 import { css } from 'styled-components'
 
-import Duration from './Duration'
+import Duration from '../Constants/Duration'
 
 export const FontFace = (name: string, path: string, fontWeight: string = 'normal') => css`
         @font-face {

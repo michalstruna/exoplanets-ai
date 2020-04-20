@@ -1,11 +1,11 @@
 import { createGlobalStyle } from 'styled-components'
 
-import { Color, Dimensions, Mixin } from '../../Utils'
+import { Color, Dimension, Mixins } from '../../Style'
 
 const GlobalStyle = createGlobalStyle`
-     ${Mixin.FontFace('Montserrat', 'Montserrat.woff2')}
-     ${Mixin.FontFace('Montserrat', 'MontserratThin.woff2', '100')}
-     ${Mixin.FontFace('Montserrat', 'MontserratBold.woff2', 'bold')}
+     ${Mixins.FontFace('Montserrat', 'Montserrat.woff2')}
+     ${Mixins.FontFace('Montserrat', 'MontserratThin.woff2', '100')}
+     ${Mixins.FontFace('Montserrat', 'MontserratBold.woff2', 'bold')}
 
     body {
         background-color: ${Color.BACKGROUND};
@@ -80,7 +80,7 @@ const GlobalStyle = createGlobalStyle`
     
     #app {
          background-color: ${Color.MEDIUM_DARK};
-         height: calc(100vh - ${Dimensions.NAV_HEIGHT});
+         height: calc(100vh - ${Dimension.NAV_HEIGHT});
          overflow-x: auto;
          overflow-y: auto;
          position: relative;

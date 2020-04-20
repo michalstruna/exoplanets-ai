@@ -1,7 +1,8 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
 
-import { Color, Mixin, VirtualizedList, Duration, useSort, useElement, ZIndex } from '../../Utils'
+import { VirtualizedList, useSort, useElement } from '../../Utils'
+import { Color, Mixins, Duration, ZIndex } from '../../Style'
 import { Sort } from '../index'
 
 interface Static {
@@ -66,8 +67,8 @@ const Cell = Styled.div<CellProps>`
     
     ${props => props.icon && css`
         &:before {
-            ${Mixin.Image(undefined)}
-            ${Mixin.Size('1.2rem')}
+            ${Mixins.Image(undefined)}
+            ${Mixins.Size('1.2rem')}
             background-image: url("${props.icon}");
             content: "";
             display: inline-block;

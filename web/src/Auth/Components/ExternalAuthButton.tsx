@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Styled from 'styled-components'
 
-import { Duration, Mixin } from '../../Utils'
+import { Duration, Mixins } from '../../Style'
 
 interface Props extends React.ComponentPropsWithoutRef<'button'> {
     text: string
@@ -11,8 +11,8 @@ interface Props extends React.ComponentPropsWithoutRef<'button'> {
 const Root = Styled.button.attrs({
     type: 'button'
 })<any>`
-    ${Mixin.Size('auto', '2.5rem')}
-    ${({ icon }) => Mixin.Image(icon, 'auto 1.5rem', '0.5rem center')}
+    ${Mixins.Size('auto', '2.5rem')}
+    ${({ icon }) => Mixins.Image(icon, 'auto 1.5rem', '0.5rem center')}
     box-sizing: border-box;
     font-size: 90%;
     font-weight: bold;

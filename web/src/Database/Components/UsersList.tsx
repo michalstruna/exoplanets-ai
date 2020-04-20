@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Color, Duration, Mixin } from '../../Utils'
+import { Color, Duration, Mixins } from '../../Style'
 import { MinorSectionTitle, Table } from '../../Layout'
 import UserRole from '../../Auth/Constants/UserRole'
 import { useIdentity } from '../../Auth'
@@ -20,7 +20,7 @@ interface NavLinkProps {
 }
 
 const Root = Styled.div`
-    ${Mixin.Size()}
+    ${Mixins.Size()}
     background-color: ${Color.DARK};
     display: flex;
     flex-direction: column;
@@ -40,23 +40,23 @@ const Title = Styled(MinorSectionTitle)`
 `
 
 const Inner = Styled.div`
-    ${Mixin.Size()}
+    ${Mixins.Size()}
     display: flex;
 `
 
 const Content = Styled.main`
-    ${Mixin.Size('calc(100% - 5rem)', '100%')}
+    ${Mixins.Size('calc(100% - 5rem)', '100%')}
     background: ${Color.MEDIUM_DARK};
 `
 
 const Nav = Styled.nav`
-    ${Mixin.Size('8rem', '100%')}
+    ${Mixins.Size('8rem', '100%')}
     display: flex;
     flex-direction: column;
 `
 
 const NavLink = Styled.button<NavLinkProps>`
-    ${Mixin.Size()}
+    ${Mixins.Size()}
     box-sizing: border-box;
     padding: 0.5rem;
     text-align: left;
@@ -106,17 +106,17 @@ const UsersTable = Styled(Table)`
 `
 
 const Image = Styled.div`
-    ${Mixin.Size('1.35rem')}
-    ${Mixin.Image(undefined)}
+    ${Mixins.Size('1.35rem')}
+    ${Mixins.Image(undefined)}
     display: inline-block;
     margin-right: 0.5rem;
     vertical-align: middle;
 `
 
 const DetailLink = Styled(Link)`
-    ${Mixin.Size('1.5rem')}
-    ${Mixin.Image('Controls/ArrowRight.svg', '90%')}
-    ${Mixin.OpacityHover()}
+    ${Mixins.Size('1.5rem')}
+    ${Mixins.Image('Controls/ArrowRight.svg', '90%')}
+    ${Mixins.OpacityHover()}
     vertical-align: middle;
 `
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
-import { Dimensions, Mixin } from '../../Utils'
+
+import { Dimension, Mixins } from '../../Style'
 
 interface Props extends React.ComponentPropsWithoutRef<'button'> {
     icon?: string
@@ -9,10 +10,10 @@ interface Props extends React.ComponentPropsWithoutRef<'button'> {
 }
 
 export default Styled.button<Props>`
-    ${Mixin.OpacityHover()}
+    ${Mixins.OpacityHover()}
     
     &:before {
-        ${props => props.icon && Mixin.Image(props.icon, 'auto 100%', 'left center')}
+        ${props => props.icon && Mixins.Image(props.icon, 'auto 100%', 'left center')}
         content: "";
         display: inline-block;
         margin-right: 0.5rem;
@@ -20,16 +21,16 @@ export default Styled.button<Props>`
     }
     
     ${props => props.isLarge ? css`
-        ${Mixin.Size('auto', Dimensions.NAV_HEIGHT, true)}
+        ${Mixins.Size('auto', Dimension.NAV_HEIGHT, true)}
         
         &:before {
-            ${Mixin.Size('1.2rem')}
+            ${Mixins.Size('1.2rem')}
         }
     ` : css`
         background-size: auto 1rem;
         
         &:before {
-            ${Mixin.Size('1rem')}
+            ${Mixins.Size('1rem')}
         }
     `}
     

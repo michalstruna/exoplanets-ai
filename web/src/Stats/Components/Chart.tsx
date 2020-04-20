@@ -10,7 +10,8 @@ import {
     YAxis,
     ZAxis
 } from 'recharts'
-import { Color, Numbers } from '../../Utils'
+import { Numbers } from '../../Utils'
+import { Color } from '../../Style'
 
 enum ChartType {
     LINE,

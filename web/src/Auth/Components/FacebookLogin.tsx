@@ -5,7 +5,7 @@ import Styled from 'styled-components'
 import Facebook from 'react-facebook-login/dist/facebook-login-render-props'
 
 import ExternalAuthButton from './ExternalAuthButton'
-import { Color } from '../../Utils'
+import { Color } from '../../Style'
 
 interface Props extends React.ComponentPropsWithoutRef<'button'> {
 

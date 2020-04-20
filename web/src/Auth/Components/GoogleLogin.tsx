@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 import Google from 'react-google-login'
 
 import ExternalAuthButton from './ExternalAuthButton'
-import { Color } from '../../Utils'
+import { Color } from '../../Style'
 
 interface Props extends React.ComponentPropsWithoutRef<'button'> {
 

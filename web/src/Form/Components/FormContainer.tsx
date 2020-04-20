@@ -2,7 +2,7 @@ import { Formik, FormikProps, FormikConfig, FormikHelpers } from 'formik'
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Color, Duration } from '../../Utils'
+import { Color, Duration } from '../../Style'
 import { Loader } from '../../Async'
 
 interface Props<Values> extends FormikConfig<Values> {

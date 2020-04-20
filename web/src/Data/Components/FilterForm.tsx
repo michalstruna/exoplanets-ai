@@ -2,7 +2,8 @@ import React from 'react'
 import Styled from 'styled-components'
 import { Field, FieldArray, Formik } from 'formik'
 
-import { Arrays, Duration, Mixin, Validator } from '../../Utils'
+import { Arrays, Validator } from '../../Utils'
+import { Duration, Mixins } from '../../Style'
 import { useStrings } from '../../Content'
 
 type BrokenObjectFilter = any
@@ -43,9 +44,9 @@ const Root = Styled.div`
 `
 
 const Delete = Styled.button`
-    ${Mixin.Image('Universe/Filter/Delete.svg', '70%')}
-    ${Mixin.OpacityHover()}
-    ${Mixin.Size('3rem !important')}
+    ${Mixins.Image('Universe/Filter/Delete.svg', '70%')}
+    ${Mixins.OpacityHover()}
+    ${Mixins.Size('3rem !important')}
 `
 
 const Row = Styled.div<RowProps>`

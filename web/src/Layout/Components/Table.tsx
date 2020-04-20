@@ -1,6 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Mixin } from '../../Utils'
+
+import { Mixins } from '../../Style'
 
 interface Props<Item> extends React.ComponentPropsWithoutRef<'div'> {
     items: Item[]
@@ -15,7 +16,7 @@ interface Column<Item> {
 }
 
 const Root = Styled.div`
-    ${Mixin.Size()}
+    ${Mixins.Size()}
     display: table;
 `
 
@@ -28,7 +29,7 @@ const Row = Styled.div`
 `
 
 const Cell = Styled.div`
-    ${Mixin.ThreeDots()}
+    ${Mixins.ThreeDots()}
     display: table-cell;
     overflow: hidden;
     padding: 0.5rem;

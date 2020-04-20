@@ -1,8 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Dimensions, Duration, Mixin } from '../../Utils'
-import Color from '../../Utils/Constants/Color'
+import { Dimension, Duration, Mixins, Color } from '../../Style'
 import { useStrings } from '../../Content'
 import { Link } from '../../Routing'
 
@@ -15,7 +14,7 @@ interface Props extends React.ComponentPropsWithoutRef<'nav'> {
 }
 
 const Root = Styled.nav`
-    ${Mixin.Size('35rem', Dimensions.NAV_HEIGHT, true)}
+    ${Mixins.Size('35rem', Dimension.NAV_HEIGHT, true)}
     display: flex;
     justify-content: space-around;
     user-select: none;
@@ -33,8 +32,8 @@ const NavLink = Styled(Link)<NavLinkProps>`
     width: 100%;
     
     &:before {
-        ${props => Mixin.Image(`Core/Nav/${props.icon}.svg`)}
-        ${Mixin.Size('1.5rem', '100%')}
+        ${props => Mixins.Image(`Core/Nav/${props.icon}.svg`)}
+        ${Mixins.Size('1.5rem', '100%')}
         content: "";
         display: inline-block;
         margin-right: 0.75rem;
