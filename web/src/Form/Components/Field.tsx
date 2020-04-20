@@ -3,7 +3,7 @@ import React from 'react'
 import Styled  from 'styled-components'
 
 import FieldType from '../Constants/FieldType'
-import { Color, Duration, Mixins } from '../../Style'
+import { Color, Duration, size } from '../../Style'
 
 interface Type {
     name: string
@@ -42,7 +42,7 @@ const Input = Styled(FormikField)`
 `
 
 const Text = Styled.section`
-    ${Mixins.Size('100%', '2rem', true)}
+    ${size('100%', '2rem', true)}
     box-sizing: border-box;
     display: block;
     font-size: 90%;

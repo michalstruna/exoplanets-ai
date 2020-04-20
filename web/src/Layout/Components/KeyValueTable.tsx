@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Mixins } from '../../Style'
+import { size, threeDots } from '../../Style'
 
 interface Static {
     Row: string
@@ -21,8 +21,8 @@ const Row = Styled.div`
 `
 
 const Cell = Styled.div`
-    ${Mixins.Size()}
-    ${Mixins.ThreeDots()}
+    ${size()}
+    ${threeDots()}
     box-sizing: border-box;
     padding: 0 0.5rem;
     white-space: nowrap;

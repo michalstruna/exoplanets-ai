@@ -1,11 +1,11 @@
 import { createGlobalStyle } from 'styled-components'
 
-import { Color, Dimension, Mixins } from '../../Style'
+import { Color, Dimension, fontFace } from '../../Style'
 
 const GlobalStyle = createGlobalStyle`
-     ${Mixins.FontFace('Montserrat', 'Montserrat.woff2')}
-     ${Mixins.FontFace('Montserrat', 'MontserratThin.woff2', '100')}
-     ${Mixins.FontFace('Montserrat', 'MontserratBold.woff2', 'bold')}
+     ${fontFace('Montserrat', 'Montserrat.woff2')}
+     ${fontFace('Montserrat', 'MontserratThin.woff2', '100')}
+     ${fontFace('Montserrat', 'MontserratBold.woff2', 'bold')}
 
     body {
         background-color: ${Color.BACKGROUND};

@@ -2,7 +2,7 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 
 import { VirtualizedList, useSort, useElement } from '../../Utils'
-import { Color, Mixins, Duration, ZIndex } from '../../Style'
+import { Color, size, image, Duration, ZIndex } from '../../Style'
 import { Sort } from '../index'
 
 interface Static {
@@ -67,8 +67,8 @@ const Cell = Styled.div<CellProps>`
     
     ${props => props.icon && css`
         &:before {
-            ${Mixins.Image(undefined)}
-            ${Mixins.Size('1.2rem')}
+            ${image(undefined)}
+            ${size('1.2rem')}
             background-image: url("${props.icon}");
             content: "";
             display: inline-block;

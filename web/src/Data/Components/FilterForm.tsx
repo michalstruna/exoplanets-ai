@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 import { Field, FieldArray, Formik } from 'formik'
 
 import { Arrays, Validator } from '../../Utils'
-import { Duration, Mixins } from '../../Style'
+import { Duration, image, opacityHover, size } from '../../Style'
 import { useStrings } from '../../Content'
 
 type BrokenObjectFilter = any
@@ -44,9 +44,9 @@ const Root = Styled.div`
 `
 
 const Delete = Styled.button`
-    ${Mixins.Image('Universe/Filter/Delete.svg', '70%')}
-    ${Mixins.OpacityHover()}
-    ${Mixins.Size('3rem !important')}
+    ${image('Universe/Filter/Delete.svg', '70%')}
+    ${opacityHover()}
+    ${size('3rem !important')}
 `
 
 const Row = Styled.div<RowProps>`

@@ -6,7 +6,7 @@ import { IconButton } from '../../Control'
 import Auth from './Auth'
 import { UserSimple } from '../types'
 import { useActions } from '../../Utils'
-import { Mixins } from '../../Style'
+import { image } from '../../Style'
 import { logout } from '../Redux/Reducer'
 
 interface Static {
@@ -115,7 +115,7 @@ interface ItemRootProps {
 
 const ItemRoot = Styled.div<ItemRootProps>`
     ${props => props.icon && css`
-        ${Mixins.Image(props.icon, '1.1rem', 'left center')}
+        ${image(props.icon, '1.1rem', 'left center')}
         box-sizing: border-box;
         padding-left: 1.5rem;
     `}

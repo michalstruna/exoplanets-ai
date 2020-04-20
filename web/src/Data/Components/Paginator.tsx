@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 import Paginate from 'react-paginate'
 
-import { Mixins, Color, Duration } from '../../Style'
+import { size, Color, Duration } from '../../Style'
 import { Segment } from '../index'
 
 interface Static {
@@ -30,7 +30,7 @@ const Root = Styled.div`
      }
 
     .${PAGE}, .${BREAK}, .${EDGE} {
-        ${Mixins.Size('2.5rem', '2rem', true)}
+        ${size('2.5rem', '2rem', true)}
         background-color: ${Color.DARKEST};
         display: inline-block;
         overflow: hidden;
@@ -42,7 +42,7 @@ const Root = Styled.div`
         }
         
         a {
-            ${Mixins.Size()}
+            ${size()}
             display: block;
             outline: none;
         }

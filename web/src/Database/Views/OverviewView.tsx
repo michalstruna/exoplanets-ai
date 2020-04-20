@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Color, Dimension, Mixins } from '../../Style'
+import { Color, Dimension, size } from '../../Style'
 import { Chart, TopLevelStats } from '../../Stats'
 import { Table, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const Root = Styled.div`
-    ${Mixins.Size('100%', `calc(100vh - ${Dimension.NAV_HEIGHT})`)}
+    ${size('100%', `calc(100vh - ${Dimension.NAV_HEIGHT})`)}
     background-color: ${Color.BACKGROUND};
     display: flex;
 `
@@ -28,7 +28,7 @@ const Block = Styled.div`
 `
 
 const Left = Styled(Block)`
-    ${Mixins.Size('40rem', '100%')}
+    ${size('40rem', '100%')}
     
     & > div {
         margin-bottom: 0.5rem;
@@ -40,30 +40,30 @@ const Left = Styled(Block)`
 `
 
 const Center = Styled.div`
-    ${Mixins.Size('calc((100vw - 40rem) * 0.4)', '100%')}
+    ${size('calc((100vw - 40rem) * 0.4)', '100%')}
     margin: 0 1.5rem;
 `
 
 const Right = Styled.div`
-    ${Mixins.Size('calc((100vw - 40rem) * 0.6)', '100%')}
+    ${size('calc((100vw - 40rem) * 0.6)', '100%')}
     margin-right: 1rem;
 `
 
 const Users = Styled(UsersList)`
-    ${Mixins.Size('100%', `30rem`)}
+    ${size('100%', `30rem`)}
 `
 
 const Todo1 = Styled(Block)`
-    ${Mixins.Size('100%', `calc(100% - 33rem)`)}
+    ${size('100%', `calc(100% - 33rem)`)}
     margin-top: 1.5rem;
 `
 
 const Todo2 = Styled(Block)`
-    ${Mixins.Size('100%', `calc(100% - 32rem)`)}
+    ${size('100%', `calc(100% - 32rem)`)}
 `
 
 const News = Styled(Block)`
-    ${Mixins.Size('100%', '29rem')}
+    ${size('100%', '29rem')}
     margin-top: 1.5rem;
     padding: 0;
     
@@ -87,8 +87,8 @@ const FlexContainer = Styled.div`
 `
 
 const Image = Styled.div`
-    ${Mixins.Size('4rem')}
-    ${Mixins.Size('2.5rem')}
+    ${size('4rem')}
+    ${size('2.5rem')}
     background-image: radial-gradient(#CA0, #000);
     border-radius: 100%;
     display: inline-block;

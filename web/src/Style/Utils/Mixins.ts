@@ -2,7 +2,7 @@ import { css } from 'styled-components'
 
 import Duration from '../Constants/Duration'
 
-export const FontFace = (name: string, path: string, fontWeight: string = 'normal') => css`
+export const fontFace = (name: string, path: string, fontWeight: string = 'normal') => css`
         @font-face {
             font-family: ${name};
             font-weight: ${fontWeight};
@@ -10,26 +10,26 @@ export const FontFace = (name: string, path: string, fontWeight: string = 'norma
         }
     `
 
-export const Image = (name?: string, size: string = '100% 100%', position: string = 'center center') => css`
+export const image = (name?: string, size: string = '100% 100%', position: string = 'center center') => css`
         ${name && `background-image: url(/img/${name});`}
         background-position: ${position};
         background-repeat: no-repeat;
         background-size: ${size};
     `
 
-export const FlexCenter = () => css`
+export const flexCenter = () => css`
         align-items: center;
         display: flex;
         justify-content: center;
     `
 
-export const Size = (width: string | 0 = '100%', height: string | 0 = width, oneLine: boolean = false) => css`
+export const size = (width: string | 0 = '100%', height: string | 0 = width, oneLine: boolean = false) => css`
         height: ${height};
         line-height: ${oneLine ? height : undefined};
         width: ${width};
     `
 
-export const OpacityHover = (opacity: number = 0.5, duration: string = Duration.FAST) => css`
+export const opacityHover = (opacity: number = 0.5, duration: string = Duration.FAST) => css`
         opacity: ${opacity};
         transition: opacity ${duration};
         
@@ -38,7 +38,7 @@ export const OpacityHover = (opacity: number = 0.5, duration: string = Duration.
         }
     `
 
-export const ThreeDots = () => css`
+export const threeDots = () => css`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { useActions, useDrag, useElement } from '../../Utils'
-import { ZIndex, Mixins } from '../../Style'
+import { ZIndex, size } from '../../Style'
 import { HierarchicalTable, MiniGraph } from '../../Data'
 import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort, useBodiesSegment } from '..'
 import { Async } from '../../Async'
@@ -22,14 +22,14 @@ const Root = Styled.div`
 const colors = ['#A50', '#FFF', '#A00', '#CC0']
 
 const Image = Styled.div`
-    ${Mixins.Size('4rem')}
+    ${size('4rem')}
     background-image: radial-gradient(${colors[3]}, #000);
     border-radius: 100%;
     display: inline-block;
 `
 
 const PlanetImage = Styled(Image)`
-    ${Mixins.Size('2.5rem')}
+    ${size('2.5rem')}
     background-image: radial-gradient(#CA0, #000);
 `
 
@@ -112,7 +112,7 @@ const Table = Styled(HierarchicalTable)`
         
             &[data-level="0"] {                            
                 ${Image} {
-                    ${Mixins.Size('2.5rem')}
+                    ${size('2.5rem')}
                 }
                 
                 &:first-of-type {
@@ -125,7 +125,7 @@ const Table = Styled(HierarchicalTable)`
                 height: 2rem;
             
                 ${Image} {
-                    ${Mixins.Size('1.5rem')}
+                    ${size('1.5rem')}
                 }
             }
         }
