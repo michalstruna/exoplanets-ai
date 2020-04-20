@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux'
 import { createSelector } from '@reduxjs/toolkit'
 
-import Languages from '../Utils/Languages'
+import * as Languages from '../Utils/Languages'
 
-const selectStrings = state => state.content.strings
-const selectLanguage = state => state.content.language
+const selectStrings = (state: any) => state.content.strings
+const selectLanguage = (state: any) => state.content.language
 
 const selectLocalizedStrings = createSelector(
     [selectStrings, selectLanguage],

@@ -9,7 +9,7 @@ interface Props<Item> extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 interface Column<Item> {
-    accessor: (item: Item, number) => any
+    accessor: (item: Item, index: number) => any
     render?: (value: any, item: Item, index: number) => React.ReactNode
     title?: React.ReactNode
 }

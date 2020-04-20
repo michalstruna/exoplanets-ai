@@ -67,7 +67,7 @@ const Field: React.FC<Props> = ({ name, type, label, required, invalid, validato
 
     const [value, setValue] = React.useState()
 
-    const validate = value => {
+    const validate = (value: any) => {
         setValue(value)
 
         if (required && !value) {
@@ -84,7 +84,7 @@ const Field: React.FC<Props> = ({ name, type, label, required, invalid, validato
     }
 
     const renderOptions = () => (
-        options.map((option, i) => (
+        options && options.map((option, i) => (
             <option value={option.value} key={i}>
                 {option.text}
             </option>

@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 import Paginate from 'react-paginate'
 
 import Color from '../../Utils/Constants/Color'
-import Mixin from '../../Utils/Constants/Mixin'
+import { Mixin } from '../../Utils'
 import Duration from '../../Utils/Constants/Duration'
 import { Segment } from '../index'
 

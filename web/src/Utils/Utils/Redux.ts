@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-export const async = <T>(payload: T = null) => ({ pending: false, payload, error: null })
+export const async = <T>(payload: T | null = null) => ({ pending: false, payload, error: null })
 
 type Options<State, Payload> = {
     onPending?: (state: State, action: Action<Payload>) => any
@@ -22,9 +22,9 @@ type Reducer<State, Actions> = {
 
 export const reducer = <State extends Record<string, any>, Actions extends Reducer<State, any>>(name: string, initialState: State, actions: Actions) => {
 
-    const reducers = {}
-    const extraReducers = {}
-    const extraActions = {}
+    const reducers = {} as any
+    const extraReducers = {} as any
+    const extraActions = {} as any
 
     for (const [key, value] of Object.entries(actions)) {
         if (Array.isArray(value)) {
@@ -33,7 +33,7 @@ export const reducer = <State extends Record<string, any>, Actions extends Reduc
 
             extraActions[key] = action
 
-            extraReducers[action.pending.type] = (state, action) => {
+            extraReducers[action.pending.type] = (state: any, action: any) => {
                 state[field].pending = true
 
                 if (options && options.onPending) {
@@ -44,7 +44,7 @@ export const reducer = <State extends Record<string, any>, Actions extends Reduc
                 }
             }
 
-            extraReducers[action.fulfilled.type] = (state, action) => {
+            extraReducers[action.fulfilled.type] = (state: any, action: any) => {
                 state[field].pending = false
                 state[field].error = null
 
@@ -55,7 +55,7 @@ export const reducer = <State extends Record<string, any>, Actions extends Reduc
                 }
             }
 
-            extraReducers[action.rejected.type] = (state, action) => {
+            extraReducers[action.rejected.type] = (state: any, action: any) => {
                 state[field].pending = false
                 state[field].error = action.error.message
 
@@ -65,7 +65,7 @@ export const reducer = <State extends Record<string, any>, Actions extends Reduc
             }
 
         } else {
-            reducers[key] = (state, action) => {
+            reducers[key] = (state: any, action: any) => {
                 (value as Function)(state, action)
             }
         }

@@ -107,7 +107,7 @@ const UsersTable = Styled(Table)`
 
 const Image = Styled.div`
     ${Mixin.Size('1.35rem')}
-    ${Mixin.Image(null)}
+    ${Mixin.Image(undefined)}
     display: inline-block;
     margin-right: 0.5rem;
     vertical-align: middle;
@@ -127,7 +127,7 @@ const data = {
         value: Math.round(Math.random() * 5000),
         change: Math.round(Math.random() * 500)
     }
-}
+} as any
 
 for (let i = 0; i < 11; i++) {
     data.list.push({
@@ -155,14 +155,14 @@ for (let i = 0; i < 11; i++) {
 
 
 const columns = [
-    { accessor: (user, index) => (user.position || (index + 1)) + '.' },
+    { accessor: (user: any, index: any) => (user.position || (index + 1)) + '.' },
     {
-        accessor: user => user.user.name,
-        render: (name, user) => <><Image
+        accessor: (user: any) => user.user.name,
+        render: (name: any, user: any) => <><Image
             style={{ backgroundImage: user.user.avatar && `url(${user.user.avatar})` }} />{name}</>
     },
-    { accessor: user => user.value },
-    { accessor: user => user.change, render: change => change > 0 ? change : '' }
+    { accessor: (user: any) => user.value },
+    { accessor: (user: any) => user.change, render: (change: any) => change > 0 ? change : '' }
 ]
 
 

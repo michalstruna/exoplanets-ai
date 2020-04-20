@@ -4,10 +4,11 @@ import { Filter, Sort, Segment, Cursor } from '../../Data'
 import { Query, Urls } from '../../Routing'
 
 
-function xmur3(str) {
-    for (var i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
-        h = Math.imul(h ^ str.charCodeAt(i), 3432918353),
-            h = h << 13 | h >>> 19
+function xmur3(str: string) {
+    for (var i = 0, h = 1779033703 ^ str.length; i < str.length; i++) {
+        h = Math.imul(h ^ str.charCodeAt(i), 3432918353)
+        h = h << 13 | h >>> 19
+    }
     return function () {
         h = Math.imul(h ^ h >>> 16, 2246822507)
         h = Math.imul(h ^ h >>> 13, 3266489909)
@@ -15,7 +16,7 @@ function xmur3(str) {
     }
 }
 
-function xoshiro128ss(a, b, c, d) {
+function xoshiro128ss(a: number, b: number, c: number, d: number) {
     return function () {
         var t = b << 9, r = a * 5
         r = (r << 7 | r >>> 25) * 9
@@ -31,9 +32,9 @@ function xoshiro128ss(a, b, c, d) {
 
 const seed = xmur3('a')
 const rand = xoshiro128ss(seed(), seed(), seed(), seed())
-const get = (val, i = 0) => Math.round(val * rand())
+const get = (val: any, i = 0) => Math.round(val * rand())
 
-const data = []
+const data: any[] = []
 
 for (let i = 0; i < 256; i++) {
     data.push({
@@ -60,7 +61,8 @@ for (let i = 0; i < 256; i++) {
             type: 1
         })),
         type: i % 5,
-        distance: get(5, i)
+        distance: get(5, i),
+        tmp: null as any
     })
 }
 
@@ -69,15 +71,15 @@ for (const i in data) {
     const j = parseInt(i)
 
     if (j % 4 === 0) {
-        star.tmp = star.observation.transit.map((v, i) => ({
+        star.tmp = star.observation.transit.map((v: any, i: number) => ({
             transit: star.observation.transit[i]
         }))
     } else if (j % 4 === 1) {
-        star.tmp = star.observation.transit.map((v, i) => ({
+        star.tmp = star.observation.transit.map((v: any, i: number) => ({
             radialVelocity: Math.round(star.observation.radialVelocity[i]) / 100
         }))
     } else if (j % 4 === 2) {
-        star.tmp = star.observation.transit.map((v, i) => ({
+        star.tmp = star.observation.transit.map((v: any, i: number) => ({
             transit: star.observation.transit[i],
             radialVelocity: Math.round(star.observation.radialVelocity[i]) / 100
         }))
@@ -86,7 +88,7 @@ for (const i in data) {
     }
 }
 
-const compare = (a, b) => {
+const compare = (a: number, b: number) => {
     if (a > b) {
         return 1
     } else if (a < b) {
@@ -99,29 +101,29 @@ const compare = (a, b) => {
 const starColumns = ['', 'type', 'name', 'diameter', 'mass', 'temperature', 'luminosity', 'distance', 'planets.length', '']
 const planetColumns = ['', 'type', 'type', 'diameter', 'mass', 'surfaceTemperature', 'orbitalPeriod', 'semiMajorAxis', 'orbitalVelocity', '']
 
-const getSortedItems = (items, sort) => { // TODO: Refactor.
+const getSortedItems = <T>(items: T[], sort: any) => { // TODO: Refactor.
     const copyItems = JSON.parse(JSON.stringify(items)) // TODO: Deep clone.
-    const accessor = body => body[sort.level === 0 ? starColumns[sort.column] : planetColumns[sort.column]]
+    const accessor = (body: any) => body[sort.level === 0 ? starColumns[sort.column] : planetColumns[sort.column]]
 
     if (sort.level === 0) {
         const result = [...copyItems].sort((a, b) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1))
         addIndex(result)
         return result
     } else if (sort.level === 1) {
-        const levelAccessor = star => star.planets
+        const levelAccessor = (star: any) => star.planets
         const defaultValue = sort.isAsc ? Infinity : -Infinity
 
         const result = [...copyItems]
 
         for (const item of result) {
-            levelAccessor(item).sort((a, b) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1))
+            levelAccessor(item).sort((a: any, b: any) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1))
         }
 
         result.sort((a, b) => (
             compare(levelAccessor(a)[0] ? accessor(levelAccessor(a)[0]) : defaultValue, levelAccessor(b)[0] ? accessor(levelAccessor(b)[0]) : defaultValue) * (sort.isAsc ? 1 : -1)
         ))
 
-        addIndex(result.reduce((total, current) => total.concat(current.planets), []).sort((a, b) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1)))
+        addIndex(result.reduce((total, current) => total.concat(current.planets), []).sort((a: any, b: any) => compare(accessor(a), accessor(b)) * (sort.isAsc ? 1 : -1)))
 
         return result
     }
@@ -130,7 +132,7 @@ const getSortedItems = (items, sort) => { // TODO: Refactor.
     return items
 }
 
-const addIndex = items => {
+const addIndex = <T extends any>(items: T[]) => {
     for (const i in items) {
         items[i].index = parseInt(i)
     }
@@ -140,17 +142,17 @@ const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).
 
 const queryUtils = new URLSearchParams(window.location.search)
 
-const defaultLevel = Validator.safe(parseInt(queryUtils.get(Query.ORDER_LEVEL)), v => Number.isInteger(v) && v >= 0 && v < levels.length, 0)
+const defaultLevel = Validator.safe(parseInt(queryUtils.get(Query.ORDER_LEVEL) || ''), v => Number.isInteger(v) && v >= 0 && v < levels.length, 0)
 
 const defaultSort: Sort = {
-    column: Validator.safe(parseInt(queryUtils.get(Query.ORDER_COLUMN)), v => Number.isInteger(v) && v > 0 && v < levels[defaultLevel].columns.length, 1),
-    isAsc: Validator.safe(parseInt(queryUtils.get(Query.ORDER_IS_ASC)), v => v === 1 || v === 0, 1) === 1,
+    column: Validator.safe(parseInt(queryUtils.get(Query.ORDER_COLUMN) || ''), v => Number.isInteger(v) && v > 0 && v < levels[defaultLevel].columns.length, 1),
+    isAsc: Validator.safe(parseInt(queryUtils.get(Query.ORDER_IS_ASC) || ''), v => v === 1 || v === 0, 1) === 1,
     level: defaultLevel
 }
 
 const defaultSegment: Segment = {
-    index: Validator.safe(parseInt(queryUtils.get(Query.SEGMENT_START)), v => Number.isInteger(v) && v >= 0, 1),
-    size: Validator.safe(parseInt(queryUtils.get(Query.SEGMENT_END)), v => Number.isInteger(v) && v > 0 && v <= 100, 20)
+    index: Validator.safe(parseInt(queryUtils.get(Query.SEGMENT_START) || ''), v => Number.isInteger(v) && v >= 0, 1),
+    size: Validator.safe(parseInt(queryUtils.get(Query.SEGMENT_END) || ''), v => Number.isInteger(v) && v > 0 && v <= 100, 20)
 }
 
 
@@ -159,7 +161,7 @@ const Reducer = Redux.reducer(
     'universe',
     {
         bodies: Redux.async<any /* TODO: Body[] */>(),
-        filter: null as Filter,
+        filter: null,
         sort: defaultSort,
         segment: defaultSegment,
         usersRank: 0
@@ -174,11 +176,11 @@ const Reducer = Redux.reducer(
             }, 1000)
         })],
 
-        setBodiesFilter: (state, action: Redux.Action<Filter>) => {
+        setBodiesFilter: (state: any, action: Redux.Action<Filter>) => {
 
         },
 
-        setBodiesSort: (state, action: Redux.Action<Sort>) => {
+        setBodiesSort: (state: any, action: any/*Redux.Action<Sort>*/) => {
             state.sort = action.payload
 
             Urls.replace({
@@ -190,7 +192,7 @@ const Reducer = Redux.reducer(
             })
         },
 
-        setBodiesSegment: (state, action: Redux.Action<Segment>) => {
+        setBodiesSegment: (state: any, action: any/*Redux.Action<Segment>*/) => {
             state.segment = action.payload
 
             Urls.replace({

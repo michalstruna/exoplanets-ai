@@ -48,7 +48,7 @@ const TopLevelStats: React.FC<Props> & Static = ({ data, ...props }) => {
                     {strings[key]}
                 </Name>
                 <Value>
-                    {Numbers.format(data[key])} {strings.units[key] || ''}
+                    {Numbers.format((data as any)[key])} {strings.units[key] || ''}
                 </Value>
             </Item>
         ))

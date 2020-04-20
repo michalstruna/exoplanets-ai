@@ -1,3 +1,5 @@
+import * as Languages from './Utils/Languages'
+
 /**
  * Redux.
  */
@@ -14,7 +16,7 @@ export { default as String } from './Constants/String'
 /**
  * Utils.
  */
-export { default as Languages } from './Utils/Languages'
+export { Languages }
 
 /**
  * Types.

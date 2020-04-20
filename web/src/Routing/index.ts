@@ -1,3 +1,5 @@
+import * as Urls from './Utils/Urls'
+
 /**
  * Components.
  */
@@ -13,7 +15,7 @@ export { default as Url } from './Constants/Url'
 /**
  * Utils.
  */
-export { default as Urls } from './Utils/Urls'
+export { Urls }
 
 /**
  * Redux.

@@ -20,7 +20,7 @@ const App: React.FC<Props> & Static = ({ children }) => {
     return (
         <>
             <GlobalStyle />
-            {ReactDOM.createPortal(<Header />, nav.current)}
+            {ReactDOM.createPortal(<Header />, nav.current as any)}
             {children}
         </>
     )

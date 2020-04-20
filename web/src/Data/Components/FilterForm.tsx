@@ -28,7 +28,7 @@ interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> 
     onChange: (values: ObjectFilter) => void
     initialValues?: BrokenObjectFilter
     defaultRelation?: Validator.Relation
-    keys?: { attribute: any, relation: any, value: any }
+    keys?: any//{ attribute: any, relation: any, value: any }
 }
 
 interface RowProps {
@@ -96,8 +96,8 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
         { [keys.attribute]: filter.attribute, [keys.relation]: filter.relation, [keys.value]: filter.value }
     )
 
-    const getHandleFieldChange = (values, handleChange, helpers, i) => (
-        event => {
+    const getHandleFieldChange = (values: any, handleChange: any, helpers: any, i: any) => (
+        (event: any) => {
             handleChange(event)
 
             if (event.target.value) {
@@ -113,8 +113,8 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
     )
 
     const getArrayFilter = (values: ObjectFilter) => {
-        const temp = { ...values }
-        const result = []
+        const temp = { ...values } as any
+        const result = [] as any
 
         for (const i in temp.attribute) {
             result[i] = {}
@@ -152,7 +152,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
     }
 
     const fixFilter = (values: ObjectFilter): ObjectFilter => {
-        const result = { attribute: [], relation: [], value: [] }
+        const result = { attribute: [], relation: [], value: [] } as any
 
         if (values.attribute.length !== values.relation.length || values.relation.length !== values.value.length) {
             return result
@@ -178,7 +178,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
         return arrayFilter
     }, [])
 
-    const remove = (values, helpers, i) => {
+    const remove = (values: any, helpers: any, i: any) => {
         const last = Arrays.findLastIndex<any>(values.filter, (item, j) => item.value && i !== j)
         const toRemove = values.filter.length - last - 3
 
@@ -191,7 +191,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
 
     return (
         <Formik
-            onSubmit={() => null}
+            onSubmit={() => {}}
             initialValues={{ filter: initialFilter }}
             validate={values => handleChange(values.filter)}>
             {({ values, handleChange }) => (
@@ -199,7 +199,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
                     <FieldArray name='filter'>
                         {helpers => (
                             <>
-                                {values.filter && values.filter.map((value, i) => (
+                                {values.filter && values.filter.map((value: any, i: any) => (
                                     <Row key={i} isActive={!!value.value}>
                                         <Field as='select' name={`filter.${i}.attribute`}>
                                             {attributes.map((attribute, i) => (

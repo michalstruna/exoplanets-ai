@@ -1,21 +1,24 @@
+import * as Mixin from './Constants/Mixin'
+import * as Redux from './Utils/Redux'
+import * as Arrays from './Utils/Arrays'
+import * as Numbers from './Utils/Numbers'
+import * as Keyframe from './Constants/Keyframe'
+import * as Validator from './Utils/Validator'
+
 /**
  * Constants.
  */
 export { default as Color } from './Constants/Color'
 export { default as Dimensions } from './Constants/Dimensions'
 export { default as Duration } from './Constants/Duration'
-export { default as Keyframe } from './Constants/Keyframe'
-export { default as Mixin } from './Constants/Mixin'
+export { Mixin, Keyframe }
 export { default as ZIndex } from './Constants/ZIndex'
 export { default as Cookie } from './Constants/Cookie'
 
 /**
  * Utils.
  */
-export { default as Validator } from './Utils/Validator'
-export { default as Arrays } from './Utils/Arrays'
-export { default as Numbers } from './Utils/Numbers'
-export * as Redux from './Utils/Redux'
+export { Redux, Arrays, Numbers, Validator }
 
 /**
  * Components.

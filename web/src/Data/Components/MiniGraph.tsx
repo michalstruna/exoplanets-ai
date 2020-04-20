@@ -39,7 +39,7 @@ const MiniGraph: React.FC<Props> & Static = ({ data, lines, labels, ...props }) 
             orientation={orientation as 'left' | 'right'} />
     )
 
-    const renderLine = (name, key, color, axisId) => (
+    const renderLine = (name: string, key: string, color: string, axisId: string) => (
         <Line
             name={name}
             type='monotone'
@@ -56,9 +56,9 @@ const MiniGraph: React.FC<Props> & Static = ({ data, lines, labels, ...props }) 
 
     return React.useMemo(() => (
         <LineChart data={data} width={320} height={80}>
-            {renderLine(labels[0] || lines[0], lines[0], '#77CC77', withLeft ? 'left' : 'right')}
+            {renderLine((labels as any)[0] || lines[0], lines[0], '#77CC77', withLeft ? 'left' : 'right')}
             {renderYAxis(withLeft ? 'left' : 'right', '#77CC77')}
-            {renderLine(labels[1] || lines[1], lines[1], '#CC7777', withLeft ? 'right' : 'left')}
+            {renderLine((labels as any)[1] || lines[1], lines[1], '#CC7777', withLeft ? 'right' : 'left')}
             {renderYAxis(withLeft ? 'right' : 'left', '#CC7777')}
         </LineChart>
     ), [data, lines])

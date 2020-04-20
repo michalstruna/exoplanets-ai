@@ -9,7 +9,7 @@ export default {
 
     NUMBER: {
         name: 'number',
-        validator: value => /[0-9]*/.test(value)
+        validator: (value: any) => /[0-9]*/.test(value)
     },
 
     EMAIL: {

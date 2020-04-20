@@ -66,7 +66,7 @@ const Cell = Styled.div<CellProps>`
     
     ${props => props.icon && css`
         &:before {
-            ${Mixin.Image(null)}
+            ${Mixin.Image(undefined)}
             ${Mixin.Size('1.2rem')}
             background-image: url("${props.icon}");
             content: "";
@@ -120,7 +120,7 @@ const Header = Styled(Row)`
 // TODO: Generic types. Current = level == 0 ? T1 : T2?
 const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, renderBody, renderHeader, ...props }) => {
 
-    const { sort, sortedLevel, sortedColumn, isAsc } = useSort(defaultSort.column, defaultSort.isAsc, defaultSort.level)
+    const { sort, sortedLevel, sortedColumn, isAsc } = useSort((defaultSort as any).column, (defaultSort as any).isAsc, (defaultSort as any).level)
     const { app } = useElement()
 
     React.useEffect(() => {
@@ -131,7 +131,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
     }, [sortedLevel, sortedColumn, isAsc, items])
 
     const renderedHeader = React.useMemo(() => {
-        const renderHeader = (levelIndex: number) => (
+        const renderHeader = (levelIndex: number): React.ReactNode => (
             <>
                 <Header>
                     {levels[levelIndex].columns.map((column: Column<any, any>, i) => (
@@ -158,14 +158,14 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
     }, [sort])
 
     const rows = React.useMemo(() => {
-        const rows = []
+        const rows = [] as any
 
-        const process = (items, level) => {
-            items.map(item => {
+        const process = (items: any, level: any) => {
+            items.map((item: any) => {
                 rows.push({ level, item })
 
                 if (level < levels.length - 1) {
-                    process(levels[level + 1].accessor(item), level + 1)
+                    process((levels as any)[level + 1].accessor(item), level + 1)
                 }
             })
         }
@@ -175,7 +175,7 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
         return rows
     }, [items])
 
-    const renderRow = ({ index, style }) => {
+    const renderRow = ({ index, style }: any) => {
         const { item, level } = rows[index]
 
         return (
@@ -189,8 +189,8 @@ const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, de
         )
     }
 
-    const headerRenderer = renderHeader ? renderHeader : header => header
-    const bodyRenderer = renderBody ? renderBody : body => body
+    const headerRenderer = renderHeader ? renderHeader : (header: any) => header
+    const bodyRenderer = renderBody ? renderBody : (body: any) => body
 
     // TODO: InfiniteLoader.
     return (

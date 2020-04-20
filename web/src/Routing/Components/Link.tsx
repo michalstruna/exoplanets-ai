@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 
 import { Target } from '../types'
 import { Validator } from '../../Utils'
-import Urls from '../Utils/Urls'
+import * as Urls from '../Utils/Urls'
 
 export interface Static {
     ACTIVE: string
@@ -51,7 +51,7 @@ const Link: Type = ({ hash, query, pathname, replace, ...props }) => {
         }
     }
 
-    if (pathname && (Validator.isUrl(pathname) || /.pdf$/.test(pathname))) {
+    if (pathname && (/^https?:/.test(pathname) || /.pdf$/.test(pathname))) {
         return (
             <AbsoluteRoot {...props} href={pathname} target='_blank' />
         )

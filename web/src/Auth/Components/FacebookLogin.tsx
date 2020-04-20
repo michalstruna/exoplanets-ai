@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Styled from 'styled-components'
-import Facebook from 'react-facebook-login/dist/facebook-login-render-props'
+import Facebook from 'react-facebook-login'
 
 import ExternalAuthButton from './ExternalAuthButton'
 import { Color } from '../../Utils'
@@ -25,10 +25,7 @@ const FacebookLogin: React.FC<Props> = ({ ...props }) => {
         <Facebook
             appId=''
             autoLoad
-            callback={() => null}
-            render={renderProps => (
-                <Root {...renderProps} {...props} text='Facebook' icon='Auth/Facebook.svg' />
-            )} />
+            callback={() => null} />
     )
 
 }

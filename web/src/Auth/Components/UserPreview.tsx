@@ -133,7 +133,7 @@ const Item: React.FC<ItemProps> = ({ title, value, icon }) => {
 
 const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
 
-    const country = user.personal.country ? Countries[user.personal.country] : null
+    const country = user.personal.country ? (Countries as any).countryCode(user.personal.country) : null
     const actions = useActions({ logout })
 
     return (

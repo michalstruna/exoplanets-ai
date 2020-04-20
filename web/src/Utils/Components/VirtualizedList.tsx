@@ -7,9 +7,9 @@ interface Static {
 
 }
 
-interface Props extends React.ComponentPropsWithoutRef<'div'> {
+interface Props extends React.ComponentPropsWithRef<'div'> {
     itemsCount: number
-    itemRenderer: ({ index: number, style: object }) => React.ReactNode
+    itemRenderer: ({ index, style }: { index: number, style: object }) => React.ReactNode
     itemHeight: number | ((index: number) => number)
     scrollable?: React.RefObject<HTMLElement>
 }
@@ -22,9 +22,9 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
 
     const getItemHeight = (index: number) => typeof itemHeight === 'number' ? itemHeight : itemHeight(index)
 
-    const getIndexRange = x => {
+    const getIndexRange = (x: number) => {
         const offsetTop = root.current ? root.current.offsetTop : 0
-        const scrollableHeight = scrollable ? scrollable.current.getBoundingClientRect().height : window.innerHeight
+        const scrollableHeight = scrollable && scrollable.current ? scrollable.current.getBoundingClientRect().height : window.innerHeight
         const start = Math.min(totalHeight, Math.max(0, x - offsetTop))
         const end = Math.min(totalHeight, Math.max(0, x - offsetTop + scrollableHeight))
 
@@ -59,8 +59,8 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
 
     const [indexRange, setIndexRange] = React.useState(getIndexRange(0))
 
-    const updateIndexRange = () => setIndexRange(getIndexRange(scrollable.current.scrollTop))
-    useEvent(scrollable.current, 'scroll', updateIndexRange)
+    const updateIndexRange = () => scrollable?.current && setIndexRange(getIndexRange(scrollable.current.scrollTop))
+    useEvent(scrollable?.current && scrollable.current as any, 'scroll', updateIndexRange)
     useEvent(window, 'resize', updateIndexRange)
 
     React.useEffect(() => {
@@ -80,7 +80,7 @@ const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, i
     }, [indexRange[0], indexRange[1], itemRenderer])
 
     return (
-        <Root {...props} style={{ height: totalHeight }} ref={root}>
+        <Root {...props} style={{ height: totalHeight }} ref={root as any}>
             {renderedItems}
         </Root>
     )

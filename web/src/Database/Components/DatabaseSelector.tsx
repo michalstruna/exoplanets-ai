@@ -10,7 +10,7 @@ interface Static {
 
 }
 
-interface Props extends React.ComponentPropsWithoutRef<'div'> {
+interface Props extends React.ComponentPropsWithRef<'div'> {
 
 }
 
@@ -31,13 +31,13 @@ const DatabaseSelector: React.FC<Props> & Static = ({ ...props }) => {
     const actions = useActions({ setBodiesSegment, setBodiesFilter })
 
     const root = React.useRef()
-    useFixedX(root)
+    useFixedX(root as any)
     const segment = useBodiesSegment()
     const bodies = useBodies()
     const bodiesCount = bodies.payload ? bodies.payload.count : 0
 
     return (
-        <Root {...props} ref={root}>
+        <Root {...props} ref={root as any}>
             <div>
                 <select>
                     <option>Hvězdy a planety</option>

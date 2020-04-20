@@ -55,7 +55,7 @@ const Nav: React.FC<Props> & Static = ({ ...props }) => {
     const strings = useStrings().nav
 
     const renderedLinks = React.useMemo(() => (
-        strings.links.map(({ text, icon, ...link }, i) => (
+        strings.links.map(({ text, icon, ...link }: any, i: number) => (
             <NavLink {...link} key={i} icon={icon}>
                 {text}
             </NavLink>

@@ -23,9 +23,9 @@ type AsyncDataAction<TPayload, TError = string> = {
     2?: any[] // Array of updaters.
 }
 
-const Async: Type<any> = <T extends any>({ data: rawData, pending, success, fail }) => {
+const Async: any = <T extends any>({ data: rawData, pending, success, fail }: Props<T>) => {
     const isSingle = !Array.isArray(rawData) || (('payload' in rawData[0]) && typeof rawData[1] === 'function')
-    const data = (isSingle ? [rawData] : rawData).map(item => Array.isArray(item) ? item : [item])
+    const data = ((isSingle ? [rawData] : rawData) as any).map((item: any) => Array.isArray(item) ? item : [item])
     const dispatch = useDispatch()
 
     const findError = (items: AsyncDataAction<T>[]) => {
@@ -34,18 +34,18 @@ const Async: Type<any> = <T extends any>({ data: rawData, pending, success, fail
     }
 
     const getState = () => ({
-        isPending: !!data.find(item => item[0].pending),
+        isPending: !!data.find((item: any) => item[0].pending),
         error: findError(data),
-        hasPayloads: !data.find(item => !item[0].payload)
+        hasPayloads: !data.find((item: any) => !item[0].payload)
     })
 
-    for (const item of data) {
-        React.useEffect(() => {
+    React.useEffect(() => {
+        for (const item of data) {
             if (item[1] && (!item[0].payload || item[2])) {
                 dispatch(item[1]())
             }
-        }, item[2] || [])
-    }
+        }
+    }, [JSON.stringify(data.map((item: any) => item[2]))]) // TODO
 
     const { isPending, error, hasPayloads } = getState()
 

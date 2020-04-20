@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import String from '../Constants/String'
-import Languages from '../Utils/Languages'
+import * as Languages from '../Utils/Languages'
 
 const defaultLanguage = Languages.getDefault()
 const defaultStrings = Languages.localize(String, defaultLanguage)

@@ -67,7 +67,7 @@ function FormContainer<T>({ children, initialValues, onSubmit, onChange, ...prop
         )
     )
 
-    const renderGlobalError = (props) => (
+    const renderGlobalError = (props: any) => (
         props.errors[GLOBAL_ERROR_NAME] && (
             <ErrorContainer>
                 {props.errors[GLOBAL_ERROR_NAME]}
@@ -91,7 +91,7 @@ function FormContainer<T>({ children, initialValues, onSubmit, onChange, ...prop
             validate={onChange}
             onSubmit={handleSubmit}
             {...props}>
-            {props => children({
+            {props => children && children({
                 ...props,
                 renderSubmit: getRenderSubmit(props),
                 globalError: renderGlobalError(props)

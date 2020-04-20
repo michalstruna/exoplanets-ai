@@ -96,7 +96,7 @@ const Image = Styled.div`
     vertical-align: middle;
 `
 
-const randomPlanets = []
+const randomPlanets = [] as any
 
 for (let i = 0; i < 20; i++) {
     randomPlanets.push({
