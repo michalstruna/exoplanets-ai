@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import { throttle } from 'throttle-debounce'
 
-
 type Target = Element | Window | Document
 type Handler = () => void
 

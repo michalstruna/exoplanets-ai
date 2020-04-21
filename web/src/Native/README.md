@@ -4,7 +4,8 @@ Module for work with browser, hardware, HTML, DOM events and native data types.
 
 * [Arrays](#arrays)
   * [Arrays.findLastIndex()](#arrays-find-last-index)
-* [Predicate](#predicate)
+* [Cookie](#cookie)
+* [LocalStorage](#local-storage)
 * [Validator](#validator)
   * [Validator.BiPredicate](#validator-predicate)
   * [Validator.is()](#validator-is)
@@ -14,6 +15,9 @@ Module for work with browser, hardware, HTML, DOM events and native data types.
   * [Validator.isEmail()](#validator-is-email)
   * [Validator.isUrl()](#validator-is-url)
   * [Validator.Predicate](#validator-predicate)
+* [useDrag()](#use-drag)
+* [useElement()](#use-element)
+* [useEvent()](#use-event)
 
 ## Arrays
 
@@ -25,6 +29,26 @@ Method that returns index of last item that matches predicate.
 
 ```
 Validator.findLastIndex([1, 2, 3, 4, 5], x < 5) // 3
+```
+
+## Cookie
+
+Enum with all cookie keys and expirations [days] used in app.
+
+```
+{
+    IDENTITY: { name: 'identity', expiration: 30 / 1440 }
+}
+```
+
+## LocalStorage
+
+Enum with all local storage keys used in app.
+
+```
+enum LocalStorage {
+    SETTINGS = 'settings'
+}
 ```
 
 ## Validator
@@ -101,4 +125,57 @@ Type of predicate. It can be value, array of values, regexp or custom function.
 
 ```
 type Predicate<T> = T | T[] | ((value: T) => boolean) | RegExp
+```
+
+#### <a name="use-drag">`useDrag<T>(handler: Handler<T>, getData?: DataGetter<T>): Handlers`</a>
+
+```
+type Coord = { x: number, y: number }
+type Handler<T> = { start: Coord, current: Coord, delta: Coord, data: T | undefined }
+type DataGetter<T> = () => T
+type EventHandler = (event: React.MouseEvent) => void
+type Handlers = { onMouseDown: EventHandler, onMouseMove: EventHandler, onMouseUp: EventHandler, onMouseLeave: EventHandler }
+```
+
+Hook implementing drag events. It accepts `handler` in parameter and optionally also `getData` which will be called on beginning of drag. Hook returns record of event handlers that should be passed to props of some element.
+
+```
+const dragHandlers = useDrag(({ delta, data }) => {
+    container.scrollLeft = data.x - delta.x
+    container.scrollTop = data.y - delta.y
+}, () => ({ x: container.scrollLeft, y: container.scrollTop }))
+
+<div {...dragHandlers} />
+```
+
+#### <a name="use-element">`useElement(): Refs`</a>
+
+```
+type Refs = { app: RefObject<HTMLElement>, nav: RefObject<HTMLElement> }
+```
+
+Hook returns reference to objects that are static and outside of React renderer.
+
+```
+const { app } = useElement()
+app.current.scrollTop = 0
+```
+
+#### <a name="use-event">`useEvent(element: Target, event: string, handler: Handler, options?: Options)`</a>
+
+```
+type Target = Element | Window | Document
+type Handler = () => void
+type Options = {
+    immediate?: boolean // If true, event handler will be called immediate.
+    active?: boolean // If true, event handler is enabled.
+    throttle?: number // Throttle event [ms].
+    passive?: boolean // Event will be passive (performance reasons).
+}
+```
+
+Hook that pass event handler to element and on unmount remove this handler.
+
+```
+useEvent(window, 'scroll', () => console.log('SCROLL!'), { throttle: 200 })
 ```
