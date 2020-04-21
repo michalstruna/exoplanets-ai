@@ -132,7 +132,9 @@ type Predicate<T> = T | T[] | ((value: T) => boolean) | RegExp
 
 Enum with all relations.
 
-## <a name="use-drag">`useDrag<T>(handler: Handler<T>, getData?: DataGetter<T>): Handlers`</a>
+## <a name="use-drag">useDrag()</a>
+
+#### `useDrag<T>(handler: Handler<T>, getData?: DataGetter<T>): Handlers`
 
 ```
 type Coord = { x: number, y: number }
@@ -153,7 +155,9 @@ const dragHandlers = useDrag(({ delta, data }) => {
 <div {...dragHandlers} />
 ```
 
-## <a name="use-element">`useElement(): Refs`</a>
+## <a name="use-element">useElement</a>
+
+#### `useElement(): Refs`
 
 ```
 type Refs = { app: RefObject<HTMLElement>, nav: RefObject<HTMLElement> }
@@ -166,7 +170,9 @@ const { app } = useElement()
 app.current.scrollTop = 0
 ```
 
-## <a name="use-event">`useEvent(element: Target, event: string, handler: Handler, options?: Options)`</a>
+## <a name="use-event">useEvent</a>
+
+#### `useEvent(element: Target, event: string, handler: Handler, options?: Options)`
 
 ```
 type Target = Element | Window | Document
