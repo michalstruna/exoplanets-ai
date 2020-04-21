@@ -3,7 +3,6 @@ import QueryString from 'query-string'
 
 import History from '../Redux/History'
 import { Target, Location } from '../types'
-import * as Queries from './Queries'
 import { Validator } from '../../Native'
 
 /**
@@ -28,8 +27,8 @@ export const replace = (location: Target): void => {
  * @param source Source location. (optional, default current location)
  * @return Merged location.
  */
-export const merge = (target: Target, source: Location = History.location): Location => { // TODO
-    const result: Location = {} as any
+export const merge = (target: Target, source: Location = History.location): Location => {
+    const result: Location = {} as any // TODO: Target?
 
     if (target.pathname || source.pathname) {
         const pathname = target.pathname || source.pathname
@@ -37,7 +36,7 @@ export const merge = (target: Target, source: Location = History.location): Loca
     }
 
     if (target.query || source.search) {
-        result.search = Queries.merge(source.search, target.query!)
+        result.search = QueryString.stringify({ ...QueryString.parse(source.search), ...target.query! })
     }
 
     if (target.hash) {
@@ -50,8 +49,8 @@ export const merge = (target: Target, source: Location = History.location): Loca
 /**
  * Check pathname from URL. If its current value is not allowed, set default value.
  */
-export const safePathname = (predicate: Validator.Predicate<string>, defaultValue: string): void => {
-    const value = History.location.pathname
+export const safePathname = (pathParamName: string, predicate: Validator.Predicate<string>, defaultValue: string): void => {
+    const value = History.location.pathname // TODO: Only parameter, not pathname.
 
     if (!Validator.is(value, predicate)) {
         replace({ pathname: defaultValue })
@@ -88,8 +87,14 @@ export const isCurrent = (source: Location, target: Target): boolean => {
         return false
     }
 
-    if (target.query && !Queries.isCurrent(source.search, target.query)) {
-        return false
+    if (target.query) {
+        const parsed = QueryString.parse(source.search)
+
+        for (const i in target.query) {
+            if (target.query[i] !== parsed[i]) {
+                return false
+            }
+        }
     }
 
     if (target.hash && source.hash.replace('#', '') !== target.hash) {

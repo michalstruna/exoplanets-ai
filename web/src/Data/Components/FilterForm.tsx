@@ -76,6 +76,8 @@ const Row = Styled.div<RowProps>`
 
 const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, initialValues, onChange, keys, ...props }) => {
 
+    return null
+
     const strings = useStrings().filter
 
     const mapKeysIn = React.useCallback((filter: any): ObjectFilter => ({

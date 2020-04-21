@@ -40,11 +40,11 @@ const NavLink = Styled(Link)<NavLinkProps>`
         vertical-align: bottom;
     }
     
-    &.${Link.ACTIVE}, &:hover {
+    &${Link.ACTIVE}, &:hover {
         opacity: 1;
     }
     
-    &.${Link.ACTIVE} {
+    &${Link.ACTIVE} {
         background-color: ${Color.MEDIUM_DARK};
     }
 `
