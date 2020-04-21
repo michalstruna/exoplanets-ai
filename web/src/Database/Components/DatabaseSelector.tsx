@@ -47,8 +47,7 @@ const DatabaseSelector: React.FC<Props> & Static = ({ ...props }) => {
             </div>
             <FilterForm
                 attributes={['starName', 'starMass']}
-                onChange={actions.setBodiesFilter}
-            />
+                onChange={actions.setBodiesFilter} />
             <Paginator page={segment} itemsCount={bodiesCount} onChange={actions.setBodiesSegment} freeze={bodies.pending} />
         </Root>
     )

@@ -8,6 +8,7 @@
     "email-validator": "^2.0.4",
     "emoji-flags": "^1.2.0",
     "formik": "^2.1.4",
+    "is-absolute-url": "^3.0.3",
     "js-cookie": "^2.2.1",
     "numeral": "^2.0.6",
     "path": "^0.12.7",

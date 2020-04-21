@@ -1,4 +1,5 @@
 import EmailValidator from 'email-validator'
+import UrlValidator from 'is-absolute-url'
 
 type FunctionPredicate<T> = (value: T) => boolean
 type BiFunctionPredicate<T1, T2> = (value1: T1, value2: T2) => boolean
@@ -6,7 +7,7 @@ type ValuePredicate<T> = T
 type ArrayPredicate<T> = T[]
 type RegExpPredicate = RegExp
 export type Predicate<T> = FunctionPredicate<T> | ValuePredicate<T> | ArrayPredicate<T> | RegExpPredicate
-export type BiPredicate<T1, T2> = (value1: T1, value2: T2) => boolean
+export type BiPredicate<T1, T2> = BiFunctionPredicate<T1, T2>
 
 export enum Relation {
     EQUALS,
@@ -16,10 +17,6 @@ export enum Relation {
     STARTS_WITH,
     ENDS_WITH
 }
-
-export const isEmail = (text: string): boolean => (
-    EmailValidator.validate(text)
-)
 
 /**
  * Check value against predicate.
@@ -36,6 +33,9 @@ export const is = <T>(value: T, predicate: Predicate<T>) => {
     }
 }
 
+/**
+ * Check pair of values against predicate.
+ */
 export const is2 = <T1, T2>(value1: T1, value2: T2, predicate: BiPredicate<T1, T2>) => {
     if (predicate instanceof RegExp) {
         return predicate.test((value1 as any).toString()) && predicate.test((value2 as any).toString())
@@ -46,8 +46,24 @@ export const is2 = <T1, T2>(value1: T1, value2: T2, predicate: BiPredicate<T1, T
     }
 }
 
-export const compare = <T>(value: T, relation: Relation, value2: T) => {
-    // TODO
+/**
+ * Compare two values depends on relation.
+ */
+export const compare = <T extends string | number>(value1: T, relation: Relation, value2: T) => {
+    switch (relation) {
+        case Relation.EQUALS:
+            return value1 === value2
+        case Relation.CONTAINS:
+            return value1.toString().includes(value2.toString())
+        case Relation.STARTS_WITH:
+            return value1.toString().startsWith(value2.toString())
+        case Relation.ENDS_WITH:
+            return value1.toString().endsWith(value2.toString())
+        case Relation.LESS_THAN:
+            return value1 < value2
+        case Relation.MORE_THAN:
+            return value1 > value2
+    }
 }
 
 /**
@@ -56,3 +72,9 @@ export const compare = <T>(value: T, relation: Relation, value2: T) => {
 export const safe = <T>(value: T, predicate: Predicate<T>, defaultValue: T) => {
     return is(value, predicate) ? value : defaultValue
 }
+
+/**
+ * Common patterns.
+ */
+export const isEmail = EmailValidator.validate
+export const isUrl = UrlValidator

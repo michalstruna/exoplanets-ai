@@ -13,3 +13,6 @@ export const format = (value: number): string => {
 export const toExponential = (value: number): string => {
     return Math.abs(value) < 1000 ? value.toString() : Numeral(value).format('0,0[e+0]')
 }
+
+// TODO: Unit tests.
+// TODO: Write docs.

@@ -6,8 +6,6 @@ import { Arrays, Validator } from '../../Native'
 import { Duration, image, opacityHover, size } from '../../Style'
 import { useStrings } from '../index'
 
-type BrokenObjectFilter = any
-
 type ObjectFilter = {
     attribute: string[]
     relation: Validator.Relation[]
@@ -27,7 +25,7 @@ interface Static {
 interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
     attributes: string[]
     onChange: (values: ObjectFilter) => void
-    initialValues?: BrokenObjectFilter
+    initialValues?: ObjectFilter
     defaultRelation?: Validator.Relation
     keys?: any//{ attribute: any, relation: any, value: any }
 }
@@ -142,16 +140,6 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
         return result
     }
 
-    const forceArray = (values: BrokenObjectFilter): ObjectFilter => {
-        const result = { ...values }
-
-        for (const i in result) {
-            result[i] = Arrays.forceArray(result[i], true)
-        }
-
-        return result as ObjectFilter
-    }
-
     const fixFilter = React.useCallback((values: ObjectFilter): ObjectFilter => {
         const result = { attribute: [], relation: [], value: [] } as any
 
@@ -171,7 +159,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
     }, [attributes])
 
     const initialFilter = React.useMemo(() => {
-        const objectFilter = mapKeysIn(forceArray(initialValues))
+        const objectFilter = mapKeysIn(initialValues)
         const safeFilter = fixFilter(objectFilter)
         const arrayFilter = getArrayFilter(safeFilter)
         arrayFilter.push({ attribute: attributes[0], relation: defaultRelation, value: '' })
