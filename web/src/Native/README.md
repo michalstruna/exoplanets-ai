@@ -15,6 +15,7 @@ Module for work with browser, hardware, HTML, DOM events and native data types.
   * [Validator.isEmail()](#validator-is-email)
   * [Validator.isUrl()](#validator-is-url)
   * [Validator.Predicate](#validator-predicate)
+  * [Validator.Relation](#validator-relation)
 * [useDrag()](#use-drag)
 * [useElement()](#use-element)
 * [useEvent()](#use-event)
@@ -127,7 +128,11 @@ Type of predicate. It can be value, array of values, regexp or custom function.
 type Predicate<T> = T | T[] | ((value: T) => boolean) | RegExp
 ```
 
-#### <a name="use-drag">`useDrag<T>(handler: Handler<T>, getData?: DataGetter<T>): Handlers`</a>
+#### <a name="validator-relation">`Validator.Relation`</a>
+
+Enum with all relations.
+
+## <a name="use-drag">`useDrag<T>(handler: Handler<T>, getData?: DataGetter<T>): Handlers`</a>
 
 ```
 type Coord = { x: number, y: number }
@@ -148,7 +153,7 @@ const dragHandlers = useDrag(({ delta, data }) => {
 <div {...dragHandlers} />
 ```
 
-#### <a name="use-element">`useElement(): Refs`</a>
+## <a name="use-element">`useElement(): Refs`</a>
 
 ```
 type Refs = { app: RefObject<HTMLElement>, nav: RefObject<HTMLElement> }
@@ -161,7 +166,7 @@ const { app } = useElement()
 app.current.scrollTop = 0
 ```
 
-#### <a name="use-event">`useEvent(element: Target, event: string, handler: Handler, options?: Options)`</a>
+## <a name="use-event">`useEvent(element: Target, event: string, handler: Handler, options?: Options)`</a>
 
 ```
 type Target = Element | Window | Document

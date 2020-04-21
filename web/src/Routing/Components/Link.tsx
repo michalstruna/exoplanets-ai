@@ -51,7 +51,7 @@ const Link: Type = ({ hash, query, pathname, replace, ...props }) => {
         }
     }
 
-    if (pathname && (/^https?:/.test(pathname) || /.pdf$/.test(pathname))) {
+    if (pathname && (Validator.isUrl(pathname) || /.pdf$/.test(pathname))) {
         return (
             <AbsoluteRoot {...props} href={pathname} target='_blank' />
         )
@@ -67,7 +67,7 @@ const Link: Type = ({ hash, query, pathname, replace, ...props }) => {
 
     return (
         <Root
-            {...props as any}
+            {...props}
             data-active={isActive || undefined}
             onClick={handleClick}
             isActive={() => isActive}

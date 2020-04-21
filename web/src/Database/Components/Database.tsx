@@ -245,13 +245,9 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     const { app } = useElement()
 
     const dragHandlers = useDrag(({ delta, data }) => {
-        if (!app.current) {
-            return null
-        }
-
         app.current.scrollLeft = data.x - delta.x
         app.current.scrollTop = data.y - delta.y
-    }, () => ({ x: app.current ? app.current.scrollLeft : 0, y: app.current ? app.current.scrollTop : 0 }))
+    }, () => ({ x: app.current.scrollLeft, y: app.current.scrollTop }))
 
     const handleSort = (newSort: any) => {
         if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level) {
