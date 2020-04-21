@@ -114,11 +114,11 @@ const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).
 
 const queryUtils = new URLSearchParams(window.location.search)
 
-const defaultLevel = Validator.safe(parseInt(queryUtils.get(Query.ORDER_LEVEL) || ''), v => Number.isInteger(v) && v >= 0 && v < levels.length, 0)
+const defaultLevel = Validator.safe(parseInt(queryUtils.get(Query.SORT_LEVEL) || ''), v => Number.isInteger(v) && v >= 0 && v < levels.length, 0)
 
 const defaultSort: Sort = {
-    column: Validator.safe(parseInt(queryUtils.get(Query.ORDER_COLUMN) || ''), v => Number.isInteger(v) && v > 0 && v < levels[defaultLevel].columns.length, 1),
-    isAsc: Validator.safe(parseInt(queryUtils.get(Query.ORDER_IS_ASC) || ''), v => v === 1 || v === 0, 1) === 1,
+    column: Validator.safe(parseInt(queryUtils.get(Query.SORT_COLUMN) || ''), v => Number.isInteger(v) && v > 0 && v < levels[defaultLevel].columns.length, 1),
+    isAsc: Validator.safe(parseInt(queryUtils.get(Query.SORT_IS_ASC) || ''), v => v === 1 || v === 0, 1) === 1,
     level: defaultLevel
 }
 
@@ -157,9 +157,9 @@ const Reducer = Redux.reducer(
 
             Urls.replace({
                 query: {
-                    [Query.ORDER_COLUMN]: action.payload.column,
-                    [Query.ORDER_IS_ASC]: +action.payload.isAsc,
-                    [Query.ORDER_LEVEL]: action.payload.level
+                    [Query.SORT_COLUMN]: action.payload.column,
+                    [Query.SORT_IS_ASC]: +action.payload.isAsc,
+                    [Query.SORT_LEVEL]: action.payload.level
                 }
             })
         },

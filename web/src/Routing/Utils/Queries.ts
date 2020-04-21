@@ -59,16 +59,16 @@ export const merge = (source: string, changes: QuerySet): string => {
     const params = new URLSearchParams(source)
 
     for (const i in changes) {
-        if (changes[i] === null) {
-            params.delete(i)
-        } else if (Array.isArray(changes[i])) {
-            params.delete(i)
+        if (changes && changes[i]) {
+            if (Array.isArray(changes[i])) {
+                params.delete(i)
 
-            for (const value of changes[i]) {
-                params.append(i, value)
+                for (const value of changes[i]!.toString()) {
+                    params.append(i, value)
+                }
+            } else {
+                params.set(i, changes[i]!.toString())
             }
-        } else {
-            params.set(i, changes[i])
         }
     }
 
@@ -96,7 +96,7 @@ export const parse = (source: string): QuerySet => {
  * @returns Query string.
  */
 export const toString = (source: QuerySet): string => {
-    return new URLSearchParams(source).toString()
+    return new URLSearchParams(source as any).toString()
 }
 
 /**
@@ -107,7 +107,7 @@ export const toString = (source: QuerySet): string => {
 export const isCurrent = (source: string, target: QuerySet): boolean => {
     if (typeof source === 'string') {
         const sourceQuery = new URLSearchParams(source)
-        const targetQuery = new URLSearchParams(target)
+        const targetQuery = new URLSearchParams(target as any)
 
         if (sourceQuery.toString() !== targetQuery.toString()) {
             return false

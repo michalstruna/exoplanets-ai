@@ -1,4 +1,4 @@
-export type QuerySet = any
+export type QuerySet = Record<string, string | number | null>
 
 export interface Location {
     hash: string
@@ -6,9 +6,7 @@ export interface Location {
     search: string
 }
 
-export interface Target {
-    hash?: string
-    pathname?: string
+export interface Target extends Omit<Partial<Location>, 'search'> {
     query?: QuerySet
 }
 

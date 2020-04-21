@@ -3,12 +3,12 @@ enum Query {
     FILTER_RELATION = 'fr',
     FILTER_VALUE = 'fv',
 
-    ORDER_COLUMN = 'oc',
-    ORDER_IS_ASC = 'oa',
-    ORDER_LEVEL = 'ov',
+    SORT_COLUMN = 'soc',
+    SORT_IS_ASC = 'soa',
+    SORT_LEVEL = 'sov',
 
-    SEGMENT_START = 'ss',
-    SEGMENT_END = 'se'
+    SEGMENT_START = 'ses',
+    SEGMENT_END = 'see'
 }
 
 export default Query

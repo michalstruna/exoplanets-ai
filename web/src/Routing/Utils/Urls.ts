@@ -1,12 +1,10 @@
 import Path from 'path'
+import QueryString from 'query-string'
 
 import History from '../Redux/History'
 import { Target, Location } from '../types'
-import Query from '../Constants/Query'
-import Hash from '../Constants/Hash'
 import * as Queries from './Queries'
-
-type Validator<T> = (value: T) => boolean
+import { Validator } from '../../Native'
 
 /**
  * Push new URL to browser history.
@@ -25,34 +23,6 @@ export const replace = (location: Target): void => {
 }
 
 /**
- * Parse pathname, query and hash of location.
- * @param location String location.
- * @returns Parsed location.
- */
-export const parse = (location: string): Location => { // TODO
-    return null as any
-}
-
-/**
- * Convert location to string.
- * @param location Source location.
- * @returns String location.
- */
-export const toString = (location: Location): string => {
-    let result = location.pathname
-
-    if (location.search) {
-        result += '?' + location.search
-    }
-
-    if (location.hash) {
-        result += '#' + location.hash
-    }
-
-    return result.replace(/#{2,}/, '#').replace(/\?{2,}/, '?')
-}
-
-/**
  * Merge target location to source location.
  * @param target Target location.
  * @param source Source location. (optional, default current location)
@@ -67,7 +37,7 @@ export const merge = (target: Target, source: Location = History.location): Loca
     }
 
     if (target.query || source.search) {
-        result.search = Queries.merge(source.search, target.query)
+        result.search = Queries.merge(source.search, target.query!)
     }
 
     if (target.hash) {
@@ -77,33 +47,41 @@ export const merge = (target: Target, source: Location = History.location): Loca
     return result
 }
 
-export const testHash = (validator: Validator<Hash>, defaultValue: Hash): void => { // TODO
+/**
+ * Check pathname from URL. If its current value is not allowed, set default value.
+ */
+export const safePathname = (predicate: Validator.Predicate<string>, defaultValue: string): void => {
+    const value = History.location.pathname
 
-}
-
-export const testPath = (paramName: string, validator: Validator<string>, defaultValue: string): void => { // TODO
-
+    if (!Validator.is(value, predicate)) {
+        replace({ pathname: defaultValue })
+    }
 }
 
 /**
- * Check query parameter from URL. If not exists or not have allowed value, set default value.
- * @param queryName Name of query parameter.
- * @param validator Validator.
- * @param defaultValue Default value if current value is not allowed.
+ * Check query parameter from URL. If its value is not allowed, set default value.
  */
-export const testQuery = (queryName: Query, validator: Validator<Query>, defaultValue: Query): void => {
-    const value = Queries.get(History.location.search, queryName)
+export const safeQuery = (queryName: string, predicate: Validator.Predicate<string | string[] | null | undefined>, defaultValue: string): void => {
+    const value = QueryString.parse(History.location.search)[queryName]
 
-    if (!validator(value)) {
+    if (!Validator.is(value, predicate)) {
         replace({ query: { [queryName]: defaultValue } })
     }
 }
 
 /**
+ * Check hash from URL. If its current value is not allowed, set default value.
+ */
+export const safeHash = (predicate: Validator.Predicate<string>, defaultValue: string): void => {
+    const value = History.location.hash
+
+    if (!Validator.is(value, predicate)) {
+        replace({ hash: defaultValue })
+    }
+}
+
+/**
  * Check if target refers to the same URL as source.
- * @param source Source location.
- * @param target Target location.
- * @returns Target refers to the same URL as source.
  */
 export const isCurrent = (source: Location, target: Target): boolean => {
     if (target.pathname && source.pathname !== target.pathname) {

@@ -12,7 +12,7 @@
     "js-cookie": "^2.2.1",
     "numeral": "^2.0.6",
     "path": "^0.12.7",
-    "query-string": "^6.11.0",
+    "query-string": "^6.12.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-facebook-login": "^4.1.1",
