@@ -8,9 +8,9 @@ type DataGetter<T> = () => T
 export default <T>(handler: Handler<T>, getData: DataGetter<T>) => {
 
     const [start, setStart] = React.useState<{ x: number, y: number } | null>(null)
+    const [data, setData] = React.useState<T>(getData())
 
     return React.useMemo(() => {
-        const [data, setData] = React.useState<T>(getData())
 
         return {
             onMouseDown: (event: React.MouseEvent) => {
@@ -25,9 +25,9 @@ export default <T>(handler: Handler<T>, getData: DataGetter<T>) => {
                     handler({ start, current, delta, data })
                 }
             },
-            onMouseup: () => setStart(null),
+            onMouseUp: () => setStart(null),
             onMouseLeave: () => setStart(null)
         }
-    }, [handler, getData, start])
+    }, [handler, getData, start, data])
 
 }
