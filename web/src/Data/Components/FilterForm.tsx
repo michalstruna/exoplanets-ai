@@ -76,8 +76,6 @@ const Row = Styled.div<RowProps>`
 
 const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, initialValues, onChange, keys, ...props }) => {
 
-    return null
-
     const strings = useStrings().filter
 
     const mapKeysIn = React.useCallback((filter: any): ObjectFilter => ({
@@ -161,13 +159,14 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
     }, [attributes])
 
     const initialFilter = React.useMemo(() => {
-        const objectFilter = mapKeysIn(initialValues)
+        const objectFilter = mapKeysIn(initialValues || {})
         const safeFilter = fixFilter(objectFilter)
         const arrayFilter = getArrayFilter(safeFilter)
         arrayFilter.push({ attribute: attributes[0], relation: defaultRelation, value: '' })
         handleChange(arrayFilter)
         return arrayFilter
-    }, [attributes, defaultRelation, fixFilter, handleChange, initialValues, mapKeysIn])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const remove = (values: any, helpers: any, i: any) => {
         const last = Arrays.findLastIndex<any>(values.filter, (item, j) => item.value && i !== j)

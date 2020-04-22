@@ -57,15 +57,20 @@ export const safePathname = (pathParamName: string, predicate: Validator.Predica
     }
 }
 
+type QueryValue = string | number | (string | number)[] | null | undefined // TODO: Docs. Also safeQuery return value docs.
+
 /**
  * Check query parameter from URL. If its value is not allowed, set default value.
  */
-export const safeQuery = (queryName: string, predicate: Validator.Predicate<string | string[] | null | undefined>, defaultValue: string): void => {
-    const value = QueryString.parse(History.location.search)[queryName]
+export const safeQuery = <T extends QueryValue>(queryName: string, predicate: Validator.Predicate<QueryValue>, defaultValue: QueryValue): T => {
+    const value = QueryString.parse(History.location.search, { parseNumbers: true })[queryName]
 
     if (!Validator.is(value, predicate)) {
         replace({ query: { [queryName]: defaultValue } })
+        return defaultValue as T
     }
+
+    return value as T
 }
 
 /**

@@ -1,4 +1,4 @@
-export type QuerySet = Record<string, string | number | null>
+export type QuerySet = Record<string, string | number | null | undefined | (string | number)[]>
 
 export interface Location {
     hash: string

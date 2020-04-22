@@ -1,5 +1,4 @@
 import SpectralType from '../Constants/SpectralType'
-import { Validator } from '../../Native'
 import { Filter, Sort, Segment, Cursor } from '../../Layout'
 import { Query, Urls } from '../../Routing'
 import { Redux } from '../../Data'
@@ -112,20 +111,19 @@ const addIndex = <T extends any>(items: T[]) => {
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
 
-const queryUtils = new URLSearchParams(window.location.search)
+const sortLevel = Urls.safeQuery<number>(Query.SORT_LEVEL, v => typeof v === 'number' && Number.isInteger(v) && v >= 0 && v < levels.length, 0)
+const sortColumn = Urls.safeQuery<number>(Query.SORT_COLUMN, v => typeof v === 'number' && Number.isInteger(v) && v > 0 && v < levels[sortLevel].columns.length, 1)
+const sortIsAsc = Urls.safeQuery<number>(Query.SORT_IS_ASC, [0, 1], 1) === 1
+const defaultSort: Sort = { column: sortColumn, isAsc: sortIsAsc, level: sortLevel }
 
-const defaultLevel = Validator.safe(parseInt(queryUtils.get(Query.SORT_LEVEL) || ''), v => Number.isInteger(v) && v >= 0 && v < levels.length, 0)
+const segmentIndex = Urls.safeQuery<number>(Query.SEGMENT_START, v => typeof v === 'number' && Number.isInteger(v) && v >= 0, 1)
+const segmentSize = Urls.safeQuery<number>(Query.SEGMENT_SIZE, [5, 10, 20, 50, 100, 200], 20)
+const defaultSegment: Segment = { index: segmentIndex, size: segmentSize }
 
-const defaultSort: Sort = {
-    column: Validator.safe(parseInt(queryUtils.get(Query.SORT_COLUMN) || ''), v => Number.isInteger(v) && v > 0 && v < levels[defaultLevel].columns.length, 1),
-    isAsc: Validator.safe(parseInt(queryUtils.get(Query.SORT_IS_ASC) || ''), v => v === 1 || v === 0, 1) === 1,
-    level: defaultLevel
-}
-
-const defaultSegment: Segment = {
-    index: Validator.safe(parseInt(queryUtils.get(Query.SEGMENT_START) || ''), v => Number.isInteger(v) && v >= 0, 1),
-    size: Validator.safe(parseInt(queryUtils.get(Query.SEGMENT_END) || ''), v => Number.isInteger(v) && v > 0 && v <= 100, 20)
-}
+/*
+const defaultFilter: Filter = {
+    attribute: Validator.safe(queryUtils.get(Query.FILTER_ATTRIBUTE))
+}*/
 
 
 // TODO: Add "connect with url query"? sort: { isAsc: Redux.connectWithQuery(queryName, Validator) }
@@ -149,30 +147,15 @@ const Reducer = Redux.reducer(
         })],
 
         setBodiesFilter: (state: any, action: Redux.Action<Filter>) => {
-
+            state.filter = action.payload
         },
 
-        setBodiesSort: (state: any, action: any/*Redux.Action<Sort>*/) => {
+        setBodiesSort: (state: any, action: Redux.Action<Sort>) => {
             state.sort = action.payload
-
-            Urls.replace({
-                query: {
-                    [Query.SORT_COLUMN]: action.payload.column,
-                    [Query.SORT_IS_ASC]: +action.payload.isAsc,
-                    [Query.SORT_LEVEL]: action.payload.level
-                }
-            })
         },
 
-        setBodiesSegment: (state: any, action: any/*Redux.Action<Segment>*/) => {
+        setBodiesSegment: (state: any, action: Redux.Action<Segment>) => {
             state.segment = action.payload
-
-            Urls.replace({
-                query: {
-                    [Query.SEGMENT_START]: action.payload.index,
-                    [Query.SEGMENT_END]: action.payload.size
-                }
-            })
         }
 
     }

@@ -1,5 +1,9 @@
-export type Filter = {
+import { Validator } from '../Native'
 
+export type Filter<TValue = any> = {
+    attribute: string[]
+    relation: Validator.Relation[]
+    value: TValue[]
 }
 
 export type Sort = {

@@ -4,7 +4,7 @@ import Styled from 'styled-components'
 import { useFixedX } from '../../Style'
 import { Paginator, FilterForm, useActions } from '../../Data'
 import { setBodiesSegment, setBodiesFilter } from'../Redux/Reducer'
-import { useBodies, useBodiesSegment } from '..'
+import { useBodies, useBodiesFilter, useBodiesSegment } from '..'
 
 interface Static {
 
@@ -33,6 +33,7 @@ const DatabaseSelector: React.FC<Props> & Static = ({ ...props }) => {
     const root = React.useRef()
     useFixedX(root as any)
     const segment = useBodiesSegment()
+    const filter = useBodiesFilter()
     const bodies = useBodies()
     const bodiesCount = bodies.payload ? bodies.payload.count : 0
 
@@ -47,7 +48,8 @@ const DatabaseSelector: React.FC<Props> & Static = ({ ...props }) => {
             </div>
             <FilterForm
                 attributes={['starName', 'starMass']}
-                onChange={actions.setBodiesFilter} />
+                onChange={actions.setBodiesFilter}
+                initialValues={filter} />
             <Paginator page={segment} itemsCount={bodiesCount} onChange={actions.setBodiesSegment} freeze={bodies.pending} />
         </Root>
     )
