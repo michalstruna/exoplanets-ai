@@ -6,7 +6,7 @@ import FacebookLogin from './FacebookLogin'
 import GoogleLogin from './GoogleLogin'
 import { useActions } from '../../Data'
 import { Color, opacityHover, size } from '../../Style'
-import { login } from '../Redux/Reducer'
+import { login } from '../Redux/Slice'
 
 interface Props extends React.ComponentPropsWithoutRef<'form'> {
 

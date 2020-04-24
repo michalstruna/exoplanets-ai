@@ -1,19 +1,19 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
-import { Reducer as AuthReducer } from '../../Auth'
-import { Reducer as ContentReducer, Redux } from '../../Data'
-import { Reducer as DatabaseReducer } from '../../Database'
+import { Reducer as AuthSlice } from '../../Auth'
+import { Reducer as ContentSlice, Redux } from '../../Data'
+import { Reducer as DatabaseSlice } from '../../Database'
 import { Query, Urls } from '../../Routing'
 import { Validator } from '../../Native'
 
 const RootReducer = combineReducers({
-    auth: AuthReducer,
-    content: ContentReducer,
-    database: DatabaseReducer.reducer
+    auth: AuthSlice,
+    content: ContentSlice,
+    database: DatabaseSlice.reducer
 })
 /*
 type SyncUrl = [keyof typeof RootReducer, (state: any) => any, Query, Validator.Predicate<any>, any][]
-const syncUrl = [...DatabaseReducer.syncUrl] as SyncUrl*/
+const syncUrl = [...DatabaseSlice.syncUrl] as SyncUrl*/
 
 const store = configureStore<typeof RootReducer>({ reducer: RootReducer })
 /*

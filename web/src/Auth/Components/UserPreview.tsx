@@ -7,7 +7,7 @@ import Auth from './Auth'
 import { UserSimple } from '../types'
 import { useActions } from '../../Data'
 import { image } from '../../Style'
-import { logout } from '../Redux/Reducer'
+import { logout } from '../Redux/Slice'
 
 interface Static {
 

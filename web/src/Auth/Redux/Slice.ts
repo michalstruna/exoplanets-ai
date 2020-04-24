@@ -23,7 +23,7 @@ const demoIdentity: Identity = {
     }
 }
 
-const Reducer = Redux.reducer(
+const Slice = Redux.slice(
     'auth',
     {
         identity: Redux.async(Cookies.getJSON(Cookie.IDENTITY.name))
@@ -47,5 +47,5 @@ const Reducer = Redux.reducer(
     })
 )
 
-export default Reducer.reducer
-export const { login, logout } = Reducer.actions
+export default Slice.reducer
+export const { login, logout } = Slice.actions

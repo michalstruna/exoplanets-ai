@@ -35,7 +35,7 @@ type ActionsSet<State> = {
     set: <Payload>(property: keyof State) => PlainActionWrapper<State, Payload>
 }
 
-export const reducer = <State extends Record<any, any>, Actions extends Record<string, ActionWrapper<State>>>(name: string, initialState: State, actionsAccessor: (actions: ActionsSet<State>) => Actions) => {
+export const slice = <State extends Record<any, any>, Actions extends Record<string, ActionWrapper<State>>>(name: string, initialState: State, actionsAccessor: (actions: ActionsSet<State>) => Actions) => {
     const reducers = {} as any
     const extraReducers = {} as any
     const extraActions = {} as any

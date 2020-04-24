@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 
 import { useFixedX } from '../../Style'
 import { Paginator, FilterForm, useActions } from '../../Data'
-import { setBodiesSegment, setBodiesFilter } from'../Redux/Reducer'
+import { setBodiesSegment, setBodiesFilter } from '../Redux/Slice'
 import { useBodies, useBodiesFilter, useBodiesSegment } from '..'
 
 interface Static {

@@ -131,7 +131,7 @@ const defaultFilter: Filter = {
 }*/
 
 // TODO: Add "connect with url query"? sort: { isAsc: Redux.connectWithQuery(queryName, Validator) }
-const Reducer = Redux.reducer(
+const Slice = Redux.slice(
     'database',
     {
         bodies: Redux.async<any /* TODO: Body[] */>(),
@@ -155,5 +155,5 @@ const Reducer = Redux.reducer(
     })
 )
 
-export default Reducer
-export const { getBodies, setBodiesFilter, setBodiesSort, setBodiesSegment } = Reducer.actions
+export default Slice
+export const { getBodies, setBodiesFilter, setBodiesSort, setBodiesSegment } = Slice.actions
