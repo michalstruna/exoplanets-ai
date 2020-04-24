@@ -1,44 +1,40 @@
-import { combineReducers, configureStore, getDefaultMiddleware, Store } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 import { Reducer as AuthReducer } from '../../Auth'
 import { Reducer as ContentReducer, Redux } from '../../Data'
-import { Reducer as DatabaseReducer, setBodiesSort, setBodiesSegment } from '../../Database'
+import { Reducer as DatabaseReducer } from '../../Database'
 import { Query, Urls } from '../../Routing'
+import { Validator } from '../../Native'
 
 const RootReducer = combineReducers({
     auth: AuthReducer,
     content: ContentReducer,
-    universe: DatabaseReducer
+    database: DatabaseReducer.reducer
 })
+/*
+type SyncUrl = [keyof typeof RootReducer, (state: any) => any, Query, Validator.Predicate<any>, any][]
+const syncUrl = [...DatabaseReducer.syncUrl] as SyncUrl*/
 
-const syncWithUrl = (store: Store) => (next: any) => <T>(action: Redux.Action<any>) => {
-    const { type, payload } = action
+const store = configureStore<typeof RootReducer>({ reducer: RootReducer })
+/*
+let lastState = store.getState()
 
-    switch (type) {
-        case setBodiesSort.toString():
-            Urls.replace({
-                query: {
-                    [Query.SORT_COLUMN]: payload.column,
-                    [Query.SORT_IS_ASC]: +payload.isAsc,
-                    [Query.SORT_LEVEL]: payload.level
-                }
-            })
-            break
-        case setBodiesSegment.toString():
-            Urls.replace({
-                query: {
-                    [Query.SEGMENT_START]: payload.index,
-                    [Query.SEGMENT_SIZE]: payload.size
-                }
-            })
+store.subscribe(() => {
+    const state = store.getState()
+    const changes: Record<string, any> = {}
 
-            break
+    for (const [reducerName, accessor, queryName, predicate, defaultValue] of syncUrl) {
+        const value = accessor(state[reducerName])
+
+        if (value !== accessor(lastState[reducerName])) {
+            changes[queryName] = Validator.safe(value, predicate, defaultValue)
+        }
     }
 
-    return next(action)
-}
+    if (Object.keys(changes).length > 0) {
+        lastState = state
+        Urls.replace({ query: changes })
+    }
+})*/
 
-export default configureStore<typeof RootReducer>({
-    reducer: RootReducer,
-    middleware: [...getDefaultMiddleware(), syncWithUrl] as any
-})
+export default store

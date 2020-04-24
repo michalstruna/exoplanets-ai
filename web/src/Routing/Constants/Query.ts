@@ -7,8 +7,8 @@ enum Query {
     SORT_IS_ASC = 'sa',
     SORT_LEVEL = 'sl',
 
-    SEGMENT_START = 'sgt',
-    SEGMENT_SIZE = 'sgi'
+    SEGMENT_START = 'gt',
+    SEGMENT_SIZE = 'gi'
 }
 
 export default Query

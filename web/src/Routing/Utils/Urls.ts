@@ -62,7 +62,7 @@ type QueryValue = string | number | (string | number)[] | null | undefined // TO
 /**
  * Check query parameter from URL. If its value is not allowed, set default value.
  */
-export const safeQuery = <T extends QueryValue>(queryName: string, predicate: Validator.Predicate<QueryValue>, defaultValue: QueryValue): T => {
+export const safeQuery = <T extends QueryValue>(queryName: string, predicate: Validator.Predicate<QueryValue>, defaultValue: QueryValue = undefined): T => {
     const value = QueryString.parse(History.location.search, { parseNumbers: true })[queryName]
 
     if (!Validator.is(value, predicate)) {

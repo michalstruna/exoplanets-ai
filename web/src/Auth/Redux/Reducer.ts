@@ -28,8 +28,8 @@ const Reducer = Redux.reducer(
     {
         identity: Redux.async(Cookies.getJSON(Cookie.IDENTITY.name))
     },
-    {
-        login: ['identity', ({ email, password }: Credentials) => new Promise((resolve, reject) => {
+    ({ set, async, plain }) => ({
+        login: async<Credentials>('identity', ({ email, password }) => new Promise((resolve, reject) => {
             // TODO: Cookies
             setTimeout(() => {
                 if (email === 'm@m.cz' && password === '123') {
@@ -39,14 +39,12 @@ const Reducer = Redux.reducer(
                     reject('Bad identity.')
                 }
             }, 1000)
-        })],
-
-        logout: state => {
+        })),
+        logout: plain<void>(state => {
             state.identity.payload = null
             Cookies.remove(Cookie.IDENTITY.name)
-        }
-
-    }
+        })
+    })
 )
 
 export default Reducer.reducer

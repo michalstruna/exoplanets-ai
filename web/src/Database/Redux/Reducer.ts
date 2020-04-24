@@ -116,50 +116,44 @@ const sortColumn = Urls.safeQuery<number>(Query.SORT_COLUMN, v => typeof v === '
 const sortIsAsc = Urls.safeQuery<number>(Query.SORT_IS_ASC, [0, 1], 1) === 1
 const defaultSort: Sort = { column: sortColumn, isAsc: sortIsAsc, level: sortLevel }
 
-const segmentIndex = Urls.safeQuery<number>(Query.SEGMENT_START, v => typeof v === 'number' && Number.isInteger(v) && v >= 0, 1)
+const segmentIndex = Urls.safeQuery<number>(Query.SEGMENT_START, v => typeof v === 'number' && Number.isInteger(v) && v >= 0, 0)
 const segmentSize = Urls.safeQuery<number>(Query.SEGMENT_SIZE, [5, 10, 20, 50, 100, 200], 20)
 const defaultSegment: Segment = { index: segmentIndex, size: segmentSize }
+
+
+//const [sortLevel, sortColumn, sortIsAsc] = Urls.safeQueries
+
+
 
 /*
 const defaultFilter: Filter = {
     attribute: Validator.safe(queryUtils.get(Query.FILTER_ATTRIBUTE))
 }*/
 
-
 // TODO: Add "connect with url query"? sort: { isAsc: Redux.connectWithQuery(queryName, Validator) }
 const Reducer = Redux.reducer(
-    'universe',
+    'database',
     {
         bodies: Redux.async<any /* TODO: Body[] */>(),
-        filter: null,
-        sort: defaultSort,
-        segment: defaultSegment,
-        usersRank: 0
+        filter: {} as Filter,
+        sort: {} as Sort,
+        segment: defaultSegment as Segment,
+        usersRank: 0,
     },
-    {
-        getBodies: ['bodies', ({ sort, filter, segment }: Cursor) => new Promise(resolve => {
+    ({ async, set, plain }) => ({
+        getBodies: async<Cursor>('bodies', ({ sort, filter, segment }) => new Promise(resolve => {
             setTimeout(() => {
                 resolve({
                     list: getSortedItems(data, sort).slice(segment.index * segment.size, (segment.index + 1) * segment.size),
                     count: data.length
                 })
             }, 1000)
-        })],
-
-        setBodiesFilter: (state: any, action: Redux.Action<Filter>) => {
-            state.filter = action.payload
-        },
-
-        setBodiesSort: (state: any, action: Redux.Action<Sort>) => {
-            state.sort = action.payload
-        },
-
-        setBodiesSegment: (state: any, action: Redux.Action<Segment>) => {
-            state.segment = action.payload
-        }
-
-    }
+        })),
+        setBodiesFilter: plain<Filter>((state, action) => state.filter = action.payload),
+        setBodiesSegment: plain<Segment>((state, action) => state.segment = action.payload),
+        setBodiesSort: set<Sort>('sort')
+    })
 )
 
-export default Reducer.reducer
+export default Reducer
 export const { getBodies, setBodiesFilter, setBodiesSort, setBodiesSegment } = Reducer.actions

@@ -185,9 +185,9 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
                 <Todo2 />
                 <News>
                     <ToggleLine items={[
+                        { header: 'Poslední objevené exoplanety', content: earthLike, link: { pathname: Url.DATABASE } },
                         { header: 'Zemi nejpodobnější exoplanety', content: earthLike, link: { pathname: Url.DATABASE } },
-                        { header: 'Nejbližší exoplanety', content: earthLike, link: { pathname: Url.DATABASE } },
-                        { header: 'Největší exoplanety', content: earthLike, link: { pathname: Url.DATABASE } }
+                        { header: 'Nejbližší exoplanety', content: earthLike, link: { pathname: Url.DATABASE } }
                     ]} />
                 </News>
             </Right>

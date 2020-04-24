@@ -9,73 +9,109 @@ type Options<State, Payload> = {
 }
 
 export type Action<Payload = void, Error = { message: string }> = {
-    payload?: Payload
+    payload: Payload
     type: string
     error?: Error
 }
 
-type Case<State> = (state: State, action: Action<any>) => any
-
-type Reducer<State, Actions> = {
-    [Key in keyof Actions]: Actions[Key] extends [any, (payload: infer Payload) => any, any?] ? [keyof State, any, Options<State, any>?] : Case<State>
+enum ActionType {
+    PLAIN,
+    ASYNC,
+    URL,
+    SET
 }
 
-export const reducer = <State extends Record<string, any>, Actions extends Reducer<State, any>>(name: string, initialState: State, actions: Actions) => {
 
+type AsyncAction<Payload> = (payload: Payload) => Promise<any>
+
+type PlainAction<State, Payload> = (state: State, payload: Action<Payload>) => any
+type ActionWrapper<State, Payload = any> = { type: ActionType, action: PlainAction<State, Payload> | AsyncAction<Payload>, property?: keyof State, options?: Options<State, Payload> }
+type PlainActionWrapper<State, Payload> = { type: ActionType, action: PlainAction<State, Payload> }
+type AsyncActionWrapper<State, Payload> = { type: ActionType, action: AsyncAction<Payload>, property: keyof State, options?: any }
+
+type ActionsSet<State> = {
+    plain: <Payload>(action: PlainAction<State, Payload>) => PlainActionWrapper<State, Payload>,
+    async: <Payload>(property: keyof State, action: AsyncAction<Payload>, options?: any) => AsyncActionWrapper<State, Payload>,
+    set: <Payload>(property: keyof State) => PlainActionWrapper<State, Payload>
+}
+
+export const reducer = <State extends Record<any, any>, Actions extends Record<string, ActionWrapper<State>>>(name: string, initialState: State, actionsAccessor: (actions: ActionsSet<State>) => Actions) => {
     const reducers = {} as any
     const extraReducers = {} as any
     const extraActions = {} as any
 
+    const actions = actionsAccessor({
+        plain: action => ({ type: ActionType.PLAIN, action }),
+        async: (property, action, options) => ({
+            type: ActionType.ASYNC, property, action, options
+        }),
+        set: <Payload>(property: keyof State) => ({
+            type: ActionType.SET, property, action: (state, action) => state[property] = action.payload as any
+        })
+    })
+
     for (const [key, value] of Object.entries(actions)) {
-        if (Array.isArray(value)) {
-            const [field, func, options] = value
-            const action = createAsyncThunk(name + '/' + key, func as any)
+        if (value.type === ActionType.PLAIN) {
+            reducers[key] = <T>(state: State, action: Action<T>) => {
+                value.action(state, action as any)
+            }
+        } else if (value.type === ActionType.ASYNC) {
+            const thunk = createAsyncThunk(name + '/' + key, value.action as AsyncAction<any>)
 
-            extraActions[key] = action
+            extraActions[key] = thunk
 
-            extraReducers[action.pending.type] = (state: any, action: any) => {
-                state[field].pending = true
+            extraReducers[thunk.pending.type] = (state: any, action: any) => {
+                state[value.property].pending = true
 
-                if (options && options.onPending) {
-                    options.onPending(state, action)
+                if (value.options && value.options.onPending) {
+                    value.options.onPending(state, action)
                 } else {
-                    state[field].payload = null
-                    state[field].error = null
+                    state[value.property].payload = null
+                    state[value.property].error = null
                 }
             }
 
-            extraReducers[action.fulfilled.type] = (state: any, action: any) => {
-                state[field].pending = false
-                state[field].error = null
+            extraReducers[thunk.fulfilled.type] = (state: any, action: any) => {
+                state[value.property].pending = false
+                state[value.property].error = null
 
-                if (options && options.onSuccess) {
-                    options.onSuccess(state, action)
+                if (value.options && value.options.onSuccess) {
+                    value.options.onSuccess(state, action)
                 } else {
-                    state[field].payload = action.payload
+                    state[value.property].payload = action.payload
                 }
             }
 
-            extraReducers[action.rejected.type] = (state: any, action: any) => {
-                state[field].pending = false
-                state[field].error = action.error.message
+            extraReducers[thunk.rejected.type] = (state: any, action: any) => {
+                state[value.property].pending = false
+                state[value.property].error = action.error.message
 
-                if (options && options.onError) {
-                    options.onError(state, action)
+                if (value.options && value.options.onError) {
+                    value.options.onError(state, action)
                 }
             }
 
-        } else {
-            reducers[key] = (state: any, action: any) => {
-                (value as Function)(state, action)
+        } else if (value.type === ActionType.URL) {
+
+        } else if (value.type === ActionType.SET) {
+            reducers[key] = <T>(state: State, action: Action<T>) => {
+                value.action(state, action)
             }
         }
     }
 
     const slice = createSlice({ name, initialState, reducers, extraReducers })
 
-    return {
-        actions: { ...slice.actions, ...extraActions } as { [T in keyof Actions]: Actions[T] extends [string, (payload: infer Payload) => any, any?] ? (p: Payload) => Action : Actions[T] extends (state: State, action: Action<infer P>) => any ? (payload?: P) => any : never },
-        reducer: slice.reducer
+    type OutputActions = {
+        [T in keyof Actions]: Actions[T] extends AsyncActionWrapper<State, infer Payload> ?
+            (payload: Payload) => any :
+            Actions[T] extends { type: any, action: (state: State, action: Action<infer Payload>) => void, property?: any, options?: any } ?
+                (payload: Payload) => any :
+                never
     }
 
+    return {
+        actions: { ...slice.actions, ...extraActions } as OutputActions,
+        reducer: slice.reducer
+    }
 }
