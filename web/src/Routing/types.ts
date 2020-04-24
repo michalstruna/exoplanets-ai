@@ -1,11 +1,5 @@
-import Query from './Constants/Query'
-
-// TODO: [name: Query] error.
-/*export interface QuerySet {
-    [name: string]: Query
-}*/
-
-export type QuerySet = any
+export type QueryValue = string | number | null | undefined | boolean | (string | number | boolean)[]
+export type QuerySet = Record<string, QueryValue>
 
 export interface Location {
     hash: string
@@ -13,20 +7,10 @@ export interface Location {
     search: string
 }
 
-export interface Target {
-    hash?: string
-    pathname?: string
+export interface Target extends Omit<Partial<Location>, 'search'> {
     query?: QuerySet
 }
 
 export interface LinkData extends Target {
     text?: string
-}
-
-/**
- * Sometimes you need a lot of links with value of one query parameter.
- * It's not necessary write query={{ [Query.NAME]: Query.VALUE }}, just: queryValue={Query.VALUE}.
- */
-export interface PartialLinkData extends LinkData {
-    queryValue?: string
 }

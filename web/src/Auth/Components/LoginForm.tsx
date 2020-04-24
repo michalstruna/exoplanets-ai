@@ -4,8 +4,9 @@ import Styled from 'styled-components'
 import { Field, FieldType, Form, FormContainer } from '../../Form'
 import FacebookLogin from './FacebookLogin'
 import GoogleLogin from './GoogleLogin'
-import { Color, Mixin, useActions } from '../../Utils'
-import { login } from '../Redux/Reducer'
+import { useActions } from '../../Data'
+import { Color, opacityHover, size } from '../../Style'
+import { login } from '../Redux/Slice'
 
 interface Props extends React.ComponentPropsWithoutRef<'form'> {
 
@@ -24,7 +25,7 @@ const Root = Styled(Form)`
 `
 
 const Forgot = Styled.button`
-    ${Mixin.OpacityHover()}
+    ${opacityHover()}
     border-bottom: 1px solid transparent;
     font-size: 90%;
     margin-top: -1rem;
@@ -49,8 +50,9 @@ const HorizontalTextLine = Styled.div`
     margin: 1rem 0;
     opacity: 0.5;
     text-align: center;
+    
     &:before, &:after {
-        ${Mixin.Size('4rem', '1px')}
+        ${size('4rem', '1px')}
         background-color: ${Color.LIGHT};
         content: "";
         display: inline-block;

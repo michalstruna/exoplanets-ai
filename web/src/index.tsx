@@ -1,13 +1,14 @@
 import React from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
 import { Router, Switch, Route, Redirect } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
+import * as serviceWorker from './serviceWorker'
 import { App, HelpView, Store } from './Core'
 import { History, Url } from './Routing'
 import { AIView, DatabaseView, OverviewView } from './Database'
 
-render(
+ReactDOM.render(
     <Provider store={Store}>
         <Router history={History}>
             <App>
@@ -23,6 +24,4 @@ render(
     </Provider>, document.getElementById('app')
 )
 
-if ((module as any).hot) {
-    (module as any).hot.accept()
-}
+serviceWorker.unregister()

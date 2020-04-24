@@ -2,10 +2,8 @@ import React from 'react'
 import Styled from 'styled-components'
 import Paginate from 'react-paginate'
 
-import Color from '../../Utils/Constants/Color'
-import Mixin from '../../Utils/Constants/Mixin'
-import Duration from '../../Utils/Constants/Duration'
-import { Segment } from '../index'
+import { size, Color, Duration } from '../../Style'
+import { Segment } from '../../Layout/types'
 
 interface Static {
 
@@ -32,7 +30,7 @@ const Root = Styled.div`
      }
 
     .${PAGE}, .${BREAK}, .${EDGE} {
-        ${Mixin.Size('2.5rem', '2rem', true)}
+        ${size('2.5rem', '2rem', true)}
         background-color: ${Color.DARKEST};
         display: inline-block;
         overflow: hidden;
@@ -44,7 +42,7 @@ const Root = Styled.div`
         }
         
         a {
-            ${Mixin.Size()}
+            ${size()}
             display: block;
             outline: none;
         }
@@ -87,7 +85,7 @@ const PerPage = Styled.select`
 
 const Paginator: React.FC<Props> & Static = ({ onChange, page, itemsCount, freeze, ...props }) => {
 
-    const getPagesCount = () => Math.ceil(itemsCount / page.size)
+    const getPagesCount = React.useCallback(() => Math.ceil(itemsCount / page.size), [itemsCount, page.size])
     const getCache = () => ({ pages: getPagesCount(), itemsCount })
 
     const [cache, setCache] = React.useState(getCache())
@@ -98,7 +96,7 @@ const Paginator: React.FC<Props> & Static = ({ onChange, page, itemsCount, freez
         if (!freeze && itemsCount > 0) {
             setCache({ pages: newPagesCount, itemsCount })
         }
-    }, [itemsCount, page, freeze])
+    }, [itemsCount, page, freeze, getPagesCount])
 
     const handleChangeSize = (size: number) => {
         if (size !== page.size) {

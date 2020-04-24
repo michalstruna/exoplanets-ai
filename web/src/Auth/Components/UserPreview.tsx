@@ -2,11 +2,12 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 import Countries from 'emoji-flags'
 
-import { IconButton } from '../../Control'
+import { IconButton } from '../../Layout'
 import Auth from './Auth'
 import { UserSimple } from '../types'
-import { Mixin, useActions } from '../../Utils'
-import { logout } from '../Redux/Reducer'
+import { useActions } from '../../Data'
+import { image } from '../../Style'
+import { logout } from '../Redux/Slice'
 
 interface Static {
 
@@ -114,7 +115,7 @@ interface ItemRootProps {
 
 const ItemRoot = Styled.div<ItemRootProps>`
     ${props => props.icon && css`
-        ${Mixin.Image(props.icon, '1.1rem', 'left center')}
+        ${image(props.icon, '1.1rem', 'left center')}
         box-sizing: border-box;
         padding-left: 1.5rem;
     `}
@@ -133,7 +134,7 @@ const Item: React.FC<ItemProps> = ({ title, value, icon }) => {
 
 const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
 
-    const country = user.personal.country ? Countries[user.personal.country] : null
+    const country = user.personal.country ? (Countries as any).countryCode(user.personal.country) : null
     const actions = useActions({ logout })
 
     return (

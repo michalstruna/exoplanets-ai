@@ -3,7 +3,7 @@ import React from 'react'
 import Styled  from 'styled-components'
 
 import FieldType from '../Constants/FieldType'
-import { Color, Duration, Mixin } from '../../Utils'
+import { Color, Duration, size } from '../../Style'
 
 interface Type {
     name: string
@@ -42,7 +42,7 @@ const Input = Styled(FormikField)`
 `
 
 const Text = Styled.section`
-    ${Mixin.Size('100%', '2rem', true)}
+    ${size('100%', '2rem', true)}
     box-sizing: border-box;
     display: block;
     font-size: 90%;
@@ -67,7 +67,7 @@ const Field: React.FC<Props> = ({ name, type, label, required, invalid, validato
 
     const [value, setValue] = React.useState()
 
-    const validate = value => {
+    const validate = (value: any) => {
         setValue(value)
 
         if (required && !value) {
@@ -84,7 +84,7 @@ const Field: React.FC<Props> = ({ name, type, label, required, invalid, validato
     }
 
     const renderOptions = () => (
-        options.map((option, i) => (
+        options && options.map((option, i) => (
             <option value={option.value} key={i}>
                 {option.text}
             </option>

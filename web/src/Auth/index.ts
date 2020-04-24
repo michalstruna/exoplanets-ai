@@ -12,7 +12,8 @@ export { default as Auth } from './Components/Auth'
 /**
  * Redux.
  */
-export { default as Reducer } from './Redux/Reducer'
+export { default as Reducer } from './Redux/Slice'
+export * from './Redux/Slice'
 export * from './Redux/Selectors'
 
 /**

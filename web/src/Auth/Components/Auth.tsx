@@ -1,6 +1,6 @@
 import React from 'react'
 
-import UserRole from '../Constants/UserRole'
+import UserRole, { test } from '../Constants/UserRole'
 import { useIdentity } from '..'
 
 interface Static {
@@ -18,12 +18,12 @@ interface Props {
 const Auth: React.FC<Props> & Static = ({ role, noRole, when, otherwise, identityId }) => {
 
     const identity = useIdentity()
-    const isRoleOk = UserRole.test(identity.payload, role, noRole)
+    const isRoleOk = test(identity.payload, role, noRole)
     const isIdentityOk = typeof identityId === 'undefined' ? true : (identity.payload && identity.payload.id === identityId)
 
     return (
         <>
-            {isRoleOk && isIdentityOk ? when() : otherwise()}
+            {isRoleOk && isIdentityOk ? (when as any)() : (otherwise as any)()}
         </>
     )
 

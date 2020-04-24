@@ -1,6 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Mixin } from '../../Utils'
+
+import { size, threeDots } from '../../Style'
 
 interface Props<Item> extends React.ComponentPropsWithoutRef<'div'> {
     items: Item[]
@@ -9,13 +10,13 @@ interface Props<Item> extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 interface Column<Item> {
-    accessor: (item: Item, number) => any
+    accessor: (item: Item, index: number) => any
     render?: (value: any, item: Item, index: number) => React.ReactNode
     title?: React.ReactNode
 }
 
 const Root = Styled.div`
-    ${Mixin.Size()}
+    ${size()}
     display: table;
 `
 
@@ -28,7 +29,7 @@ const Row = Styled.div`
 `
 
 const Cell = Styled.div`
-    ${Mixin.ThreeDots()}
+    ${threeDots()}
     display: table-cell;
     overflow: hidden;
     padding: 0.5rem;

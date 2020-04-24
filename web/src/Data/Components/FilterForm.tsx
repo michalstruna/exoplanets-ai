@@ -2,10 +2,9 @@ import React from 'react'
 import Styled from 'styled-components'
 import { Field, FieldArray, Formik } from 'formik'
 
-import { Arrays, Duration, Mixin, Validator } from '../../Utils'
-import { useStrings } from '../../Content'
-
-type BrokenObjectFilter = any
+import { Arrays, Validator } from '../../Native'
+import { Duration, image, opacityHover, size } from '../../Style'
+import { useStrings } from '../index'
 
 type ObjectFilter = {
     attribute: string[]
@@ -26,9 +25,9 @@ interface Static {
 interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
     attributes: string[]
     onChange: (values: ObjectFilter) => void
-    initialValues?: BrokenObjectFilter
+    initialValues?: ObjectFilter
     defaultRelation?: Validator.Relation
-    keys?: { attribute: any, relation: any, value: any }
+    keys?: any//{ attribute: any, relation: any, value: any }
 }
 
 interface RowProps {
@@ -43,9 +42,9 @@ const Root = Styled.div`
 `
 
 const Delete = Styled.button`
-    ${Mixin.Image('Universe/Filter/Delete.svg', '70%')}
-    ${Mixin.OpacityHover()}
-    ${Mixin.Size('3rem !important')}
+    ${image('Universe/Filter/Delete.svg', '70%')}
+    ${opacityHover()}
+    ${size('3rem !important')}
 `
 
 const Row = Styled.div<RowProps>`
@@ -79,25 +78,25 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
 
     const strings = useStrings().filter
 
-    const handleChange = (filter: ArrayFilter): void => {
+    const mapKeysIn = React.useCallback((filter: any): ObjectFilter => ({
+        attribute: filter[keys.attribute] || [],
+        relation: filter[keys.relation] || [],
+        value: filter[keys.value] || []
+    }), [keys.attribute, keys.relation, keys.value])
+
+    const mapKeysOut = React.useCallback((filter: ObjectFilter): any => (
+        { [keys.attribute]: filter.attribute, [keys.relation]: filter.relation, [keys.value]: filter.value }
+    ), [keys.attribute, keys.relation, keys.value])
+
+    const handleChange = React.useCallback((filter: ArrayFilter): void => {
         if (onChange) {
             const values = mapKeysOut(getObjectFilter(getWithoutLast(filter)))
             onChange(values)
         }
-    }
+    }, [mapKeysOut, onChange])
 
-    const mapKeysIn = (filter: any): ObjectFilter => ({
-        attribute: filter[keys.attribute] || [],
-        relation: filter[keys.relation] || [],
-        value: filter[keys.value] || []
-    })
-
-    const mapKeysOut = (filter: ObjectFilter): any => (
-        { [keys.attribute]: filter.attribute, [keys.relation]: filter.relation, [keys.value]: filter.value }
-    )
-
-    const getHandleFieldChange = (values, handleChange, helpers, i) => (
-        event => {
+    const getHandleFieldChange = (values: any, handleChange: any, helpers: any, i: any) => (
+        (event: any) => {
             handleChange(event)
 
             if (event.target.value) {
@@ -113,8 +112,8 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
     )
 
     const getArrayFilter = (values: ObjectFilter) => {
-        const temp = { ...values }
-        const result = []
+        const temp = { ...values } as any
+        const result = [] as any
 
         for (const i in temp.attribute) {
             result[i] = {}
@@ -141,18 +140,8 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
         return result
     }
 
-    const forceArray = (values: BrokenObjectFilter): ObjectFilter => {
-        const result = { ...values }
-
-        for (const i in result) {
-            result[i] = Arrays.forceArray(result[i], true)
-        }
-
-        return result as ObjectFilter
-    }
-
-    const fixFilter = (values: ObjectFilter): ObjectFilter => {
-        const result = { attribute: [], relation: [], value: [] }
+    const fixFilter = React.useCallback((values: ObjectFilter): ObjectFilter => {
+        const result = { attribute: [], relation: [], value: [] } as any
 
         if (values.attribute.length !== values.relation.length || values.relation.length !== values.value.length) {
             return result
@@ -167,18 +156,19 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
         }
 
         return result
-    }
+    }, [attributes])
 
     const initialFilter = React.useMemo(() => {
-        const objectFilter = mapKeysIn(forceArray(initialValues))
+        const objectFilter = mapKeysIn(initialValues || {})
         const safeFilter = fixFilter(objectFilter)
         const arrayFilter = getArrayFilter(safeFilter)
         arrayFilter.push({ attribute: attributes[0], relation: defaultRelation, value: '' })
         handleChange(arrayFilter)
         return arrayFilter
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const remove = (values, helpers, i) => {
+    const remove = (values: any, helpers: any, i: any) => {
         const last = Arrays.findLastIndex<any>(values.filter, (item, j) => item.value && i !== j)
         const toRemove = values.filter.length - last - 3
 
@@ -191,7 +181,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
 
     return (
         <Formik
-            onSubmit={() => null}
+            onSubmit={() => {}}
             initialValues={{ filter: initialFilter }}
             validate={values => handleChange(values.filter)}>
             {({ values, handleChange }) => (
@@ -199,7 +189,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
                     <FieldArray name='filter'>
                         {helpers => (
                             <>
-                                {values.filter && values.filter.map((value, i) => (
+                                {values.filter && values.filter.map((value: any, i: any) => (
                                     <Row key={i} isActive={!!value.value}>
                                         <Field as='select' name={`filter.${i}.attribute`}>
                                             {attributes.map((attribute, i) => (

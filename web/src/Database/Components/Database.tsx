@@ -1,9 +1,11 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Mixin, useActions, useDrag, useElement, ZIndex } from '../../Utils'
-import { Planet } from '../types'
-import { HierarchicalTable, MiniGraph } from '../../Data'
+import { useActions } from '../../Data'
+import { useDrag, useElement } from '../../Native'
+import { ZIndex, size } from '../../Style'
+import { MiniGraph } from '../../Stats'
+import { HierarchicalTable } from '../../Layout'
 import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort, useBodiesSegment } from '..'
 import { Async } from '../../Async'
 
@@ -22,14 +24,14 @@ const Root = Styled.div`
 const colors = ['#A50', '#FFF', '#A00', '#CC0']
 
 const Image = Styled.div`
-    ${Mixin.Size('4rem')}
+    ${size('4rem')}
     background-image: radial-gradient(${colors[3]}, #000);
     border-radius: 100%;
     display: inline-block;
 `
 
 const PlanetImage = Styled(Image)`
-    ${Mixin.Size('2.5rem')}
+    ${size('2.5rem')}
     background-image: radial-gradient(#CA0, #000);
 `
 
@@ -112,7 +114,7 @@ const Table = Styled(HierarchicalTable)`
         
             &[data-level="0"] {                            
                 ${Image} {
-                    ${Mixin.Size('2.5rem')}
+                    ${size('2.5rem')}
                 }
                 
                 &:first-of-type {
@@ -125,7 +127,7 @@ const Table = Styled(HierarchicalTable)`
                 height: 2rem;
             
                 ${Image} {
-                    ${Mixin.Size('1.5rem')}
+                    ${size('1.5rem')}
                 }
             }
         }
@@ -144,78 +146,79 @@ const lines = ['transit', 'radialVelocity']
 const labels = ['Tranzit [%]', 'Radiální rychlost [m/s]']
 
 const starColumns = [
-    { title: '#', accessor: star => star.index + 1, render: index => index || '' },
-    { title: <Image />, accessor: star => star.type, render: () => <Image /> },
+    { title: '#', accessor: (star: any) => star.index + 1, render: (index: any) => index || '' },
+    { title: <Image />, accessor: (star: any) => star.type, render: () => <Image /> },
     {
         title: 'Hvězda',
-        accessor: star => star.name,
-        render: (name, star) => <>{name}<br />{'Žlutý trpaslík M5,5Ve'}</>
+        accessor: (star: any) => star.name,
+        render: (name: any, star: any) => <>{name}<br />{'Žlutý trpaslík M5,5Ve'}</>
     },
     {
         title: 'Průměr',
-        accessor: star => star.diameter,
+        accessor: (star: any) => star.diameter,
         icon: '/img/Universe/Database/Diameter.svg',
-        render: v => v + ' km'
+        render: (v: any) => v + ' km'
     },
-    { title: 'Hmotnost', accessor: star => star.mass, icon: '/img/Universe/Database/Mass.svg' },
+    { title: 'Hmotnost', accessor: (star: any) => star.mass, icon: '/img/Universe/Database/Mass.svg' },
     {
         title: 'Teplota',
-        accessor: star => star.temperature,
+        accessor: (star: any) => star.temperature,
         icon: '/img/Universe/Database/Temperature.svg'
     },
     {
         title: 'Zářivý výkon',
-        accessor: star => star.luminosity,
+        accessor: (star: any) => star.luminosity,
         icon: '/img/Universe/Database/Luminosity.svg'
     },
     {
         title: 'Vzdálenost',
-        accessor: star => star.distance,
+        accessor: (star: any) => star.distance,
         icon: '/img/Universe/Database/Distance.svg'
     },
     {
         title: 'Planet',
-        accessor: star => star.planets.length,
+        accessor: (star: any) => star.planets.length,
         icon: '/img/Universe/Database/Planet.svg'
     },
-    { title: '', accessor: star => star.planets.length, icon: '', render: value => '' },
+    { title: '', accessor: (star: any) => star.planets.length, icon: '', render: (value: any) => '' },
     {
         title: <><Colored color='#77CC77'>Tranzit [%]</Colored>&nbsp;/&nbsp; <Colored color='#CC7777'>radiální
             rychlost [m/s]</Colored></>,
         accessor: () => null,
-        render: (value, star) => <MiniGraph data={star.tmp} lines={lines} labels={labels} height={80} width={320} />,
+        render: (value: any, star: any) => <MiniGraph data={star.tmp} lines={lines} labels={labels} height={80}
+                                                      width={320} />,
         headerIcon: '/img/Universe/Database/Discovery.svg'
     }
 ]
 
 const planetColumns = [
-    { title: '', accessor: planet => planet.index + 1, render: index => index || '' },
-    { title: <PlanetImage />, accessor: planet => planet.type, render: () => <PlanetImage /> },
-    { title: 'Planeta', accessor: planet => planet.type, render: () => 'Horký jupiter' },
+    { title: '', accessor: (planet: any) => planet.index + 1, render: (index: any) => index || '' },
+    { title: <PlanetImage />, accessor: (planet: any) => planet.type, render: () => <PlanetImage /> },
+    { title: 'Planeta', accessor: (planet: any) => planet.type, render: () => 'Horký jupiter' },
     {
         title: 'Průměr',
-        accessor: planet => planet.diameter,
+        accessor: (planet: any) => planet.diameter,
         icon: '/img/Universe/Database/Diameter.svg'
     },
-    { title: 'Hmotnost', accessor: planet => planet.mass, icon: '/img/Universe/Database/Mass.svg' },
+    { title: 'Hmotnost', accessor: (planet: any) => planet.mass, icon: '/img/Universe/Database/Mass.svg' },
     {
         title: 'Teplota',
-        accessor: planet => planet.surfaceTemperature,
+        accessor: (planet: any) => planet.surfaceTemperature,
         icon: '/img/Universe/Database/Temperature.svg'
     },
     {
         title: 'Perioda',
-        accessor: planet => planet.orbitalPeriod,
+        accessor: (planet: any) => planet.orbitalPeriod,
         icon: '/img/Universe/Database/Period.svg'
     },
     {
         title: 'Poloosa',
-        accessor: planet => planet.semiMajorAxis,
+        accessor: (planet: any) => planet.semiMajorAxis,
         icon: '/img/Universe/Database/Orbit.svg'
     },
     {
         title: 'Rychlost',
-        accessor: planet => planet.orbitalVelocity,
+        accessor: (planet: any) => planet.orbitalVelocity,
         icon: '/img/Universe/Database/Velocity.svg'
     },
     { title: 'Život', accessor: () => 'Vyloučen', icon: '/img/Universe/Database/Life.svg' },
@@ -229,7 +232,7 @@ const planetColumns = [
 
 const levels = [
     { columns: starColumns },
-    { columns: planetColumns, accessor: star => star.planets }
+    { columns: planetColumns, accessor: (star: any) => star.planets }
 ]
 
 const Database: React.FC<Props> & Static = ({ ...props }) => {
@@ -247,7 +250,7 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
         app.current.scrollTop = data.y - delta.y
     }, () => ({ x: app.current.scrollLeft, y: app.current.scrollTop }))
 
-    const handleSort = newSort => {
+    const handleSort = (newSort: any) => {
         if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level) {
             actions.setBodiesSort(newSort)
         }
@@ -256,8 +259,8 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     return (
         <Root {...props} {...dragHandlers}>
             <Table
-                items={bodies.payload ? bodies.payload.list : []}
-                levels={levels}
+                items={bodies.payload?.list ?? []}
+                levels={levels as any}
                 onSort={handleSort}
                 defaultSort={sort}
                 renderBody={body => (

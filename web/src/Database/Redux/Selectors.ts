@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux'
 
-const selectBodies = state => state.universe.bodies
-const selectBodiesSort = state => state.universe.sort
-const selectBodiesFilter = state => state.universe.filter
-const selectBodiesSegment = state => state.universe.segment
-const selectUsersRank = state => state.universe.usersRank
+const selectBodies = (state: any) => state.database.bodies
+const selectBodiesSort = (state: any) => state.database.sort
+const selectBodiesFilter = (state: any) => state.database.filter
+const selectBodiesSegment = (state: any) => state.database.segment
+const selectUsersRank = (state: any) => state.database.usersRank
 
 export const useBodies = () => useSelector(selectBodies)
 

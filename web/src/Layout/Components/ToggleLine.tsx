@@ -1,7 +1,8 @@
 import React from 'react'
 import Styled from 'styled-components'
+
 import { Link, LinkData } from '../../Routing'
-import { Color, Duration, Mixin } from '../../Utils'
+import { Color, Duration, size, opacityHover, image } from '../../Style'
 import MinorSectionTitle from './MinorSectionTitle'
 
 interface Static {
@@ -76,9 +77,9 @@ const OuterArrow = Styled.div`
 `
 
 const Arrow = Styled(Link)`
-    ${Mixin.Size('1rem', '2rem')}
-    ${Mixin.OpacityHover()}
-    ${Mixin.Image('Controls/ArrowRight.svg')}
+    ${size('1rem', '2rem')}
+    ${opacityHover()}
+    ${image('Controls/ArrowRight.svg')}
     position: absolute;
     right: 1rem;
     top: 50%;

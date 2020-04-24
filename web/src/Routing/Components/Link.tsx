@@ -1,21 +1,18 @@
 import * as React from 'react'
-import useRouter from 'use-react-router'
 import Styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 
 import { Target } from '../types'
-import { Validator } from '../../Utils'
-import Urls from '../Utils/Urls'
+import { Validator } from '../../Native'
+import * as Urls from '../Utils/Urls'
 
-export interface Static {
+interface Static {
     ACTIVE: string
 }
 
-export interface Props extends Target, React.ComponentPropsWithoutRef<'a'> {
+interface Props extends Target, React.ComponentPropsWithoutRef<'a'> {
     replace?: boolean
 }
-
-export type Type = React.FC<Props> & Static
 
 const Root = Styled(NavLink)`
     cursor: pointer;
@@ -32,22 +29,17 @@ const AbsoluteRoot = Styled.a`
     display: inline-block;
 `
 
-const Link: Type = ({ hash, query, pathname, replace, ...props }) => {
+const Link: React.FC<Props> & Static = ({ hash, query, pathname, replace, ...props }) => {
 
-    const { location } = useRouter()
-    const target = { hash, query, pathname }
+    const target = { hash, search: query, pathname }
 
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
 
-        if (props.onClick) {
-            props.onClick(event)
+        if (replace) {
+            Urls.replace({ hash, query: query, pathname })
         } else {
-            if (replace) {
-                Urls.replace({ hash, query, pathname })
-            } else {
-                Urls.push({ hash, query, pathname })
-            }
+            Urls.push({ hash, query: query, pathname })
         }
     }
 
@@ -63,21 +55,17 @@ const Link: Type = ({ hash, query, pathname, replace, ...props }) => {
         )
     }
 
-    const isActive = Urls.isCurrent(location, target)
-
     return (
         <Root
-            {...props as any}
-            data-active={isActive || undefined}
+            {...props}
+            activeClassName={Link.ACTIVE.replace('.', '')}
             onClick={handleClick}
-            isActive={() => isActive}
             exact
-            to={Urls.merge(target, location)}
-            activeClassName={Link.ACTIVE} />
+            to={Urls.merge(target)} />
     )
 }
 
-Link.ACTIVE = 'active'
+Link.ACTIVE = '.active'
 
 export default Link
 

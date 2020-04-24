@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Color, Duration, Mixin } from '../../Utils'
+import { Color, Duration, size, image, opacityHover } from '../../Style'
 import { MinorSectionTitle, Table } from '../../Layout'
 import UserRole from '../../Auth/Constants/UserRole'
 import { useIdentity } from '../../Auth'
@@ -20,7 +20,7 @@ interface NavLinkProps {
 }
 
 const Root = Styled.div`
-    ${Mixin.Size()}
+    ${size()}
     background-color: ${Color.DARK};
     display: flex;
     flex-direction: column;
@@ -40,23 +40,23 @@ const Title = Styled(MinorSectionTitle)`
 `
 
 const Inner = Styled.div`
-    ${Mixin.Size()}
+    ${size()}
     display: flex;
 `
 
 const Content = Styled.main`
-    ${Mixin.Size('calc(100% - 5rem)', '100%')}
+    ${size('calc(100% - 5rem)', '100%')}
     background: ${Color.MEDIUM_DARK};
 `
 
 const Nav = Styled.nav`
-    ${Mixin.Size('8rem', '100%')}
+    ${size('8rem', '100%')}
     display: flex;
     flex-direction: column;
 `
 
 const NavLink = Styled.button<NavLinkProps>`
-    ${Mixin.Size()}
+    ${size()}
     box-sizing: border-box;
     padding: 0.5rem;
     text-align: left;
@@ -106,17 +106,17 @@ const UsersTable = Styled(Table)`
 `
 
 const Image = Styled.div`
-    ${Mixin.Size('1.35rem')}
-    ${Mixin.Image(null)}
+    ${size('1.35rem')}
+    ${image(undefined)}
     display: inline-block;
     margin-right: 0.5rem;
     vertical-align: middle;
 `
 
 const DetailLink = Styled(Link)`
-    ${Mixin.Size('1.5rem')}
-    ${Mixin.Image('Controls/ArrowRight.svg', '90%')}
-    ${Mixin.OpacityHover()}
+    ${size('1.5rem')}
+    ${image('Controls/ArrowRight.svg', '90%')}
+    ${opacityHover()}
     vertical-align: middle;
 `
 
@@ -127,7 +127,7 @@ const data = {
         value: Math.round(Math.random() * 5000),
         change: Math.round(Math.random() * 500)
     }
-}
+} as any
 
 for (let i = 0; i < 11; i++) {
     data.list.push({
@@ -155,14 +155,14 @@ for (let i = 0; i < 11; i++) {
 
 
 const columns = [
-    { accessor: (user, index) => (user.position || (index + 1)) + '.' },
+    { accessor: (user: any, index: any) => (user.position || (index + 1)) + '.' },
     {
-        accessor: user => user.user.name,
-        render: (name, user) => <><Image
+        accessor: (user: any) => user.user.name,
+        render: (name: any, user: any) => <><Image
             style={{ backgroundImage: user.user.avatar && `url(${user.user.avatar})` }} />{name}</>
     },
-    { accessor: user => user.value },
-    { accessor: user => user.change, render: change => change > 0 ? change : '' }
+    { accessor: (user: any) => user.value },
+    { accessor: (user: any) => user.change, render: (change: any) => change > 0 ? change : '' }
 ]
 
 
@@ -187,7 +187,7 @@ const UsersList: React.FC<Props> & Static = ({ ...props }) => {
         }
 
         return result
-    }, [identity, data])
+    }, [identity])
 
     return (
         <Root {...props}>

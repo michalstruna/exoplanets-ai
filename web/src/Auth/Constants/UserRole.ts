@@ -10,7 +10,7 @@ enum UserRole {
 export default UserRole
 
 
-namespace UserRole {
+//namespace UserRole {
 
     /**
      * Check identity role.
@@ -26,4 +26,4 @@ namespace UserRole {
         return isInRole && !isInNoRole
     }
 
-}
+//}

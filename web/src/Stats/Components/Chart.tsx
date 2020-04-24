@@ -10,7 +10,9 @@ import {
     YAxis,
     ZAxis
 } from 'recharts'
-import { Color, Numbers } from '../../Utils'
+
+import { Numbers } from '../../Native'
+import { Color } from '../../Style'
 
 enum ChartType {
     LINE,
@@ -90,7 +92,7 @@ const Root = Styled(ResponsiveContainer)`
 `
 
 const splitIntoCategories = <T extends any>(items: T[], key: string): Record<string, T[]> => {
-    const result = {}
+    const result = {} as any
 
     for (const item of items) {
         if (!result[item[key]]) {
@@ -106,16 +108,11 @@ const splitIntoCategories = <T extends any>(items: T[], key: string): Record<str
 const colors = ['lightgreen', 'red', 'lightblue', 'yellow', 'white', 'purple', 'orange', 'cyan']
 
 const Chart: React.FC<Props<any>> & Static = ({ type, items, x, y, z, color, axisColor, textColor, grid, width, height, ...props }) => {
-
     const isNamed = items && typeof items[0][x.name] === 'string'
     const data = z ? splitIntoCategories(items, z.name) : items
 
     const ChartRoot = mapTypeToComponent[type].chart
     const Component = mapTypeToComponent[type].component
-
-    if (type === ChartType.PIE) {
-        console.log(isNamed, data, ChartRoot)
-    }
 
     const isCartesian = type === ChartType.BAR || type === ChartType.SCATTER || type === ChartType.LINE
 
@@ -139,7 +136,7 @@ const Chart: React.FC<Props<any>> & Static = ({ type, items, x, y, z, color, axi
                         interval={0} />
                 )}
 
-                {isCartesian && (
+                {isCartesian && x && y && (
                     <YAxis
                         stroke={axisColor}
                         tick={{ fill: textColor }}
@@ -168,10 +165,10 @@ const Chart: React.FC<Props<any>> & Static = ({ type, items, x, y, z, color, axi
 
                 {z ? (
                     Object.keys(data).map((category, i) => (
-                        <Component data={data[category]} name={category} fill={colors[i]} key={i} opacity={0.5} />
+                        <Component data={(data as any)[category]} name={category} fill={colors[i]} key={i} opacity={0.5} />
                     ))
                 ) : (
-                    <Component fill={color} opacity={0.5} dataKey={y.name} cx={200} cy={200} outerRadius={60} data={items} />
+                    <Component fill={color} opacity={0.5} dataKey={y && y.name} cx={200} cy={200} outerRadius={60} data={items} />
                 )}
             </ChartRoot>
         </Root>

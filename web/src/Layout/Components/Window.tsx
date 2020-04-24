@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Color, Duration, Mixin, ZIndex } from '../../Utils'
+import { Color, Duration, ZIndex } from '../../Style'
 
 interface Static {
     Content: string
@@ -48,7 +48,7 @@ const Window: React.FC<Props> & Static = ({ children, renderButton, onToggle, ..
     const [isOpened, setOpened] = React.useState(false)
 
     const handleToggle = () => {
-        onToggle(!isOpened)
+        onToggle && onToggle(!isOpened)
         setOpened(!isOpened)
     }
 

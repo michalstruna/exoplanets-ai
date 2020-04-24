@@ -1,9 +1,11 @@
 import * as React from 'react'
 import Styled from 'styled-components'
+
+// @ts-ignore
 import Facebook from 'react-facebook-login/dist/facebook-login-render-props'
 
 import ExternalAuthButton from './ExternalAuthButton'
-import { Color } from '../../Utils'
+import { Color } from '../../Style'
 
 interface Props extends React.ComponentPropsWithoutRef<'button'> {
 
@@ -26,9 +28,10 @@ const FacebookLogin: React.FC<Props> = ({ ...props }) => {
             appId=''
             autoLoad
             callback={() => null}
-            render={renderProps => (
+            render={(renderProps: any) => (
                 <Root {...renderProps} {...props} text='Facebook' icon='Auth/Facebook.svg' />
             )} />
+
     )
 
 }

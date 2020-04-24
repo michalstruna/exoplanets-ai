@@ -2,8 +2,8 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { ExtendedStats } from '../types'
-import { useStrings } from '../../Content'
-import { Numbers } from '../../Utils'
+import { useStrings } from '../../Data'
+import { Numbers } from '../../Native'
 
 interface Static {
     Item: string
@@ -48,11 +48,11 @@ const TopLevelStats: React.FC<Props> & Static = ({ data, ...props }) => {
                     {strings[key]}
                 </Name>
                 <Value>
-                    {Numbers.format(data[key])} {strings.units[key] || ''}
+                    {Numbers.format((data as any)[key])} {strings.units[key] || ''}
                 </Value>
             </Item>
         ))
-    }, [data])
+    }, [data, strings])
 
     return (
         <Root {...props}>
