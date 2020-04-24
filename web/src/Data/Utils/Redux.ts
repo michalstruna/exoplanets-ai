@@ -1,8 +1,18 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
+import Query from '../../Routing/Constants/Query'
+import { Validator } from '../../Native'
+import { Urls } from '../../Routing'
 
 export const async = <T>(payload: T | null = null) => ({ pending: false, payload, error: null })
+export const empty = <T>() => ({} as T)
 
-type Options<State, Payload> = {
+type PlainOptions<State, Payload> = {
+    syncObject?: (state: State) => ({
+        [K in keyof Payload]?: [Query, Validator.Predicate<Payload[K]>, Payload[K]]
+    })
+}
+
+type AsyncOptions<State, Payload> = {
     onPending?: (state: State, action: Action<Payload>) => any
     onSuccess?: (state: State, action: Action<Payload>) => any
     onError?: (state: State, action: Action<Payload>) => any
@@ -14,25 +24,24 @@ export type Action<Payload = void, Error = { message: string }> = {
     error?: Error
 }
 
-enum ActionType {
-    PLAIN,
-    ASYNC,
-    URL,
-    SET
-}
+enum ActionType {PLAIN, ASYNC, SET}
 
-
-type AsyncAction<Payload> = (payload: Payload) => Promise<any>
-
+type AsyncAction<Payload, ResultPayload = Payload> = (payload: Payload) => Promise<ResultPayload>
 type PlainAction<State, Payload> = (state: State, payload: Action<Payload>) => any
-type ActionWrapper<State, Payload = any> = { type: ActionType, action: PlainAction<State, Payload> | AsyncAction<Payload>, property?: keyof State, options?: Options<State, Payload> }
-type PlainActionWrapper<State, Payload> = { type: ActionType, action: PlainAction<State, Payload> }
-type AsyncActionWrapper<State, Payload> = { type: ActionType, action: AsyncAction<Payload>, property: keyof State, options?: any }
+
+type PlainActionCreator<State> = <Payload>(action: PlainAction<State, Payload>, options?: PlainOptions<State, Payload>) => PlainActionWrapper<State, Payload>
+type AsyncActionCreator<State> = <Payload, ResultPayload>(property: keyof State, action: AsyncAction<Payload, ResultPayload>, options?: AsyncOptions<State, Payload>) => AsyncActionWrapper<State, Payload, ResultPayload>
+type SetActionCreator<State> = <Payload>(property: keyof State, options?: PlainOptions<State, Payload>) => SetActionWrapper<State, Payload>
+
+type ActionWrapper<State, Payload = any> = PlainActionWrapper<State, Payload> | AsyncActionWrapper<State, Payload, any> | SetActionWrapper<State, Payload>
+type PlainActionWrapper<State, Payload> = { type: ActionType.PLAIN, action: PlainAction<State, Payload>, options?: PlainOptions<State, Payload> }
+type AsyncActionWrapper<State, Payload, ResultPayload> = { type: ActionType.ASYNC, action: AsyncAction<Payload, ResultPayload>, property: keyof State, options?: AsyncOptions<State, Payload> }
+type SetActionWrapper<State, Payload> = { type: ActionType.SET, action: PlainAction<State, Payload>, property: keyof State, options?: PlainOptions<State, Payload> }
 
 type ActionsSet<State> = {
-    plain: <Payload>(action: PlainAction<State, Payload>) => PlainActionWrapper<State, Payload>,
-    async: <Payload>(property: keyof State, action: AsyncAction<Payload>, options?: any) => AsyncActionWrapper<State, Payload>,
-    set: <Payload>(property: keyof State) => PlainActionWrapper<State, Payload>
+    plain: PlainActionCreator<State>
+    async: AsyncActionCreator<State>
+    set: SetActionCreator<State>
 }
 
 export const slice = <State extends Record<any, any>, Actions extends Record<string, ActionWrapper<State>>>(name: string, initialState: State, actionsAccessor: (actions: ActionsSet<State>) => Actions) => {
@@ -45,22 +54,50 @@ export const slice = <State extends Record<any, any>, Actions extends Record<str
         async: (property, action, options) => ({
             type: ActionType.ASYNC, property, action, options
         }),
-        set: <Payload>(property: keyof State) => ({
-            type: ActionType.SET, property, action: (state, action) => state[property] = action.payload as any
+        set: (property, options) => ({
+            type: ActionType.SET, property, action: (state, action) => state[property] = action.payload as any, options
         })
     })
 
     for (const [key, value] of Object.entries(actions)) {
         if (value.type === ActionType.PLAIN) {
             reducers[key] = <T>(state: State, action: Action<T>) => {
-                value.action(state, action as any)
+                value.action(state, action)
+            }
+        } else if (value.type === ActionType.SET) {
+            if (value.options) {
+                if (value.options.syncObject) {
+                    const syncObject = value.options.syncObject(initialState)
+
+                    for (const i in syncObject) {
+                        const [queryName, validator, defaultValue] = syncObject[i]!
+                        initialState[value.property][i] = Urls.safeQuery(queryName, validator, defaultValue)
+                    }
+                }
+            }
+
+            reducers[key] = <T>(state: State, action: Action<T>) => {
+                if (value.options) {
+                    if (value.options.syncObject) {
+                        const syncObject = value.options.syncObject(state)
+
+                        for (const i in syncObject) {
+                            const [queryName, validator, defaultValue] = syncObject[i]!
+                            const queryValue = Validator.safe((action.payload as any)[i], validator, defaultValue)
+                            state[value.property][i] = queryValue
+                            Urls.replace({ query: { [queryName]: queryValue } })
+                        }
+                    }
+                }
+
+                value.action(state, action)
             }
         } else if (value.type === ActionType.ASYNC) {
-            const thunk = createAsyncThunk(name + '/' + key, value.action as AsyncAction<any>)
+            const thunk = createAsyncThunk(name + '/' + key, value.action)
 
             extraActions[key] = thunk
 
-            extraReducers[thunk.pending.type] = (state: any, action: any) => {
+            extraReducers[thunk.pending.type] = (state: State, action: PayloadAction) => {
                 state[value.property].pending = true
 
                 if (value.options && value.options.onPending) {
@@ -71,7 +108,7 @@ export const slice = <State extends Record<any, any>, Actions extends Record<str
                 }
             }
 
-            extraReducers[thunk.fulfilled.type] = (state: any, action: any) => {
+            extraReducers[thunk.fulfilled.type] = (state: State, action: PayloadAction) => {
                 state[value.property].pending = false
                 state[value.property].error = null
 
@@ -82,7 +119,7 @@ export const slice = <State extends Record<any, any>, Actions extends Record<str
                 }
             }
 
-            extraReducers[thunk.rejected.type] = (state: any, action: any) => {
+            extraReducers[thunk.rejected.type] = (state: State, action: PayloadAction<any, string, any, Error>) => {
                 state[value.property].pending = false
                 state[value.property].error = action.error.message
 
@@ -91,19 +128,13 @@ export const slice = <State extends Record<any, any>, Actions extends Record<str
                 }
             }
 
-        } else if (value.type === ActionType.URL) {
-
-        } else if (value.type === ActionType.SET) {
-            reducers[key] = <T>(state: State, action: Action<T>) => {
-                value.action(state, action)
-            }
         }
     }
 
     const slice = createSlice({ name, initialState, reducers, extraReducers })
 
     type OutputActions = {
-        [T in keyof Actions]: Actions[T] extends AsyncActionWrapper<State, infer Payload> ?
+        [T in keyof Actions]: Actions[T] extends AsyncActionWrapper<State, infer Payload, any> ?
             (payload: Payload) => any :
             Actions[T] extends { type: any, action: (state: State, action: Action<infer Payload>) => void, property?: any, options?: any } ?
                 (payload: Payload) => any :

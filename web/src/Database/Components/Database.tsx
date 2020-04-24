@@ -185,7 +185,8 @@ const starColumns = [
         title: <><Colored color='#77CC77'>Tranzit [%]</Colored>&nbsp;/&nbsp; <Colored color='#CC7777'>radiální
             rychlost [m/s]</Colored></>,
         accessor: () => null,
-        render: (value: any, star: any) => <MiniGraph data={star.tmp} lines={lines} labels={labels} height={80} width={320} />,
+        render: (value: any, star: any) => <MiniGraph data={star.tmp} lines={lines} labels={labels} height={80}
+                                                      width={320} />,
         headerIcon: '/img/Universe/Database/Discovery.svg'
     }
 ]
@@ -258,7 +259,7 @@ const Database: React.FC<Props> & Static = ({ ...props }) => {
     return (
         <Root {...props} {...dragHandlers}>
             <Table
-                items={bodies.payload ? bodies.payload.list : []}
+                items={bodies.payload?.list ?? []}
                 levels={levels as any}
                 onSort={handleSort}
                 defaultSort={sort}

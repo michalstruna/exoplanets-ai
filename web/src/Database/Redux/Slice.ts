@@ -1,6 +1,6 @@
 import SpectralType from '../Constants/SpectralType'
 import { Filter, Sort, Segment, Cursor } from '../../Layout'
-import { Query, Urls } from '../../Routing'
+import { Query } from '../../Routing'
 import { Redux } from '../../Data'
 
 const get = (val: any, i = 0) => Math.round(val * Math.random())
@@ -111,37 +111,19 @@ const addIndex = <T extends any>(items: T[]) => {
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
 
-const sortLevel = Urls.safeQuery<number>(Query.SORT_LEVEL, v => typeof v === 'number' && Number.isInteger(v) && v >= 0 && v < levels.length, 0)
-const sortColumn = Urls.safeQuery<number>(Query.SORT_COLUMN, v => typeof v === 'number' && Number.isInteger(v) && v > 0 && v < levels[sortLevel].columns.length, 1)
-const sortIsAsc = Urls.safeQuery<number>(Query.SORT_IS_ASC, [0, 1], 1) === 1
-const defaultSort: Sort = { column: sortColumn, isAsc: sortIsAsc, level: sortLevel }
-
-const segmentIndex = Urls.safeQuery<number>(Query.SEGMENT_START, v => typeof v === 'number' && Number.isInteger(v) && v >= 0, 0)
-const segmentSize = Urls.safeQuery<number>(Query.SEGMENT_SIZE, [5, 10, 20, 50, 100, 200], 20)
-const defaultSegment: Segment = { index: segmentIndex, size: segmentSize }
-
-
-//const [sortLevel, sortColumn, sortIsAsc] = Urls.safeQueries
-
-
-
-/*
-const defaultFilter: Filter = {
-    attribute: Validator.safe(queryUtils.get(Query.FILTER_ATTRIBUTE))
-}*/
 
 // TODO: Add "connect with url query"? sort: { isAsc: Redux.connectWithQuery(queryName, Validator) }
-const Slice = Redux.slice(
+const slice = Redux.slice(
     'database',
     {
         bodies: Redux.async<any /* TODO: Body[] */>(),
-        filter: {} as Filter,
-        sort: {} as Sort,
-        segment: defaultSegment as Segment,
-        usersRank: 0,
+        filter: Redux.empty<Filter>(),
+        sort: Redux.empty<Sort>(),
+        segment: Redux.empty<Segment>(),
+        usersRank: 0
     },
-    ({ async, set, plain }) => ({
-        getBodies: async<Cursor>('bodies', ({ sort, filter, segment }) => new Promise(resolve => {
+    ({ async, set }) => ({
+        getBodies: async<Cursor, { list: any, count: number }>('bodies', ({ sort, filter, segment }) => new Promise(resolve => {
             setTimeout(() => {
                 resolve({
                     list: getSortedItems(data, sort).slice(segment.index * segment.size, (segment.index + 1) * segment.size),
@@ -149,11 +131,28 @@ const Slice = Redux.slice(
                 })
             }, 1000)
         })),
-        setBodiesFilter: plain<Filter>((state, action) => state.filter = action.payload),
-        setBodiesSegment: plain<Segment>((state, action) => state.segment = action.payload),
-        setBodiesSort: set<Sort>('sort')
+        setBodiesFilter: set<Filter>('filter', {
+            syncObject: () => ({ // TODO: Validate filter.
+                attribute: [Query.FILTER_ATTRIBUTE, () => true, []],
+                relation: [Query.FILTER_RELATION, () => true, []],
+                value: [Query.FILTER_VALUE, () => true, []]
+            })
+        }),
+        setBodiesSegment: set<Segment>('segment', {
+            syncObject: () => ({
+                index: [Query.SEGMENT_START, v => Number.isInteger(v) && v >= 0, 0],
+                size: [Query.SEGMENT_SIZE, [5, 10, 20, 50, 100, 200], 20]
+            })
+        }),
+        setBodiesSort: set<Sort>('sort', {
+            syncObject: state => ({ // TODO: Level must be before column. Object is not order-safe. Replace key by first item array?
+                level: [Query.SORT_LEVEL, [0, 1], 0],
+                column: [Query.SORT_COLUMN, v => Number.isInteger(v) && v > 0 && v < levels[state.sort.level].columns.length, 1],
+                isAsc: [Query.SORT_IS_ASC, [false, true], true]
+            })
+        })
     })
 )
 
-export default Slice
-export const { getBodies, setBodiesFilter, setBodiesSort, setBodiesSegment } = Slice.actions
+export default slice.reducer
+export const { getBodies, setBodiesFilter, setBodiesSort, setBodiesSegment } = slice.actions

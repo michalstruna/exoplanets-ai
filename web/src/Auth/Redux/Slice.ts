@@ -26,10 +26,10 @@ const demoIdentity: Identity = {
 const Slice = Redux.slice(
     'auth',
     {
-        identity: Redux.async(Cookies.getJSON(Cookie.IDENTITY.name))
+        identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name))
     },
     ({ set, async, plain }) => ({
-        login: async<Credentials>('identity', ({ email, password }) => new Promise((resolve, reject) => {
+        login: async<Credentials, Identity>('identity', ({ email, password }) => new Promise((resolve, reject) => {
             // TODO: Cookies
             setTimeout(() => {
                 if (email === 'm@m.cz' && password === '123') {
