@@ -14,6 +14,7 @@ export { default as Cookie } from './Constants/Cookie'
  */
 export { default as Validator } from './Utils/Validator'
 export { default as Arrays } from './Utils/Arrays'
+export { default as Numbers } from './Utils/Numbers'
 export * as Redux from './Utils/Redux'
 
 /**
