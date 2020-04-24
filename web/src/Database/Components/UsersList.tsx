@@ -129,7 +129,7 @@ const data = {
     }
 } as any
 
-for (let i = 0; i < 11; i++) {
+for (let i = 0; i < 10; i++) {
     data.list.push({
         value: Math.round(Math.random() * 5000),
         change: Math.round(Math.random() * 500),
@@ -184,6 +184,8 @@ const UsersList: React.FC<Props> & Static = ({ ...props }) => {
 
         if (identity.payload) {
             result.push({ ...data.me, user: identity.payload })
+        } else {
+            result.push({ value: '???', change: 0, position: '???', user: { name: 'Nepřihlášený' } })
         }
 
         return result

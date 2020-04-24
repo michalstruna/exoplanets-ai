@@ -6,6 +6,7 @@ import { Chart, TopLevelStats } from '../../Stats'
 import { Table, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
 import UsersList from '../Components/UsersList'
+import RealTimeBlock from '../Components/RealTimeBlock'
 
 interface Static {
 
@@ -53,7 +54,7 @@ const Users = Styled(UsersList)`
     ${size('100%', `30rem`)}
 `
 
-const Todo1 = Styled(Block)`
+const Now = Styled(RealTimeBlock)`
     ${size('100%', `calc(100% - 33rem)`)}
     margin-top: 1.5rem;
 `
@@ -168,18 +169,8 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
                 Tabulka spektrálních tříd a objeveých exoplanet
             </Left>
             <Center>
-                <Users>
-                    <UsersList />
-                    &lt; Stránka &gt; Časový interval
-                    Pořadí. Ikona username ... score přírustek
-                    Vpravo: Objevených planet, Prozkoumaných hvězd, Výpočetní čas, ???
-                </Users>
-                <Todo1>
-                    Záložky:
-                    - Chat + online uživatelé,
-                    - Historie (objevené planety, zpracované hvězdy) - za posledních 100 dnů
-                    - Hw info
-                </Todo1>
+                <Users />
+                <Now />
             </Center>
             <Right>
                 <Todo2 />

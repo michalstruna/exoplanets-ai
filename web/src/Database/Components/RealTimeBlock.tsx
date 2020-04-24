@@ -1,0 +1,74 @@
+import React from 'react'
+import Styled from 'styled-components'
+import { Color, Duration, opacityHover, size } from '../../Style'
+import { IconButton } from '../../Layout'
+
+interface Static {
+
+}
+
+interface Props extends React.ComponentPropsWithoutRef<'div'> {
+
+}
+
+interface NavLinkProps {
+    isActive: boolean
+}
+
+const Root = Styled.div`
+    ${size()}
+`
+
+const Nav = Styled.nav`
+    ${size('100%', '2.5rem')}
+    display: flex;
+`
+
+const NavLink = Styled(IconButton)<NavLinkProps>`
+    flex: 1 1 0;
+    transform: background-color ${Duration.MEDIUM}, opacity ${Duration.MEDIUM};
+    
+    ${props => props.isActive && `
+        background-color: ${Color.MEDIUM_DARK};
+        pointer-events: none;
+        opacity: 1;
+    `}
+`
+
+const Content = Styled.div`
+    ${size('100%', 'calc(100% - 2.5rem)')}
+    background-color: ${Color.MEDIUM_DARK};
+`
+
+const links = [
+    { icon: 'Universe/RealTime/Info.svg', text: 'Info' },
+    { icon: 'Auth/Online.svg', text: 'Online (451)' },
+    { icon: 'Universe/RealTime/Discussion.svg', text: 'Diskuse (2)' }
+]
+
+const RealTimeBlock: React.FC<Props> & Static = ({ ...props }) => {
+
+    const [tab, setTab] = React.useState(0)
+
+    const renderedLinks = React.useMemo(() => (
+        links.map((link, i) => (
+            <NavLink onClick={() => setTab(i)} key={i} isActive={tab === i} icon={link.icon} isLarge={true}>
+                {link.text}
+            </NavLink>
+        ))
+    ), [tab])
+
+    return (
+        <Root {...props}>
+            <Nav>
+                {renderedLinks}
+            </Nav>
+            <Content>
+
+            </Content>
+        </Root>
+    )
+
+}
+
+export default RealTimeBlock

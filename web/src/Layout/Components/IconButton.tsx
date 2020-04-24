@@ -24,7 +24,7 @@ export default Styled.button<Props>`
         ${size('auto', Dimension.NAV_HEIGHT, true)}
         
         &:before {
-            ${size('1.2rem')}
+            ${size('1.4rem')}
         }
     ` : css`
         background-size: auto 1rem;
