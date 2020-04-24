@@ -111,8 +111,6 @@ const addIndex = <T extends any>(items: T[]) => {
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
 
-
-// TODO: Add "connect with url query"? sort: { isAsc: Redux.connectWithQuery(queryName, Validator) }
 const slice = Redux.slice(
     'database',
     {
