@@ -5,8 +5,7 @@ import { Color, Dimension, size } from '../../Style'
 import { Chart, TopLevelStats } from '../../Stats'
 import { Table, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
-import UsersList from '../Components/UsersList'
-import RealTimeBlock from '../Components/RealTimeBlock'
+import { UsersBlock } from '../../User'
 
 interface Static {
 
@@ -50,22 +49,22 @@ const Right = Styled.div`
     margin-right: 1rem;
 `
 
-const Users = Styled(UsersList)`
-    ${size('100%', `30rem`)}
+const Todo = Styled(Block)`
+    ${size('100%', `calc(100% - 35.5rem)`)}
 `
 
-const Now = Styled(RealTimeBlock)`
-    ${size('100%', `calc(100% - 33rem)`)}
+const OverviewUsersBlock = Styled(UsersBlock)`
+    ${size('100%', `32.5rem`)}
     margin-top: 1.5rem;
 `
 
 const Todo2 = Styled(Block)`
     ${size('100%', `calc(100% - 32rem)`)}
+    margin-top: 1.5rem;
 `
 
 const News = Styled(Block)`
     ${size('100%', '29rem')}
-    margin-top: 1.5rem;
     padding: 0;
     
     ${Table.Root} {
@@ -169,11 +168,10 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
                 Tabulka spektrálních tříd a objeveých exoplanet
             </Left>
             <Center>
-                <Users />
-                <Now />
+                <Todo />
+                <OverviewUsersBlock />
             </Center>
             <Right>
-                <Todo2 />
                 <News>
                     <ToggleLine items={[
                         { header: 'Poslední objevené exoplanety', content: earthLike, link: { pathname: Url.DATABASE } },
@@ -181,6 +179,7 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
                         { header: 'Nejbližší exoplanety', content: earthLike, link: { pathname: Url.DATABASE } }
                     ]} />
                 </News>
+                <Todo2 />
             </Right>
         </Root>
     )

@@ -3,8 +3,8 @@ import Styled from 'styled-components'
 
 import { Color, Duration, size, image, opacityHover } from '../../Style'
 import { MinorSectionTitle, Table } from '../../Layout'
-import UserRole from '../../Auth/Constants/UserRole'
-import { useIdentity } from '../../Auth'
+import UserRole from '../Constants/UserRole'
+import { useIdentity } from '..'
 import { Link, Url } from '../../Routing'
 
 interface Static {
@@ -21,7 +21,6 @@ interface NavLinkProps {
 
 const Root = Styled.div`
     ${size()}
-    background-color: ${Color.DARK};
     display: flex;
     flex-direction: column;
 `
@@ -56,19 +55,17 @@ const Nav = Styled.nav`
 `
 
 const NavLink = Styled.button<NavLinkProps>`
+    ${opacityHover()}
     ${size()}
     box-sizing: border-box;
     padding: 0.5rem;
     text-align: left;
+    transition: background-color ${Duration.MEDIUM}, opacity ${Duration.MEDIUM};
     word-spacing: 9999999px;
-    transition: color ${Duration.MEDIUM};
-    
-    &:hover {
-        background-color: ${Color.MEDIUM_DARK};
-    }
     
     ${props => props.isActive && `
         background-color: ${Color.MEDIUM_DARK};
+        opacity: 1;
         pointer-events: none;
     `}
 `
@@ -166,7 +163,7 @@ const columns = [
 ]
 
 
-const UsersList: React.FC<Props> & Static = ({ ...props }) => {
+const UsersRank: React.FC<Props> & Static = ({ ...props }) => {
 
     const [rank, setRank] = React.useState(0)
     const identity = useIdentity()
@@ -217,4 +214,4 @@ const UsersList: React.FC<Props> & Static = ({ ...props }) => {
 
 }
 
-export default UsersList
+export default UsersRank

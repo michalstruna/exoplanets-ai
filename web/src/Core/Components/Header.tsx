@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import Nav from './Nav'
-import AuthControl from '../../Auth/Components/AuthControl'
+import AuthControl from '../../User/Components/AuthControl'
 
 interface Static {
 

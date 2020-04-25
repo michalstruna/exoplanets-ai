@@ -1,7 +1,8 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Color, Duration, opacityHover, size } from '../../Style'
+import { Color, Duration, size } from '../../Style'
 import { IconButton } from '../../Layout'
+import UsersRank from './UsersRank'
 
 interface Static {
 
@@ -37,16 +38,17 @@ const NavLink = Styled(IconButton)<NavLinkProps>`
 
 const Content = Styled.div`
     ${size('100%', 'calc(100% - 2.5rem)')}
-    background-color: ${Color.MEDIUM_DARK};
 `
 
 const links = [
-    { icon: 'Universe/RealTime/Info.svg', text: 'Info' },
+    { icon: 'Universe/RealTime/Volunteers.svg', text: 'Dobrovolníci' },
     { icon: 'Auth/Online.svg', text: 'Online (451)' },
     { icon: 'Universe/RealTime/Discussion.svg', text: 'Diskuse (2)' }
 ]
 
-const RealTimeBlock: React.FC<Props> & Static = ({ ...props }) => {
+const tabs = [() => <UsersRank />, () => <div />, () => <div />]
+
+const UsersBlock: React.FC<Props> & Static = ({ ...props }) => {
 
     const [tab, setTab] = React.useState(0)
 
@@ -58,17 +60,19 @@ const RealTimeBlock: React.FC<Props> & Static = ({ ...props }) => {
         ))
     ), [tab])
 
+    const renderedContent = React.useMemo(tabs[tab], [tab])
+
     return (
         <Root {...props}>
             <Nav>
                 {renderedLinks}
             </Nav>
             <Content>
-
+                {renderedContent}
             </Content>
         </Root>
     )
 
 }
 
-export default RealTimeBlock
+export default UsersBlock

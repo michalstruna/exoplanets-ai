@@ -2,7 +2,7 @@ import Axios, { AxiosPromise } from 'axios'
 import Path from 'path'
 
 import Config from '../../Async/Constants/Config'
-import { useIdentity } from '../../Auth'
+import { useIdentity } from '../../User/Redux/Selectors'
 
 export default class Requests {
 
