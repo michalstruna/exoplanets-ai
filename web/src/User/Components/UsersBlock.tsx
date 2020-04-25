@@ -3,6 +3,7 @@ import Styled from 'styled-components'
 import { Color, Duration, size } from '../../Style'
 import { IconButton } from '../../Layout'
 import UsersRank from './UsersRank'
+import OnlineUsers from './OnlineUsers'
 
 interface Static {
 
@@ -46,7 +47,7 @@ const links = [
     { icon: 'Universe/RealTime/Discussion.svg', text: 'Diskuse (2)' }
 ]
 
-const tabs = [() => <UsersRank />, () => <div />, () => <div />]
+const tabs = [() => <UsersRank />, () => <OnlineUsers />, () => <div />]
 
 const UsersBlock: React.FC<Props> & Static = ({ ...props }) => {
 

@@ -33,6 +33,7 @@ const Cell = Styled.div`
     display: table-cell;
     overflow: hidden;
     padding: 0.5rem;
+    vertical-align: middle;
     width: auto;
     
     &:first-of-type {
@@ -89,6 +90,7 @@ Table.Row = Row
 Table.Cell = Cell
 Table.HeaderRow = HeaderRow
 Table.HeaderCell = HeaderCell
+Table.Root = Root
 
 Table.defaultProps = {
     withHeader: true

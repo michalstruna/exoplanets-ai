@@ -12,14 +12,22 @@ const demoIdentity: Identity = {
     role: UserRole.ADMIN,
     score: {
         rank: 193,
-        totalPlanets: { value: 3, rank: 216 },
-        totalStars: { value: 314, rank: 512 },
-        time: { value: 7875, rank: 337 }
+        totalPlanets: 216,
+        totalStars: 512,
+        time: 337
     },
     personal: {
         country: 'CZ',
         birth: 456,
         isMale: true
+    },
+    activity: {
+        devices: {
+            count: 3,
+            power: 2317
+        },
+        isOnline: true,
+        last: new Date().getTime()
     }
 }
 

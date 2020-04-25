@@ -149,9 +149,9 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
                     Rank <ItemValue>{user.score.rank}.</ItemValue>
                 </Rank>
                 <Stats>
-                    <Item title='Planet' value={user.score.totalPlanets.value} />
-                    <Item title='Hvězd' value={user.score.totalStars.value} />
-                    <Item title='Hodin' value={user.score.time.value} />
+                    <Item title='Planet' value={user.score.totalPlanets} />
+                    <Item title='Hvězd' value={user.score.totalStars} />
+                    <Item title='Hodin' value={user.score.time} />
                 </Stats>
             </Left>
             <Right>
