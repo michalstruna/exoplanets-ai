@@ -2,7 +2,7 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 import Countries from 'emoji-flags'
 
-import { IconButton } from '../../Layout'
+import { IconText } from '../../Layout'
 import Auth from './Auth'
 import { UserSimple } from '../types'
 import { useActions } from '../../Data'
@@ -64,7 +64,7 @@ const RightMenu = Styled.div`
     font-size: 105%;
     width: 100%;
     
-    & > button {
+    & > * {
         display: inline-block;
         text-align: left;
         width: 50%;
@@ -157,9 +157,7 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
             </Left>
             <Right>
                 <Row>
-                    <IconButton icon='Auth/Male.svg' as='div'>
-                        23 let
-                    </IconButton>
+                    <IconText icon='Auth/Male.svg' text='23 let' />
                     {country && (
                         <div title={country.name}>
                             {country.emoji + ' ' + country.code}
@@ -174,13 +172,13 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
 
                 </div>
                 <RightMenu>
-                    <IconButton icon='Auth/User.svg'>
-                        Detail
-                    </IconButton>
+                    <IconText icon='Auth/User.svg' text='Detail' size={IconText.SMALL} />
                     <Auth identityId={user.id} when={() => (
-                        <IconButton icon='Auth/Logout.svg' onClick={() => actions.logout()}>
-                            Odhlásit se
-                        </IconButton>
+                        <IconText
+                            icon='Auth/Logout.svg'
+                            onClick={() => actions.logout()}
+                            text='Odhlásit se'
+                            size={IconText.SMALL} />
                     )} />
                 </RightMenu>
             </Right>

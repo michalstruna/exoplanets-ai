@@ -11,7 +11,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = Styled.div`
-    display: inline-block;
+
 `
 
 const Content = Styled.div`

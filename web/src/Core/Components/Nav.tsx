@@ -1,9 +1,10 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Dimension, Duration, size, image, Color } from '../../Style'
+import { Dimension, size } from '../../Style'
 import { useStrings } from '../../Data'
-import { Link } from '../../Routing'
+import { IconText } from '../../Layout'
+import useRouter from 'use-react-router'
 
 interface Static {
 
@@ -18,48 +19,19 @@ const Root = Styled.nav`
     display: flex;
     justify-content: space-around;
     user-select: none;
-`
-
-interface NavLinkProps {
-    icon: string
-}
-
-const NavLink = Styled(Link)<NavLinkProps>`
-    background-color: transparent;
-    opacity: 0.6;
     text-align: center;
-    transition: background-color ${Duration.MEDIUM}, opacity ${Duration.MEDIUM};
-    width: 100%;
-    
-    &:before {
-        ${props => image(`Core/Nav/${props.icon}.svg`)}
-        ${size('1.5rem', '100%')}
-        content: "";
-        display: inline-block;
-        margin-right: 0.75rem;
-        vertical-align: bottom;
-    }
-    
-    &${Link.ACTIVE}, &:hover {
-        opacity: 1;
-    }
-    
-    &${Link.ACTIVE} {
-        background-color: ${Color.MEDIUM_DARK};
-    }
 `
 
 const Nav: React.FC<Props> & Static = ({ ...props }) => {
 
     const strings = useStrings().nav
+    const { location } = useRouter()
 
     const renderedLinks = React.useMemo(() => (
         strings.links.map(({ text, icon, ...link }: any, i: number) => (
-            <NavLink {...link} key={i} icon={icon}>
-                {text}
-            </NavLink>
+            <IconText key={i} icon={`Core/Nav/${icon}.svg`} text={text}{...link} />
         ))
-    ), [strings])
+    ), [strings, location])
 
     return (
         <Root {...props}>

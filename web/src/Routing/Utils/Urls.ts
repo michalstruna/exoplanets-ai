@@ -85,7 +85,7 @@ export const safeHash = (predicate: Validator.Predicate<string>, defaultValue: s
 /**
  * Check if target refers to the same URL as source.
  */
-export const isCurrent = (source: Location, target: Target): boolean => {
+export const isCurrent = (target: Target, source: Location = History.location): boolean => {
     if (target.pathname && source.pathname !== target.pathname) {
         return false
     }

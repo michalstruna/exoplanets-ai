@@ -2,7 +2,7 @@ import React from 'react'
 
 import Auth from './Auth'
 import UserRole from '../Constants/UserRole'
-import { Window, IconButton } from '../../Layout'
+import { Window, IconText } from '../../Layout'
 import { LoginForm, useIdentity } from '../index'
 import UserPreview from './UserPreview'
 
@@ -22,22 +22,15 @@ const AuthControl: React.FC<Props> & Static = ({ ...props }) => {
         <Auth
             role={UserRole.UNAUTHENTICATED}
             when={() => (
-                <Window
-                    renderButton={() => (
-                        <IconButton icon='Auth/User.svg' isLarge={true}>
-                            Přihlášení
-                        </IconButton>
-                    )}>
+                <Window renderButton={() => <IconText icon='Auth/User.svg' text='Přihlášení' onClick={() => null} />}>
                     <LoginForm />
                 </Window>
             )}
             otherwise={() => (
-                <Window
-                    renderButton={() => (
-                        <IconButton icon='Auth/User.svg' isLarge={true}>
-                            {identity.payload.name}
-                        </IconButton>
-                    )}>
+                <Window renderButton={() => <IconText
+                    icon='Auth/User.svg'
+                    text={identity.payload.name}
+                    onClick={() => null} />}>
                     <UserPreview user={identity.payload} />
                 </Window>
             )} />

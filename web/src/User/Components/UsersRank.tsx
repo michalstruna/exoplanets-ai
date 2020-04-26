@@ -106,7 +106,7 @@ const data = {
     }
 } as any
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 11; i++) {
     data.list.push({
         value: Math.round(Math.random() * 5000),
         change: Math.round(Math.random() * 500),

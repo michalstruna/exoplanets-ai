@@ -6,6 +6,7 @@ import { Chart, TopLevelStats } from '../../Stats'
 import { Table, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
 import { UsersBlock } from '../../User'
+import PlanetsRank from '../Components/PlanetsRank'
 
 interface Static {
 
@@ -63,7 +64,7 @@ const Todo2 = Styled(Block)`
     margin-top: 1.5rem;
 `
 
-const News = Styled(Block)`
+const PlanetRankBlock = Styled(PlanetsRank)`
     ${size('100%', '29rem')}
     padding: 0;
     
@@ -86,16 +87,6 @@ const FlexContainer = Styled.div`
     }
 `
 
-const Image = Styled.div`
-    ${size('4rem')}
-    ${size('2.5rem')}
-    background-image: radial-gradient(#CA0, #000);
-    border-radius: 100%;
-    display: inline-block;
-    margin-right: 0.5rem;
-    vertical-align: middle;
-`
-
 const randomPlanets = [] as any
 
 for (let i = 0; i < 20; i++) {
@@ -114,25 +105,8 @@ const barData = [
     { size: '> 15', count: 160 }
 ]
 
-const planets = [
-    { name: 'Proxima Centauri b', distance: 4.2, diameter: 15535 },
-    { name: 'VY Canis Majors', distance: 5.2, diameter: 8963 },
-    { name: 'Proxima Centauri b', distance: 4.2, diameter: 12411 },
-    { name: 'VY Canis Majors', distance: 5.2, diameter: 13691 },
-    { name: 'Proxima Centauri b', distance: 4.2, diameter: 15741 }
-]
-
 
 const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
-
-    const earthLike = React.useMemo(() => (
-        <Table items={planets} columns={[
-            { accessor: (planet, index) => index + 1, title: '#', render: index => index + '.' },
-            { accessor: planet => planet.name, title: 'Planeta', render: name => <><Image />{name}</> },
-            { accessor: planet => planet.diameter, title: 'Průměr' },
-            { accessor: planet => planet.distance, title: 'Vzdálenost' }
-        ]} />
-    ), [])
 
     return (
         <Root {...props}>
@@ -172,13 +146,7 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
                 <OverviewUsersBlock />
             </Center>
             <Right>
-                <News>
-                    <ToggleLine items={[
-                        { header: 'Poslední objevené exoplanety', content: earthLike, link: { pathname: Url.DATABASE } },
-                        { header: 'Zemi nejpodobnější exoplanety', content: earthLike, link: { pathname: Url.DATABASE } },
-                        { header: 'Nejbližší exoplanety', content: earthLike, link: { pathname: Url.DATABASE } }
-                    ]} />
-                </News>
+                <PlanetRankBlock />
                 <Todo2 />
             </Right>
         </Root>

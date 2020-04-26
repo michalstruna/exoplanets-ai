@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Color, Duration, size } from '../../Style'
-import { IconButton } from '../../Layout'
+import { Duration, size } from '../../Style'
+import { IconText } from '../../Layout'
 import UsersRank from './UsersRank'
 import OnlineUsers from './OnlineUsers'
 
@@ -13,10 +13,6 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
 
-interface NavLinkProps {
-    isActive: boolean
-}
-
 const Root = Styled.div`
     ${size()}
 `
@@ -26,15 +22,9 @@ const Nav = Styled.nav`
     display: flex;
 `
 
-const NavLink = Styled(IconButton)<NavLinkProps>`
+const NavLink = Styled(IconText)`
     flex: 1 1 0;
-    transform: background-color ${Duration.MEDIUM}, opacity ${Duration.MEDIUM};
-    
-    ${props => props.isActive && `
-        background-color: ${Color.MEDIUM_DARK};
-        pointer-events: none;
-        opacity: 1;
-    `}
+    transition: background-color ${Duration.MEDIUM}, opacity ${Duration.MEDIUM};
 `
 
 const Content = Styled.div`
@@ -55,9 +45,12 @@ const UsersBlock: React.FC<Props> & Static = ({ ...props }) => {
 
     const renderedLinks = React.useMemo(() => (
         links.map((link, i) => (
-            <NavLink onClick={() => setTab(i)} key={i} isActive={tab === i} icon={link.icon} isLarge={true}>
-                {link.text}
-            </NavLink>
+            <NavLink
+                onClick={() => setTab(i)}
+                key={i}
+                isActive={tab === i}
+                icon={link.icon}
+                text={link.text} />
         ))
     ), [tab])
 
