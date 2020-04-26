@@ -1,10 +1,11 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Color, image, size } from '../../Style'
+import { Color, size } from '../../Style'
 import UserRole from '../Constants/UserRole'
 import { Table } from '../../Layout'
 import { UserSimple } from '../types'
+import UserName from './UserName'
 
 interface Static {
 
@@ -25,28 +26,15 @@ const Root = Styled.div`
         width: 100%;
     }
     
-    ${Table.HeaderRow} {
-        height: 3rem;
+    ${Table.HeaderCell} {
+        padding-bottom: 1rem;
+        padding-top: 1rem;
     }
-    
-    ${Table.Cell} {
-        &:first-of-type {
-            max-width: 10rem;
-        }
-    }
-`
-
-const Image = Styled.div`
-    ${size('1.35rem')}
-    ${image(undefined)}
-    display: inline-block;
-    margin-right: 0.5rem;
-    vertical-align: middle;
 `
 
 const users = [] as UserSimple[]
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 38; i++) {
     users.push({
         id: 'abc' + i,
         avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png',
@@ -80,13 +68,13 @@ const OnlineUsers: React.FC<Props> & Static = ({ ...props }) => {
     const renderedTable = React.useMemo(() => (
         <Table
             columns={[
+                { accessor: user => user.score.rank, title: 'Rank', render: rank => rank + '.' },
                 {
                     accessor: user => user.name, title: 'Jméno',
-                    render: (name, user) => <><Image
-                        style={{ backgroundImage: user.avatar && `url(${user.avatar})` }} />{name}</>
+                    render: (name, user) => <UserName user={user} />,
+                    width: 5
                 },
-                { accessor: user => user.score.rank, title: 'Rank' },
-                { accessor: user => user.activity.devices.power, title: 'Výkon' }
+                { accessor: user => user.activity.devices.power, title: 'Výkon', width: 2 }
             ]}
             items={users} />
     ), [])

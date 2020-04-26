@@ -50,11 +50,11 @@ const Right = Styled.div`
 `
 
 const Todo = Styled(Block)`
-    ${size('100%', `calc(100% - 35.5rem)`)}
+    ${size('100%', `calc(100% - 35rem)`)}
 `
 
 const OverviewUsersBlock = Styled(UsersBlock)`
-    ${size('100%', `32.5rem`)}
+    ${size('100%', `32rem`)}
     margin-top: 1.5rem;
 `
 

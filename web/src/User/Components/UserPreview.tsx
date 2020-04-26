@@ -6,11 +6,11 @@ import { IconButton } from '../../Layout'
 import Auth from './Auth'
 import { UserSimple } from '../types'
 import { useActions } from '../../Data'
-import { image } from '../../Style'
+import { image, threeDots } from '../../Style'
 import { logout } from '../Redux/Slice'
 
 interface Static {
-
+    Root: string
 }
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
@@ -25,6 +25,7 @@ const Root = Styled.div`
 `
 
 const Name = Styled.h3`
+    ${threeDots()}
     font-size: 120%;
     font-weight: bold;
     text-align: center;
@@ -187,5 +188,7 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
     )
 
 }
+
+UserPreview.Root = Root
 
 export default UserPreview
