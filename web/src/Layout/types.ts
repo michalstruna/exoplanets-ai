@@ -22,3 +22,11 @@ export type Cursor = {
     sort: Sort
     segment: Segment
 }
+
+export type TooltipData = {
+    render: () => React.ReactNode
+    coords: {
+        x: number
+        y: number
+    }
+}

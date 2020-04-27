@@ -1,25 +1,35 @@
 import React from 'react'
 import Styled from 'styled-components'
 import { Color, Duration, ZIndex } from '../../Style'
+import { useTooltip, setTooltip, TooltipData } from '..'
+import { useActions } from '../../Data'
 import { useEvent } from '../../Native'
 
 interface Static {
-
+    Area: any
 }
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    renderContent: () => React.ReactNode
+
 }
 
-interface ContentProps {
+interface AreaStatic {
+    instances: Record<number, TooltipData>
+}
+
+interface AreaProps extends React.ComponentPropsWithoutRef<'div'> {
+
+}
+
+interface AreaRootProps {
     isVisible: boolean
 }
 
 const Root = Styled.div`
-    user-select: none;
+
 `
 
-const Content = Styled.div<ContentProps>`
+const AreaRoot = Styled.div<AreaRootProps>`
     background-color: #444;
     box-shadow: 0 0 0.5rem ${Color.DARK};
     cursor: auto;
@@ -34,20 +44,30 @@ const Content = Styled.div<ContentProps>`
     ${props => props.isVisible && `
         transform: scale(1);
     `}
+    
+    & > * {
+        user-select: auto;
+    }
 `
 
-const InnerContent = Styled.div`
+const Tooltip: React.FC<Props> & Static = ({ ...props }) => {
 
-`
+    return (
+        <Root {...props}>
 
-let hideActive: (() => void) | undefined
+        </Root>
+    )
 
-const Tooltip: React.FC<Props> & Static = ({ renderContent, children, ...props }) => {
+}
 
+const TooltipArea: React.FC<AreaProps> & AreaStatic = ({ ...props }) => {
 
     const [style, setStyle] = React.useState<Partial<CSSStyleDeclaration>>()
+    const [isVisible, setVisible] = React.useState(false)
+    const actions = useActions({ setTooltip })
+    const tooltip = useTooltip()
 
-    const updateCoords = (event: React.MouseEvent) => {
+    /*const updateCoords = (event: React.MouseEvent) => {
         event.nativeEvent.stopImmediatePropagation()
 
         if (hideActive) {
@@ -67,24 +87,32 @@ const Tooltip: React.FC<Props> & Static = ({ renderContent, children, ...props }
             setStyle(newStyle)
             hideActive = () => setStyle(undefined)
         }
-    }
+    }*/
+
+    const instance = TooltipArea.instances[tooltip]
 
     useEvent(window, 'click', () => {
-        hideActive?.()
-        hideActive = undefined
-    }, { active: !!style })
+        actions.setTooltip(0)
+    }, { active: !!instance })
+
+    if (!instance) {
+        return null
+    }
 
     return (
-        <Root
+        <AreaRoot
             {...props}
-            onClick={updateCoords}>
-            {children}
-            <Content isVisible={!!style} onClick={e => e.stopPropagation()} style={style as any}>
-                {renderContent()}
-            </Content>
-        </Root>
+            isVisible={true}
+            onClick={e => e.stopPropagation()}
+            style={{ left: instance.coords.x + 'px', top: instance.coords.y + 'px'}}>
+            {instance.render()}
+        </AreaRoot>
     )
 
 }
+
+TooltipArea.instances = {}
+
+Tooltip.Area = TooltipArea
 
 export default Tooltip
