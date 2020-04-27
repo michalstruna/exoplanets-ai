@@ -22,13 +22,13 @@ const AuthControl: React.FC<Props> & Static = ({ ...props }) => {
         <Auth
             role={UserRole.UNAUTHENTICATED}
             when={() => (
-                <Window renderButton={() => <IconText icon='Auth/User.svg' text='Přihlášení' onClick={() => null} />}>
+                <Window renderButton={() => <IconText icon='User/User.svg' text='Přihlášení' onClick={() => null} />}>
                     <LoginForm />
                 </Window>
             )}
             otherwise={() => (
                 <Window renderButton={() => <IconText
-                    icon='Auth/User.svg'
+                    icon='User/User.svg'
                     text={identity.payload.name}
                     onClick={() => null} />}>
                     <UserPreview user={identity.payload} />

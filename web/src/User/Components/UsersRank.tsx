@@ -72,7 +72,9 @@ const UsersTable = Styled(Table)`
     background: ${Color.MEDIUM_DARK};
     float: left;
 
-    ${Table.Cell} {        
+    ${Table.Cell} {
+        padding: 0 0.5rem;
+            
         &:nth-of-type(4) {
             color: ${Color.GREEN};
             font-size: 90%;
@@ -80,6 +82,10 @@ const UsersTable = Styled(Table)`
             &:not(:empty):before {
                 content: "+";
             }
+        }
+        
+        & > * {
+            padding: 0.5rem 0;
         }
     }
     

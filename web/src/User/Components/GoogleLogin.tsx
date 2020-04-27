@@ -38,7 +38,7 @@ const FacebookLogin: React.FC<Props> = ({ ...props }) => {
             onFailure={handleFail}
             cookiePolicy={'single_host_origin'}
             render={() => (
-                <Root {...props} text='Google' icon='Auth/Google.svg' />
+                <Root {...props} text='Google' icon='User/Google.svg' />
             )}
         />
     )

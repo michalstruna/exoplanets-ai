@@ -29,7 +29,7 @@ const FacebookLogin: React.FC<Props> = ({ ...props }) => {
             autoLoad
             callback={() => null}
             render={(renderProps: any) => (
-                <Root {...renderProps} {...props} text='Facebook' icon='Auth/Facebook.svg' />
+                <Root {...renderProps} {...props} text='Facebook' icon='User/Facebook.svg' />
             )} />
 
     )

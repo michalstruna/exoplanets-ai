@@ -5,7 +5,7 @@ import { Reducer as ContentReducer } from '../../Data'
 import { Reducer as DatabaseReducer } from '../../Database'
 
 const RootReducer = combineReducers({
-    auth: UserReducer,
+    user: UserReducer,
     content: ContentReducer,
     database: DatabaseReducer
 })

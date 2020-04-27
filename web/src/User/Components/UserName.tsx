@@ -15,7 +15,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = Styled(Tooltip)`
-    cursor: default;
+    cursor: pointer;
     max-width: 100%;
 `
 

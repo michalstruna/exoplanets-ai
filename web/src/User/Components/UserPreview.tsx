@@ -157,7 +157,7 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
             </Left>
             <Right>
                 <Row>
-                    <IconText icon='Auth/Male.svg' text='23 let' />
+                    <IconText icon='User/Male.svg' text='23 let' />
                     {country && (
                         <div title={country.name}>
                             {country.emoji + ' ' + country.code}
@@ -165,17 +165,17 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
                     )}
                 </Row>
                 <Row>
-                    <Item title='Aktivní' value={'Před ' + 23 + ' m'} icon='Auth/Online.svg' />
-                    <Item title='Členem' value='2,2 roku' icon='Auth/Origin.svg' />
+                    <Item title='Aktivní' value={'Před ' + 23 + ' m'} icon='User/Online.svg' />
+                    <Item title='Členem' value='2,2 roku' icon='User/Origin.svg' />
                 </Row>
                 <div style={{ height: '8.8rem' }}>
 
                 </div>
                 <RightMenu>
-                    <IconText icon='Auth/User.svg' text='Detail' size={IconText.SMALL} />
+                    <IconText icon='User/User.svg' text='Detail' size={IconText.SMALL} />
                     <Auth identityId={user.id} when={() => (
                         <IconText
-                            icon='Auth/Logout.svg'
+                            icon='User/Logout.svg'
                             onClick={() => actions.logout()}
                             text='Odhlásit se'
                             size={IconText.SMALL} />
