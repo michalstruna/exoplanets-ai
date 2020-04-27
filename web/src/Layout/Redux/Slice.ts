@@ -5,11 +5,11 @@ import Tooltip from '../Components/Tooltip'
 const Slice = Redux.slice(
     'layout',
     {
-        tooltip: 0,
+        tooltip: '',
     },
     ({ plain }) => ({
-        setTooltip: plain<number>((state, action) => {
-            state.tooltip = state.tooltip === action.payload ? 0 : action.payload
+        setTooltip: plain<string>((state, action) => {
+            state.tooltip = state.tooltip === action.payload ? '' : action.payload
         })
     })
 )

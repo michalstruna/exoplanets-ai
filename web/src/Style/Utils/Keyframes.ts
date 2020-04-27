@@ -24,3 +24,14 @@ export const levitate = keyframes`
             transform: translateY(-10%);
         }
     `
+
+export const zoomIn = keyframes`
+    from {
+        transform: scale(0);
+    }
+    
+    to {
+        transform: scale(1);
+    }
+
+`
