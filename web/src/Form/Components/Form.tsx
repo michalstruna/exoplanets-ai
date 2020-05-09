@@ -1,27 +1,75 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Form as FormikForm } from 'formik'
+import { useForm, FormContextValues } from 'react-hook-form'
 
-interface Static {
+import { Color, Duration } from '../../Style'
+import { Loader } from '../../Async'
 
+interface Props<Values> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
+    defaultValues: Values
+    onSubmit: (values: Values, form: FormContextValues<Values>) => void
 }
 
-interface Props extends React.ComponentPropsWithoutRef<'form'> {
-
-}
-
-const Root = Styled(FormikForm)`
-    position: relative
+const Root = Styled.form`
+    button:not([type]) {
+        background-color: ${Color.DARKEST};
+        color: ${Color.LIGHT};
+        display: block;
+        font-weight: bold;
+        margin: 1rem auto;
+        margin-top: 2rem;
+        padding: 0.8rem 0;
+        position: relative;
+        transition: background-color ${Duration.FAST}, color ${Duration.FAST};
+        width: 100%;
+        
+        &:hover {
+            background-color: ${Color.DARKEST_HOVER};
+        }
+    }    
+    
+    &[data-invalid] {
+        button:not([type]) {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
 `
 
-const Form: React.FC<Props> & Static = ({ children, ...props }) => {
+const FormLoader = Styled(Loader)`
+    background-color: rgba(255, 255, 255, 0.1);
+`
+
+const ErrorContainer = Styled.p`
+    color: ${Color.RED};
+    font-size: 90%;
+    margin: 0 auto;
+    margin-bottom: 0.5rem;
+    text-align: center;
+`
+
+function Form<Values>({ defaultValues, onSubmit, children, ...props }: Props<Values>) {
+
+    const form = useForm<Values>({ defaultValues })
 
     return (
-        <Root {...props}>
-            {children}
+        <Root
+            {...props}
+            noValidate={true}
+            data-invalid={!(form.formState.isValid || !form.formState.isSubmitted) || undefined}
+            onSubmit={form.handleSubmit(values => onSubmit(values, form))}>
+            {Array.isArray(children) ? children.map(child => (
+                child && typeof child === 'object' && ('props' in child) && child!.props.name ? React.createElement(child.type, {
+                    ...{ ...child.props, form, key: child.props.name }
+                }) : child
+            )) : children}
+            {(form.errors as any)[Form.GLOBAL_ERROR] && <ErrorContainer>{(form.errors as any)[Form.GLOBAL_ERROR].type}</ErrorContainer>}
+            {form.formState.isSubmitting && <FormLoader />}
         </Root>
     )
 
 }
+
+Form.GLOBAL_ERROR = '__global__'
 
 export default Form

@@ -1,23 +1,22 @@
-import * as React from 'react'
+import React from 'react'
 import Styled from 'styled-components'
 
-import { Field, FieldType, Form, FormContainer } from '../../Form'
+import { useActions } from '../../Data'
+import { login } from '..'
+import { Color, opacityHover, size } from '../../Style'
 import FacebookLogin from './FacebookLogin'
 import GoogleLogin from './GoogleLogin'
-import { useActions } from '../../Data'
-import { Color, opacityHover, size } from '../../Style'
-import { login } from '../Redux/Slice'
+import { Form, Field } from '../../Form'
 
-interface Props extends React.ComponentPropsWithoutRef<'form'> {
+interface Static {
 
 }
 
-interface Values {
-    email: string
-    password: string
+interface Props extends React.ComponentPropsWithoutRef<'div'> {
+
 }
 
-const Root = Styled(Form)`
+const Root = Styled.div`
     box-sizing: border-box;
     padding: 1rem;
     text-align: center;
@@ -68,22 +67,14 @@ const HorizontalTextLine = Styled.div`
     }
 `
 
-const LoginForm: React.FC<Props> = ({ ...props }) => {
+interface Values { // TODO: Interface Credentials.
+    email: string
+    password: string
+}
+
+const LoginForm: React.FC<Props> & Static = ({ ...props }) => {
 
     const actions = useActions({ login })
-
-    const handleSubmit = async (values: Values) => {
-        const action = await actions.login(values)
-
-        if (action.error) {
-            throw strings.error
-        }
-    }
-
-    const initialValues = {
-        email: '',
-        password: ''
-    }
 
     const strings = {
         email: 'Email',
@@ -96,39 +87,45 @@ const LoginForm: React.FC<Props> = ({ ...props }) => {
         missingPassword: 'Napište své heslo'
     } as any // TODO
 
+    const handleSubmit = async (values: Values, form: any) => {
+        const action = await actions.login(values as any)
+
+        if (action.error) {
+            form.setError(Form.GLOBAL_ERROR, strings.error)
+        }
+    }
+
     return (
-        <FormContainer<Values>
-            initialValues={initialValues}
-            onSubmit={handleSubmit}>
-            {({ renderSubmit, globalError }) => (
-                <Root {...props}>
-                    <External>
-                        <FacebookLogin />
-                        <GoogleLogin />
-                    </External>
-                    <HorizontalTextLine>
-                        nebo
-                    </HorizontalTextLine>
-                    <Field
-                        type={FieldType.EMAIL}
-                        name='email'
-                        label={strings.email}
-                        required={strings.missingEmail}
-                        invalid={strings.invalidEmail} />
-                    <Field
-                        type={FieldType.PASSWORD}
-                        label={strings.password}
-                        required={strings.missingPassword}
-                        name='password' />
-                    {renderSubmit(strings.submit)}
-                    {globalError}
-                    <Forgot>
-                        {strings.forgotPassword}
-                    </Forgot>
-                </Root>
-            )}
-        </FormContainer>
+        <Root{...props}>
+            <Form onSubmit={handleSubmit as any} defaultValues={{ email: '', password: '' }}>
+                <External>
+                    <FacebookLogin />
+                    <GoogleLogin />
+                </External>
+                <HorizontalTextLine>
+                    nebo
+                </HorizontalTextLine>
+                <Field
+                    name='email'
+                    type={Field.Type.EMAIL}
+                    label={strings.email}
+                    required={strings.missingEmail}
+                    invalid={strings.invalidEmail} />
+                <Field
+                    name='password'
+                    type={Field.Type.PASSWORD}
+                    label={strings.password}
+                    required={strings.missingPassword} />
+                <button>
+                    {strings.submit}
+                </button>
+            </Form>
+            <Forgot type='button'>
+                {strings.forgotPassword}
+            </Forgot>
+        </Root>
     )
+
 }
 
 export default LoginForm

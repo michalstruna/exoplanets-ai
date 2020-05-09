@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 import { Color, image, opacityHover, size } from '../../Style'
-import { Field, FieldType, Form, FormContainer } from '../../Form'
+import { Field, Form } from '../../Form'
 import { useOnlineUsers } from '..'
 
 interface Static {
@@ -33,7 +33,7 @@ const Input = Styled(Form)`
         }
     }
 
-    button {
+    button:not([type]) {
         ${image('User/Chat/Send.svg', '70%')}
         ${size('2.5rem')}
         ${opacityHover()}
@@ -90,16 +90,10 @@ const Chat: React.FC<Props> & Static = ({ ...props }) => {
     }
 
     const renderedInput = (
-        <FormContainer<ChatData>
-            initialValues={{ message: '' }}
-            onSubmit={handleSend}>
-            {({ renderSubmit }) => (
-                <Input>
-                    <Field name='message' type={FieldType.TEXT} label={'Napište něco...'} />
-                    {renderSubmit('')}
-                </Input>
-            )}
-        </FormContainer>
+        <Input defaultValues={{ message: '' }} onSubmit={handleSend}>
+            <Field name='message' type={Field.Type.TEXT} label={'Napište něco...'} />
+            <button />
+        </Input>
     )
 
     const user = users.payload?.[4]

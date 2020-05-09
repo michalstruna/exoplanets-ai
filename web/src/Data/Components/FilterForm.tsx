@@ -1,6 +1,5 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Field, FieldArray, Formik } from 'formik'
 
 import { Arrays, Validator } from '../../Native'
 import { Duration, image, opacityHover, size } from '../../Style'
@@ -179,7 +178,9 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
         }
     }
 
-    return (
+    return null
+
+    /*return (
         <Formik
             onSubmit={() => {}}
             initialValues={{ filter: initialFilter }}
@@ -215,7 +216,7 @@ const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, ini
                 </Root>
             )}
         </Formik>
-    )
+    )*/
 
 }
 
