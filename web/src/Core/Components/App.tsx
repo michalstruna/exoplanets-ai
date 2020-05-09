@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom'
 import GlobalStyle from './GlobalStyle'
 import { useElement } from '../../Native'
 import Header from './Header'
+import Tooltip from '../../Layout/Components/Tooltip'
 
 interface Static {
 
@@ -22,6 +23,7 @@ const App: React.FC<Props> & Static = ({ children }) => {
             <GlobalStyle />
             {ReactDOM.createPortal(<Header />, nav.current as any)}
             {children}
+            <Tooltip.Area />
         </>
     )
 }

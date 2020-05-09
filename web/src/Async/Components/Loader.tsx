@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { flexCenter, size, image, FadeIn, Duration } from '../../Style'
+import { flexCenter, size, image, fadeIn, Duration } from '../../Style'
 
 export interface Static {
 
@@ -16,7 +16,7 @@ export type Type = React.FC<Props> & Static
 const Root = Styled.div`
     ${flexCenter()}
     ${size('100%')}
-    animation: ${FadeIn} ${Duration.SLOW};
+    animation: ${fadeIn} ${Duration.SLOW};
     left: 0;
     position: absolute;
     top: 0;

@@ -2,7 +2,7 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 
 import { Color, image, opacityHover, size } from '../../Style'
-import { Link, LinkData } from '../../Routing'
+import { Link, Target } from '../../Routing'
 
 interface Static {
     SMALL: string
@@ -10,7 +10,7 @@ interface Static {
     LARGE: string
 }
 
-interface Props extends React.ComponentPropsWithoutRef<'div'>, LinkData {
+interface Props extends React.ComponentPropsWithoutRef<'div'>, Partial<Target> {
     icon?: string
     text?: string
     size?: string
@@ -43,6 +43,7 @@ const Root = Styled.div<RootProps>`
     ${size()}
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
     
     ${props => props.isButton && css`
         ${opacityHover()}

@@ -7,6 +7,7 @@ import { Table, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
 import { UsersBlock } from '../../User'
 import PlanetsRank from '../Components/PlanetsRank'
+import Chat from '../../User/Components/Chat'
 
 interface Static {
 
@@ -41,12 +42,12 @@ const Left = Styled(Block)`
 `
 
 const Center = Styled.div`
-    ${size('calc((100vw - 40rem) * 0.4)', '100%')}
+    ${size('32rem', '100%')}
     margin: 0 1.5rem;
 `
 
 const Right = Styled.div`
-    ${size('calc((100vw - 40rem) * 0.6)', '100%')}
+    ${size('calc(100vw - 40rem - 32rem)', '100%')}
     margin-right: 1rem;
 `
 
@@ -59,12 +60,12 @@ const OverviewUsersBlock = Styled(UsersBlock)`
     margin-top: 1.5rem;
 `
 
-const Todo2 = Styled(Block)`
+const ChatBlock = Styled(Chat)`
     ${size('100%', `calc(100% - 32rem)`)}
     margin-top: 1.5rem;
 `
 
-const PlanetRankBlock = Styled(PlanetsRank)`
+const PlanetsRankBlock = Styled(PlanetsRank)`
     ${size('100%', '29rem')}
     padding: 0;
     
@@ -146,8 +147,8 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
                 <OverviewUsersBlock />
             </Center>
             <Right>
-                <PlanetRankBlock />
-                <Todo2 />
+                <PlanetsRankBlock />
+                <ChatBlock />
             </Right>
         </Root>
     )

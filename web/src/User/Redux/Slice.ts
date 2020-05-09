@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 import { Cookie } from '../../Native'
 import { Redux } from '../../Data'
 import UserRole from '../Constants/UserRole'
-import { Credentials, Identity } from '../types'
+import { Credentials, Identity, UserSimple } from '../types'
 
 const demoIdentity: Identity = {
     id: 'abc',
@@ -31,10 +31,41 @@ const demoIdentity: Identity = {
     }
 }
 
+const onlineUsers = [] as UserSimple[]
+
+for (let i = 0; i < 38; i++) {
+    onlineUsers.push({
+        id: 'abc' + i,
+        avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png',
+        name: ('Michal Struna ' + i).repeat(Math.floor(Math.random() * 2 + 1)),
+        role: UserRole.AUTHENTICATED,
+        score: {
+            rank: 193,
+            totalPlanets: 213,
+            totalStars: 512,
+            time: 337
+        },
+        personal: {
+            country: 'CZ',
+            birth: 456,
+            isMale: true
+        },
+        activity: {
+            isOnline: true,
+            last: new Date().getTime(),
+            devices: {
+                count: 3,
+                power: 456781
+            }
+        }
+    })
+}
+
 const Slice = Redux.slice(
-    'auth',
+    'user',
     {
-        identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name))
+        identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name)),
+        onlineUsers: Redux.async<UserSimple[]>(onlineUsers)
     },
     ({ set, async, plain }) => ({
         login: async<Credentials, Identity>('identity', ({ email, password }) => new Promise((resolve, reject) => {

@@ -1,6 +1,6 @@
 import { keyframes } from 'styled-components'
 
-export const FadeIn = keyframes`
+export const fadeIn = keyframes`
         from {
             opacity: 0;
         }
@@ -11,7 +11,7 @@ export const FadeIn = keyframes`
     
     `
 
-export const Levitate = keyframes`
+export const levitate = keyframes`
         0% {
             transform: translateY(-10%);
         }
@@ -24,3 +24,14 @@ export const Levitate = keyframes`
             transform: translateY(-10%);
         }
     `
+
+export const zoomIn = keyframes`
+    from {
+        transform: scale(0);
+    }
+    
+    to {
+        transform: scale(1);
+    }
+
+`

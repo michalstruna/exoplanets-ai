@@ -6,6 +6,7 @@ import UserRole from '../Constants/UserRole'
 import { Table } from '../../Layout'
 import { UserSimple } from '../types'
 import UserName from './UserName'
+import { useOnlineUsers } from '..'
 
 interface Static {
 
@@ -26,46 +27,25 @@ const Root = Styled.div`
         width: 100%;
     }
     
+    ${Table.Cell} {
+        padding: 0 0.5rem;
+        
+        & > * {
+            padding: 0.5rem 0;
+        }
+    }
+    
     ${Table.HeaderCell} {
         padding-bottom: 1rem;
         padding-top: 1rem;
     }
 `
 
-const users = [] as UserSimple[]
-
-for (let i = 0; i < 38; i++) {
-    users.push({
-        id: 'abc' + i,
-        avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png',
-        name: ('Michal Struna ' + i).repeat(Math.floor(Math.random() * 2 + 1)),
-        role: UserRole.AUTHENTICATED,
-        score: {
-            rank: 193,
-            totalPlanets: 213,
-            totalStars: 512,
-            time: 337
-        },
-        personal: {
-            country: 'CZ',
-            birth: 456,
-            isMale: true
-        },
-        activity: {
-            isOnline: true,
-            last: new Date().getTime(),
-            devices: {
-                count: 3,
-                power: 456781
-            }
-        }
-    })
-}
-
-
 const OnlineUsers: React.FC<Props> & Static = ({ ...props }) => {
 
-    const renderedTable = React.useMemo(() => (
+    const users = useOnlineUsers()
+
+    const renderedTable = React.useMemo(() => users.payload && (
         <Table
             columns={[
                 { accessor: user => user.score.rank, title: 'Rank', render: rank => rank + '.' },
@@ -76,7 +56,7 @@ const OnlineUsers: React.FC<Props> & Static = ({ ...props }) => {
                 },
                 { accessor: user => user.activity.devices.power, title: 'Výkon', width: 2 }
             ]}
-            items={users} />
+            items={users.payload} />
     ), [])
 
     return (
