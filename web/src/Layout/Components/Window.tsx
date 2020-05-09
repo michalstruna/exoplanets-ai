@@ -12,6 +12,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = Styled.div`
+    height: 100%;
     position: relative;
 `
 

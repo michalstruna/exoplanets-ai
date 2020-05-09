@@ -2,15 +2,15 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 import Countries from 'emoji-flags'
 
-import { IconButton } from '../../Layout'
+import { IconText } from '../../Layout'
 import Auth from './Auth'
 import { UserSimple } from '../types'
 import { useActions } from '../../Data'
-import { image } from '../../Style'
+import { image, threeDots } from '../../Style'
 import { logout } from '../Redux/Slice'
 
 interface Static {
-
+    Root: string
 }
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
@@ -25,6 +25,7 @@ const Root = Styled.div`
 `
 
 const Name = Styled.h3`
+    ${threeDots()}
     font-size: 120%;
     font-weight: bold;
     text-align: center;
@@ -63,7 +64,7 @@ const RightMenu = Styled.div`
     font-size: 105%;
     width: 100%;
     
-    & > button {
+    & > * {
         display: inline-block;
         text-align: left;
         width: 50%;
@@ -149,16 +150,14 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
                     Rank <ItemValue>{user.score.rank}.</ItemValue>
                 </Rank>
                 <Stats>
-                    <Item title='Planet' value={user.score.totalPlanets.value} />
-                    <Item title='Hvězd' value={user.score.totalStars.value} />
-                    <Item title='Hodin' value={user.score.time.value} />
+                    <Item title='Planet' value={user.score.totalPlanets} />
+                    <Item title='Hvězd' value={user.score.totalStars} />
+                    <Item title='Hodin' value={user.score.time} />
                 </Stats>
             </Left>
             <Right>
                 <Row>
-                    <IconButton icon='Auth/Male.svg' as='div'>
-                        23 let
-                    </IconButton>
+                    <IconText icon='Auth/Male.svg' text='23 let' />
                     {country && (
                         <div title={country.name}>
                             {country.emoji + ' ' + country.code}
@@ -173,13 +172,13 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
 
                 </div>
                 <RightMenu>
-                    <IconButton icon='Auth/User.svg'>
-                        Detail
-                    </IconButton>
+                    <IconText icon='Auth/User.svg' text='Detail' size={IconText.SMALL} />
                     <Auth identityId={user.id} when={() => (
-                        <IconButton icon='Auth/Logout.svg' onClick={() => actions.logout()}>
-                            Odhlásit se
-                        </IconButton>
+                        <IconText
+                            icon='Auth/Logout.svg'
+                            onClick={() => actions.logout()}
+                            text='Odhlásit se'
+                            size={IconText.SMALL} />
                     )} />
                 </RightMenu>
             </Right>
@@ -187,5 +186,7 @@ const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
     )
 
 }
+
+UserPreview.Root = Root
 
 export default UserPreview

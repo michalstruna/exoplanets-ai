@@ -5,7 +5,8 @@ import { Color, Dimension, size } from '../../Style'
 import { Chart, TopLevelStats } from '../../Stats'
 import { Table, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
-import UsersList from '../Components/UsersList'
+import { UsersBlock } from '../../User'
+import PlanetsRank from '../Components/PlanetsRank'
 
 interface Static {
 
@@ -49,22 +50,22 @@ const Right = Styled.div`
     margin-right: 1rem;
 `
 
-const Users = Styled(UsersList)`
-    ${size('100%', `30rem`)}
+const Todo = Styled(Block)`
+    ${size('100%', `calc(100% - 35rem)`)}
 `
 
-const Todo1 = Styled(Block)`
-    ${size('100%', `calc(100% - 33rem)`)}
+const OverviewUsersBlock = Styled(UsersBlock)`
+    ${size('100%', `32rem`)}
     margin-top: 1.5rem;
 `
 
 const Todo2 = Styled(Block)`
     ${size('100%', `calc(100% - 32rem)`)}
+    margin-top: 1.5rem;
 `
 
-const News = Styled(Block)`
+const PlanetRankBlock = Styled(PlanetsRank)`
     ${size('100%', '29rem')}
-    margin-top: 1.5rem;
     padding: 0;
     
     ${Table.Root} {
@@ -86,16 +87,6 @@ const FlexContainer = Styled.div`
     }
 `
 
-const Image = Styled.div`
-    ${size('4rem')}
-    ${size('2.5rem')}
-    background-image: radial-gradient(#CA0, #000);
-    border-radius: 100%;
-    display: inline-block;
-    margin-right: 0.5rem;
-    vertical-align: middle;
-`
-
 const randomPlanets = [] as any
 
 for (let i = 0; i < 20; i++) {
@@ -114,25 +105,8 @@ const barData = [
     { size: '> 15', count: 160 }
 ]
 
-const planets = [
-    { name: 'Proxima Centauri b', distance: 4.2, diameter: 15535 },
-    { name: 'VY Canis Majors', distance: 5.2, diameter: 8963 },
-    { name: 'Proxima Centauri b', distance: 4.2, diameter: 12411 },
-    { name: 'VY Canis Majors', distance: 5.2, diameter: 13691 },
-    { name: 'Proxima Centauri b', distance: 4.2, diameter: 15741 }
-]
-
 
 const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
-
-    const earthLike = React.useMemo(() => (
-        <Table items={planets} columns={[
-            { accessor: (planet, index) => index + 1, title: '#', render: index => index + '.' },
-            { accessor: planet => planet.name, title: 'Planeta', render: name => <><Image />{name}</> },
-            { accessor: planet => planet.diameter, title: 'Průměr' },
-            { accessor: planet => planet.distance, title: 'Vzdálenost' }
-        ]} />
-    ), [])
 
     return (
         <Root {...props}>
@@ -168,28 +142,12 @@ const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
                 Tabulka spektrálních tříd a objeveých exoplanet
             </Left>
             <Center>
-                <Users>
-                    <UsersList />
-                    &lt; Stránka &gt; Časový interval
-                    Pořadí. Ikona username ... score přírustek
-                    Vpravo: Objevených planet, Prozkoumaných hvězd, Výpočetní čas, ???
-                </Users>
-                <Todo1>
-                    Záložky:
-                    - Chat + online uživatelé,
-                    - Historie (objevené planety, zpracované hvězdy) - za posledních 100 dnů
-                    - Hw info
-                </Todo1>
+                <Todo />
+                <OverviewUsersBlock />
             </Center>
             <Right>
+                <PlanetRankBlock />
                 <Todo2 />
-                <News>
-                    <ToggleLine items={[
-                        { header: 'Poslední objevené exoplanety', content: earthLike, link: { pathname: Url.DATABASE } },
-                        { header: 'Zemi nejpodobnější exoplanety', content: earthLike, link: { pathname: Url.DATABASE } },
-                        { header: 'Nejbližší exoplanety', content: earthLike, link: { pathname: Url.DATABASE } }
-                    ]} />
-                </News>
             </Right>
         </Root>
     )

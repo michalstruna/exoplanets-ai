@@ -3,9 +3,10 @@ import Styled from 'styled-components'
 
 import { Color, Duration, size, image, opacityHover } from '../../Style'
 import { MinorSectionTitle, Table } from '../../Layout'
-import UserRole from '../../Auth/Constants/UserRole'
-import { useIdentity } from '../../Auth'
+import UserRole from '../Constants/UserRole'
+import { useIdentity } from '..'
 import { Link, Url } from '../../Routing'
+import UserName from './UserName'
 
 interface Static {
 
@@ -21,7 +22,6 @@ interface NavLinkProps {
 
 const Root = Styled.div`
     ${size()}
-    background-color: ${Color.DARK};
     display: flex;
     flex-direction: column;
 `
@@ -41,53 +41,38 @@ const Title = Styled(MinorSectionTitle)`
 
 const Inner = Styled.div`
     ${size()}
-    display: flex;
-`
-
-const Content = Styled.main`
-    ${size('calc(100% - 5rem)', '100%')}
-    background: ${Color.MEDIUM_DARK};
+    overflow: hidden;
 `
 
 const Nav = Styled.nav`
     ${size('8rem', '100%')}
     display: flex;
     flex-direction: column;
+    float: left;
 `
 
 const NavLink = Styled.button<NavLinkProps>`
+    ${opacityHover()}
     ${size()}
     box-sizing: border-box;
     padding: 0.5rem;
     text-align: left;
+    transition: background-color ${Duration.MEDIUM}, opacity ${Duration.MEDIUM};
     word-spacing: 9999999px;
-    transition: color ${Duration.MEDIUM};
-    
-    &:hover {
-        background-color: ${Color.MEDIUM_DARK};
-    }
     
     ${props => props.isActive && `
         background-color: ${Color.MEDIUM_DARK};
+        opacity: 1;
         pointer-events: none;
     `}
 `
 
 const UsersTable = Styled(Table)`
-    ${Table.Cell} {
-        &:first-of-type {
-            width: 1rem;
-        }
-        
-        &:nth-of-type(2) {
-            width: 100%;
-            max-width: 0;
-        }
-        
-        &:nth-of-type(3) {
-            width: 3rem;
-        }
-        
+    ${size('calc(100% - 8rem)', '100%')}
+    background: ${Color.MEDIUM_DARK};
+    float: left;
+
+    ${Table.Cell} {        
         &:nth-of-type(4) {
             color: ${Color.GREEN};
             font-size: 90%;
@@ -103,14 +88,6 @@ const UsersTable = Styled(Table)`
             font-weight: bold;
         }
     }
-`
-
-const Image = Styled.div`
-    ${size('1.35rem')}
-    ${image(undefined)}
-    display: inline-block;
-    margin-right: 0.5rem;
-    vertical-align: middle;
 `
 
 const DetailLink = Styled(Link)`
@@ -140,9 +117,9 @@ for (let i = 0; i < 11; i++) {
             role: UserRole.AUTHENTICATED,
             score: {
                 rank: 193,
-                totalPlanets: { value: 3, rank: 216 },
-                totalStars: { value: 314, rank: 512 },
-                time: { value: 7875, rank: 337 }
+                totalPlanets: 216,
+                totalStars: 512,
+                time: 337
             },
             personal: {
                 country: 'CZ',
@@ -158,15 +135,15 @@ const columns = [
     { accessor: (user: any, index: any) => (user.position || (index + 1)) + '.' },
     {
         accessor: (user: any) => user.user.name,
-        render: (name: any, user: any) => <><Image
-            style={{ backgroundImage: user.user.avatar && `url(${user.user.avatar})` }} />{name}</>
+        render: (name: any, user: any) => <UserName user={user.user} />,
+        width: 6
     },
-    { accessor: (user: any) => user.value },
-    { accessor: (user: any) => user.change, render: (change: any) => change > 0 ? change : '' }
+    { accessor: (user: any) => user.value, width: 2 },
+    { accessor: (user: any) => user.change, render: (change: any) => change > 0 ? change : '', width: 2 }
 ]
 
 
-const UsersList: React.FC<Props> & Static = ({ ...props }) => {
+const UsersRank: React.FC<Props> & Static = ({ ...props }) => {
 
     const [rank, setRank] = React.useState(0)
     const identity = useIdentity()
@@ -203,9 +180,7 @@ const UsersList: React.FC<Props> & Static = ({ ...props }) => {
                 <DetailLink pathname={Url.DATABASE} />
             </Title>
             <Inner>
-                <Content>
-                    <UsersTable items={users} columns={columns} withHeader={false} />
-                </Content>
+                <UsersTable items={users} columns={columns} withHeader={false} />
                 <Nav>
                     {renderedLinks}
                 </Nav>
@@ -215,4 +190,4 @@ const UsersList: React.FC<Props> & Static = ({ ...props }) => {
 
 }
 
-export default UsersList
+export default UsersRank
