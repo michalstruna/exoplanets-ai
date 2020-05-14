@@ -3,15 +3,9 @@ import Styled from 'styled-components'
 
 import { flexCenter, size, image, fadeIn, Duration } from '../../Style'
 
-export interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
-
-export type Type = React.FC<Props> & Static
 
 const Root = Styled.div`
     ${flexCenter()}
@@ -27,7 +21,7 @@ const Inner = Styled.div`
     ${size('4rem')}
 `
 
-const Loader: Type = ({ ...props }) => (
+const Loader = ({ ...props }: Props) => (
     <Root {...props}>
         <Inner />
     </Root>

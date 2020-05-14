@@ -6,15 +6,11 @@ import { useElement } from '../../Native'
 import Header from './Header'
 import Tooltip from '../../Layout/Components/Tooltip'
 
-interface Static {
+interface Props extends React.ComponentPropsWithoutRef<any> {
 
 }
 
-interface Props {
-
-}
-
-const App: React.FC<Props> & Static = ({ children }) => {
+const App = ({ children }: Props) => {
 
     const { nav } = useElement()
 

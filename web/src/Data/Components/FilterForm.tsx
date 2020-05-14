@@ -17,10 +17,6 @@ type ArrayFilter = {
     value: any
 }[]
 
-interface Static {
-
-}
-
 interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
     attributes: string[]
     onChange: (values: ObjectFilter) => void
@@ -73,7 +69,7 @@ const Row = Styled.div<RowProps>`
 `
 
 
-const FilterForm: React.FC<Props> & Static = ({ defaultRelation, attributes, initialValues, onChange, keys, ...props }) => {
+const FilterForm = ({ defaultRelation, attributes, initialValues, onChange, keys, ...props }: Props) => {
 
     const strings = useStrings().filter
 

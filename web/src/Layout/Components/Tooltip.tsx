@@ -1,20 +1,12 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
 import { Color, Duration, ZIndex, zoomIn } from '../../Style'
-import { useTooltip, setTooltip, TooltipData } from '..'
+import { useTooltip, setTooltip } from '..'
 import { useActions } from '../../Data'
 import { useEvent } from '../../Native'
 
-interface Static {
-    Area: any
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     render: () => React.ReactNode
-}
-
-interface AreaStatic {
-    instances: Record<string, TooltipData>
 }
 
 interface AreaProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -54,7 +46,7 @@ const AreaRoot = Styled.div<AreaRootProps>`
     }
 `
 
-const Tooltip: React.FC<Props> & Static = ({ render, ...props }) => {
+const Tooltip = ({ render, ...props }: Props) => {
 
     const id = React.useMemo(() => new Date().getTime() + Math.random().toString(), [])
     const actions = useActions({ setTooltip })
@@ -80,7 +72,7 @@ const Tooltip: React.FC<Props> & Static = ({ render, ...props }) => {
 
 }
 
-const TooltipArea: React.FC<AreaProps> & AreaStatic = ({ ...props }) => {
+const TooltipArea = ({ ...props }: AreaProps) => {
 
     const actions = useActions({ setTooltip })
     const tooltip = useTooltip()
@@ -151,7 +143,7 @@ const TooltipArea: React.FC<AreaProps> & AreaStatic = ({ ...props }) => {
 
 }
 
-TooltipArea.instances = {}
+TooltipArea.instances = {} as Record<string, any>
 
 Tooltip.Area = TooltipArea
 

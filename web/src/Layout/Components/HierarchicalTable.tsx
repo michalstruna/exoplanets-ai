@@ -7,12 +7,6 @@ import { Sort } from '../types'
 import { useElement } from '../../Native'
 import VirtualizedList from './VirtualizedList'
 
-interface Static {
-    Cell: string
-    Header: string
-    Row: string
-}
-
 interface Column<TItem, TValue> {
     title: React.ReactNode
     accessor: (item: TItem) => TValue
@@ -121,7 +115,7 @@ const Header = Styled(Row)`
 `
 
 // TODO: Generic types. Current = level == 0 ? T1 : T2?
-const HierarchicalTable: React.FC<Props> & Static = ({ levels, items, onSort, defaultSort, renderBody, renderHeader, ...props }) => {
+const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, renderHeader, ...props }: Props) => {
 
     const { sort, sortedLevel, sortedColumn, isAsc } = useSort((defaultSort as any).column, (defaultSort as any).isAsc, (defaultSort as any).level)
     const { app } = useElement()

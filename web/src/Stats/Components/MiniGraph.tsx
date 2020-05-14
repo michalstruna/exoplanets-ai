@@ -1,10 +1,6 @@
 import React from 'react'
 import { LineChart, Line, YAxis } from 'recharts'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'canvas'> {
     data: any
     width: number
@@ -13,7 +9,7 @@ interface Props extends React.ComponentPropsWithoutRef<'canvas'> {
     labels?: string[]
 }
 
-const MiniGraph: React.FC<Props> & Static = ({ data, lines, labels, ...props }) => {
+const MiniGraph = ({ data, lines, labels, ...props }: Props) => {
 
     const renderYAxis = (orientation: string = 'left', color: string) => (
         <YAxis

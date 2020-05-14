@@ -4,10 +4,6 @@ import { useDispatch } from 'react-redux'
 import Loader from './Loader'
 import { AsyncData } from '../../Data'
 
-export interface Static<T> {
-
-}
-
 export interface Props<T> {
     data: AsyncDataAction<T> | AsyncDataAction<T>[]
     pending?: () => React.ReactNode

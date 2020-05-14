@@ -5,10 +5,6 @@ import Nav from './Nav'
 import AuthControl from '../../User/Components/AuthControl'
 import { Dimension } from '../../Style'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
@@ -29,7 +25,7 @@ const Right = Styled(Left)`
 
 
 
-const Header: React.FC<Props> & Static = ({ ...props }) => {
+const Header = ({ ...props }: Props) => {
 
     return (
         <Root {...props}>

@@ -5,12 +5,6 @@ import { ExtendedStats } from '../types'
 import { useStrings } from '../../Data'
 import { Numbers } from '../../Native'
 
-interface Static {
-    Item: string
-    ItemName: string
-    ItemValue: string
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     data: ExtendedStats
 }
@@ -36,7 +30,7 @@ const Value = Styled.div`
     width: 100%;
 `
 
-const TopLevelStats: React.FC<Props> & Static = ({ data, ...props }) => {
+const TopLevelStats = ({ data, ...props }: Props) => {
 
     const strings = useStrings().stats.topLevelStats
 

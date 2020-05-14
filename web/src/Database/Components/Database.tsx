@@ -9,10 +9,6 @@ import { HierarchicalTable } from '../../Layout'
 import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort, useBodiesSegment } from '..'
 import { Async } from '../../Async'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
@@ -235,7 +231,7 @@ const levels = [
     { columns: planetColumns, accessor: (star: any) => star.planets }
 ]
 
-const Database: React.FC<Props> & Static = ({ ...props }) => {
+const Database = ({ ...props }: Props) => {
 
     const bodies = useBodies()
     const filter = useBodiesFilter()

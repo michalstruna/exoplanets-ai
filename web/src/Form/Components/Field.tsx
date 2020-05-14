@@ -5,10 +5,6 @@ import { Color, Duration, size } from '../../Style'
 import FieldType from '../Constants/FieldType'
 import FormContext from './FormContext'
 
-interface Static {
-    Type: typeof FieldType
-}
-
 interface Type {
     name: string
     validator: (value: any) => boolean
@@ -66,7 +62,7 @@ const Label = Styled.p<LabelProps>`
     margin: 0;
 `
 
-const Field: React.FC<Props> & Static = ({ label, name, type, required, invalid, validator, placeholder, ...props }) => {
+const Field = ({ label, name, type, required, invalid, validator, placeholder, ...props }: Props) => {
 
     const [value, setValue] = React.useState<string>('')
 

@@ -3,15 +3,10 @@ import Styled from 'styled-components'
 
 import { Color, Dimension, size } from '../../Style'
 import { Chart, TopLevelStats } from '../../Stats'
-import { Table, ToggleLine } from '../../Layout'
-import { Url } from '../../Routing'
+import { Table } from '../../Layout'
 import { UsersBlock } from '../../User'
 import PlanetsRank from '../Components/PlanetsRank'
 import Chat from '../../User/Components/Chat'
-
-interface Static {
-
-}
 
 interface Props {
 
@@ -107,7 +102,7 @@ const barData = [
 ]
 
 
-const OverviewView: React.FC<Props> & Static = ({ ...props }) => {
+const OverviewView = ({ ...props }: Props) => {
 
     return (
         <Root {...props}>

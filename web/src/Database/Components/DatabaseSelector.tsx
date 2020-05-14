@@ -6,10 +6,6 @@ import { Paginator, FilterForm, useActions } from '../../Data'
 import { setBodiesSegment, setBodiesFilter } from '../Redux/Slice'
 import { useBodies, useBodiesFilter, useBodiesSegment } from '..'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithRef<'div'> {
 
 }
@@ -26,7 +22,7 @@ const Root = Styled.div`
     }
 `
 
-const DatabaseSelector: React.FC<Props> & Static = ({ ...props }) => {
+const DatabaseSelector = ({ ...props }: Props) => {
 
     const actions = useActions({ setBodiesSegment, setBodiesFilter })
 

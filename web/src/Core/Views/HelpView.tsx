@@ -4,10 +4,6 @@ import Styled from 'styled-components'
 import { Link, Url } from '../../Routing'
 import { useStrings } from '../../Data'
 
-interface Static {
-
-}
-
 interface Props {
 
 }
@@ -16,7 +12,7 @@ const Root = Styled.div`
 
 `
 
-const HelpView: React.FC<Props> & Static = ({ ...props }) => {
+const HelpView = ({ ...props }: Props) => {
 
     const strings = useStrings().help
 

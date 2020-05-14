@@ -6,10 +6,6 @@ import { useStrings } from '../../Data'
 import { IconText } from '../../Layout'
 import useRouter from 'use-react-router'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'nav'> {
 
 }
@@ -22,7 +18,7 @@ const Root = Styled.nav`
     text-align: center;
 `
 
-const Nav: React.FC<Props> & Static = ({ ...props }) => {
+const Nav = ({ ...props }: Props) => {
 
     const strings = useStrings().nav
     const { location } = useRouter()
