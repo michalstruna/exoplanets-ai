@@ -1,12 +1,13 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useActions } from '../../Data'
-import { login } from '..'
+import { useActions, useStrings } from '../../Data'
+import { login, Credentials } from '..'
 import { Color, opacityHover, size } from '../../Style'
 import FacebookLogin from './FacebookLogin'
 import GoogleLogin from './GoogleLogin'
 import { Form, Field } from '../../Form'
+import { FormContextValues } from 'react-hook-form'
 
 interface Static {
 
@@ -67,27 +68,12 @@ const HorizontalTextLine = Styled.div`
     }
 `
 
-interface Values { // TODO: Interface Credentials.
-    email: string
-    password: string
-}
-
 const LoginForm: React.FC<Props> & Static = ({ ...props }) => {
 
     const actions = useActions({ login })
+    const strings = useStrings().login
 
-    const strings = {
-        email: 'Email',
-        password: 'Heslo',
-        submit: 'Připojit se',
-        forgotPassword: 'Zapomenuté heslo?',
-        error: 'Špatné přihlašovací údaje.',
-        missingEmail: 'Napište svůj email',
-        invalidEmail: 'Napište email ve tvaru email@doména.',
-        missingPassword: 'Napište své heslo'
-    } as any // TODO
-
-    const handleSubmit = async (values: Values, form: any) => {
+    const handleSubmit = async (values: Credentials, form: FormContextValues<Credentials>) => {
         const action = await actions.login(values as any)
 
         if (action.error) {
@@ -97,13 +83,13 @@ const LoginForm: React.FC<Props> & Static = ({ ...props }) => {
 
     return (
         <Root{...props}>
-            <Form onSubmit={handleSubmit as any} defaultValues={{ email: '', password: '' }}>
+            <Form onSubmit={handleSubmit} defaultValues={{ email: '', password: '' }}>
                 <External>
                     <FacebookLogin />
                     <GoogleLogin />
                 </External>
                 <HorizontalTextLine>
-                    nebo
+                    {strings.or}
                 </HorizontalTextLine>
                 <Field
                     name='email'

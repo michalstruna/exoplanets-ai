@@ -3,6 +3,7 @@ import Styled from 'styled-components'
 
 import { Color, Duration, size } from '../../Style'
 import FieldType from '../Constants/FieldType'
+import FormContext from './FormContext'
 
 interface Static {
     Type: typeof FieldType
@@ -21,9 +22,6 @@ interface Props extends Omit<Omit<React.ComponentPropsWithoutRef<'input'>, 'type
     invalid?: string
     required?: string
     validator?: (value: any) => string
-
-    register?: any
-    form?: any
 }
 
 type LabelProps = {
@@ -68,7 +66,7 @@ const Label = Styled.p<LabelProps>`
     margin: 0;
 `
 
-const Field: React.FC<Props> & Static = ({ label, name, form, type, required, invalid, validator, placeholder, ...props }) => {
+const Field: React.FC<Props> & Static = ({ label, name, type, required, invalid, validator, placeholder, ...props }) => {
 
     const [value, setValue] = React.useState<string>('')
 
@@ -81,30 +79,34 @@ const Field: React.FC<Props> & Static = ({ label, name, form, type, required, in
     )
 
     return (
-        <Root>
-            <Input
-                {...props}
-                name={name}
-                placeholder={placeholder}
-                type={type.name}
-                autoComplete='off'
-                ref={form.register({
-                    required: { value: !!required, message: required },
-                    validate: { value: validate }
-                })}
-                data-empty={value === '' || undefined}
-                onChange={handleChange} />
-            <Text>
-                {form.errors[name] && (
-                    <Label error={true}>
-                        {form.errors[name].message}
-                    </Label>
-                )}
-                <Label>
-                    {label}
-                </Label>
-            </Text>
-        </Root>
+        <FormContext.Consumer>
+            {({ errors, register }) => (
+                <Root>
+                    <Input
+                        {...props}
+                        name={name}
+                        placeholder={placeholder}
+                        type={type.name}
+                        autoComplete='off'
+                        ref={register({
+                            required: { value: !!required, message: required! },
+                            validate: { value: validate }
+                        })}
+                        data-empty={value === '' || undefined}
+                        onChange={handleChange} />
+                    <Text>
+                        {errors[name] && (
+                            <Label error={true}>
+                                {errors[name].message}
+                            </Label>
+                        )}
+                        <Label>
+                            {label}
+                        </Label>
+                    </Text>
+                </Root>
+            )}
+        </FormContext.Consumer>
     )
 
 }
