@@ -3,10 +3,6 @@ import React from 'react'
 import UserRole, { test } from '../Constants/UserRole'
 import { useIdentity } from '..'
 
-interface Static {
-
-}
-
 interface Props {
     role?: UserRole | UserRole[]
     noRole?: UserRole | UserRole[]
@@ -15,7 +11,7 @@ interface Props {
     identityId?: string
 }
 
-const Auth: React.FC<Props> & Static = ({ role, noRole, when, otherwise, identityId }) => {
+const Auth = ({ role, noRole, when, otherwise, identityId }: Props) => {
 
     const identity = useIdentity()
     const isRoleOk = test(identity.payload, role, noRole)

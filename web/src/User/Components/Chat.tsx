@@ -4,10 +4,6 @@ import { Color, image, opacityHover, size } from '../../Style'
 import { Field, Form } from '../../Form'
 import { useOnlineUsers } from '..'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
@@ -76,12 +72,7 @@ const MessageText = Styled.div`
     margin-top: 0.0rem;
 `
 
-
-interface ChatData {
-    message: string
-}
-
-const Chat: React.FC<Props> & Static = ({ ...props }) => {
+const Chat = ({ ...props }: Props) => {
 
     const users = useOnlineUsers()
 

@@ -9,10 +9,6 @@ import GoogleLogin from './GoogleLogin'
 import { Form, Field } from '../../Form'
 import { FormContextValues } from 'react-hook-form'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
@@ -68,7 +64,7 @@ const HorizontalTextLine = Styled.div`
     }
 `
 
-const LoginForm: React.FC<Props> & Static = ({ ...props }) => {
+const LoginForm = ({ ...props }: Props) => {
 
     const actions = useActions({ login })
     const strings = useStrings().login

@@ -6,10 +6,6 @@ import UserPreview from './UserPreview'
 import Tooltip from '../../Layout/Components/Tooltip'
 import { IconText } from '../../Layout'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: UserSimple
 }
@@ -21,7 +17,7 @@ const Root = Styled(IconText)`
     max-width: 100%;
 `
 
-const UserName: React.FC<Props> & Static = ({ user, ...props }) => {
+const UserName = ({ user, ...props }: Props) => {
 
     return (
         <Tooltip render={() => <UserPreview user={user} />}>

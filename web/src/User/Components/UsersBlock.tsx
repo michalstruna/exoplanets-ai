@@ -5,10 +5,6 @@ import { IconText } from '../../Layout'
 import UsersRank from './UsersRank'
 import OnlineUsers from './OnlineUsers'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
@@ -39,7 +35,7 @@ const links = [
 
 const tabs = [() => <UsersRank />, () => <OnlineUsers />, () => <div />]
 
-const UsersBlock: React.FC<Props> & Static = ({ ...props }) => {
+const UsersBlock = ({ ...props }: Props) => {
 
     const [tab, setTab] = React.useState(0)
 

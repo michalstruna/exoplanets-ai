@@ -8,10 +8,6 @@ import { useIdentity } from '..'
 import { Link, Url } from '../../Routing'
 import UserName from './UserName'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
@@ -149,7 +145,7 @@ const columns = [
 ]
 
 
-const UsersRank: React.FC<Props> & Static = ({ ...props }) => {
+const UsersRank = ({ ...props }: Props) => {
 
     const [rank, setRank] = React.useState(0)
     const identity = useIdentity()

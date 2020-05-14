@@ -21,7 +21,7 @@ const Root = Styled.button.attrs({
     transition: background-color ${Duration.FAST};
 `
 
-const ExternalAuthButton: React.FC<Props> = ({ text, ...props }) => {
+const ExternalAuthButton = ({ text, ...props }: Props) => {
 
     return (
         <Root {...props}>

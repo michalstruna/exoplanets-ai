@@ -9,10 +9,6 @@ import { useActions } from '../../Data'
 import { image, threeDots } from '../../Style'
 import { logout } from '../Redux/Slice'
 
-interface Static {
-    Root: string
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: UserSimple
 }
@@ -133,7 +129,7 @@ const Item: React.FC<ItemProps> = ({ title, value, icon }) => {
 
 }
 
-const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
+const UserPreview = ({ user, ...props }: Props) => {
 
     const country = user.personal.country ? (Countries as any).countryCode(user.personal.country) : null
     const actions = useActions({ logout })
