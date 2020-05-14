@@ -6,7 +6,7 @@ import { IconText } from '../../Layout'
 import Auth from './Auth'
 import { UserSimple } from '../types'
 import { useActions } from '../../Data'
-import { image, threeDots } from '../../Style'
+import { image, dots } from '../../Style'
 import { logout } from '../Redux/Slice'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
@@ -21,7 +21,7 @@ const Root = Styled.div`
 `
 
 const Name = Styled.h3`
-    ${threeDots()}
+    ${dots()}
     font-size: 120%;
     font-weight: bold;
     text-align: center;

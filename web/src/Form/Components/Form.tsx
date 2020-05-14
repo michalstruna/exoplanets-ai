@@ -49,7 +49,7 @@ const ErrorContainer = Styled.p`
     text-align: center;
 `
 
-function Form<Values>({ defaultValues, onSubmit, children, ...props }: Props<Values>) {
+const Form = <Values extends any>({ defaultValues, onSubmit, children, ...props }: Props<Values>) => {
 
     const form = useForm<Values>({ defaultValues })
 
