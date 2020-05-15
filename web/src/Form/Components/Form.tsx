@@ -1,10 +1,9 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { useForm, FormContextValues } from 'react-hook-form'
+import { useForm, FormContextValues, FormContext } from 'react-hook-form'
 
 import { Color, Duration } from '../../Style'
 import { Loader } from '../../Async'
-import FormContext from './FormContext'
 
 interface Props<Values> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
     defaultValues?: Values
@@ -61,9 +60,9 @@ const Form = <Values extends any>({ defaultValues, onSubmit, children, form: out
             noValidate={true}
             data-invalid={!(form.formState.isValid || !form.formState.isSubmitted) || undefined}
             onSubmit={form.handleSubmit(values => onSubmit(values, form))}>
-            <FormContext.Provider value={form}>
+            <FormContext {...form}>
                 {children}
-            </FormContext.Provider>
+            </FormContext>
             {(form.errors as any)[Form.GLOBAL_ERROR] && <ErrorContainer>{(form.errors as any)[Form.GLOBAL_ERROR].type}</ErrorContainer>}
             {form.formState.isSubmitting && <FormLoader />}
         </Root>

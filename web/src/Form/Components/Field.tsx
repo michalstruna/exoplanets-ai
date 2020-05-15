@@ -1,9 +1,9 @@
 import React, { ChangeEvent } from 'react'
 import Styled from 'styled-components'
+import { useFormContext } from 'react-hook-form'
 
 import { Color, Duration, size } from '../../Style'
 import FieldType from '../Constants/FieldType'
-import FormContext from './FormContext'
 
 interface Option {
     text: string
@@ -72,6 +72,7 @@ const Label = Styled.p<LabelProps>`
 const Field = ({ label, name, type, required, invalid, validator, placeholder, options, ...props }: Props) => {
 
     const [value, setValue] = React.useState<string>('')
+    const { register, errors } = useFormContext()
 
     const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setValue(event.target.value)
@@ -108,23 +109,19 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
     )
 
     return (
-        <FormContext.Consumer>
-            {({ errors, register }) => (
-                <Root>
-                    {renderComponent(register)}
-                    <Text>
-                        {errors[name] && (
-                            <Label error={true}>
-                                {errors[name].message}
-                            </Label>
-                        )}
-                        <Label>
-                            {label}
-                        </Label>
-                    </Text>
-                </Root>
-            )}
-        </FormContext.Consumer>
+        <Root>
+            {renderComponent(register)}
+            <Text>
+                {errors[name] && (
+                    <Label error={true}>
+                        {errors[name].message}
+                    </Label>
+                )}
+                <Label>
+                    {label}
+                </Label>
+            </Text>
+        </Root>
     )
 
 }
