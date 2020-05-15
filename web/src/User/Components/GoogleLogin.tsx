@@ -18,7 +18,7 @@ const Root = Styled(ExternalAuthButton)`
     }
 `
 
-const FacebookLogin: React.FC<Props> = ({ ...props }) => {
+const FacebookLogin = ({ ...props }: Props) => {
 
     const handleSuccess = () => {
 

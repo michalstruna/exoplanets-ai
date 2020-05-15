@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { size, threeDots } from '../../Style'
+import { size, dots } from '../../Style'
 
 interface Props<Item> extends React.ComponentPropsWithoutRef<'div'> {
     items: Item[]
@@ -30,7 +30,7 @@ const Row = Styled.div`
 `
 
 const Cell = Styled.div`
-    ${threeDots()}
+    ${dots()}
     ${size()}
     flex: 1 1 0;
     overflow: hidden;
@@ -54,7 +54,7 @@ const HeaderCell = Styled(Cell)`
 
 `
 
-function Table<Item>({ columns, items, withHeader, ...props }: Props<Item>) {
+const Table = <Item extends any>({ columns, items, withHeader, ...props }: Props<Item>) => {
 
     const renderedHeader = React.useMemo(() => withHeader && (
         <HeaderRow>

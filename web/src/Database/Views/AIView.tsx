@@ -2,10 +2,6 @@ import React from 'react'
 import Styled from 'styled-components'
 import io from 'socket.io-client'
 
-interface Static {
-
-}
-
 interface Props {
 
 }
@@ -22,7 +18,7 @@ socket.on('connect', () => {
 })
 
 
-const AIView: React.FC<Props> & Static = ({ ...props }) => {
+const AIView = ({ ...props }: Props) => {
 
     return (
         <Root {...props}>

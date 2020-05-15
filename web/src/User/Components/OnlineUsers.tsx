@@ -2,15 +2,9 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Color, size } from '../../Style'
-import UserRole from '../Constants/UserRole'
 import { Table } from '../../Layout'
-import { UserSimple } from '../types'
 import UserName from './UserName'
 import { useOnlineUsers } from '..'
-
-interface Static {
-
-}
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -41,7 +35,7 @@ const Root = Styled.div`
     }
 `
 
-const OnlineUsers: React.FC<Props> & Static = ({ ...props }) => {
+const OnlineUsers = ({ ...props }: Props) => {
 
     const users = useOnlineUsers()
 

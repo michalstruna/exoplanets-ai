@@ -5,10 +5,6 @@ import { Link, LinkData } from '../../Routing'
 import { Color, Duration, size, opacityHover, image } from '../../Style'
 import MinorSectionTitle from './MinorSectionTitle'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     items: LineData[]
 }
@@ -88,7 +84,7 @@ const Arrow = Styled(Link)`
     transition: transform ${Duration.MEDIUM};
 `
 
-const ToggleLine: React.FC<Props> & Static = ({ items, ...props }) => {
+const ToggleLine = ({ items, ...props }: Props) => {
 
     const [active, setActive] = React.useState(0)
 

@@ -3,10 +3,6 @@ import Styled from 'styled-components'
 
 import { useEvent } from '../../Native'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithRef<'div'> {
     itemsCount: number
     itemRenderer: ({ index, style }: { index: number, style: object }) => React.ReactNode
@@ -18,7 +14,7 @@ const Root = Styled.div`
     position: relative;
 `
 
-const VirtualizedList: React.FC<Props> & Static = ({ itemsCount, itemRenderer, itemHeight, scrollable, ...props }) => {
+const VirtualizedList = ({ itemsCount, itemRenderer, itemHeight, scrollable, ...props }: Props) => {
 
     const getItemHeight = React.useCallback(
         (index: number) => typeof itemHeight === 'number' ? itemHeight : itemHeight(index),

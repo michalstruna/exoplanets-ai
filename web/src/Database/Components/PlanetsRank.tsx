@@ -2,11 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 import { IconText, Table, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
-import { Color, size } from '../../Style'
-
-interface Static {
-
-}
+import { Color } from '../../Style'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -28,7 +24,7 @@ const planets = [
 
 const icons = ['https://lh5.ggpht.com/DDMIxegFhINdUiET3ZRNj1KQevPoPFSrczPIxUQq-DEwci4rIW3yQNyP3PzV3lYyUxo=h300', 'https://www.pngkey.com/png/full/178-1788085_wip-new-planet-textures-space-pendant-gas-giant.png']
 
-const PlanetsRank: React.FC<Props> & Static = ({ ...props }) => {
+const PlanetsRank = ({ ...props }: Props) => {
 
     const earthLike = (
         <Table items={planets} columns={[

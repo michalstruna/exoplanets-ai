@@ -2,10 +2,6 @@ import React from 'react'
 import Styled from 'styled-components'
 import { Color, Duration, ZIndex } from '../../Style'
 
-interface Static {
-    Content: string
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     renderButton: (isVisible: boolean) => React.ReactNode
     onToggle?: (isVisible: boolean) => void
@@ -44,7 +40,7 @@ const Arrow = Styled.div`
     width: 0;
 `
 
-const Window: React.FC<Props> & Static = ({ children, renderButton, onToggle, ...props }) => {
+const Window = ({ children, renderButton, onToggle, ...props }: Props) => {
 
     const [isOpened, setOpened] = React.useState(false)
 

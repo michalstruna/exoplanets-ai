@@ -4,12 +4,6 @@ import Styled, { css } from 'styled-components'
 import { Color, image, opacityHover, size } from '../../Style'
 import { Link, Target } from '../../Routing'
 
-interface Static {
-    SMALL: string
-    MEDIUM: string
-    LARGE: string
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'>, Partial<Target> {
     icon?: string
     text?: string
@@ -65,7 +59,7 @@ const Icon = Styled.div<IconProps>`
     vertical-align: middle;
 `
 
-const IconText: React.FC<Props> & Static = ({ icon, text, size, isActive, pathname, query, hash, ...props }) => {
+const IconText = ({ icon, text, size, isActive, pathname, query, hash, ...props }: Props) => {
 
     if (pathname || query || hash) {
         return (

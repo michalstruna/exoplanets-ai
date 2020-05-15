@@ -6,10 +6,6 @@ import { Target } from '../types'
 import { Validator } from '../../Native'
 import * as Urls from '../Utils/Urls'
 
-interface Static {
-    ACTIVE: string
-}
-
 interface Props extends Target, React.ComponentPropsWithoutRef<'a'> {
     replace?: boolean
 }
@@ -29,7 +25,7 @@ const AbsoluteRoot = Styled.a`
     display: inline-block;
 `
 
-const Link: React.FC<Props> & Static = ({ hash, query, pathname, replace, ...props }) => {
+const Link = ({ hash, query, pathname, replace, ...props }: Props) => {
 
     const target = { hash, search: query, pathname }
 

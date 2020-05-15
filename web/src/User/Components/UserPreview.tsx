@@ -6,12 +6,8 @@ import { IconText } from '../../Layout'
 import Auth from './Auth'
 import { UserSimple } from '../types'
 import { useActions } from '../../Data'
-import { image, threeDots } from '../../Style'
+import { image, dots } from '../../Style'
 import { logout } from '../Redux/Slice'
-
-interface Static {
-    Root: string
-}
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: UserSimple
@@ -25,7 +21,7 @@ const Root = Styled.div`
 `
 
 const Name = Styled.h3`
-    ${threeDots()}
+    ${dots()}
     font-size: 120%;
     font-weight: bold;
     text-align: center;
@@ -133,7 +129,7 @@ const Item: React.FC<ItemProps> = ({ title, value, icon }) => {
 
 }
 
-const UserPreview: React.FC<Props> & Static = ({ user, ...props }) => {
+const UserPreview = ({ user, ...props }: Props) => {
 
     const country = user.personal.country ? (Countries as any).countryCode(user.personal.country) : null
     const actions = useActions({ logout })

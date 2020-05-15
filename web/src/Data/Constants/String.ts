@@ -92,6 +92,18 @@ export default {
                 [EN]: 'REgistered volunteers'
             }
         }
+    },
+
+    login: {
+        email: 'Email',
+        password: { [CS]: 'Heslo', [EN]: 'Password' },
+        submit: { [CS]: 'Připojit se', [EN]: 'Join' },
+        forgotPassword: { [CS]: 'Zapomenuté heslo?', [EN]: 'Forgot password?' },
+        error: { [CS]: 'Špatné přihlašovací údaje.', [EN]: 'Bad credentials' },
+        missingEmail: { [CS]: 'Napište svůj email', [EN]: 'Type your email' },
+        invalidEmail: { [CS]: 'Napište email ve tvaru email@doména.', [EN]: 'Type email in form email@domain.' },
+        missingPassword: { [CS]: 'Napište své heslo', [EN]: 'Type your password' },
+        or: { [CS]: 'Nebo', [EN]: 'Or' }
     }
 
 }

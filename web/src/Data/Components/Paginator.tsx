@@ -5,10 +5,6 @@ import Paginate from 'react-paginate'
 import { size, Color, Duration } from '../../Style'
 import { Segment } from '../../Layout/types'
 
-interface Static {
-
-}
-
 interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
     page: Segment
     onChange: (segment: Segment) => void
@@ -83,7 +79,7 @@ const PerPage = Styled.select`
     text-align: center;
 `
 
-const Paginator: React.FC<Props> & Static = ({ onChange, page, itemsCount, freeze, ...props }) => {
+const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
 
     const getPagesCount = React.useCallback(() => Math.ceil(itemsCount / page.size), [itemsCount, page.size])
     const getCache = () => ({ pages: getPagesCount(), itemsCount })

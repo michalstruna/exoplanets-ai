@@ -3,15 +3,7 @@ import React from 'react'
 import { useLanguage, useStrings, setLanguage, Language, useActions } from '../../Data'
 import { Link, Url } from '../../Routing'
 
-interface Static {
-
-}
-
-interface Props {
-
-}
-
-const HomeView: React.FC<Props> & Static = () => {
+const HomeView = () => {
 
     const strings = useStrings().home
     const language = useLanguage()

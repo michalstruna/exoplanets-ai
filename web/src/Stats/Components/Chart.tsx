@@ -30,10 +30,6 @@ const mapTypeToComponent: Record<ChartType, { component: typeof React.Component,
     [ChartType.RADAR]: { component: Radar, chart: RadarChart }
 }
 
-interface Static {
-    Type: typeof ChartType
-}
-
 interface Dimension {
     name: string
     title?: string
@@ -107,7 +103,7 @@ const splitIntoCategories = <T extends any>(items: T[], key: string): Record<str
 
 const colors = ['lightgreen', 'red', 'lightblue', 'yellow', 'white', 'purple', 'orange', 'cyan']
 
-const Chart: React.FC<Props<any>> & Static = ({ type, items, x, y, z, color, axisColor, textColor, grid, width, height, ...props }) => {
+const Chart = ({ type, items, x, y, z, color, axisColor, textColor, grid, width, height, ...props }: Props<any>) => {
     const isNamed = items && typeof items[0][x.name] === 'string'
     const data = z ? splitIntoCategories(items, z.name) : items
 

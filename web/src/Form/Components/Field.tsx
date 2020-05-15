@@ -1,24 +1,30 @@
-import { ErrorMessage, Field as FormikField } from 'formik'
-import React from 'react'
-import Styled  from 'styled-components'
+import React, { ChangeEvent } from 'react'
+import Styled from 'styled-components'
+import { useFormContext } from 'react-hook-form'
 
-import FieldType from '../Constants/FieldType'
 import { Color, Duration, size } from '../../Style'
+import FieldType from '../Constants/FieldType'
+
+interface Option {
+    text: string
+    value: string | number
+}
 
 interface Type {
     name: string
     validator: (value: any) => boolean
 }
 
-interface Props extends React.ComponentPropsWithoutRef<'label'> {
+interface Props extends Omit<Omit<Omit<React.ComponentPropsWithoutRef<'input'>, 'type'>, 'onChange'>, 'required'> {
     name: string
     type: Type
-    label?: string
     placeholder?: string
+    label?: string
     invalid?: string
     required?: string
     validator?: (value: any) => string
-    options?: { text: string, value?: any }[]
+    options?: Option[]
+    onChange?: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
 }
 
 type LabelProps = {
@@ -33,7 +39,7 @@ const Root = Styled.label`
     text-align: left;
 `
 
-const Input = Styled(FormikField)`
+const Input = Styled.input`
     box-sizing: border-box;
     display: block;
     padding: 0.5rem 0;
@@ -63,77 +69,63 @@ const Label = Styled.p<LabelProps>`
     margin: 0;
 `
 
-const Field: React.FC<Props> = ({ name, type, label, required, invalid, validator, placeholder, options, ...props }) => {
+const Field = ({ label, name, type, required, invalid, validator, placeholder, options, ...props }: Props) => {
 
-    const [value, setValue] = React.useState()
+    const [value, setValue] = React.useState<string>('')
+    const { register, errors } = useFormContext()
 
-    const validate = (value: any) => {
-        setValue(value)
-
-        if (required && !value) {
-            return required
-        }
-
-        if (invalid && !type.validator(value)) {
-            return invalid
-        }
-
-        if (validator) {
-            return validator(value) ? undefined : invalid
-        }
+    const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        setValue(event.target.value)
+        props.onChange?.(event)
     }
 
-    const renderOptions = () => (
-        options && options.map((option, i) => (
-            <option value={option.value} key={i}>
-                {option.text}
-            </option>
-        ))
+    const validate = (value: any) => (
+        (type.validator(value) && (!validator || validator(value))) || invalid || label || placeholder || 'Error'
     )
 
-    const renderControl = () => {
-        if (type === FieldType.SELECT) {
-            return (
-                <Input
-                    component='select'
-                    name={name}
-                    type={type.name}
-                    validate={validate}>
-                    {renderOptions()}
-                </Input>
-            )
-        } else {
-            return (
-                <Input
-                    data-empty={!value && value !== 0 ? true : undefined}
-                    name={name}
-                    type={type.name}
-                    validate={validate}
-                    autoComplete='off'
-                    placeholder={placeholder} />
-            )
-        }
+    const registerOptions = {
+        required: { value: !!required, message: required! },
+        validate: { value: validate }
     }
 
+    const renderComponent = (register: any) => type === FieldType.SELECT ? (
+        <select onChange={handleChange} ref={register(registerOptions)} name={name}>
+            {(options || []).map(({ text, value }, i) => (
+                <option key={i} value={value}>
+                    {text}
+                </option>
+            ))}
+        </select>
+    ) : (
+        <Input
+            {...props}
+            name={name}
+            placeholder={placeholder}
+            type={type.name}
+            autoComplete='off'
+            ref={register(registerOptions)}
+            data-empty={value === '' || undefined}
+            onChange={handleChange} />
+    )
+
     return (
-        <Root {...props}>
-            {renderControl()}
+        <Root>
+            {renderComponent(register)}
             <Text>
-                <Label error={true}>
-                    <ErrorMessage name={name} />
-                </Label>
+                {errors[name] && (
+                    <Label error={true}>
+                        {errors[name].message}
+                    </Label>
+                )}
                 <Label>
                     {label}
                 </Label>
             </Text>
         </Root>
     )
+
 }
 
-Field.defaultProps = {
-    type: FieldType.TEXT
-}
+Field.Type = FieldType
 
 export default Field
-
-export { default as FieldType } from '../Constants/FieldType'

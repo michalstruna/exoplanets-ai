@@ -6,15 +6,11 @@ import { Window, IconText } from '../../Layout'
 import { LoginForm, useIdentity } from '../index'
 import UserPreview from './UserPreview'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
 
-const AuthControl: React.FC<Props> & Static = ({ ...props }) => {
+const AuthControl = ({ ...props }: Props) => {
 
     const identity = useIdentity()
 
