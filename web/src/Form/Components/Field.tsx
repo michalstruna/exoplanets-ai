@@ -5,12 +5,17 @@ import { Color, Duration, size } from '../../Style'
 import FieldType from '../Constants/FieldType'
 import FormContext from './FormContext'
 
+interface Option {
+    text: string
+    value: string | number
+}
+
 interface Type {
     name: string
     validator: (value: any) => boolean
 }
 
-interface Props extends Omit<Omit<React.ComponentPropsWithoutRef<'input'>, 'type'>, 'required'> {
+interface Props extends Omit<Omit<Omit<React.ComponentPropsWithoutRef<'input'>, 'type'>, 'onChange'>, 'required'> {
     name: string
     type: Type
     placeholder?: string
@@ -18,6 +23,8 @@ interface Props extends Omit<Omit<React.ComponentPropsWithoutRef<'input'>, 'type
     invalid?: string
     required?: string
     validator?: (value: any) => string
+    options?: Option[]
+    onChange?: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
 }
 
 type LabelProps = {
@@ -62,11 +69,11 @@ const Label = Styled.p<LabelProps>`
     margin: 0;
 `
 
-const Field = ({ label, name, type, required, invalid, validator, placeholder, ...props }: Props) => {
+const Field = ({ label, name, type, required, invalid, validator, placeholder, options, ...props }: Props) => {
 
     const [value, setValue] = React.useState<string>('')
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setValue(event.target.value)
         props.onChange?.(event)
     }
@@ -75,22 +82,36 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, .
         (type.validator(value) && (!validator || validator(value))) || invalid || label || placeholder || 'Error'
     )
 
+    const registerOptions = {
+        required: { value: !!required, message: required! },
+        validate: { value: validate }
+    }
+
+    const renderComponent = (register: any) => type === FieldType.SELECT ? (
+        <select onChange={handleChange} ref={register(registerOptions)} name={name}>
+            {(options || []).map(({ text, value }, i) => (
+                <option key={i} value={value}>
+                    {text}
+                </option>
+            ))}
+        </select>
+    ) : (
+        <Input
+            {...props}
+            name={name}
+            placeholder={placeholder}
+            type={type.name}
+            autoComplete='off'
+            ref={register(registerOptions)}
+            data-empty={value === '' || undefined}
+            onChange={handleChange} />
+    )
+
     return (
         <FormContext.Consumer>
             {({ errors, register }) => (
                 <Root>
-                    <Input
-                        {...props}
-                        name={name}
-                        placeholder={placeholder}
-                        type={type.name}
-                        autoComplete='off'
-                        ref={register({
-                            required: { value: !!required, message: required! },
-                            validate: { value: validate }
-                        })}
-                        data-empty={value === '' || undefined}
-                        onChange={handleChange} />
+                    {renderComponent(register)}
                     <Text>
                         {errors[name] && (
                             <Label error={true}>

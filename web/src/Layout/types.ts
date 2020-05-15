@@ -1,6 +1,6 @@
 import { Validator } from '../Native'
 
-export type Filter<TValue = any> = {
+export type Filter<TValue = string | number> = {
     attribute: string[]
     relation: Validator.Relation[]
     value: TValue[]

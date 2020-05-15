@@ -70,7 +70,7 @@ const LoginForm = ({ ...props }: Props) => {
     const strings = useStrings().login
 
     const handleSubmit = async (values: Credentials, form: FormContextValues<Credentials>) => {
-        const action = await actions.login(values as any)
+        const action = await actions.login(values)
 
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, strings.error)

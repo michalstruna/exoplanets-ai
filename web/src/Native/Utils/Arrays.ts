@@ -2,9 +2,6 @@ import * as Validator from './Validator'
 
 /**
  * Find index of last item that match predicate.
- * @param items Array of any items.
- * @param predicate Predicate that accepts value from array and current index in parameters and returns if item match predicate.
- * @return Index of last item in array that match predicate.
  */
 export const findLastIndex = <T>(items: T[], predicate: Validator.BiPredicate<T, number>): number => {
     for (let i = items.length - 1; i >= 0; i--) {
@@ -16,10 +13,16 @@ export const findLastIndex = <T>(items: T[], predicate: Validator.BiPredicate<T,
     return -1
 }
 
+/**
+ * Check if teo arrays contains same items in same order (without deep equality).
+ */
 export const equals = <T>(array1: T[], array2: T[]): boolean => {
     return !!array1 && !!array2 && !(array1 < array2 || array2 < array1)
 }
 
+/**
+ * Create number sequence from-to (includes) with step between numbers (default = 1).
+ */
 export const range = (from: number, to: number, step: number = 1): number[] => {
     const result = []
 
