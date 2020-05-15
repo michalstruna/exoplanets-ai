@@ -15,3 +15,20 @@ export const findLastIndex = <T>(items: T[], predicate: Validator.BiPredicate<T,
 
     return -1
 }
+
+export const equals = <T>(array1: T[], array2: T[]): boolean => {
+    return !!array1 && !!array2 && !(array1 < array2 || array2 < array1)
+}
+
+export const range = (from: number, to: number, step: number = 1): number[] => {
+    const result = []
+
+    const realStep = (from > to && step > 0) || (from < to && step < 0) ? -step : step
+    const getCondition = (i: number) => from <= to ? i <= to : i >= to
+
+    for (let i = from; getCondition(i); i += realStep) {
+        result.push(i)
+    }
+
+    return result
+}

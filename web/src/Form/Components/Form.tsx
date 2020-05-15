@@ -7,8 +7,9 @@ import { Loader } from '../../Async'
 import FormContext from './FormContext'
 
 interface Props<Values> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
-    defaultValues: Values
+    defaultValues?: Values
     onSubmit: (values: Values, form: FormContextValues<Values>) => void
+    form?: FormContextValues<Values>
 }
 
 const Root = Styled.form`
@@ -49,9 +50,10 @@ const ErrorContainer = Styled.p`
     text-align: center;
 `
 
-const Form = <Values extends any>({ defaultValues, onSubmit, children, ...props }: Props<Values>) => {
+const Form = <Values extends any>({ defaultValues, onSubmit, children, form: outerForm, ...props }: Props<Values>) => {
 
-    const form = useForm<Values>({ defaultValues })
+    const localForm = useForm<Values>({ defaultValues })
+    const form = outerForm || localForm
 
     return (
         <Root

@@ -68,6 +68,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, .
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value)
+        props.onChange?.(event)
     }
 
     const validate = (value: any) => (
