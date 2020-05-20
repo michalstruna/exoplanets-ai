@@ -97,12 +97,12 @@ Málo hmotné planety byly objevovány jak tranzitní metodou, tak i~metodou rad
 \clearpage
 \subsection{Tranzitní metoda}
 
-Někdy se může exoplaneta při obíhání dostat mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu této hvězdy (obvykle v jednotkách procent). Pokud je hvězda teleskopem sledována dlouhodobě, je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost nějakého tělesa v~blízkosti této hvězdy.
-
-Tyto změny však nemusí být vždy stejně velké a~na první pohled viditelné. V~systému hvězdy může být více planet, které hvězdu ovlivňují v~různých periodických intervalech, nebo jasnost hvězdy mohou ovlivňovat i~jiné jevy, než obíhající tělesa.
+Někdy se může exoplaneta při obíhání dostat mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu této hvězdy (obvykle ve zlomku procenta). Pokud je hvězda teleskopem sledována dlouhodobě, je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost planety v~blízkosti této hvězdy.
 
 \img[1]{Tranzitní metoda}{img/transit.png}
 \drawgimp
+
+Tyto změny však nemusí být na první pohled viditelné, protože v~soustavě může být více planet, které svou hvězdu zastiňují různou měrou a~obíhají kolem ní s~různou periodou. Navíc i v situaci, kdy je ve změnách jasu hvězdy objevena periodická složka nemusí jít vždy o~obíhající planetu. Hvězda může být např. sama o~sobě proměnlivá nebo se může jednat o~dvojhvězdu, jejíž složky se vzájmně zastiňují.
 
 Tranzitní metoda vzbuzuje velký zájem především kvůli možnosti objevovat i~malé planety podobné Zemi~--~takové planety by mohly spíše splňovat podmínky pro život. Úspěšnost této metody však silně závisí na geometrii přechodu planety přes hvězdu a~poklesu jasu hvězdy.
 
@@ -111,7 +111,45 @@ Tranzitní metoda vzbuzuje velký zájem především kvůli možnosti objevovat
 \img[1]{Rozklad periodické funkce na složky}{stats/sinus.pdf}
 \footnotetext[1]{Vytvořeno autorem.}
 
-\subsubsection{Výpočet údajů o~exoplanetě}
+\subsubsection{Detekce exoplanety}
+
+\subsubsection{Výpočet poloměru planety}
+
+Ze světelné křivky a~poloměru hvězdy lze poloměr tranzitující planety vypočítat po vyjádření z~následující rovnice:
+
+\formula{Poloměr planety z~tranzitní metody} {\frac{r^2}{R^2} = \frac{\Delta F}{F}}{
+\begin{tabular}{llll}
+	r = poloměr planety & R = poloměr hvězdy & F = jas hvězdy & $\Delta F$ = změna jasu \
+\end{tabular}
+}
+
+\subsubsection{Výpočet hmotnosti planety}
+
+Hmotnost planety z tranzitní metody narozdíl od metody radiálních rychlostí nelze vypočítat. Avšak z~empirických pozorování je možné hmotnost planety odhadnout z následující rovnice, přičemž $a$ a $b$ jsou pro různé velikostní kategorie jiné.
+
+\formula{Odhad hmotnosti planety z~tranzitní metody} {m = a * r^b}{
+\begin{tabular}{ll}
+	m = hmotnost planety [hmotnost Země] & r = poloměr planety [poloměr Země] \
+\end{tabular}
+}
+
+{ % TODO
+\catcode`\-=12
+\tab{Odhad hmotnosti planety z~trantizní metody}{
+	\begin{tabular}{|l|l|}
+		\hline	
+		\rowcolor{lightgray}
+		Poloměr [poloměr Země] & Odhad hmotnosti \\	
+		\hline	
+		< 6 & $m = 0.9515 * r^{3.1}$  \\
+		\hline	
+		6-10 & $m = 1.7013 * r^{2.0383}$  \\
+		\hline	
+		10 > & $m = 0.6631 * r^{2.4191}$  \\
+		\hline	
+	\end{tabular}
+}
+
 
 \clearpage
 \subsection{Metoda radiálních rychlostí}
