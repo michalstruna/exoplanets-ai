@@ -2,7 +2,7 @@ enum Url {
     HOME = '/',
     HELP = '/help',
     DATABASE = '/db',
-    AI = '/ai'
+    DISCOVERY = '/discovery'
 }
 
 export default Url

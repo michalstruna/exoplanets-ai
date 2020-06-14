@@ -11,7 +11,7 @@ export default {
         links: [
             { text: { [CS]: 'Přehled', [EN]: 'Overview' }, pathname: Url.HOME, icon: 'Overview' },
             { text: { [CS]: 'Databáze', [EN]: 'Database' }, pathname: Url.DATABASE, icon: 'Database' },
-            { text: { [CS]: 'Učení', [EN]: 'Learning' }, pathname: Url.AI, icon: 'AI' }
+            { text: { [CS]: 'Objevování', [EN]: 'Discovery' }, pathname: Url.DISCOVERY, icon: 'Discovery' }
         ]
     },
 
@@ -104,6 +104,31 @@ export default {
         invalidEmail: { [CS]: 'Napište email ve tvaru email@doména.', [EN]: 'Type email in form email@domain.' },
         missingPassword: { [CS]: 'Napište své heslo', [EN]: 'Type your password' },
         or: { [CS]: 'Nebo', [EN]: 'Or' }
+    },
+
+    discovery: {
+        tutorial: {
+            title: 'Chcete poskytnout výkon svého počítače pro hledání exoplanet?',
+            steps: [
+                {
+                    icon: 'Download.svg',
+                    download: true,
+                    title: 'Stáhněte si klientský program (16,8 kiB)'
+                },
+                {
+                    icon: 'Run.png',
+                    title: 'Spusťte stažený program'
+                },
+                {
+                    icon: 'pair.svg',
+                    title: 'Spárujte program s webovou aplikací'
+                },
+                {
+                    icon: 'discovery.svg',
+                    title: 'Nechte počítač, ať hledá exoplanety'
+                }
+            ]
+        }
     }
 
 }
