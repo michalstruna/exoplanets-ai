@@ -4,6 +4,7 @@ import io from 'socket.io-client'
 
 import DiscoveryTutorial from '../Components/DiscoveryTutorial'
 import { Color } from '../../Style'
+import Process from '../Components/Process'
 
 interface Props {
 
@@ -13,6 +14,11 @@ const Root = Styled.div`
     background-color: ${Color.BACKGROUND};
     overflow: hidden;
     min-height: 100%;
+`
+
+const Processes = Styled.div`
+    margin: 0 auto;
+    max-width: 60rem;
 `
 
 // TODO: Remove.
@@ -28,11 +34,14 @@ const DiscoveryView = ({ ...props }: Props) => {
     return (
         <Root {...props}>
             <DiscoveryTutorial />
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+            <Processes>
+                <Process />
+                <Process />
+                <Process />
+                <Process />
+                <Process />
+                <Process />
+            </Processes>
         </Root>
     )
 

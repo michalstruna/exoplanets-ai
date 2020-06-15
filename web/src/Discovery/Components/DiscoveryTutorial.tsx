@@ -4,10 +4,6 @@ import { Color, image, size } from '../../Style'
 import { useStrings } from '../../Data'
 import { Link } from '../../Routing'
 
-interface Static {
-
-}
-
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
@@ -55,7 +51,7 @@ const BlockTitle = Styled.h3`
 // TODO
 const DOWNLOAD_URL = 'https://www.google.com'
 
-const DiscoveryTutorial: React.FC<Props> & Static = ({ ...props }) => {
+const DiscoveryTutorial = ({ ...props }: Props) => {
 
     const strings = useStrings().discovery.tutorial
 
