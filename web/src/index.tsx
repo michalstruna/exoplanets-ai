@@ -6,7 +6,8 @@ import { Provider } from 'react-redux'
 import * as serviceWorker from './serviceWorker'
 import { App, HelpView, Store } from './Core'
 import { History, Url } from './Routing'
-import { AIView, DatabaseView, OverviewView } from './Database'
+import { DatabaseView, OverviewView } from './Database'
+import { DiscoveryView } from './Discovery'
 
 ReactDOM.render(
     <Provider store={Store}>
@@ -16,7 +17,7 @@ ReactDOM.render(
                     <Route exact path={Url.HOME} component={OverviewView} />
                     <Route path={Url.HELP} component={HelpView} />
                     <Route path={Url.DATABASE} component={DatabaseView} />
-                    <Route path={Url.AI} component={AIView} />
+                    <Route path={Url.DISCOVERY} component={DiscoveryView} />
                     <Redirect to={Url.HOME} />
                 </Switch>
             </App>

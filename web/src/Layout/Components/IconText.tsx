@@ -9,11 +9,13 @@ interface Props extends React.ComponentPropsWithoutRef<'div'>, Partial<Target> {
     text?: string
     size?: string
     isActive?: boolean
+    value?: string | number
 }
 
 interface RootProps {
     isActive?: boolean
     isButton?: boolean
+    isSmall?: boolean
 }
 
 interface IconProps {
@@ -49,6 +51,10 @@ const Root = Styled.div<RootProps>`
         pointer-events: none;
         opacity: 1;
     `}
+    
+    ${props => props.isSmall && `
+        font-size: 90%;
+    `}
 `
 
 const Icon = Styled.div<IconProps>`
@@ -59,7 +65,16 @@ const Icon = Styled.div<IconProps>`
     vertical-align: middle;
 `
 
-const IconText = ({ icon, text, size, isActive, pathname, query, hash, ...props }: Props) => {
+const Text = Styled.div`
+    display: inline-block;
+    vertical-align: middle;
+`
+
+const Value = Styled.div`
+    font-weight: bold;
+`
+
+const IconText = ({ icon, text, value, size, isActive, pathname, query, hash, ...props }: Props) => {
 
     if (pathname || query || hash) {
         return (
@@ -73,12 +88,14 @@ const IconText = ({ icon, text, size, isActive, pathname, query, hash, ...props 
     }
 
     return (
-        <Root {...props as any} isButton={!!props.onClick} isActive={isActive}
-              as={!!props.onClick ? 'button' : undefined}>
+        <Root {...props as any} isButton={!!props.onClick} isActive={isActive} isSmall={!!value} as={!!props.onClick ? 'button' : undefined}>
             <Icon
                 style={{ backgroundImage: icon && `url(${/^http|^\//.test(icon) ? icon : '/img/' + icon})` }}
                 size={size || IconText.MEDIUM} />
-            {text}
+                <Text>
+                    {text}
+                    {value && <Value>{value}</Value>}
+                </Text>
         </Root>
     )
 
