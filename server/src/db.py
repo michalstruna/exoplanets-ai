@@ -32,10 +32,6 @@ class Star(Document):
     name = StringField(max_length=50, required=True, unique=True)
     pipelines = ListField(StarPipeline)
 
-
-connect("exoplanets")
-
-
 # TODO: Star aliases.
 # TODO: map_units dataset?
 # TODO: LocalDataset - upload file to DB.

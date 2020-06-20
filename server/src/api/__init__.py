@@ -1,6 +1,6 @@
 from flask_restx import Api
 
-from .pipelines import api as pipelines_api
+from api.pipelines import api as pipelines_api
 
 api = Api(
     title='Exoplanets',
