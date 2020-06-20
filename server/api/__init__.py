@@ -1,6 +1,6 @@
 from flask_restx import Api
 
-from .users import api as ns1
+from .pipelines import api as pipelines_api
 
 api = Api(
     title='Exoplanets',
@@ -10,4 +10,4 @@ api = Api(
     prefix='/api'
 )
 
-api.add_namespace(ns1)
+api.add_namespace(pipelines_api)
