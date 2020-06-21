@@ -28,7 +28,7 @@ pipeline_service = PipelineService()
 @api.route("")
 class Pipelines(Resource):
 
-    @api.marshal_with([pipeline], description="Successfully get pipelines.")
+    @api.marshal_list_with(pipeline, description="Successfully get pipelines.")
     def get(self):
         return Response.get(lambda: pipeline_service.get_all())
 
@@ -43,7 +43,7 @@ class Pipelines(Resource):
 @api.route("/<string:id>")
 class Pipeline(Resource):
 
-    @api.marshal_with(pipeline, description="Successfully get pipeline.")
+    @api.marshal_with(pipeline, code=201, description="Successfully get pipeline.")
     @api.response(404, "Pipeline with specified ID was not found.")
     @api.expect(fields.String)
     def get(self, id):
