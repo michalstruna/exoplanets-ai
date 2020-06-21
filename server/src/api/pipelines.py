@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request
+from http import HTTPStatus
 
 from service.PipelineService import PipelineService
 from utils.http import Response
@@ -32,7 +33,7 @@ class Pipelines(Resource):
     def get(self):
         return Response.get(lambda: pipeline_service.get_all())
 
-    @api.marshal_with(pipeline, description="Pipeline was successfully created.")
+    @api.marshal_with(pipeline, code=HTTPStatus.CREATED, description="Pipeline was successfully created.")
     @api.response(400, "Pipeline is invalid.")
     @api.response(409, "Pipeline is duplicate.")
     @api.expect(new_pipeline)
@@ -43,7 +44,7 @@ class Pipelines(Resource):
 @api.route("/<string:id>")
 class Pipeline(Resource):
 
-    @api.marshal_with(pipeline, code=201, description="Successfully get pipeline.")
+    @api.marshal_with(pipeline, description="Successfully get pipeline.")
     @api.response(404, "Pipeline with specified ID was not found.")
     @api.expect(fields.String)
     def get(self, id):

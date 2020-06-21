@@ -23,7 +23,7 @@ class Response:
 
     @staticmethod
     def _process(handler, delete=False, create=False):
-        status = HTTPStatus.CREATED if create else HTTPStatus.NO_CONTENT if delete else HTTPStatus.OK
+        status = HTTPStatus.CREATED if create else (HTTPStatus.NO_CONTENT if delete else HTTPStatus.OK)
 
         try:
             return handler(), status

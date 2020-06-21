@@ -2,7 +2,7 @@ from mongoengine import *
 
 
 class Dataset(EmbeddedDocument):
-    name = StringField(max_length=50, required=True, unique=True)
+    name = StringField(max_length=50, required=True)
     map_fields = MapField(StringField(max_length=50), required=True)
     url_getter = URLField(max_length=500, required=True)
 
