@@ -1,6 +1,7 @@
 from flask_restx import Api
 
-from api.pipelines import api as pipelines_api
+from api.datasets import api as datasets_api
+from api.stars import api as stars_api
 
 api = Api(
     title='Exoplanets',
@@ -10,4 +11,5 @@ api = Api(
     prefix='/api'
 )
 
-api.add_namespace(pipelines_api)
+api.add_namespace(datasets_api)
+api.add_namespace(stars_api)
