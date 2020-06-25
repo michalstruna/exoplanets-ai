@@ -18,7 +18,7 @@ class Dataset(Document):
 
 
 class StarProperties(EmbeddedDocument):
-    dataset = ReferenceField(Dataset)
+    dataset = ReferenceField(Dataset, required=True)
     name = StringField(required=True, max_length=50)
     diameter = FloatField(min_value=0)
     mass = FloatField(min_value=0)

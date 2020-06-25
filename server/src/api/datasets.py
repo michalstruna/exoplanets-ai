@@ -20,7 +20,7 @@ dataset_fields = api.model("DatasetFields", {
 })
 
 dataset = api.model("Dataset", {
-    "id": fields.String(requred=True, description="Dataset unique identifier."),
+    "_id": fields.String(requred=True, description="Dataset unique identifier."),
     "name": fields.String(required=True, description="Name of dataset."),
     "fields": fields.Nested(dataset_fields, required=True, description="Info about dataset fields (columns)."),
     "items_getter": fields.String(required=True, max_length=500, description="URL for obtaining all item names.", example="https://dataset.org?select=name"),

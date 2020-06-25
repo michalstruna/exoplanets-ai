@@ -1,8 +1,10 @@
 import pandas as pd
+from bson.objectid import ObjectId
+from mongoengine.errors import DoesNotExist
 
 from .Service import Service
-from constants.Dataset import DatasetType
 from .StarService import StarService
+from constants.Dataset import DatasetType
 
 
 class DatasetService(Service):
@@ -12,10 +14,18 @@ class DatasetService(Service):
         self.star_service = StarService()
 
     def get(self, id):
-        return self.db.Dataset.objects.get(id=id)
+        items = self.get_all(filter={"_id": ObjectId(id)}, limit=1)
 
-    def get_all(self):
-        return self.json(self.db.Dataset.objects())
+        if not items:
+            raise DoesNotExist(f"Dataset with id {id} was not found.")
+
+        return items[0]
+
+    def get_all(self, filter={}, limit=None, skip=None):
+        return self.aggregate(self.db.Dataset, [
+            {"$addFields": {"current_size": {"$size": "$items"}}},
+            {"$project": {"items": 0}}
+        ], filter, limit, skip)
 
     def add(self, dataset):
         items = pd.read_csv(dataset["items_getter"])
@@ -25,19 +35,20 @@ class DatasetService(Service):
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
             dataset["items"] = []
             result = self.db.Dataset(**dataset).save()
-            stars = list(map(lambda star: self.db.Star(name=star["name"], properties=[star]), items.to_dict("records")))
+            stars = list(map(lambda star: self.db.Star(name=star["name"], properties=[{**star, "dataset": result["id"]}]), items.to_dict("records")))
             self.star_service.upsert_all_by_name(stars)
         else:
             dataset["items"] = items["name"].tolist()
             result = self.db.Dataset(**dataset).save()
 
-        return result
+        return self.get(result["id"])
 
     def delete(self, id):
         return self.db.Dataset(id=id).delete()
 
     def update(self, id, dataset):
-        return self.db.Dataset.objects(id=id).update_one(**dataset)
+        self.db.Dataset.objects(id=id).update_one(**dataset)
+        return self.get(id)
 
     def standardize_dataset(self, dataset, items):
         items = items.rename(columns=self.fields_to_fields_map(dataset["fields"]))

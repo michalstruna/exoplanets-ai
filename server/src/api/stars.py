@@ -3,13 +3,12 @@ from flask_restx import Namespace, Resource, fields
 
 from service.StarService import StarService
 from utils.http import Response
-from .datasets import dataset
 
 
 api = Namespace("stars", description="Explored stars.")
 
 star_property = api.model("StarProperty", {
-    "dataset": fields.Nested(dataset),
+    "dataset": fields.String(required=True, max_length=50, description="Name of dataset from which properties originate."),
     "name": fields.String(required=True, max_length=50, description="Name of star within dataset."),
     "diameter": fields.Float(min=0, description="Diameter of star in [sun diameters]."),
     "mass": fields.Float(min=0, description="Mass of star [sun masses]."),
@@ -18,7 +17,7 @@ star_property = api.model("StarProperty", {
 })
 
 star = api.model("Star", {
-    "id": fields.String(requred=True, description="Star unique identifier."),
+    "_id": fields.String(requred=True, description="Star unique identifier."),
     "name": fields.String(required=True, description="Name of star."),
     "properties": fields.List(fields.Nested(star_property), required=True)
 })

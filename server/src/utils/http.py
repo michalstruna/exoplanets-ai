@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from flask_restx import abort
-from mongoengine.errors import ValidationError, NotUniqueError
+from mongoengine.errors import ValidationError, NotUniqueError, DoesNotExist
 
 
 class Response:
@@ -34,6 +34,8 @@ class Response:
                 Response.invalid(str(e))
         except NotUniqueError as e:
             Response.duplicate(str(e))
+        except DoesNotExist as e:
+            Response.not_found(str(e))
 
     @staticmethod
     def not_found(message=""):
