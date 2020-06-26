@@ -30,13 +30,43 @@ class StarProperties(EmbeddedDocument):
     }
 
 
-class Star(Document):
-    name = StringField(required=True, max_length=50, unique=True)
-    properties = ListField(EmbeddedDocumentField(StarProperties), default=[], required=True)
+class Transit(EmbeddedDocument):
+    period = FloatField(min_value=0, required=True)
+    duration = FloatField(min_value=0, required=True)
+    depth = FloatField(min_value=0, max_value=1, required=True)
+
+
+class PlanetProperties(EmbeddedDocument):
+    name = StringField(required=True, max_length=50)
+    diameter = FloatField(min_value=0)
+    mass = FloatField(min_value=0)
+    density = FloatField(min_value=0)
+    semi_major_axis = FloatField(min_value=0)
+    orbital_velocity = FloatField(min_value=0)
+    live_conditions = StringField()  # TODO: DB table LiveType?
+    transit = EmbeddedDocumentField(Transit)
+    dataset = ReferenceField(Dataset, required=True)
 
     meta = {
         "indexes": ["name"]
     }
+
+
+class Planet(Document):
+    properties = ListField(EmbeddedDocumentField(PlanetProperties, required=True), required=True, default=[])
+    star = ReferenceField("Star", required=True)
+
+
+class LightCurve(EmbeddedDocument):
+    dataset = ReferenceField(Dataset, required=True)
+    planets = ListField(ReferenceField(Planet), required=True, default=[])
+
+
+class Star(Document):
+    properties = ListField(EmbeddedDocumentField(StarProperties), default=[], required=True)
+    light_curve = ListField(EmbeddedDocumentField(LightCurve), default=[], required=True)
+    planets = ListField(ReferenceField(Planet), required=True, default=[])
+
 
 # TODO: Star aliases.
 # TODO: map_units dataset?
