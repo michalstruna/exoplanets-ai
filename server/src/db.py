@@ -1,36 +1,42 @@
 from mongoengine import *
 
 
-class Dataset(EmbeddedDocument):
-    name = StringField(max_length=50, required=True)
-    map_fields = MapField(StringField(max_length=50), required=True)
-    url_getter = URLField(max_length=500, required=True)
-
-    meta = {"allow_inheritance": True}
+class DatasetField(EmbeddedDocument):
+    name = StringField(required=True, max_length=50)
+    prefix = StringField(max_length=50)
+    multiple = FloatField()
 
 
-class ItemDataset(Dataset):
-    url_getter = URLField(max_length=500, required=True, regex=".*{#}.*")
-
-
-class Pipeline(Document):
+class Dataset(Document):
     name = StringField(max_length=50, required=True, unique=True)
-    star_dataset = EmbeddedDocumentField(Dataset)
-    light_curve_dataset = EmbeddedDocumentField(ItemDataset)
+    fields = MapField(EmbeddedDocumentField(DatasetField), required=True)
+    item_getter = URLField(max_length=500, regex=".*{#}.*")
+    items_getter = URLField(max_length=500)
+    items = ListField(StringField(max_length=50, default=[], required=True))
+    total_size = IntField(min_value=0, required=True)
+    type = StringField(max_length=50, required=True)
 
 
-class StarPipeline:
-    pipeline = ReferenceField(Pipeline)
-    name = StringField(max_length=50, required=True, unique=True)
-    radius = LongField(min_value=0)
-    mass = LongField(min_value=0)
+class StarProperties(EmbeddedDocument):
+    dataset = ReferenceField(Dataset, required=True)
+    name = StringField(required=True, max_length=50)
+    diameter = FloatField(min_value=0)
+    mass = FloatField(min_value=0)
     temperature = IntField()
-    distance = IntField(min_value=0)
+    distance = FloatField(min_value=0)
+
+    meta = {
+        "indexes": ["name"]
+    }
 
 
 class Star(Document):
-    name = StringField(max_length=50, required=True, unique=True)
-    pipelines = ListField(StarPipeline)
+    name = StringField(required=True, max_length=50, unique=True)
+    properties = ListField(EmbeddedDocumentField(StarProperties), default=[], required=True)
+
+    meta = {
+        "indexes": ["name"]
+    }
 
 # TODO: Star aliases.
 # TODO: map_units dataset?

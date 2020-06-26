@@ -153,7 +153,7 @@ const starColumns = [
         title: 'Průměr',
         accessor: (star: any) => star.diameter,
         icon: '/img/Universe/Database/Diameter.svg',
-        render: (v: any) => v + ' km'
+        render: (v: any) => <>{v} km<br />{v} km<br />{v} km</>
     },
     { title: 'Hmotnost', accessor: (star: any) => star.mass, icon: '/img/Universe/Database/Mass.svg' },
     {
