@@ -21,15 +21,15 @@ class DatasetService(Service):
         items = pd.read_csv(dataset["items_getter"])
         dataset["total_size"] = len(items.index)
         items = self.standardize_dataset(dataset, items)
+        dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
             dataset["items"] = []
-            result = self.db.Dataset(**dataset).save()
-            stars = list(map(lambda star: self.db.Star(name=star["name"], properties=[{**star, "dataset": result["id"]}]), items.to_dict("records")))
+            result = self.json(self.db.Dataset(**dataset).save())
+            stars = list(map(lambda star: self.db.Star(properties=[{**star, "dataset": result["_id"]}]), items.to_dict("records")))
             self.star_service.upsert_all_by_name(stars)
         else:
-            dataset["items"] = items["name"].tolist()
-            result = self.db.Dataset(**dataset).save()
+            result = self.json(self.db.Dataset(**dataset).save())
 
         return self.get(result["_id"])
 

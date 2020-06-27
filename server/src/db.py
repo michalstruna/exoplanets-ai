@@ -63,9 +63,9 @@ class LightCurve(EmbeddedDocument):
 
 
 class Star(Document):
-    properties = ListField(EmbeddedDocumentField(StarProperties), default=[], required=True)
-    light_curve = ListField(EmbeddedDocumentField(LightCurve), default=[], required=True)
-    planets = ListField(ReferenceField(Planet), required=True, default=[])
+    properties = ListField(EmbeddedDocumentField(StarProperties), default=[])
+    light_curve = ListField(EmbeddedDocumentField(LightCurve), default=[])
+    planets = ListField(ReferenceField(Planet), default=[])
 
 
 # TODO: Star aliases.

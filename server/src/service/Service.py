@@ -1,6 +1,7 @@
 from abc import ABC
 from bson.objectid import ObjectId
 from mongoengine.errors import DoesNotExist
+import json
 
 import db
 
@@ -15,6 +16,11 @@ class Service(ABC):
     def setup(self, collection, pipeline=[]):
         self.collection = collection
         self.pipeline = pipeline
+
+    def json(self, queryset):
+        result = json.loads(queryset.to_json())
+        result["_id"] = result["_id"]["$oid"]
+        return result
 
     def get(self, id):
         items = self.get_all(filter={"_id": ObjectId(id)}, limit=1)
@@ -40,9 +46,11 @@ class Service(ABC):
 
         return list(model.objects.aggregate(pipeline))
 
-    def add(self, item):
+    def add(self, item, return_item=True):
         item = self.collection(**item).save()
-        return self.get(item["_id"])
+
+        if return_item:
+            return self.get(item["_id"])
 
     def delete(self, id):
         return self.collection(_id=id).delete()

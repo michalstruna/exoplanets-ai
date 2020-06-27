@@ -3,7 +3,6 @@ from http import HTTPStatus
 from uuid import uuid4
 
 from app_factory import create_app
-from db import Dataset
 from constants.Dataset import DatasetType
 
 
@@ -26,7 +25,7 @@ def create_dataset(name=None, type=DatasetType.STAR_PROPERTIES):
                 "name": {"name": "kepid", "prefix": "KIC "},
                 "distance": {"name": "dist"}
             },
-            "items_getter": "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=q1_q17_dr25_stellar&select=kepid,teff,radius,mass,dist&where=kepid%20like%20'10000800'",
+            "items_getter": "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=q1_q17_dr25_stellar&select=kepid,teff,radius,mass,dist&where=kepid%20like%20'10000800'%20or%20kepid%20like%20'10001116'",
             "type": DatasetType.STAR_PROPERTIES.name
         }
 
@@ -55,12 +54,13 @@ def test_add_star_properties_dataset(client):
     res = client.post("/api/datasets", json=dataset)
     dataset["_id"], dataset["total_size"], dataset["current_size"], dataset["fields"] = res.json["_id"], res.json["total_size"], res.json["current_size"], res.json["fields"]
     res_stars = client.get("/api/stars")
+    res_dataset = client.get(f"/api/datasets/{res.json['_id']}")
 
     assert dataset == res.json
     assert res.status_code == HTTPStatus.CREATED
-
-    assert len(res_stars.json) == 1
+    assert len(res_stars.json) == 2
     assert res_stars.json[0]["properties"][0]["dataset"] == res.json["name"]
+    assert res_dataset.json == res.json
 
 
 
