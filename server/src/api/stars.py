@@ -23,7 +23,6 @@ light_curve = api.model("LightCurve", {
 
 star = api.model("Star", {
     "_id": fields.String(requred=True, description="Star unique identifier."),
-    "name": fields.String(required=True, description="Name of star."),
     "properties": fields.List(fields.Nested(star_properties), required=True, default=[]),
     "light_curve": fields.List(fields.Nested(light_curve), required=True, default=[])
 })
