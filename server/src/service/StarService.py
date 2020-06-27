@@ -13,7 +13,7 @@ class StarService(Service):
             {"$lookup": {"from": "dataset", "localField": "properties.dataset", "foreignField": "_id", "as": "properties.dataset"}},
             {"$addFields": {"properties.dataset": "$properties.dataset.name"}},
             {"$unwind": "$properties.dataset"},
-            {"$group": {"_id": "$_id", "name": {"$first": "$name"}, "properties": {"$push": "$properties"}}}
+            {"$group": {"_id": "$_id", "properties": {"$push": "$properties"}}}
         ])
 
     def upsert_all_by_name(self, stars):
@@ -24,8 +24,8 @@ class StarService(Service):
             star = star.to_mongo()
 
             operations.append(UpdateOne(
-                {"name": star["name"]},
-                {"$set": {"name": star["name"]}, "$push": {"properties": {"$each": star["properties"]}}},
+                {"properties": {"$elemMatch": {"name": star["properties"][0]["name"]}}},
+                {"$push": {"properties": {"$each": star["properties"]}}},
                 upsert=True
             ))
 

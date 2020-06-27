@@ -1,6 +1,7 @@
 from abc import ABC
 from bson.objectid import ObjectId
 from mongoengine.errors import DoesNotExist
+import json
 
 import db
 
@@ -16,18 +17,26 @@ class Service(ABC):
         self.collection = collection
         self.pipeline = pipeline
 
+    def json(self, queryset):
+        result = json.loads(queryset.to_json())
+        result["_id"] = result["_id"]["$oid"]
+        return result
+
     def get(self, id):
-        items = self.get_all(filter={"_id": ObjectId(id)}, limit=1)
+        items = self.get_all(filter={"_id": self.id(id)}, limit=1)
 
         if not items:
             raise DoesNotExist(f"Item with id {id} was not found.")
 
         return items[0]
 
-    def get_all(self, filter={}, limit=None, skip=None):
-        return self.aggregate(self.collection, self.pipeline, filter, limit, skip)
+    def id(self, id):
+        return ObjectId(id)
 
-    def aggregate(self, model, operations, filter={}, limit=None, skip=None):
+    def get_all(self, filter={}, limit=None, skip=None):
+        return self.aggregate(self.pipeline, filter, limit, skip)
+
+    def aggregate(self, operations, filter={}, limit=None, skip=None):
         pipeline = [{"$match": filter}]
 
         if limit:
@@ -38,11 +47,13 @@ class Service(ABC):
 
         pipeline += operations
 
-        return list(model.objects.aggregate(pipeline))
+        return list(self.collection.objects.aggregate(pipeline))
 
-    def add(self, item):
+    def add(self, item, return_item=True):
         item = self.collection(**item).save()
-        return self.get(item["_id"])
+
+        if return_item:
+            return self.get(item["_id"])
 
     def delete(self, id):
         return self.collection(_id=id).delete()

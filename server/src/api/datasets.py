@@ -36,6 +36,10 @@ new_dataset = api.model("NewDataset", {
     "items_getter": fields.String(required=True, max_length=500, description="URL for obtaining all item names.", example="https://dataset.org?select=name")
 })
 
+dataset_item = api.model("DatasetItem", {
+    "name": fields.String(required=True, description="Name of item.")
+})
+
 dataset_service = DatasetService()
 
 
@@ -81,9 +85,11 @@ class Dataset(Resource):
 @api.route("/<string:id>/item")
 class DatasetItem(Resource):
 
-    @api.marshal_with(dataset, description="Successfully get first unprocessed item from dataset.")
-    def get(self):
-        pass
+    @api.marshal_with(dataset_item, description="Successfully get first unprocessed item from dataset.")
+    @api.response(400, "Dataset is empty, so there are no items to process.")
+    @api.response(404, "Dataset with specified ID was not found or is empty.")
+    def get(self, id):
+        return Response.get(lambda: dataset_service.get_item_from_dataset(id))
 
 
 @api.route("/<string:id>/item/<string:name>/process")
