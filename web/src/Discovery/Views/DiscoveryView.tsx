@@ -37,10 +37,6 @@ const DiscoveryView = ({ ...props }: Props) => {
             <Processes>
                 <Process />
                 <Process />
-                <Process />
-                <Process />
-                <Process />
-                <Process />
             </Processes>
         </Root>
     )

@@ -3,6 +3,7 @@ import Styled from 'styled-components'
 import { Color, image, size } from '../../Style'
 import { useStrings } from '../../Data'
 import { Link } from '../../Routing'
+import { PageTitle } from '../../Layout'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -44,10 +45,6 @@ const Title = Styled.h2`
     margin-bottom: 2rem;
 `
 
-const BlockTitle = Styled.h3`
-
-`
-
 // TODO
 const DOWNLOAD_URL = 'https://www.google.com'
 
@@ -59,9 +56,9 @@ const DiscoveryTutorial = ({ ...props }: Props) => {
         strings.steps.map((step: any, i: number) => (
             <React.Fragment key={i}>
                 <Block style={{ backgroundImage: `url(/img/Discovery/Tutorial/${step.icon})` }} pathname={step.download && DOWNLOAD_URL}>
-                    <BlockTitle>
+                    <PageTitle>
                         {step.title}
-                    </BlockTitle>
+                    </PageTitle>
                 </Block>
                 {i < strings.steps.length - 1 && <Transition />}
             </React.Fragment>

@@ -8,7 +8,9 @@ enum Query {
     SORT_LEVEL = 'sl',
 
     SEGMENT_START = 'gt',
-    SEGMENT_SIZE = 'gi'
+    SEGMENT_SIZE = 'gi',
+
+    SYNC_KEY = 'sk'
 }
 
 export default Query

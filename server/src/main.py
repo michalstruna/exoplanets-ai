@@ -1,18 +1,25 @@
 #!/usr/bin/python3
 
 from app_factory import create_app
+from flask import request
 
 # TODO: Dev vs prod env variable.
-app, api, socketio = create_app("dev")
-socketio.run(app)
-
-map_web_to_client = {}
-
-@socketio.on("web_init")
-def web_init():
-    pass
+app, api, sio = create_app("dev")
 
 
-@socketio.on("client_init")
+@sio.on("connect")
+def connect():
+    sio.emit("connect_success")
+
+
+@sio.on("disconnect")
+def disconnect():
+    print("=========================", "disconnected")
+
+
+@sio.on("client_init")
 def client_init():
-    pass
+    print("=================== client_init")
+
+
+sio.run(app)
