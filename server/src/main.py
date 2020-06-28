@@ -9,7 +9,6 @@ app, api, sio = create_app("dev")
 
 @sio.on("connect")
 def connect():
-    print("=========================", "connected")
     sio.emit("connect_success")
 
 
