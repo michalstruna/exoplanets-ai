@@ -9,6 +9,7 @@ const demoIdentity: Identity = {
     id: 'abc',
     token: 'def',
     name: 'Michal Struna',
+    avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/1200px-Google_Earth_icon.svg.png',
     role: UserRole.ADMIN,
     score: {
         rank: 193,

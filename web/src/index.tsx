@@ -8,6 +8,7 @@ import { App, HelpView, Store } from './Core'
 import { History, Url } from './Routing'
 import { DatabaseView, OverviewView } from './Database'
 import { DiscoveryView } from './Discovery'
+import { SyncView } from './User'
 
 ReactDOM.render(
     <Provider store={Store}>
@@ -18,6 +19,7 @@ ReactDOM.render(
                     <Route path={Url.HELP} component={HelpView} />
                     <Route path={Url.DATABASE} component={DatabaseView} />
                     <Route path={Url.DISCOVERY} component={DiscoveryView} />
+                    <Route path={Url.SYNC} component={SyncView} />
                     <Redirect to={Url.HOME} />
                 </Switch>
             </App>

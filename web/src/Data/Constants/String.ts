@@ -120,14 +120,31 @@ export default {
                     title: 'Spusťte stažený program'
                 },
                 {
-                    icon: 'pair.svg',
+                    icon: 'Pair.png',
                     title: 'Spárujte program s webovou aplikací'
                 },
                 {
-                    icon: 'discovery.svg',
+                    icon: 'Discovery.png',
                     title: 'Nechte počítač, ať hledá exoplanety'
                 }
             ]
+        }
+    },
+
+    sync: {
+        login: {
+            [CS]: 'Pro hledání exoplanet se přihlašte',
+            [EN]: 'Log in to search for exoplanets'
+        },
+        confirm: {
+            [CS]: 'Chcete začít hledat exoplanety jako',
+            [EN]: 'Start looking for exoplanets under'
+        },
+        submit: {
+            [CS]: 'Začít hledat'
+        },
+        changeIdentity: {
+            [CS]: 'Přihlásit se jako jiný uživatel'
         }
     }
 

@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 
 import { Link, LinkData } from '../../Routing'
 import { Color, Duration, size, opacityHover, image } from '../../Style'
-import MinorSectionTitle from './MinorSectionTitle'
+import { MinorSectionTitle } from './Styled'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     items: LineData[]
