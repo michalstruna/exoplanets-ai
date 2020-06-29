@@ -31,12 +31,12 @@ type AsyncAction<Payload, ResultPayload = Payload> = (payload: Payload) => Promi
 type PlainAction<State, Payload> = (state: State, payload: Action<Payload>) => any
 
 type PlainActionCreator<State> = <Payload>(action: PlainAction<State, Payload>, options?: PlainOptions<State, Payload>) => PlainActionWrapper<State, Payload>
-type AsyncActionCreator<State> = <Payload, ResultPayload>(property: keyof State, action: AsyncAction<Payload, ResultPayload>, options?: AsyncOptions<State, Payload>) => AsyncActionWrapper<State, Payload, ResultPayload>
+type AsyncActionCreator<State> = <Payload, ResultPayload>(property: keyof State, action: AsyncAction<Payload, ResultPayload>, options?: AsyncOptions<State, ResultPayload>) => AsyncActionWrapper<State, Payload, ResultPayload>
 type SetActionCreator<State> = <Payload>(property: keyof State, options?: PlainOptions<State, Payload>) => SetActionWrapper<State, Payload>
 
 type ActionWrapper<State, Payload = any> = PlainActionWrapper<State, Payload> | AsyncActionWrapper<State, Payload, any> | SetActionWrapper<State, Payload>
 type PlainActionWrapper<State, Payload> = { type: ActionType.PLAIN, action: PlainAction<State, Payload>, options?: PlainOptions<State, Payload> }
-type AsyncActionWrapper<State, Payload, ResultPayload> = { type: ActionType.ASYNC, action: AsyncAction<Payload, ResultPayload>, property: keyof State, options?: AsyncOptions<State, Payload> }
+type AsyncActionWrapper<State, Payload, ResultPayload> = { type: ActionType.ASYNC, action: AsyncAction<Payload, ResultPayload>, property: keyof State, options?: AsyncOptions<State, ResultPayload> }
 type SetActionWrapper<State, Payload> = { type: ActionType.SET, action: PlainAction<State, Payload>, property: keyof State, options?: PlainOptions<State, Payload> }
 
 type ActionsSet<State> = {

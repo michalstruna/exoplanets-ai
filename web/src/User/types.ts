@@ -1,15 +1,15 @@
 import UserRole from './Constants/UserRole'
 
 export type UserSimple = {
-    id: string
+    _id: string
     name: string
     avatar?: string,
     role: UserRole
     score: {
         rank: number
         time: number
-        totalStars: number
-        totalPlanets: number
+        stars: number
+        planets: number
     }
     personal: {
         isMale: boolean
@@ -33,4 +33,8 @@ export type Identity = UserSimple & {
 export type Credentials = {
     email: string,
     password: string
+}
+
+export type ExternalCredentials = {
+    token: string
 }

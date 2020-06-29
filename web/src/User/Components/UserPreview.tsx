@@ -140,14 +140,13 @@ const UserPreview = ({ user, ...props }: Props) => {
                 <Name>
                     {user.name}
                 </Name>
-                <Avatar
-                    src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png' />
+                <Avatar src={user.avatar} />
                 <Rank>
                     Rank <ItemValue>{user.score.rank}.</ItemValue>
                 </Rank>
                 <Stats>
-                    <Item title='Planet' value={user.score.totalPlanets} />
-                    <Item title='Hvězd' value={user.score.totalStars} />
+                    <Item title='Planet' value={user.score.planets} />
+                    <Item title='Hvězd' value={user.score.stars} />
                     <Item title='Hodin' value={user.score.time} />
                 </Stats>
             </Left>
@@ -169,7 +168,7 @@ const UserPreview = ({ user, ...props }: Props) => {
                 </div>
                 <RightMenu>
                     <IconText icon='User/User.svg' text='Detail' size={IconText.SMALL} />
-                    <Auth identityId={user.id} when={() => (
+                    <Auth identityId={user._id} when={() => (
                         <IconText
                             icon='User/Logout.svg'
                             onClick={() => actions.logout()}

@@ -119,8 +119,8 @@ for (let i = 0; i < 11; i++) {
             role: UserRole.AUTHENTICATED,
             score: {
                 rank: 193,
-                totalPlanets: 216,
-                totalStars: 512,
+                planets: 216,
+                stars: 512,
                 time: 337
             },
             personal: {

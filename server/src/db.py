@@ -68,6 +68,10 @@ class Star(Document):
     planets = ListField(ReferenceField(Planet), default=[])
 
 
+class User(Document):
+    name = StringField(required=True, max_length=50)
+
+
 # TODO: Star aliases.
 # TODO: map_units dataset?
 # TODO: LocalDataset - upload file to DB.

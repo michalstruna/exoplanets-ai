@@ -52,5 +52,10 @@ class Response:
     def duplicate(message=""):
         abort(HTTPStatus.CONFLICT, type="DUPLICATE", message=message)
 
+    @staticmethod
+    def bad_credentials(message=""):
+        abort(HTTPStatus.BAD_REQUEST, type="BAD_CREDENTIALS", message=message)
 
-not_found_response = {"message": "NOT_FOUND"}
+    @staticmethod
+    def ok(body):
+        return body, HTTPStatus.OK

@@ -103,6 +103,9 @@ const LoginForm = ({ ...props }: Props) => {
                 </button>
             </Form>
             <Forgot type='button'>
+                {strings.signUp}
+            </Forgot>
+            <Forgot type='button'>
                 {strings.forgotPassword}
             </Forgot>
         </Root>

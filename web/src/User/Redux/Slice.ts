@@ -3,18 +3,19 @@ import Cookies from 'js-cookie'
 import { Cookie } from '../../Native'
 import { Redux } from '../../Data'
 import UserRole from '../Constants/UserRole'
-import { Credentials, Identity, UserSimple } from '../types'
+import { Credentials, ExternalCredentials, Identity, UserSimple } from '../types'
+import { Requests } from '../../Async'
 
 const demoIdentity: Identity = {
-    id: 'abc',
+    _id: 'abc',
     token: 'def',
     name: 'Michal Struna',
     avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/1200px-Google_Earth_icon.svg.png',
     role: UserRole.ADMIN,
     score: {
         rank: 193,
-        totalPlanets: 216,
-        totalStars: 512,
+        planets: 216,
+        stars: 512,
         time: 337
     },
     personal: {
@@ -36,14 +37,14 @@ const onlineUsers = [] as UserSimple[]
 
 for (let i = 0; i < 38; i++) {
     onlineUsers.push({
-        id: 'abc' + i,
+        _id: 'abc' + i,
         avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png',
         name: ('Michal Struna ' + i).repeat(Math.floor(Math.random() * 2 + 1)),
         role: UserRole.AUTHENTICATED,
         score: {
             rank: 193,
-            totalPlanets: 213,
-            totalStars: 512,
+            planets: 213,
+            stars: 512,
             time: 337
         },
         personal: {
@@ -80,6 +81,14 @@ const Slice = Redux.slice(
                 }
             }, 1000)
         })),
+        facebookLogin: async<ExternalCredentials, Identity>('identity', credentials => Requests.post(`users/login/facebook`, credentials), {
+                onSuccess: (state, action) => {
+                    console.log(444, action.payload)
+                    state.identity.payload = action.payload
+                    Cookies.set(Cookie.IDENTITY.name, action.payload, { expires: Cookie.IDENTITY.expiration })
+                }
+            }
+        ),
         logout: plain<void>(state => {
             state.identity.payload = null
             Cookies.remove(Cookie.IDENTITY.name)
@@ -88,4 +97,4 @@ const Slice = Redux.slice(
 )
 
 export default Slice.reducer
-export const { login, logout } = Slice.actions
+export const { login, logout, facebookLogin } = Slice.actions

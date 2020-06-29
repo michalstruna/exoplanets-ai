@@ -1,12 +1,14 @@
 from flask import Flask
 from flask_socketio import SocketIO
 from mongoengine import connect
+from flask_cors import CORS
 
 from api import api
 
 
 def create_app(config_name=None):
     app = Flask(__name__)
+    CORS(app)
     app.config.from_pyfile("config/base.cfg", silent=True)
 
     if config_name is not None:
