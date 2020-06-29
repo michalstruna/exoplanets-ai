@@ -1,6 +1,6 @@
 import Styled from 'styled-components'
 
-import { Color, opacityHover } from '../../Style'
+import { Color, Duration, opacityHover } from '../../Style'
 
 export const PageTitle = Styled.h1`
     font-size: 150%;
@@ -17,10 +17,14 @@ export const MinorSectionTitle = Styled.h2`
 `
 
 export const PrimaryButton = Styled.button`
-    ${opacityHover()}
     background-color: ${Color.DARKEST};
     font-size: 110%;
     font-weight: bold;
     padding: 1rem;
+    transition: background-color ${Duration.MEDIUM};
     width: 100%;
+    
+    &:hover {
+        background-color: ${Color.DARKEST_HOVER};
+    }
 `

@@ -15,7 +15,7 @@ const Auth = ({ role, noRole, when, otherwise, identityId }: Props) => {
 
     const identity = useIdentity()
     const isRoleOk = test(identity.payload, role, noRole)
-    const isIdentityOk = typeof identityId === 'undefined' ? true : (identity.payload && identity.payload.id === identityId)
+    const isIdentityOk = typeof identityId === 'undefined' ? true : (identity.payload && identity.payload._id === identityId)
 
     return (
         <>

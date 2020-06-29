@@ -35,6 +35,14 @@ export type Credentials = {
     password: string
 }
 
+export type RegistrationData = Credentials & {
+    name: string
+}
+
+export type ForgotPasswordData = {
+    email: string
+}
+
 export type ExternalCredentials = {
     token: string
 }

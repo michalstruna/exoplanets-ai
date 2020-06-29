@@ -66,7 +66,8 @@ class FacebookLogin(Resource):
     def post(self):
         identity = user_service.facebook_login(request.json["token"])
 
-        if identity or True:
+        if identity:
+            identity["_id"] = "abc"
             return Response.ok(identity)
         else:
             return Response.bad_credentials("Facebook token is not valid.")
