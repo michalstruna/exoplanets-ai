@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 
 import { useActions, useStrings } from '../../Data'
 import { login, Credentials } from '..'
-import { Color, opacityHover, size } from '../../Style'
+import { Color, size } from '../../Style'
 import FacebookLogin from './FacebookLogin'
 import GoogleLogin from './GoogleLogin'
 import { Form, Field } from '../../Form'
@@ -11,8 +11,8 @@ import { FormContextValues } from 'react-hook-form'
 import { PrimaryButton } from '../../Layout'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    handleNoAccount?: () => void
-    handleForgotPassword?: () => void
+    handleSignUp?: () => void
+    handleResetPassword?: () => void
 }
 
 const Root = Styled.div`
@@ -62,10 +62,10 @@ const Submit = Styled(PrimaryButton)`
     font-size: 100%;
 `
 
-const LoginForm = ({ handleNoAccount, handleForgotPassword, ...props }: Props) => {
+const LoginForm = ({ handleSignUp, handleResetPassword, ...props }: Props) => {
 
     const actions = useActions({ login })
-    const strings = useStrings().login
+    const strings = useStrings().auth
 
     const handleSubmit = async (values: Credentials, form: FormContextValues<Credentials>) => {
         const action = await actions.login(values)
@@ -74,12 +74,12 @@ const LoginForm = ({ handleNoAccount, handleForgotPassword, ...props }: Props) =
             form.setError(Form.GLOBAL_ERROR, strings.error)
         }
     }
-    
+
     return (
         <Root{...props}>
             <Form onSubmit={handleSubmit} defaultValues={{ email: '', password: '' }} buttons={[
-                [handleNoAccount, strings.noAccount],
-                [handleForgotPassword, strings.forgotPassword]
+                [handleSignUp, strings.signUp],
+                [handleResetPassword, strings.resetPassword]
             ]}>
                 <External>
                     <FacebookLogin />

@@ -9,7 +9,7 @@ import { PrimaryButton } from '../../Layout'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     handleLogin?: () => void
-    handleNoAccount?: () => void
+    handleSignUp?: () => void
 }
 
 const Root = Styled.div`
@@ -23,10 +23,10 @@ const Submit = Styled(PrimaryButton)`
     font-size: 100%;
 `
 
-const LoginForm = ({ handleLogin, handleNoAccount, ...props }: Props) => {
+const LoginForm = ({ handleLogin, handleSignUp, ...props }: Props) => {
 
     const actions = useActions({ login })
-    const strings = useStrings().login
+    const strings = useStrings().auth
 
     const handleSubmit = async (values: ForgotPasswordData, form: FormContextValues<ForgotPasswordData>) => {
         /*const action = await actions.login(values) // TODO
@@ -39,8 +39,8 @@ const LoginForm = ({ handleLogin, handleNoAccount, ...props }: Props) => {
     return (
         <Root{...props}>
             <Form onSubmit={handleSubmit} defaultValues={{ email: '' }} buttons={[
-                [handleLogin, strings.knowPassword],
-                [handleNoAccount, strings.noAccount]
+                [handleLogin, strings.login],
+                [handleSignUp, strings.signUp]
             ]}>
                 <Field
                     name='email'
@@ -49,7 +49,7 @@ const LoginForm = ({ handleLogin, handleNoAccount, ...props }: Props) => {
                     required={strings.missingEmail}
                     invalid={strings.invalidEmail} />
                 <Submit>
-                    {strings.remindPassword}
+                    {strings.resetPassword}
                 </Submit>
             </Form>
         </Root>

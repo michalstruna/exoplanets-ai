@@ -64,7 +64,7 @@ const Submit = Styled(PrimaryButton)`
 const LoginForm = ({ handleLogin, ...props }: Props) => {
 
     const actions = useActions({ login })
-    const strings = useStrings().login
+    const strings = useStrings().auth
 
     const handleSubmit = async (values: RegistrationData, form: FormContextValues<RegistrationData>) => {
         /*const action = await actions.login(values) // TODO.
@@ -77,7 +77,7 @@ const LoginForm = ({ handleLogin, ...props }: Props) => {
     return (
         <Root{...props}>
             <Form onSubmit={handleSubmit} defaultValues={{ email: '', password: '', name: '' }} buttons={[
-                [handleLogin, strings.accountExists]
+                [handleLogin, strings.signUpToLogin]
             ]}>
                 <External>
                     <FacebookLogin />
@@ -103,7 +103,7 @@ const LoginForm = ({ handleLogin, ...props }: Props) => {
                     label={strings.password}
                     required={strings.missingPassword} />
                 <Submit>
-                    {strings.signIn}
+                    {strings.signUp}
                 </Submit>
             </Form>
         </Root>

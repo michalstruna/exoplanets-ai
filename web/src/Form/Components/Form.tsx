@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 import { useForm, FormContextValues, FormContext } from 'react-hook-form'
 
-import { Color, Duration, opacityHover } from '../../Style'
+import { Color, opacityHover } from '../../Style'
 import { Loader } from '../../Async'
 
 interface Props<Values> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
@@ -43,12 +43,20 @@ const ErrorContainer = Styled.p`
     text-align: center;
 `
 
+interface ButtonsProps {
+    single: boolean
+}
+
+const Buttons = Styled.div<ButtonsProps>`
+    display: flex;
+    justify-content: ${props => props.single ? 'center' : 'space-between'};
+`
+
 const Button = Styled.button`
     ${opacityHover()}
     border-bottom: 1px solid transparent;
     font-size: 90%;
     margin-top: 1rem;
-    text-align: center;
 `
 
 const Form = <Values extends any>({ defaultValues, onSubmit, children, form: outerForm, buttons, ...props }: Props<Values>) => {
@@ -67,11 +75,15 @@ const Form = <Values extends any>({ defaultValues, onSubmit, children, form: out
             </FormContext>
             {(form.errors as any)[Form.GLOBAL_ERROR] && <ErrorContainer>{(form.errors as any)[Form.GLOBAL_ERROR].type}</ErrorContainer>}
             {form.formState.isSubmitting && <FormLoader />}
-            {buttons && buttons.map(([handler, text], i) => handler && text && (
-                <Button onClick={handler} key={i} type='button'>
-                    {text}
-                </Button>
-            ))}
+            {buttons && (
+                <Buttons single={buttons.length === 1}>
+                    {buttons.map(([handler, text], i) => handler && text && (
+                        <Button onClick={handler} key={i} type='button'>
+                            {text}
+                        </Button>
+                    ))}
+                </Buttons>
+            )}
         </Root>
     )
 

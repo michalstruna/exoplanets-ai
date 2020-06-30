@@ -14,7 +14,7 @@ const Root = Styled.div`
 enum Tab {
     LOGIN,
     SIGN_UP,
-    FORGOT_PASSWORD
+    RESET_PASSWORD
 }
 
 const AuthForm = ({ ...props }: Props) => {
@@ -25,18 +25,18 @@ const AuthForm = ({ ...props }: Props) => {
         if (tab === Tab.LOGIN) {
             return (
                 <LoginForm
-                    handleNoAccount={() => setTab(Tab.SIGN_UP)}
-                    handleForgotPassword={() => setTab(Tab.FORGOT_PASSWORD)} />
+                    handleSignUp={() => setTab(Tab.SIGN_UP)}
+                    handleResetPassword={() => setTab(Tab.RESET_PASSWORD)} />
             )
         } else if (tab === Tab.SIGN_UP) {
             return (
                 <SignUpForm handleLogin={() => setTab(Tab.LOGIN)} />
             )
-        } else if (tab === Tab.FORGOT_PASSWORD) {
+        } else if (tab === Tab.RESET_PASSWORD) {
             return (
                 <ForgotPasswordForm
                     handleLogin={() => setTab(Tab.LOGIN)}
-                    handleNoAccount={() => setTab(Tab.SIGN_UP)} />
+                    handleSignUp={() => setTab(Tab.SIGN_UP)} />
             )
         }
     }, [tab])

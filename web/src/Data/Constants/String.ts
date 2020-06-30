@@ -94,7 +94,7 @@ export default {
         }
     },
 
-    login: {
+    auth: {
         email: 'Email',
         password: { [CS]: 'Heslo', [EN]: 'Password' },
         forgotPassword: { [CS]: 'Zapomenuté heslo?', [EN]: 'Forgot password?' },
@@ -103,13 +103,11 @@ export default {
         invalidEmail: { [CS]: 'Napište email ve tvaru email@doména.', [EN]: 'Type email in form email@domain.' },
         missingPassword: { [CS]: 'Napište své heslo', [EN]: 'Type your password' },
         or: { [CS]: 'Nebo', [EN]: 'Or' },
-        noAccount: { [CS]: 'Ještě nemáte účet?', [EN]: 'Don\'t have account?' },
-        accountExists: { [CS]: 'Již máte účet?', [EN]: 'Already have account?' },
         name: { [CS]: 'Jméno', [EN]: 'Name' },
         login: { [CS]: 'Přihlásit se', [EN]: 'Login' },
-        signIn: { [CS]: 'Zaregistrovat se', [EN]: 'Sign in' },
-        remindPassword: { [CS]: 'Resetovat heslo', [EN]: 'Reset password' },
-        knowPassword: { [CS]: 'Znáte heslo?', [EN]: 'Do you know password?' }
+        signUp: { [CS]: 'Zaregistrovat se', [EN]: 'Sign up' },
+        resetPassword: { [CS]: 'Resetovat heslo', [EN]: 'Reset password' },
+        signUpToLogin: { [CS]: 'Již máte účet?', [EN]: 'Already have account?' }
     },
 
     discovery: {
