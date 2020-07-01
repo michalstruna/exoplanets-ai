@@ -12,9 +12,10 @@ export type UserSimple = {
         planets: number
     }
     personal: {
-        isMale: boolean
-        birth: number
-        country: string
+        isMale?: boolean
+        birth?: number
+        country?: string
+        text?: string
     }
     activity: {
         isOnline: boolean,

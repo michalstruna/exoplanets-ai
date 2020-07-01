@@ -18,7 +18,6 @@ const Root = Styled.div`
     display: flex;
     font-size: 80%;
     overflow: hidden;
-    user-select: none;
     
     ${Avatar.Root} {
         margin: 1rem auto;
@@ -35,11 +34,16 @@ const Name = Styled.h3`
 
 const ItemValue = Styled.div`
     font-weight: bold;
+    
+    &:empty {
+        display: none;
+    }
 `
 
 const Left = Styled.div`
     box-sizing: border-box;
     padding: 0.5rem;
+    padding-bottom: 0.25rem;
     width: 12rem;
     
     ${ItemValue} {
@@ -48,29 +52,36 @@ const Left = Styled.div`
 `
 
 const Right = Styled.div`
+    align-items:flex-start;
+    align-content:flex-start;
     box-sizing: border-box;
     padding: 0.5rem;
+    position: relative;
     width: 14rem;
+    
+    display: flex;
+    flex-wrap: wrap;
+    
+    & > * {
+        ${size('50%', 'auto')}
+        margin-bottom: 0.5rem;
+    }
 `
 
 const RightMenu = Styled.div`
+    bottom: 0;
+    box-sizing: border-box;
     font-size: 105%;
+    left: 0;
+    margin-bottom: 0;
+    padding: 0.5rem;
+    position: absolute;
     width: 100%;
     
     & > * {
         display: inline-block;
+        float: left;
         text-align: left;
-        width: 50%;
-    }
-`
-
-const Row = Styled.div`
-    display: flex;
-    margin-top: 0.5rem;
-    width: 100%;
-    
-    & > * {
-        box-sizing: border-box;
         width: 50%;
     }
 `
@@ -98,9 +109,10 @@ const Rank = Styled.div`
 `
 
 interface ItemProps {
-    value: string | number
+    value?: string | number
     title: string
     icon?: string
+    full?: boolean
 }
 
 interface ItemRootProps {
@@ -108,17 +120,36 @@ interface ItemRootProps {
 }
 
 const ItemRoot = Styled.div<ItemRootProps>`
-    ${props => props.icon && css`
+    ${props => props.icon && (
+    props.icon.length > 4 ? css`
         ${image(props.icon, '1.1rem', 'left center')}
         box-sizing: border-box;
         padding-left: 1.5rem;
-    `}
+` : css`
+        &:before {
+            ${size('1.35rem', '1.35rem', true)}
+            content: "${props.icon}";
+            display: inline-block;
+            margin-right: 0.2rem;
+            vertical-align: middle;
+        }
+`
+)}
 `
 
-const Item: React.FC<ItemProps> = ({ title, value, icon }) => {
+const About = Styled.p`
+    padding: 0.5rem 0;
+    width: 100%;
+`
+
+const EmptyAbout = Styled(About)`
+    opacity: 0.5;
+`
+
+const Item: React.FC<ItemProps> = ({ title, value, icon, full }) => {
 
     return (
-        <ItemRoot icon={icon}>
+        <ItemRoot icon={icon} style={full ? { width: '100%' } : undefined}>
             {title}
             <ItemValue>{value}</ItemValue>
         </ItemRoot>
@@ -130,6 +161,8 @@ const UserPreview = ({ user, ...props }: Props) => {
 
     const country = user.personal.country ? (Countries as any).countryCode(user.personal.country) : null
     const actions = useActions({ logout })
+
+    console.log(country.emoji.length)
 
     return (
         <Root {...props}>
@@ -148,21 +181,24 @@ const UserPreview = ({ user, ...props }: Props) => {
                 </Stats>
             </Left>
             <Right>
-                <Row>
-                    <IconText icon='User/Male.svg' text='23 let' />
-                    {country && (
-                        <div title={country.name}>
-                            {country.emoji + ' ' + country.code}
-                        </div>
-                    )}
-                </Row>
-                <Row>
-                    <Item title='Aktivní' value={'Před ' + 23 + ' m'} icon='User/Online.svg' />
-                    <Item title='Členem' value='2,2 roku' icon='User/Origin.svg' />
-                </Row>
-                <div style={{ height: '8.8rem' }}>
-
-                </div>
+                <Item title='Aktivní' value={'Před ' + 23 + ' m'} icon='User/Online.svg' />
+                <Item title='Členem' value='2,2 roku' icon='User/Origin.svg' />
+                <IconText icon='User/Male.svg' text='23 let' />
+                {country && (
+                    <Item title={country.code} icon={country.emoji} />
+                )}
+                {true && (
+                    <Item title='Kontakt' value='email@domain.com' icon='User/Contact.svg' full={true} />
+                )}
+                {user.personal.text ? (
+                    <About>
+                        {user.personal.text}
+                    </About>
+                ) : (
+                    <EmptyAbout>
+                        Tento uživatel o sobě nic nenapsal.
+                    </EmptyAbout>
+                )}
                 <RightMenu>
                     <IconText icon='User/User.svg' text='Detail' size={IconText.SMALL} />
                     <Auth identityId={user._id} when={() => (

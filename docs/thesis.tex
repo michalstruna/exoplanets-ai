@@ -18,7 +18,8 @@
 % ÚDAJE O PRÁCI
 \def\jmenoFakulty{Fakulta elektrotechniky a informatiky}
 \def\jmenoAutora{Michal Struna}
-\def\nazevPrace{Umělá inteligence pro detekci exoplanet}
+%\def\nazevPrace{Umělá inteligence pro detekci exoplanet}
+\def\nazevPrace{Distribuované výpočty a umělá inteligence\\ pro detekci a analýzu exoplanet}
 \def\typPrace{Diplomová práce}
 \def\rok{2021}
 \def\prefixZadani{img/zadani}	% cesta a začátek jména, bude doplněno číslo strany
@@ -66,6 +67,18 @@
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Úvod}
 \section*{Úvod}
 \label{uvod}
+
+První potvrzená planeta mimo sluneční soustavu byla objevena již roku 1992, ale výzkum exoplanet se dostal do oblasti širokého zájmu až během posledního desetiletí. Stalo se tak především kvůli vesmírnému teleskopu Kepler, který má na svém kontě od roku 2009 přes 2~500 objevených exoplanet.
+
+K~dnešnímu dni je známo celkem více jak 4 000 potvrzených exoplanet. Toto číslo se s~nejvyšší pravděpodobností bude rychle zvyšovat, protože roku 2018 byl vypuštěn nástupce Kepleru -- satelit TESS -- od něhož je očekáván objev 20~000 exoplanet.
+
+Planety u~jiných hvězd většinou nelze pozorovat přímo. Proto je nepřímými metodami zkoumáno jejich působení na své mateřské hvězdy, které už pozorovat lze. Výstupem z~takovýchto teleskopů jsou často stovky GiB nebo jednotky TiB fyzikálních a~statistických dat, jež je následně nutno zpracovat.
+
+Cílem této diplomové práce je vytvořit aplikaci, jež bude umožňovat uživatelům poskytovat výpočetní výkon svých počítačů pro analyzování právě těchto dat. Projekt bude sestávat z~klientského konzolového programu, webové aplikace a~serveru. Klientský program bude provádět potřebné distribuovatelné výpočty na počítači uživatele. Tento program bude možné ovládat z~rozhraní webové aplikace, jež bude zároveň poskytovat přehled o~všech aktivitách, uživatelích a datech. Rozdělování výpočetních úloh mezi uživatele a~ukládání dat do databáze bude řešit server.
+
+Díky distribuovaným výpočtům se do výzkumu exoplanet bude moci bez vysokého úsilí, znalosti či technického vybavení zapojit i široká veřejnost. To může urychlit vývoj a zároveň zvýšit povědomí o~této vědní disciplíně.
+
+V~projektu jsou využity některé techniky spadající pod umělou inteligenci, v~důsledku čehož je zpracovávání dat zcela automatizované. Platí však, že umělá inteligence je v~současnosti stále intenzivně se rozvíjející oblastí, a~proto výsledky nemusí být natolik vypovídající ve srovnání s~tím, kdy by výzkum prováděli lidé manuálně, byť by to trvalo nesrovnatelně déle.
 
 \section{Exoplanety}
 \subsection{Důvody hledání}
