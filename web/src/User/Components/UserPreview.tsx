@@ -6,8 +6,9 @@ import { IconText } from '../../Layout'
 import Auth from './Auth'
 import { UserSimple } from '../types'
 import { useActions } from '../../Data'
-import { image, dots } from '../../Style'
+import { image, dots, size, flexCenter } from '../../Style'
 import { logout } from '../Redux/Slice'
+import Avatar from './Avatar'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: UserSimple
@@ -18,6 +19,10 @@ const Root = Styled.div`
     font-size: 80%;
     overflow: hidden;
     user-select: none;
+    
+    ${Avatar.Root} {
+        margin: 1rem auto;
+    }
 `
 
 const Name = Styled.h3`
@@ -26,13 +31,6 @@ const Name = Styled.h3`
     font-weight: bold;
     text-align: center;
     white-space: nowrap;
-`
-
-const Avatar = Styled.img`
-    display: block;
-    margin: 1rem auto;
-    max-height: 7rem;
-    max-width: 7rem;
 `
 
 const ItemValue = Styled.div`
@@ -52,8 +50,7 @@ const Left = Styled.div`
 const Right = Styled.div`
     box-sizing: border-box;
     padding: 0.5rem;
-    padding-left: 1rem;
-    width: 15rem;
+    width: 14rem;
 `
 
 const RightMenu = Styled.div`
@@ -140,7 +137,7 @@ const UserPreview = ({ user, ...props }: Props) => {
                 <Name>
                     {user.name}
                 </Name>
-                <Avatar src={user.avatar} />
+                <Avatar user={user} size='7.4rem' />
                 <Rank>
                     Rank <ItemValue>{user.score.rank}.</ItemValue>
                 </Rank>

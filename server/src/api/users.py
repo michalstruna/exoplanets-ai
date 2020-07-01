@@ -14,7 +14,9 @@ user_score = api.model("UserScore", {
 })
 
 user_personal = api.model("UserPersonal", {
-
+    "is_male": fields.Boolean(),
+    "country": fields.String(max_length=10),
+    "birth": fields.Integer()
 })
 
 user_activity = api.model("UserActivity", {
@@ -64,10 +66,7 @@ class FacebookLogin(Resource):
     @api.response(400, "Invalid credentials.")
     @api.expect(external_credentials)
     def post(self):
-        identity = user_service.facebook_login(request.json["token"])
-
         if identity:
-            identity["_id"] = "abc"
-            return Response.ok(identity)
+            return user_service.facebook_login(request.get_json()["token"])
         else:
             return Response.bad_credentials("Facebook token is not valid.")

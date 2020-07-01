@@ -1,23 +1,42 @@
 import requests
 from http import HTTPStatus
+from mongoengine.errors import DoesNotExist
+from datetime import datetime
 
 from .Service import Service
-
 
 
 class UserService(Service):
 
     def __init__(self):
         super().__init__()
-
         self.setup(self.db.User, [])
 
     def facebook_login(self, token):
-        token_validation = requests.get(f"https://graph.facebook.com/me?access_token={token}")
+        # TODO: FacebookService or ExternalService?
+        fb_profile_res = requests.get(f"https://graph.facebook.com/me?fields=id,name,gender,email,birthday,picture.width(200).height(200),address,location{'{location{city,state,region_id}}'}&access_token={token}")
 
-        if token_validation.status_code != HTTPStatus.OK:
+        if fb_profile_res.status_code != HTTPStatus.OK:
             return None
 
-        identity = token_validation.json()
-        print(identity)
-        return identity
+        identity = fb_profile_res.json()
+
+        try:
+            user = self.get_by_filter({"fb_id": identity["id"]})
+        except DoesNotExist:
+            user = self.add({
+                "name": identity["name"],
+                "fb_id": identity["id"],
+                "avatar": identity["picture"]["data"]["url"],
+                "personal": {
+                    "is_male": identity["gender"] != "female",
+                    "birth": datetime.timestamp(datetime.strptime(identity["birthday"], "%d/%m/%Y")),
+                    "country": "CZ"  # TODO
+                }
+            })
+
+        user["score"] = {}
+        user["score"]["rank"] = 12
+
+        # TODO: Token
+        return user

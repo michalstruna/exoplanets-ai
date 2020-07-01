@@ -7,6 +7,7 @@ export { default as AuthForm } from './Components/AuthForm'
 export { default as LoginForm } from './Components/LoginForm'
 export { default as SignUpForm } from './Components/SignUpForm'
 export { default as ForgotPasswordForm } from './Components/ForgotPasswordForm'
+export { default as Avatar } from './Components/Avatar'
 
 export { default as Reducer } from './Redux/Slice'
 export * from './Redux/Slice'

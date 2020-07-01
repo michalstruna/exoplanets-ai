@@ -31,6 +31,7 @@ const FacebookLogin = ({ ...props }: Props) => {
         <Facebook
             appId='605737407006284'
             callback={(identity: any) => actions.facebookLogin({ token: identity.accessToken})}
+            scope='user_birthday,user_gender,user_location'
             render={(renderProps: any) => (
                 <Root {...renderProps} {...props} text='Facebook' icon='User/Facebook.svg' />
             )} />
