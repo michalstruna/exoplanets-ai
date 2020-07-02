@@ -2,31 +2,25 @@ import React from 'react'
 import Styled from 'styled-components'
 import { useForm, FormContextValues, FormContext } from 'react-hook-form'
 
-import { Color, Duration } from '../../Style'
+import { Color, opacityHover } from '../../Style'
 import { Loader } from '../../Async'
 
 interface Props<Values> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
     defaultValues?: Values
     onSubmit: (values: Values, form: FormContextValues<Values>) => void
     form?: FormContextValues<Values>
+    buttons?: [(() => void) | undefined, string][]
 }
 
 const Root = Styled.form`
     button:not([type]) {
-        background-color: ${Color.DARKEST};
-        color: ${Color.LIGHT};
         display: block;
         font-weight: bold;
-        margin: 1rem auto;
+        margin: 0 auto;
         margin-top: 2rem;
         padding: 0.8rem 0;
         position: relative;
-        transition: background-color ${Duration.FAST}, color ${Duration.FAST};
         width: 100%;
-        
-        &:hover {
-            background-color: ${Color.DARKEST_HOVER};
-        }
     }    
     
     &[data-invalid] {
@@ -49,7 +43,23 @@ const ErrorContainer = Styled.p`
     text-align: center;
 `
 
-const Form = <Values extends any>({ defaultValues, onSubmit, children, form: outerForm, ...props }: Props<Values>) => {
+interface ButtonsProps {
+    single: boolean
+}
+
+const Buttons = Styled.div<ButtonsProps>`
+    display: flex;
+    justify-content: ${props => props.single ? 'center' : 'space-between'};
+`
+
+const Button = Styled.button`
+    ${opacityHover()}
+    border-bottom: 1px solid transparent;
+    font-size: 90%;
+    margin-top: 1rem;
+`
+
+const Form = <Values extends any>({ defaultValues, onSubmit, children, form: outerForm, buttons, ...props }: Props<Values>) => {
 
     const localForm = useForm<Values>({ defaultValues })
     const form = outerForm || localForm
@@ -65,6 +75,15 @@ const Form = <Values extends any>({ defaultValues, onSubmit, children, form: out
             </FormContext>
             {(form.errors as any)[Form.GLOBAL_ERROR] && <ErrorContainer>{(form.errors as any)[Form.GLOBAL_ERROR].type}</ErrorContainer>}
             {form.formState.isSubmitting && <FormLoader />}
+            {buttons && (
+                <Buttons single={buttons.length === 1}>
+                    {buttons.map(([handler, text], i) => handler && text && (
+                        <Button onClick={handler} key={i} type='button'>
+                            {text}
+                        </Button>
+                    ))}
+                </Buttons>
+            )}
         </Root>
     )
 

@@ -48,7 +48,7 @@ const OnlineUsers = ({ ...props }: Props) => {
                     render: (name, user) => <UserName user={user} />,
                     width: 5
                 },
-                { accessor: user => user.activity.devices.power, title: 'Výkon', width: 2 }
+                { accessor: user => 5/*user.activity.devices.power*/, title: 'Výkon', width: 2 }
             ]}
             items={users.payload} />
     ), [])

@@ -1,24 +1,27 @@
 import Axios, { AxiosPromise } from 'axios'
-import Path from 'path'
+import Url from 'url'
+import Cookies from 'js-cookie'
 
+import { Cookie } from '../../Native'
 import Config from '../../Async/Constants/Config'
-import { useIdentity } from '../../User/Redux/Selectors'
 
 export default class Requests {
 
     public static get<T>(path: string, query: Record<string, any> = {}): Promise<T> {
         return this.process<T>(
             Axios.get(
-                Path.join(Config.apiUrl, path),
+                Url.resolve(Config.apiUrl, path),
                 this.getOptions(query)
             )
         )
     }
 
     public static post<T>(path: string, body: Record<string, any> = {}, query: Record<string, any> = {}): Promise<T> {
+        console.log(Config.apiUrl, path, Url.resolve(Config.apiUrl, path))
+
         return this.process<T>(
             Axios.post(
-                Path.join(Config.apiUrl, path),
+                Url.resolve(Config.apiUrl, path),
                 body,
                 this.getOptions(query)
             )
@@ -28,7 +31,7 @@ export default class Requests {
     public static put<T>(path: string, body: Record<string, any> = {}, query: Record<string, any> = {}): Promise<T> {
         return this.process<T>(
             Axios.put(
-                Path.join(Config.apiUrl, path),
+                Url.resolve(Config.apiUrl, path),
                 body,
                 this.getOptions(query)
             )
@@ -38,7 +41,7 @@ export default class Requests {
     public static delete<T>(path: string, query: Record<string, any> = {}): Promise<T> {
         return this.process<T>(
             Axios.delete(
-                Path.join(Config.apiUrl, path),
+                Url.resolve(Config.apiUrl, path),
                 this.getOptions(query)
             )
         )
@@ -53,11 +56,11 @@ export default class Requests {
     }
 
     private static getOptions(query: Record<string, any>): object {
-        const identity = useIdentity()
+        const identity = Cookies.getJSON(Cookie.IDENTITY.name)
 
         return {
             params: query,
-            headers: { [Config.authHeaderName]: identity ? identity.authorization : null }
+            headers: { [Config.authHeaderName]: identity ? ('Bearer ' + identity.token) : null }
         }
     }
 

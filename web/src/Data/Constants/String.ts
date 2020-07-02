@@ -94,16 +94,20 @@ export default {
         }
     },
 
-    login: {
+    auth: {
         email: 'Email',
         password: { [CS]: 'Heslo', [EN]: 'Password' },
-        submit: { [CS]: 'Připojit se', [EN]: 'Join' },
         forgotPassword: { [CS]: 'Zapomenuté heslo?', [EN]: 'Forgot password?' },
         error: { [CS]: 'Špatné přihlašovací údaje.', [EN]: 'Bad credentials' },
         missingEmail: { [CS]: 'Napište svůj email', [EN]: 'Type your email' },
         invalidEmail: { [CS]: 'Napište email ve tvaru email@doména.', [EN]: 'Type email in form email@domain.' },
         missingPassword: { [CS]: 'Napište své heslo', [EN]: 'Type your password' },
-        or: { [CS]: 'Nebo', [EN]: 'Or' }
+        or: { [CS]: 'Nebo', [EN]: 'Or' },
+        name: { [CS]: 'Jméno', [EN]: 'Name' },
+        login: { [CS]: 'Přihlásit se', [EN]: 'Login' },
+        signUp: { [CS]: 'Zaregistrovat se', [EN]: 'Sign up' },
+        resetPassword: { [CS]: 'Resetovat heslo', [EN]: 'Reset password' },
+        signUpToLogin: { [CS]: 'Již máte účet?', [EN]: 'Already have account?' }
     },
 
     discovery: {

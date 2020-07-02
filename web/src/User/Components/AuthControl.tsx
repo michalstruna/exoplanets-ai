@@ -3,8 +3,9 @@ import React from 'react'
 import Auth from './Auth'
 import UserRole from '../Constants/UserRole'
 import { Window, IconText } from '../../Layout'
-import { LoginForm, useIdentity } from '../index'
+import { useIdentity } from '../index'
 import UserPreview from './UserPreview'
+import AuthForm from './AuthForm'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -19,7 +20,7 @@ const AuthControl = ({ ...props }: Props) => {
             role={UserRole.UNAUTHENTICATED}
             when={() => (
                 <Window renderButton={() => <IconText icon='User/User.svg' text='Přihlášení' onClick={() => null} />}>
-                    <LoginForm />
+                    <AuthForm />
                 </Window>
             )}
             otherwise={() => (

@@ -23,10 +23,13 @@ class Service(ABC):
         return result
 
     def get(self, id):
-        items = self.get_all(filter={"_id": self.id(id)}, limit=1)
+        return self.get_by_filter({"_id": self.id(id)})
+
+    def get_by_filter(self, filter):
+        items = self.get_all(filter=filter, limit=1)
 
         if not items:
-            raise DoesNotExist(f"Item with id {id} was not found.")
+            raise DoesNotExist(f"Item {filter} was not found.")
 
         return items[0]
 
@@ -53,7 +56,7 @@ class Service(ABC):
         item = self.collection(**item).save()
 
         if return_item:
-            return self.get(item["_id"])
+            return self.get(item.to_mongo()["_id"])
 
     def delete(self, id):
         return self.collection(_id=id).delete()

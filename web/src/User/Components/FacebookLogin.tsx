@@ -6,6 +6,8 @@ import Facebook from 'react-facebook-login/dist/facebook-login-render-props'
 
 import ExternalAuthButton from './ExternalAuthButton'
 import { Color } from '../../Style'
+import { useActions } from '../../Data'
+import { facebookLogin } from '..'
 
 interface Props extends React.ComponentPropsWithoutRef<'button'> {
 
@@ -21,13 +23,15 @@ const Root = Styled(ExternalAuthButton)`
 
 const FacebookLogin = ({ ...props }: Props) => {
 
-    // TODO: Connect with app.
+    // TODO: AppId to config.
+
+    const actions = useActions({ facebookLogin })
 
     return (
         <Facebook
-            appId=''
-            autoLoad
-            callback={() => null}
+            appId='605737407006284'
+            callback={(identity: any) => actions.facebookLogin({ token: identity.accessToken})}
+            scope='user_birthday,user_gender,user_location'
             render={(renderProps: any) => (
                 <Root {...renderProps} {...props} text='Facebook' icon='User/Facebook.svg' />
             )} />

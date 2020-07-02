@@ -10,7 +10,6 @@
     "is-absolute-url": "^3.0.3",
     "js-cookie": "^2.2.1",
     "numeral": "^2.0.6",
-    "path": "^0.12.7",
     "query-string": "^6.12.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
@@ -25,6 +24,7 @@
     "socket.io-client": "^2.3.0",
     "styled-components": "^5.0.1",
     "throttle-debounce": "^2.1.0",
+    "url": "^0.11.0",
     "use-react-router": "^1.0.7"
   },
   "devDependencies": {

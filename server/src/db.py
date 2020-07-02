@@ -68,6 +68,22 @@ class Star(Document):
     planets = ListField(ReferenceField(Planet), default=[])
 
 
+class UserPersonal(EmbeddedDocument):
+    is_male = BooleanField()
+    country = StringField(max_length=10)
+    birth = LongField()
+
+
+class User(Document):
+    name = StringField(required=True, max_length=50)
+
+    email = EmailField(max_length=200, unique=True, sparse=True)
+    password = StringField(max_length=200)
+    fb_id = StringField(max_length=200, unique=True, sparse=True)
+    avatar = StringField(max_length=200)
+    personal = EmbeddedDocumentField(UserPersonal, default={})
+
+
 # TODO: Star aliases.
 # TODO: map_units dataset?
 # TODO: LocalDataset - upload file to DB.

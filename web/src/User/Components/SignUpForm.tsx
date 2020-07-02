@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { useActions, useStrings } from '../../Data'
-import { login, Credentials } from '..'
+import { login, RegistrationData } from '..'
 import { Color, size } from '../../Style'
 import FacebookLogin from './FacebookLogin'
 import GoogleLogin from './GoogleLogin'
@@ -11,8 +11,7 @@ import { FormContextValues } from 'react-hook-form'
 import { PrimaryButton } from '../../Layout'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    handleSignUp?: () => void
-    handleResetPassword?: () => void
+    handleLogin?: () => void
 }
 
 const Root = Styled.div`
@@ -62,24 +61,23 @@ const Submit = Styled(PrimaryButton)`
     font-size: 100%;
 `
 
-const LoginForm = ({ handleSignUp, handleResetPassword, ...props }: Props) => {
+const LoginForm = ({ handleLogin, ...props }: Props) => {
 
     const actions = useActions({ login })
     const strings = useStrings().auth
 
-    const handleSubmit = async (values: Credentials, form: FormContextValues<Credentials>) => {
-        const action = await actions.login(values)
+    const handleSubmit = async (values: RegistrationData, form: FormContextValues<RegistrationData>) => {
+        /*const action = await actions.login(values) // TODO.
 
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, strings.error)
-        }
+        }*/
     }
 
     return (
         <Root{...props}>
-            <Form onSubmit={handleSubmit} defaultValues={{ email: '', password: '' }} buttons={[
-                [handleSignUp, strings.signUp],
-                [handleResetPassword, strings.resetPassword]
+            <Form onSubmit={handleSubmit} defaultValues={{ email: '', password: '', name: '' }} buttons={[
+                [handleLogin, strings.signUpToLogin]
             ]}>
                 <External>
                     <FacebookLogin />
@@ -95,12 +93,17 @@ const LoginForm = ({ handleSignUp, handleResetPassword, ...props }: Props) => {
                     required={strings.missingEmail}
                     invalid={strings.invalidEmail} />
                 <Field
+                    name='name'
+                    type={Field.Type.TEXT}
+                    label={strings.name}
+                    required={strings.missingName} />
+                <Field
                     name='password'
                     type={Field.Type.PASSWORD}
                     label={strings.password}
                     required={strings.missingPassword} />
                 <Submit>
-                    {strings.login}
+                    {strings.signUp}
                 </Submit>
             </Form>
         </Root>
