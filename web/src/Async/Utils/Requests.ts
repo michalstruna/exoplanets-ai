@@ -1,8 +1,9 @@
 import Axios, { AxiosPromise } from 'axios'
 import Url from 'url'
+import Cookies from 'js-cookie'
 
+import { Cookie } from '../../Native'
 import Config from '../../Async/Constants/Config'
-import { useIdentity } from '../../User/Redux/Selectors'
 
 export default class Requests {
 
@@ -55,11 +56,11 @@ export default class Requests {
     }
 
     private static getOptions(query: Record<string, any>): object {
-        const identity = null as any//useIdentity()
+        const identity = Cookies.getJSON(Cookie.IDENTITY.name)
 
         return {
             params: query,
-            headers: { [Config.authHeaderName]: identity ? identity.authorization : null }
+            headers: { [Config.authHeaderName]: identity ? ('Bearer ' + identity.token) : null }
         }
     }
 

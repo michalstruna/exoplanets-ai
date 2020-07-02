@@ -138,12 +138,9 @@ const ItemRoot = Styled.div<ItemRootProps>`
 `
 
 const About = Styled.p`
+    opacity: 0.6;
     padding: 0.5rem 0;
     width: 100%;
-`
-
-const EmptyAbout = Styled(About)`
-    opacity: 0.5;
 `
 
 const Item: React.FC<ItemProps> = ({ title, value, icon, full }) => {
@@ -161,8 +158,6 @@ const UserPreview = ({ user, ...props }: Props) => {
 
     const country = user.personal.country ? (Countries as any).countryCode(user.personal.country) : null
     const actions = useActions({ logout })
-
-    console.log(country.emoji.length)
 
     return (
         <Root {...props}>
@@ -190,15 +185,9 @@ const UserPreview = ({ user, ...props }: Props) => {
                 {true && (
                     <Item title='Kontakt' value='email@domain.com' icon='User/Contact.svg' full={true} />
                 )}
-                {user.personal.text ? (
-                    <About>
-                        {user.personal.text}
-                    </About>
-                ) : (
-                    <EmptyAbout>
-                        Tento uživatel o sobě nic nenapsal.
-                    </EmptyAbout>
-                )}
+                <About>
+                    {user.personal.text || 'Tento uživatel o sobě nic nenapsal.'}
+                </About>
                 <RightMenu>
                     <IconText icon='User/User.svg' text='Detail' size={IconText.SMALL} />
                     <Auth identityId={user._id} when={() => (

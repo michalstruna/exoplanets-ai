@@ -4,12 +4,14 @@ from mongoengine.errors import DoesNotExist
 from datetime import datetime
 
 from .Service import Service
+from .SecurityService import SecurityService
 
 
 class UserService(Service):
 
     def __init__(self):
         super().__init__()
+        self.security_service = SecurityService()
         self.setup(self.db.User, [])
 
     def facebook_login(self, token):
@@ -35,6 +37,7 @@ class UserService(Service):
                 }
             })
 
+        user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})
         user["score"] = {}
         user["score"]["rank"] = 12
 

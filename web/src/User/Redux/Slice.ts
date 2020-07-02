@@ -83,7 +83,6 @@ const Slice = Redux.slice(
         })),
         facebookLogin: async<ExternalCredentials, Identity>('identity', credentials => Requests.post(`users/login/facebook`, credentials), {
                 onSuccess: (state, action) => {
-                    console.log(444, action.payload)
                     state.identity.payload = action.payload
                     Cookies.set(Cookie.IDENTITY.name, action.payload, { expires: Cookie.IDENTITY.expiration })
                 }
