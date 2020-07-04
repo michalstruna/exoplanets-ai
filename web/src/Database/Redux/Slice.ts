@@ -2,6 +2,8 @@ import SpectralType from '../Constants/SpectralType'
 import { Filter, Sort, Segment, Cursor } from '../../Layout'
 import { Query } from '../../Routing'
 import { Redux } from '../../Data'
+import { Requests } from '../../Async'
+import { Dataset } from '../types'
 
 const get = (val: any, i = 0) => Math.round(val * Math.random())
 
@@ -115,16 +117,18 @@ const slice = Redux.slice(
     'database',
     {
         bodies: Redux.async<any /* TODO: Body[] */>(),
-        filter: Redux.empty<Filter>(),
-        sort: Redux.empty<Sort>(),
-        segment: Redux.empty<Segment>(),
-        usersRank: 0
+        filter: Redux.empty<Filter>({}),
+        sort: Redux.empty<Sort>({}),
+        segment: Redux.empty<Segment>({}),
+        usersRank: 0,
+        datasets: Redux.async<Dataset[]>(),
+        table: 0
     },
     ({ async, set }) => ({
-        getBodies: async<Cursor, { list: any, count: number }>('bodies', ({ sort, filter, segment }) => new Promise(resolve => {
+        getBodies: async<Cursor, { content: any, count: number }>('bodies', ({ sort, filter, segment }) => new Promise(resolve => {
             setTimeout(() => {
                 resolve({
-                    list: getSortedItems(data, sort).slice(segment.index * segment.size, (segment.index + 1) * segment.size),
+                    content: getSortedItems(data, sort).slice(segment.index * segment.size, (segment.index + 1) * segment.size),
                     count: data.length
                 })
             }, 1000)
@@ -148,9 +152,13 @@ const slice = Redux.slice(
                 column: [Query.SORT_COLUMN, v => Number.isInteger(v) && v > 0 && v < levels[state.sort.level].columns.length, 1],
                 isAsc: [Query.SORT_IS_ASC, [false, true], true]
             })
+        }),
+        getDatasets: async<Cursor, Dataset[]>('datasets', ({ segment, sort, filter }) => Requests.get(`datasets`)),
+        setTable: set<string>('table', {
+            sync: () => [Query.DB_TABLE, ['stars_and_planets', 'stars', 'planets', 'datasets'], 'stars_and_planets']
         })
     })
 )
 
 export default slice.reducer
-export const { getBodies, setBodiesFilter, setBodiesSort, setBodiesSegment } = slice.actions
+export const { getBodies, setBodiesFilter, setBodiesSort, setBodiesSegment, setTable, getDatasets } = slice.actions

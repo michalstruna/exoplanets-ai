@@ -6,8 +6,19 @@ import { useDrag, useElement } from '../../Native'
 import { ZIndex, size } from '../../Style'
 import { MiniGraph } from '../../Stats'
 import { HierarchicalTable } from '../../Layout'
-import { useBodies, getBodies, useBodiesFilter, useBodiesSort, setBodiesSort, useBodiesSegment } from '..'
+import {
+    useBodies,
+    getBodies,
+    useBodiesFilter,
+    useBodiesSort,
+    setBodiesSort,
+    useBodiesSegment,
+    useTable,
+    useDatasets,
+    getDatasets
+} from '..'
 import { Async } from '../../Async'
+import DbTable from '../Constants/DbTable'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -226,17 +237,29 @@ const planetColumns = [
     }
 ]
 
-const levels = [
+const _levels = [
     { columns: starColumns },
     { columns: planetColumns, accessor: (star: any) => star.planets }
+]
+
+const datasetsLevels = [
+    {
+        columns: [
+            { title: '', accessor: (dataset: any, i: number) => i + 1 },
+            { title: 'Název', accessor: (dataset: any) => dataset.name }
+        ]
+    }
 ]
 
 const Database = ({ ...props }: Props) => {
 
     const bodies = useBodies()
+    const datasets = useDatasets()
+
     const filter = useBodiesFilter()
     const sort = useBodiesSort()
-    const actions = useActions({ getBodies, setBodiesSort })
+    const actions = useActions({ getBodies, setBodiesSort, getDatasets })
+    const table = useTable()
 
     const segment = useBodiesSegment()
     const { app } = useElement()
@@ -252,16 +275,24 @@ const Database = ({ ...props }: Props) => {
         }
     }
 
+    const { items, levels, getter } = React.useMemo(() => {
+        if (table === DbTable.DATASETS) {
+            return { items: datasets, levels: datasetsLevels, getter: getDatasets }
+        } else {
+            return { items: bodies, levels: _levels, getter: getBodies }
+        }
+    }, [table, bodies, datasets])
+
     return (
         <Root {...props} {...dragHandlers}>
             <Table
-                items={bodies.payload?.list ?? []}
+                items={items.payload?.content ?? []}
                 levels={levels as any}
                 onSort={handleSort}
                 defaultSort={sort}
                 renderBody={body => (
                     <Async
-                        data={[bodies, () => getBodies({ sort, filter, segment }), [sort, filter, segment]]}
+                        data={[items, () => getter({ sort, filter, segment }), [sort, filter, segment, table]]}
                         success={() => body} />
                 )} />
         </Root>
