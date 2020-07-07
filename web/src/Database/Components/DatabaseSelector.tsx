@@ -2,10 +2,11 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { useFixedX } from '../../Style'
-import { Paginator, FilterForm, useActions } from '../../Data'
+import { Paginator, FilterForm, useActions, useStrings } from '../../Data'
 import { setBodiesSegment, setBodiesFilter, setTable } from '../Redux/Slice'
-import { useBodies, useBodiesFilter, useBodiesSegment } from '..'
+import { useBodies, useBodiesFilter, useBodiesSegment, useTable } from '..'
 import DbTable from '../Constants/DbTable'
+import { provideFilterColumns } from '../Utils/StructureProvider'
 
 interface Props extends React.ComponentPropsWithRef<'div'> {
 
@@ -34,6 +35,11 @@ const DatabaseSelector = ({ ...props }: Props) => {
     const bodies = useBodies()
     const bodiesCount = bodies.payload ? bodies.payload.count : 0
 
+    const table = useTable()
+    const strings = useStrings().database
+
+    const filterColumns = React.useMemo(() => provideFilterColumns(table, strings), [table]) as [string, string][]
+
     const tables = React.useMemo(() => (
         <select onChange={e => actions.setTable(e.target.value)}>
             {Object.values(DbTable).map((table, i) => (
@@ -50,7 +56,7 @@ const DatabaseSelector = ({ ...props }: Props) => {
                 {tables}
             </div>
             <FilterForm
-                attributes={['starName', 'starMass']}
+                attributes={filterColumns}
                 onChange={actions.setBodiesFilter}
                 initialValues={filter} />
             <Paginator

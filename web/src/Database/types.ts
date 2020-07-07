@@ -1,6 +1,8 @@
 import PlanetType from './Constants/PlanetType'
 import StarType from './Constants/StarType'
 import SpectralType from './Constants/SpectralType'
+import React from 'react'
+import { Level } from '../Layout'
 
 export interface Planet {
     diameter?: number

@@ -1,10 +1,9 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useActions } from '../../Data'
+import { useActions, useStrings } from '../../Data'
 import { useDrag, useElement } from '../../Native'
 import { ZIndex, size } from '../../Style'
-import { MiniGraph } from '../../Stats'
 import { HierarchicalTable } from '../../Layout'
 import {
     useBodies,
@@ -19,6 +18,7 @@ import {
 } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'
+import { providedStructure } from '../Utils/StructureProvider'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -28,228 +28,105 @@ const Root = Styled.div`
     user-select: none;
 `
 
-const colors = ['#A50', '#FFF', '#A00', '#CC0']
-
-const Image = Styled.div`
-    ${size('4rem')}
-    background-image: radial-gradient(${colors[3]}, #000);
-    border-radius: 100%;
-    display: inline-block;
-`
-
-const PlanetImage = Styled(Image)`
-    ${size('2.5rem')}
-    background-image: radial-gradient(#CA0, #000);
-`
-
-const Table = Styled(HierarchicalTable)`
-    ${HierarchicalTable.Row} {
-        &[data-is-odd="true"] {
-            ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
-                background-color: #2F2F2F;
-            }
-        }
-    
-        &[data-is-odd="false"] {
-            ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
-                background-color: #383838;
-            }
-        }
-    }
-
+const Table = Styled(HierarchicalTable)`    
     ${HierarchicalTable.Cell} {
-        height: 6rem;
+        min-width: 10rem;
         
         &:first-of-type {
             font-size: 85%;
             pointer-events: none;
+            min-width: 3rem;
+        }
+    }
+    
+    &.table--${DbTable.DATASETS} ${HierarchicalTable.Cell} {
+        &:first-of-type {
             width: 3rem;
         }
+    }
+    
+    &.table--${DbTable.STARS_AND_PLANETS} { 
+        ${HierarchicalTable.Row} {
+            &[data-is-odd="true"] {
+                ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
+                    background-color: #2F2F2F;
+                }
+            }
         
-        &:nth-of-type(2) {
-            padding-right: 0;
-            position: relative;
-            text-align: right;
-            z-index: ${ZIndex.TABLE_BODY_ICON};
+            &[data-is-odd="false"] {
+                ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
+                    background-color: #383838;
+                }
+            }
         }
     
-        &:nth-of-type(3) {
-            border-right: 2px solid black;
-            left: 0;
-            position: sticky;
-            width: 16.5rem;
-            z-index: ${ZIndex.TABLE_BODY_NAME};
-        }
-        
-        &:nth-of-type(7) {
-            width: 11rem;
-        }
-        
-        &:nth-of-type(11) {
-            width: 22rem;
-            
-            &:not([data-header])[data-level="0"] {
-                padding-left: 0;
+        ${HierarchicalTable.Cell} {
+            &:nth-of-type(2) {
                 padding-right: 0;
+                position: relative;
+                text-align: right;
+                z-index: ${ZIndex.TABLE_BODY_ICON};
+                min-width: 0;
             }
-        }
         
-        &[data-level="0"] {
-            &:nth-of-type(2) {
-                width: 5rem;
-            }
-        }
-        
-        &[data-level="1"] {
-            height: 4.5rem;
-        
-            &:nth-of-type(2) {
-                padding-left: 4rem;
-                width: 7rem;
+            &:nth-of-type(3) {
+                border-right: 2px solid black;
+                left: 0;
+                position: sticky;
+                z-index: ${ZIndex.TABLE_BODY_NAME};
             }
             
-            &:nth-of-type(3) {
-                margin-left: -2rem;
-                padding-left: 3rem;
-            }
-        }
-        
-        &[data-header] {
-            height: 3rem;
-            padding-top: 0;
-            padding-bottom: 0;
-        
-            &[data-level="0"] {                            
-                ${Image} {
-                    ${size('2.5rem')}
+            &:nth-of-type(11) {            
+                &:not([data-header])[data-level="0"] {
+                    padding-left: 0;
+                    padding-right: 0;
                 }
-                
-                &:first-of-type {
-                    font-size: 110%;
-                    transform: translateY(30%);
+            }
+            
+            &[data-level="0"] {
+                &:nth-of-type(2) {
+                    width: 5rem;
                 }
             }
             
             &[data-level="1"] {
-                height: 2rem;
+                &:nth-of-type(2) {
+                    padding-left: 3rem;
+                }
+                
+                &:nth-of-type(3) {
+                    margin-left: -2rem;
+                    padding-left: 3rem;
+                }
+            }
             
-                ${Image} {
-                    ${size('1.5rem')}
+            &[data-header] {
+                height: 3rem;
+                padding-top: 0;
+                padding-bottom: 0;
+            
+                &[data-level="0"] {                            
+                    .image--star {
+                        ${size('2.5rem')}
+                    }
+                    
+                    &:first-of-type {
+                        font-size: 110%;
+                        transform: translateY(30%);
+                    }
+                }
+                
+                &[data-level="1"] {
+                    height: 2rem;
+                
+                    .image--star {
+                        ${size('1.5rem')}
+                    }
                 }
             }
         }
     }
 `
-
-interface Colored {
-    color: string
-}
-
-const Colored = Styled.span<Colored>`
-    color: ${props => props.color};
-`
-
-const lines = ['transit', 'radialVelocity']
-const labels = ['Tranzit [%]', 'Radiální rychlost [m/s]']
-
-const starColumns = [
-    { title: '#', accessor: (star: any) => star.index + 1, render: (index: any) => index || '' },
-    { title: <Image />, accessor: (star: any) => star.type, render: () => <Image /> },
-    {
-        title: 'Hvězda',
-        accessor: (star: any) => star.name,
-        render: (name: any, star: any) => <>{name}<br />{'Žlutý trpaslík M5,5Ve'}</>
-    },
-    {
-        title: 'Průměr',
-        accessor: (star: any) => star.diameter,
-        icon: '/img/Universe/Database/Diameter.svg',
-        render: (v: any) => <>{v} km<br />{v} km<br />{v} km</>
-    },
-    { title: 'Hmotnost', accessor: (star: any) => star.mass, icon: '/img/Universe/Database/Mass.svg' },
-    {
-        title: 'Teplota',
-        accessor: (star: any) => star.temperature,
-        icon: '/img/Universe/Database/Temperature.svg'
-    },
-    {
-        title: 'Zářivý výkon',
-        accessor: (star: any) => star.luminosity,
-        icon: '/img/Universe/Database/Luminosity.svg'
-    },
-    {
-        title: 'Vzdálenost',
-        accessor: (star: any) => star.distance,
-        icon: '/img/Universe/Database/Distance.svg'
-    },
-    {
-        title: 'Planet',
-        accessor: (star: any) => star.planets.length,
-        icon: '/img/Universe/Database/Planet.svg'
-    },
-    { title: '', accessor: (star: any) => star.planets.length, icon: '', render: (value: any) => '' },
-    {
-        title: <><Colored color='#77CC77'>Tranzit [%]</Colored>&nbsp;/&nbsp; <Colored color='#CC7777'>radiální
-            rychlost [m/s]</Colored></>,
-        accessor: () => null,
-        render: (value: any, star: any) => <MiniGraph data={star.tmp} lines={lines} labels={labels} height={80}
-                                                      width={320} />,
-        headerIcon: '/img/Universe/Database/Discovery.svg'
-    }
-]
-
-const planetColumns = [
-    { title: '', accessor: (planet: any) => planet.index + 1, render: (index: any) => index || '' },
-    { title: <PlanetImage />, accessor: (planet: any) => planet.type, render: () => <PlanetImage /> },
-    { title: 'Planeta', accessor: (planet: any) => planet.type, render: () => 'Horký jupiter' },
-    {
-        title: 'Průměr',
-        accessor: (planet: any) => planet.diameter,
-        icon: '/img/Universe/Database/Diameter.svg'
-    },
-    { title: 'Hmotnost', accessor: (planet: any) => planet.mass, icon: '/img/Universe/Database/Mass.svg' },
-    {
-        title: 'Teplota',
-        accessor: (planet: any) => planet.surfaceTemperature,
-        icon: '/img/Universe/Database/Temperature.svg'
-    },
-    {
-        title: 'Perioda',
-        accessor: (planet: any) => planet.orbitalPeriod,
-        icon: '/img/Universe/Database/Period.svg'
-    },
-    {
-        title: 'Poloosa',
-        accessor: (planet: any) => planet.semiMajorAxis,
-        icon: '/img/Universe/Database/Orbit.svg'
-    },
-    {
-        title: 'Rychlost',
-        accessor: (planet: any) => planet.orbitalVelocity,
-        icon: '/img/Universe/Database/Velocity.svg'
-    },
-    { title: 'Život', accessor: () => 'Vyloučen', icon: '/img/Universe/Database/Life.svg' },
-    {
-        title: 'Metoda',
-        accessor: () => null,
-        render: () => <>Tranzit<br />Radiální rychlost</>,
-        icon: '/img/Universe/Database/Discovery.svg'
-    }
-]
-
-const _levels = [
-    { columns: starColumns },
-    { columns: planetColumns, accessor: (star: any) => star.planets }
-]
-
-const datasetsLevels = [
-    {
-        columns: [
-            { title: '', accessor: (dataset: any, i: number) => i + 1 },
-            { title: 'Název', accessor: (dataset: any) => dataset.name }
-        ]
-    }
-]
 
 const Database = ({ ...props }: Props) => {
 
@@ -263,6 +140,10 @@ const Database = ({ ...props }: Props) => {
 
     const segment = useBodiesSegment()
     const { app } = useElement()
+    const strings = useStrings().database
+
+    const { levels, rowHeight } = React.useMemo(() => providedStructure(table, strings), [table, strings])
+
 
     const dragHandlers = useDrag(({ delta, data }) => {
         app.current.scrollLeft = data.x - delta.x
@@ -275,21 +156,23 @@ const Database = ({ ...props }: Props) => {
         }
     }
 
-    const { items, levels, getter } = React.useMemo(() => {
+    const { items, getter } = React.useMemo(() => {
         if (table === DbTable.DATASETS) {
-            return { items: datasets, levels: datasetsLevels, getter: getDatasets }
+            return { items: datasets, getter: getDatasets }
         } else {
-            return { items: bodies, levels: _levels, getter: getBodies }
+            return { items: bodies, getter: getBodies }
         }
     }, [table, bodies, datasets])
 
     return (
         <Root {...props} {...dragHandlers}>
             <Table
+                className={`table--${table}`}
                 items={items.payload?.content ?? []}
                 levels={levels as any}
                 onSort={handleSort}
                 defaultSort={sort}
+                rowHeight={rowHeight}
                 renderBody={body => (
                     <Async
                         data={[items, () => getter({ sort, filter, segment }), [sort, filter, segment, table]]}
