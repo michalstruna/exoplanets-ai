@@ -37,11 +37,42 @@ const Table = Styled(HierarchicalTable)`
             pointer-events: none;
             min-width: 3rem;
         }
+        
+        &[data-header] {
+            height: 2.5rem;
+        
+            .image--star {
+                ${size('1.5rem')}
+            }
+        }
     }
     
-    &.table--${DbTable.DATASETS} ${HierarchicalTable.Cell} {
-        &:first-of-type {
-            width: 3rem;
+    &.table--${DbTable.DATASETS} {
+        ${HierarchicalTable.Row} {
+            &[data-is-odd="true"] {
+                ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
+                    background-color: #2F2F2F;
+                }
+            }
+        
+            &[data-is-odd="false"] {
+                ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
+                    background-color: #383838;
+                }
+            }
+        }
+    
+        ${HierarchicalTable.Cell} {
+            &:nth-of-type(2) {
+                min-width: 0;
+            }
+        
+            &:nth-of-type(3) {
+                border-right: 2px solid black;
+                left: 0;
+                position: sticky;
+                z-index: ${ZIndex.TABLE_BODY_NAME};
+            }
         }
     }
     
@@ -118,10 +149,6 @@ const Table = Styled(HierarchicalTable)`
                 
                 &[data-level="1"] {
                     height: 2rem;
-                
-                    .image--star {
-                        ${size('1.5rem')}
-                    }
                 }
             }
         }

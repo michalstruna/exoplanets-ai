@@ -5,8 +5,24 @@ import Styled from 'styled-components'
 import DbTable from '../Constants/DbTable'
 import { Level } from '../../Layout'
 import { MiniGraph } from '../../Stats'
-import { size } from '../../Style'
-import { useBodies } from '..'
+import { image, size } from '../../Style'
+import ItemControls from '../Components/ItemControls'
+import { Link } from '../../Routing'
+
+const Detail = Styled(Link)`
+    ${size()}
+    align-items: center;
+    display: flex;
+
+    &:after {   
+        ${image('Controls/ArrowRight.svg', '80%')}
+        ${size('1rem')}
+        content: "";
+        display: inline-block;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+    }
+`
 
 export const provideFilterColumns = (table: DbTable, strings: any): [string, string][] => {
     switch (table) {
@@ -51,7 +67,7 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                                 title: 'Průměr',
                                 accessor: (star: any) => star.diameter,
                                 icon: '/img/Universe/Database/Diameter.svg',
-                                render: (v: any) => v
+                                render: (v: any) => <>{v} km<br />{v} km<br />{v} km</>
                             },
                             { title: 'Hmotnost', accessor: (star: any) => star.mass, icon: '/img/Universe/Database/Mass.svg' },
                             {
@@ -136,22 +152,27 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                 levels: [
                     {
                         columns: [
-                            { title: '#', accessor: (dataset, index) => index + 1 },
+                            { title: '#', accessor: (dataset, i) => i + 1, width: '3rem' },
+                            { title: <PlanetImage />, accessor: (dataset: any) => '', render: () => <PlanetImage />, width: '5rem' },
                             {
                                 title: 'Název',
-                                accessor: (dataset: any, index) => dataset.name,
+                                accessor: dataset => dataset.name,
+                                render: name => <Detail pathname='/abc'><div><b>{name}</b><br /><i>Svetelné křivky</i></div></Detail>,
+                                width: 1.5,
+                                interactive: true,
                             },
                             {
-                                title: 'Velikost',
+                                title: 'Objektů',
                                 accessor: (dataset: any) => '203 100'
                             },
                             {
                                 title: 'Zpracováno',
-                                accessor: (dataset: any) => '98 %',
+                                accessor: () => '',
+                                render: () => <div>98.01 %<br /><i>37,8 GiB</i></div>
                             },
                             {
-                                title: 'Typ',
-                                accessor: (dataset: any) => 'Světelná křivka'
+                                title: 'Výpočetní čas',
+                                accessor: () => '12,05 h'
                             },
                             {
                                 title: 'Zveřejnění',
@@ -160,13 +181,29 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                             {
                                 title: 'Dokončení',
                                 accessor: () => ''
+                            },
+                            {
+                                title: 'Aktivní',
+                                accessor: () => '0'
+                            },
+                            {
+                                title: 'URL',
+                                accessor: () => 'exoplanetarchive.ipac.caltech.edu',
+                                render: () => <>exoplanetarchive.ipac.caltech.edu<br />exoplanetarchive.ipac</>,
+                                width: 2
+                            },
+                            {
+                                title: '',
+                                accessor: () => '',
+                                render: () => <ItemControls onEdit={() => null} onRemove={() => null} />,
+                                width: 1.5
                             }
                         ]
                     }
                 ],
                 selector: null as any,
                 getter: null as any,
-                rowHeight: () => 50
+                rowHeight: () => 72
             }
     }
 

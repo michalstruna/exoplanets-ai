@@ -39,6 +39,7 @@ export interface Column<TItem, TValue> {
     icon?: string
     headerIcon?: string
     width?: number | string
+    interactive?: boolean
 }
 
 export type Level = {

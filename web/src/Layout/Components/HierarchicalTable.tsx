@@ -37,6 +37,7 @@ const Row = Styled.div<RowProps>`
 
 interface CellProps {
     icon?: string
+    interactive?: boolean
 }
 
 const Cell = Styled.div<CellProps>`
@@ -63,6 +64,19 @@ const Cell = Styled.div<CellProps>`
             margin-right: 0.5rem;
         }
     `}
+    
+    ${props => props.interactive && css`
+        padding: 0;
+
+        &:hover {
+            background-color: #3B3B3B !important;
+        }
+        
+        & > a, & > button, & > div, & > p {
+            box-sizing: border-box;
+            padding: 0.5rem 1rem;
+        }
+    `}
 `
 
 const Header = Styled.div`
@@ -82,8 +96,13 @@ const HeaderRow = Styled(Row)`
         background-color: ${Color.DARKEST};
         border-bottom: 2px solid transparent;
         border-top: 2px solid transparent;
+        height: 2.5rem;
         cursor: pointer;
         user-select: none;
+        
+        &:empty {
+            pointer-events: none;
+        }
         
         &:hover {
             background-color: ${Color.DARKEST_HOVER};
@@ -186,7 +205,7 @@ const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, ren
         return (
             <Row key={index} style={{ ...style, height: rowHeight!(index, level) + 'px' }} isOdd={index % 2 === 1} data-is-odd={index % 2 === 1}>
                 {levels[level].columns.map((column, j) => (
-                    <Cell key={j} icon={column.icon} data-level={level} style={getWidth(column.width)}>
+                    <Cell key={j} icon={column.icon} data-level={level} style={getWidth(column.width)} interactive={column.interactive}>
                         {column.render ? column.render(column.accessor(item, index), item, index) : column.accessor(item, index)}
                     </Cell>
                 ))}
