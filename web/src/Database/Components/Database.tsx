@@ -5,10 +5,11 @@ import { useActions, useStrings } from '../../Data'
 import { useDrag, useElement } from '../../Native'
 import { ZIndex, size } from '../../Style'
 import { HierarchicalTable } from '../../Layout'
-import { setSort, useTable, useCursor } from '..'
+import { setSort, useCursor } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'
 import { providedStructure } from '../Utils/StructureProvider'
+import useRouter from 'use-react-router'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -69,7 +70,7 @@ const Table = Styled(HierarchicalTable)`
         }
     }
     
-    &.table--${DbTable.STARS_AND_PLANETS} { 
+    &.table--${DbTable.BODIES} { 
         ${HierarchicalTable.Row} {
             &[data-is-odd="true"] {
                 ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
@@ -144,7 +145,7 @@ const Database = ({ ...props }: Props) => {
 
     const { filter, segment, sort } = useCursor()
     const actions = useActions({ setSort })
-    const table = useTable()
+    const table = useRouter<any>().match.params.table
     const { app } = useElement()
     const strings = useStrings()
     const { levels, rowHeight, getter, selector } = React.useMemo(() => providedStructure(table, strings), [table, strings])

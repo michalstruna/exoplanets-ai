@@ -4,6 +4,7 @@ import { Query } from '../../Routing'
 import { Redux } from '../../Data'
 import { Requests } from '../../Async'
 import { Dataset } from '../types'
+import DbTable from '../Constants/DbTable'
 
 const get = (val: any, i = 0) => Math.round(val * Math.random())
 
@@ -121,8 +122,7 @@ const slice = Redux.slice(
         filter: Redux.empty<Filter>({}),
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),
-        usersRank: 0,
-        table: 0
+        usersRank: 0
     },
     ({ async, set }) => ({
         getBodies: async<Cursor, { content: any, count: number }>('bodies', ({ sort, filter, segment }) => new Promise(resolve => {
@@ -153,12 +153,9 @@ const slice = Redux.slice(
                 isAsc: [Query.SORT_IS_ASC, [false, true], true]
             })
         }),
-        getDatasets: async<Cursor, Dataset[]>('datasets', ({ segment, sort, filter }) => Requests.get(`datasets`)),
-        setTable: set<string>('table', {
-            sync: () => [Query.DB_TABLE, ['stars_and_planets', 'stars', 'planets', 'datasets'], 'stars_and_planets']
-        })
+        getDatasets: async<Cursor, Dataset[]>('datasets', ({ segment, sort, filter }) => Requests.get(`datasets`))
     })
 )
 
 export default slice.reducer
-export const { getBodies, setFilter, setSort, setSegment, setTable, getDatasets } = slice.actions
+export const { getBodies, setFilter, setSort, setSegment, getDatasets } = slice.actions

@@ -8,6 +8,7 @@ import * as Urls from '../Utils/Urls'
 
 interface Props extends Target, React.ComponentPropsWithoutRef<'a'> {
     replace?: boolean
+    enabledParent?: boolean
 }
 
 const Root = Styled(NavLink)`
@@ -25,7 +26,7 @@ const AbsoluteRoot = Styled.a`
     display: inline-block;
 `
 
-const Link = ({ hash, query, pathname, replace, ...props }: Props) => {
+const Link = ({ hash, query, pathname, replace, enabledParent, ...props }: Props) => {
 
     const target = { hash, search: query, pathname }
 
@@ -56,7 +57,7 @@ const Link = ({ hash, query, pathname, replace, ...props }: Props) => {
             {...props}
             activeClassName={Link.ACTIVE.replace('.', '')}
             onClick={handleClick}
-            exact
+            isActive={(match, location) => !pathname || ((enabledParent ? location.pathname === pathname : location.pathname.startsWith(pathname)) && (pathname !== '/' || pathname === location.pathname))}
             to={Urls.merge(target)} />
     )
 }

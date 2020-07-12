@@ -29,7 +29,7 @@ const Detail = Styled(Link)`
 
 export const provideFilterColumns = (table: DbTable, strings: any): [string, string][] => {
     switch (table) {
-        case DbTable.STARS_AND_PLANETS:
+        case DbTable.BODIES:
             return []
         case DbTable.DATASETS:
             return [
@@ -56,7 +56,7 @@ type Structure = {
 
 export const providedStructure = (table: DbTable, strings: any): Structure => {
     switch (table) {
-        case DbTable.STARS_AND_PLANETS:
+        case DbTable.BODIES:
             return {
                 levels: [
                     {

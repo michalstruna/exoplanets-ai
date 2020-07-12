@@ -18,5 +18,3 @@ export const useCursor = () => useSelector((state: any): Cursor => ({
 export const useUsersRank = () => useSelector(selectUsersRank)
 
 export const useDatasets = () => useSelector((state: any) => state.database.datasets)
-
-export const useTable = () => useSelector((state: any) => state.database.table)

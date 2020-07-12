@@ -1,5 +1,5 @@
 enum DbTable {
-    STARS_AND_PLANETS = 'stars_and_planets',
+    BODIES = 'bodies',
     STARS = 'stars',
     PLANETS = 'planets',
     DATASETS = 'datasets',

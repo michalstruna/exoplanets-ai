@@ -3,10 +3,12 @@ import Styled from 'styled-components'
 
 import { useFixedX } from '../../Style'
 import { Paginator, FilterForm, useActions, useStrings } from '../../Data'
-import { setSegment, setFilter, setTable } from '../Redux/Slice'
-import { useBodies, useCursor, useTable } from '..'
+import { setSegment, setFilter } from '../Redux/Slice'
+import { useBodies, useCursor } from '..'
 import DbTable from '../Constants/DbTable'
 import { provideFilterColumns } from '../Utils/StructureProvider'
+import useRouter from 'use-react-router'
+import { Urls } from '../../Routing'
 
 interface Props extends React.ComponentPropsWithRef<'div'> {
 
@@ -26,21 +28,22 @@ const Root = Styled.div`
 
 const DatabaseSelector = ({ ...props }: Props) => {
 
-    const actions = useActions({ setSegment, setFilter, setTable })
+    const actions = useActions({ setSegment, setFilter })
 
     const root = React.useRef()
     useFixedX(root as any)
     const { segment, filter } = useCursor()
     const bodies = useBodies()
     const bodiesCount = bodies.payload ? bodies.payload.count : 0
+    const table = useRouter<any>().match.params.table
 
-    const table = useTable()
     const strings = useStrings()
 
     const filterColumns = React.useMemo(() => provideFilterColumns(table, strings.properties), [table]) as [string, string][]
 
+
     const tables = React.useMemo(() => (
-        <select onChange={e => actions.setTable(e.target.value)}>
+        <select onChange={e => Urls.replace({ pathname: e.target.value })}>
             {Object.values(DbTable).map((table, i) => (
                 <option key={i} value={table}>
                     {table}
