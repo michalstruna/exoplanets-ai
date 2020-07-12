@@ -3,11 +3,14 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import DbTable from '../Constants/DbTable'
-import { Level } from '../../Layout'
+import { Cursor, Level } from '../../Layout'
 import { MiniGraph } from '../../Stats'
 import { image, size } from '../../Style'
 import ItemControls from '../Components/ItemControls'
 import { Link } from '../../Routing'
+import { getBodies, getDatasets } from '../Redux/Slice'
+import { useBodies, useDatasets } from '..'
+import { AsyncData } from '../../Data'
 
 const Detail = Styled(Link)`
     ${size()}
@@ -30,11 +33,14 @@ export const provideFilterColumns = (table: DbTable, strings: any): [string, str
             return []
         case DbTable.DATASETS:
             return [
-                ['name', 'Název'],
-                ['total_size', 'Total size'],
-                ['processed', 'Zpracováno'],
-                ['type', 'Typ'],
-                ['date', 'Datum']
+                ['name', strings.name],
+                ['type', strings.type],
+                ['total_size', strings.objects],
+                ['processed', strings.processed],
+                ['published', strings.published],
+                ['last_activity', strings.lastActivity],
+                ['time', strings.processTime],
+                ['url', strings.url]
             ]
     }
 
@@ -43,8 +49,8 @@ export const provideFilterColumns = (table: DbTable, strings: any): [string, str
 
 type Structure = {
     levels: Level[]
-    getter: () => void
-    selector: () => any[]
+    getter: (cursor: Cursor) => void
+    selector: () => AsyncData<any>
     rowHeight: (row: number, level: number) => number
 }
 
@@ -143,8 +149,8 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                         accessor: (star: any) => star.planets
                     }
                 ],
-                getter: null as any,
-                selector: null as any,
+                getter: getBodies,
+                selector: useBodies,
                 rowHeight: (index, level) => level === 0 ? 96 : 72
             }
         case DbTable.DATASETS:
@@ -153,41 +159,41 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                     {
                         columns: [
                             { title: '#', accessor: (dataset, i) => i + 1, width: '3rem' },
-                            { title: <PlanetImage />, accessor: (dataset: any) => '', render: () => <PlanetImage />, width: '5rem' },
+                            { title: <PlanetImage />, accessor: (dataset: any) => '', render: () => <PlanetImage />, width: '4rem' },
                             {
-                                title: 'Název',
+                                title: strings.properties.name,
                                 accessor: dataset => dataset.name,
                                 render: name => <Detail pathname='/abc'><div><b>{name}</b><br /><i>Svetelné křivky</i></div></Detail>,
                                 width: 1.5,
                                 interactive: true,
                             },
                             {
-                                title: 'Objektů',
+                                title: strings.properties.objects,
                                 accessor: (dataset: any) => '203 100'
                             },
                             {
-                                title: 'Zpracováno',
+                                title: strings.properties.processed,
                                 accessor: () => '',
                                 render: () => <div>98.01 %<br /><i>37,8 GiB</i></div>
                             },
                             {
-                                title: 'Výpočetní čas',
+                                title: strings.properties.processTime,
                                 accessor: () => '12,05 h'
                             },
                             {
-                                title: 'Zveřejnění',
+                                title: strings.properties.published,
                                 accessor: () => '6. 7. 2020'
                             },
                             {
-                                title: 'Dokončení',
-                                accessor: () => ''
+                                title: strings.properties.lastActivity,
+                                accessor: () => 'před 31 m'
                             },
                             {
-                                title: 'Aktivní',
-                                accessor: () => '0'
+                                title: strings.properties.priority,
+                                accessor: () => 'Nejvyšší'
                             },
                             {
-                                title: 'URL',
+                                title: strings.properties.url,
                                 accessor: () => 'exoplanetarchive.ipac.caltech.edu',
                                 render: () => <>exoplanetarchive.ipac.caltech.edu<br />exoplanetarchive.ipac</>,
                                 width: 2
@@ -201,8 +207,8 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                         ]
                     }
                 ],
-                selector: null as any,
-                getter: null as any,
+                selector: useDatasets,
+                getter: getDatasets,
                 rowHeight: () => 72
             }
     }

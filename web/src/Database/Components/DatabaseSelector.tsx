@@ -3,8 +3,8 @@ import Styled from 'styled-components'
 
 import { useFixedX } from '../../Style'
 import { Paginator, FilterForm, useActions, useStrings } from '../../Data'
-import { setBodiesSegment, setBodiesFilter, setTable } from '../Redux/Slice'
-import { useBodies, useBodiesFilter, useBodiesSegment, useTable } from '..'
+import { setSegment, setFilter, setTable } from '../Redux/Slice'
+import { useBodies, useCursor, useTable } from '..'
 import DbTable from '../Constants/DbTable'
 import { provideFilterColumns } from '../Utils/StructureProvider'
 
@@ -26,19 +26,18 @@ const Root = Styled.div`
 
 const DatabaseSelector = ({ ...props }: Props) => {
 
-    const actions = useActions({ setBodiesSegment, setBodiesFilter, setTable })
+    const actions = useActions({ setSegment, setFilter, setTable })
 
     const root = React.useRef()
     useFixedX(root as any)
-    const segment = useBodiesSegment()
-    const filter = useBodiesFilter()
+    const { segment, filter } = useCursor()
     const bodies = useBodies()
     const bodiesCount = bodies.payload ? bodies.payload.count : 0
 
     const table = useTable()
-    const strings = useStrings().database
+    const strings = useStrings()
 
-    const filterColumns = React.useMemo(() => provideFilterColumns(table, strings), [table]) as [string, string][]
+    const filterColumns = React.useMemo(() => provideFilterColumns(table, strings.properties), [table]) as [string, string][]
 
     const tables = React.useMemo(() => (
         <select onChange={e => actions.setTable(e.target.value)}>
@@ -57,12 +56,12 @@ const DatabaseSelector = ({ ...props }: Props) => {
             </div>
             <FilterForm
                 attributes={filterColumns}
-                onChange={actions.setBodiesFilter}
+                onChange={actions.setFilter}
                 initialValues={filter} />
             <Paginator
                 page={segment}
                 itemsCount={bodiesCount}
-                onChange={actions.setBodiesSegment}
+                onChange={actions.setSegment}
                 freeze={bodies.pending} />
         </Root>
     )

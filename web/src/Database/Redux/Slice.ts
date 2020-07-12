@@ -117,11 +117,11 @@ const slice = Redux.slice(
     'database',
     {
         bodies: Redux.async<any /* TODO: Body[] */>(),
+        datasets: Redux.async<Dataset[]>(),
         filter: Redux.empty<Filter>({}),
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),
         usersRank: 0,
-        datasets: Redux.async<Dataset[]>(),
         table: 0
     },
     ({ async, set }) => ({
@@ -133,20 +133,20 @@ const slice = Redux.slice(
                 })
             }, 1000)
         })),
-        setBodiesFilter: set<Filter>('filter', {
+        setFilter: set<Filter>('filter', {
             syncObject: () => ({ // TODO: Validate filter.
                 attribute: [Query.FILTER_ATTRIBUTE, () => true, []],
                 relation: [Query.FILTER_RELATION, () => true, []],
                 value: [Query.FILTER_VALUE, () => true, []]
             })
         }),
-        setBodiesSegment: set<Segment>('segment', {
+        setSegment: set<Segment>('segment', {
             syncObject: () => ({
                 index: [Query.SEGMENT_START, v => Number.isInteger(v) && v >= 0, 0],
                 size: [Query.SEGMENT_SIZE, [5, 10, 20, 50, 100, 200], 20]
             })
         }),
-        setBodiesSort: set<Sort>('sort', {
+        setSort: set<Sort>('sort', {
             syncObject: state => ({ // TODO: Level must be before column. Object is not order-safe. Replace key by first item array?
                 level: [Query.SORT_LEVEL, [0, 1], 0],
                 column: [Query.SORT_COLUMN, v => Number.isInteger(v) && v > 0 && v < levels[state.sort.level].columns.length, 1],
@@ -161,4 +161,4 @@ const slice = Redux.slice(
 )
 
 export default slice.reducer
-export const { getBodies, setBodiesFilter, setBodiesSort, setBodiesSegment, setTable, getDatasets } = slice.actions
+export const { getBodies, setFilter, setSort, setSegment, setTable, getDatasets } = slice.actions

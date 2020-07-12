@@ -5,17 +5,7 @@ import { useActions, useStrings } from '../../Data'
 import { useDrag, useElement } from '../../Native'
 import { ZIndex, size } from '../../Style'
 import { HierarchicalTable } from '../../Layout'
-import {
-    useBodies,
-    getBodies,
-    useBodiesFilter,
-    useBodiesSort,
-    setBodiesSort,
-    useBodiesSegment,
-    useTable,
-    useDatasets,
-    getDatasets
-} from '..'
+import { setSort, useTable, useCursor } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'
 import { providedStructure } from '../Utils/StructureProvider'
@@ -36,6 +26,13 @@ const Table = Styled(HierarchicalTable)`
             font-size: 85%;
             pointer-events: none;
             min-width: 3rem;
+        }
+        
+        &:nth-of-type(2) {
+            padding-right: 0;
+            position: relative;
+            z-index: ${ZIndex.TABLE_BODY_ICON};
+            min-width: 0;
         }
         
         &[data-header] {
@@ -62,11 +59,7 @@ const Table = Styled(HierarchicalTable)`
             }
         }
     
-        ${HierarchicalTable.Cell} {
-            &:nth-of-type(2) {
-                min-width: 0;
-            }
-        
+        ${HierarchicalTable.Cell} {        
             &:nth-of-type(3) {
                 border-right: 2px solid black;
                 left: 0;
@@ -91,15 +84,7 @@ const Table = Styled(HierarchicalTable)`
             }
         }
     
-        ${HierarchicalTable.Cell} {
-            &:nth-of-type(2) {
-                padding-right: 0;
-                position: relative;
-                text-align: right;
-                z-index: ${ZIndex.TABLE_BODY_ICON};
-                min-width: 0;
-            }
-        
+        ${HierarchicalTable.Cell} {        
             &:nth-of-type(3) {
                 border-right: 2px solid black;
                 left: 0;
@@ -157,46 +142,31 @@ const Table = Styled(HierarchicalTable)`
 
 const Database = ({ ...props }: Props) => {
 
-    const bodies = useBodies()
-    const datasets = useDatasets()
-
-    const filter = useBodiesFilter()
-    const sort = useBodiesSort()
-    const actions = useActions({ getBodies, setBodiesSort, getDatasets })
+    const { filter, segment, sort } = useCursor()
+    const actions = useActions({ setSort })
     const table = useTable()
-
-    const segment = useBodiesSegment()
     const { app } = useElement()
-    const strings = useStrings().database
+    const strings = useStrings()
+    const { levels, rowHeight, getter, selector } = React.useMemo(() => providedStructure(table, strings), [table, strings])
+    const items = selector()
 
-    const { levels, rowHeight } = React.useMemo(() => providedStructure(table, strings), [table, strings])
-
+    const handleSort = (newSort: any) => {
+        if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level) {
+            actions.setSort(newSort)
+        }
+    }
 
     const dragHandlers = useDrag(({ delta, data }) => {
         app.current.scrollLeft = data.x - delta.x
         app.current.scrollTop = data.y - delta.y
     }, () => ({ x: app.current.scrollLeft, y: app.current.scrollTop }))
 
-    const handleSort = (newSort: any) => {
-        if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level) {
-            actions.setBodiesSort(newSort)
-        }
-    }
-
-    const { items, getter } = React.useMemo(() => {
-        if (table === DbTable.DATASETS) {
-            return { items: datasets, getter: getDatasets }
-        } else {
-            return { items: bodies, getter: getBodies }
-        }
-    }, [table, bodies, datasets])
-
     return (
         <Root {...props} {...dragHandlers}>
             <Table
                 className={`table--${table}`}
                 items={items.payload?.content ?? []}
-                levels={levels as any}
+                levels={levels}
                 onSort={handleSort}
                 defaultSort={sort}
                 rowHeight={rowHeight}
@@ -211,3 +181,5 @@ const Database = ({ ...props }: Props) => {
 }
 
 export default Database
+
+// 188
