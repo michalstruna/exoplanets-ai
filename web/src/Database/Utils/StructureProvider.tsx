@@ -1,6 +1,7 @@
-
 import React from 'react'
 import Styled from 'styled-components'
+import Url from 'url'
+import prettyBytes from 'pretty-bytes'
 
 import DbTable from '../Constants/DbTable'
 import { Cursor, Level } from '../../Layout'
@@ -11,6 +12,8 @@ import { Link } from '../../Routing'
 import { getBodies, getDatasets } from '../Redux/Slice'
 import { useBodies, useDatasets } from '..'
 import { AsyncData } from '../../Data'
+import { Dates, Numbers } from '../../Native'
+import ProgressBar from '../../Layout/Components/ProgressBar'
 
 const Detail = Styled(Link)`
     ${size()}
@@ -27,6 +30,29 @@ const Detail = Styled(Link)`
     }
 `
 
+const DateTime = ({ s }: { s: number }) => (
+    <>
+        {Dates.formatDate(s * 1000)}
+        <br />
+        {Dates.formatTime(s * 1000)}
+    </>
+)
+
+const OptionalLine = ({ lines }: { lines: (string | null)[] }) => (
+    <>
+        {lines.filter(line => !!line).map(line => <div>{line}</div>)}
+    </>
+)
+
+const priorityColor = ['#666', '#888', '#EEE', '#EAA', '#F55']
+
+const Priority = ({ value, label }: { value: number, label: string }) => (
+    <div style={{ fontWeight: value > 3 ? 'bold' : undefined, color: priorityColor[value - 1] }}>
+        {label}
+    </div>
+)
+
+// TODO: Root strings in parameter.
 export const provideFilterColumns = (table: DbTable, strings: any): [string, string][] => {
     switch (table) {
         case DbTable.BODIES:
@@ -37,9 +63,10 @@ export const provideFilterColumns = (table: DbTable, strings: any): [string, str
                 ['type', strings.type],
                 ['total_size', strings.objects],
                 ['processed', strings.processed],
-                ['published', strings.published],
-                ['last_activity', strings.lastActivity],
                 ['time', strings.processTime],
+                ['created', strings.published],
+                ['modified', strings.lastActivity],
+                ['priority', strings.priority],
                 ['url', strings.url]
             ]
     }
@@ -61,8 +88,18 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                 levels: [
                     {
                         columns: [
-                            { title: '#', accessor: (star: any) => star.index + 1, render: (index: any) => index || '', width: '3rem' },
-                            { title: <Image />, accessor: (star: any) => star.type, render: () => <Image />, width: '5rem' },
+                            {
+                                title: '#',
+                                accessor: (star: any) => star.index + 1,
+                                render: (index: any) => index || '',
+                                width: '3rem'
+                            },
+                            {
+                                title: <Image />,
+                                accessor: (star: any) => star.type,
+                                render: () => <Image />,
+                                width: '5rem'
+                            },
                             {
                                 title: 'Hvězda',
                                 accessor: (star: any) => star.name,
@@ -75,7 +112,11 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                                 icon: '/img/Universe/Database/Diameter.svg',
                                 render: (v: any) => <>{v} km<br />{v} km<br />{v} km</>
                             },
-                            { title: 'Hmotnost', accessor: (star: any) => star.mass, icon: '/img/Universe/Database/Mass.svg' },
+                            {
+                                title: 'Hmotnost',
+                                accessor: (star: any) => star.mass,
+                                icon: '/img/Universe/Database/Mass.svg'
+                            },
                             {
                                 title: 'Teplota',
                                 accessor: (star: any) => star.temperature,
@@ -96,11 +137,19 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                                 accessor: (star: any) => star.planets.length,
                                 icon: '/img/Universe/Database/Planet.svg'
                             },
-                            { title: '', accessor: (star: any) => star.planets.length, icon: '', render: (value: any) => '' },
                             {
-                                title: <><Colored color='#77CC77'>Tranzit [%]</Colored>&nbsp;/&nbsp; <Colored color='#CC7777'>radiální rychlost [m/s]</Colored></>,
+                                title: '',
+                                accessor: (star: any) => star.planets.length,
+                                icon: '',
+                                render: (value: any) => ''
+                            },
+                            {
+                                title: <><Colored color='#77CC77'>Tranzit [%]</Colored>&nbsp;/&nbsp; <Colored
+                                    color='#CC7777'>radiální rychlost [m/s]</Colored></>,
                                 accessor: () => '',
-                                render: (value: any, star: any) => <MiniGraph data={star.tmp} lines={lines} labels={labels} height={80} width={320} />,
+                                render: (value: any, star: any) => <MiniGraph data={star.tmp} lines={lines}
+                                                                              labels={labels} height={80}
+                                                                              width={320} />,
                                 headerIcon: '/img/Universe/Database/Discovery.svg',
                                 width: '20rem'
                             }
@@ -108,15 +157,34 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                     },
                     {
                         columns: [
-                            { title: '', accessor: (planet: any) => planet.index + 1, render: (index: any) => index || '', width: '4rem' },
-                            { title: <PlanetImage />, accessor: (planet: any) => planet.type, render: () => <PlanetImage />, width: '6rem' },
-                            { title: 'Planeta', accessor: (planet: any) => planet.type, render: () => 'Horký jupiter', width: '16.5rem' },
+                            {
+                                title: '',
+                                accessor: (planet: any) => planet.index + 1,
+                                render: (index: any) => index || '',
+                                width: '4rem'
+                            },
+                            {
+                                title: <PlanetImage />,
+                                accessor: (planet: any) => planet.type,
+                                render: () => <PlanetImage />,
+                                width: '6rem'
+                            },
+                            {
+                                title: 'Planeta',
+                                accessor: (planet: any) => planet.type,
+                                render: () => 'Horký jupiter',
+                                width: '16.5rem'
+                            },
                             {
                                 title: 'Průměr',
                                 accessor: (planet: any) => planet.diameter,
                                 icon: '/img/Universe/Database/Diameter.svg'
                             },
-                            { title: 'Hmotnost', accessor: (planet: any) => planet.mass, icon: '/img/Universe/Database/Mass.svg' },
+                            {
+                                title: 'Hmotnost',
+                                accessor: (planet: any) => planet.mass,
+                                icon: '/img/Universe/Database/Mass.svg'
+                            },
                             {
                                 title: 'Teplota',
                                 accessor: (planet: any) => planet.surfaceTemperature,
@@ -159,43 +227,55 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                     {
                         columns: [
                             { title: '#', accessor: (dataset, i) => i + 1, width: '3rem' },
-                            { title: <PlanetImage />, accessor: (dataset: any) => '', render: () => <PlanetImage />, width: '4rem' },
+                            {
+                                title: <PlanetImage />,
+                                accessor: (dataset: any) => '',
+                                render: () => <PlanetImage />,
+                                width: '4rem'
+                            },
                             {
                                 title: strings.properties.name,
                                 accessor: dataset => dataset.name,
-                                render: name => <Detail pathname='/abc'><div><b>{name}</b><br /><i>Svetelné křivky</i></div></Detail>,
+                                render: (name, dataset) => <Detail pathname='/abc'>
+                                    <div><b>{name}</b><br /><i>{strings.datasets.types[dataset.type]}</i></div>
+                                </Detail>,
                                 width: 1.5,
-                                interactive: true,
+                                interactive: true
                             },
                             {
                                 title: strings.properties.objects,
-                                accessor: (dataset: any) => '203 100'
+                                accessor: dataset => Numbers.format(dataset.total_size)
                             },
                             {
                                 title: strings.properties.processed,
-                                accessor: () => '',
-                                render: () => <div>98.01 %<br /><i>37,8 GiB</i></div>
+                                accessor: dataset => 100 - Math.floor(10000 * dataset.current_size / dataset.total_size) / 100,
+                                render: (processed, dataset) => <ProgressBar range={dataset.total_size} value={dataset.total_size - dataset.current_size} label={prettyBytes(dataset.processed || 0)} />
                             },
                             {
                                 title: strings.properties.processTime,
-                                accessor: () => '12,05 h'
+                                accessor: dataset => dataset.time,
+                                render: time => Dates.formatDistance(strings, 0, time * 1000, true),
                             },
                             {
                                 title: strings.properties.published,
-                                accessor: () => '6. 7. 2020'
+                                accessor: dataset => dataset.created,
+                                render: created => <DateTime s={created} />
                             },
                             {
                                 title: strings.properties.lastActivity,
-                                accessor: () => 'před 31 m'
+                                accessor: dataset => dataset.modified,
+                                render: modified => Dates.formatDistance(strings, modified * 1000)
                             },
                             {
                                 title: strings.properties.priority,
-                                accessor: () => 'Nejvyšší'
+                                accessor: dataset => dataset.priority,
+                                render: priority => <Priority label={strings.datasets.priorities[priority - 1]} value={priority} />
                             },
                             {
                                 title: strings.properties.url,
-                                accessor: () => 'exoplanetarchive.ipac.caltech.edu',
-                                render: () => <>exoplanetarchive.ipac.caltech.edu<br />exoplanetarchive.ipac</>,
+                                accessor: dataset => (dataset.items_getter || '') + (dataset.item_getter || ''),
+                                render: (val, dataset) => <OptionalLine
+                                    lines={[Url.parse(dataset.items_getter || '').hostname, Url.parse(dataset.item_getter || '').hostname]} />,
                                 width: 2
                             },
                             {

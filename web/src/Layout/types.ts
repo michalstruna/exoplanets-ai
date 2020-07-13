@@ -43,6 +43,6 @@ export interface Column<TItem, TValue> {
 }
 
 export type Level = {
-    columns: Column<any, string | number | boolean>[] // TODO: Remove any.
+    columns: Column<any, any>[] // TODO: Remove any.
     accessor?: (item: any) => any[]
 }

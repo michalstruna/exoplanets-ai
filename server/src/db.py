@@ -7,14 +7,35 @@ class DatasetField(EmbeddedDocument):
     multiple = FloatField()
 
 
-class Dataset(Document):
+from time import time
+
+
+class Logged(Document):
+    created = LongField(required=True)
+    modified = LongField(required=True)
+
+    meta = {"allow_inheritance": True, "abstract": True}
+
+    def save(self, *args, **kwargs):
+        if not self.created:
+            self.created = time()
+
+        self.modified = time()
+
+        return super(Logged, self).save(*args, **kwargs)
+
+
+class Dataset(Logged):
     name = StringField(max_length=50, required=True, unique=True)
     fields = MapField(EmbeddedDocumentField(DatasetField), required=True)
     item_getter = URLField(max_length=500, regex=".*{#}.*")
     items_getter = URLField(max_length=500)
     items = ListField(StringField(max_length=50, default=[], required=True))
     total_size = IntField(min_value=0, required=True)
+    processed = LongField(min_value=0, default=0, required=True)
     type = StringField(max_length=50, required=True)
+    time = LongField(min_value=0, default=0, required=True)
+    priority = IntField(min_value=1, max_value=5, default=3, required=True)
 
 
 class StarProperties(EmbeddedDocument):
@@ -24,10 +45,6 @@ class StarProperties(EmbeddedDocument):
     mass = FloatField(min_value=0)
     temperature = IntField()
     distance = FloatField(min_value=0)
-
-    meta = {
-        "indexes": ["name"]
-    }
 
 
 class Transit(EmbeddedDocument):
@@ -47,14 +64,14 @@ class PlanetProperties(EmbeddedDocument):
     transit = EmbeddedDocumentField(Transit)
     dataset = ReferenceField(Dataset, required=True)
 
-    meta = {
-        "indexes": ["name"]
-    }
-
 
 class Planet(Document):
     properties = ListField(EmbeddedDocumentField(PlanetProperties, required=True), required=True, default=[])
     star = ReferenceField("Star", required=True)
+
+    meta = {
+        "indexes": ["properties.name"]
+    }
 
 
 class LightCurve(EmbeddedDocument):
@@ -66,6 +83,10 @@ class Star(Document):
     properties = ListField(EmbeddedDocumentField(StarProperties), default=[])
     light_curve = ListField(EmbeddedDocumentField(LightCurve), default=[])
     planets = ListField(ReferenceField(Planet), default=[])
+
+    meta = {
+        "indexes": ["properties.name"]
+    }
 
 
 class UserPersonal(EmbeddedDocument):

@@ -47,8 +47,29 @@ export default {
         published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
         url: 'URL',
         processTime: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
-        lastActivity: { [CS]: 'Aktivní', [EN]: 'Active' },
+        lastActivity: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
         priority: { [CS]: 'Priorita', [EN]: 'Priority' }
+    },
+
+    units: {
+        time: {
+            second: 's', minute: 'm', hour: 'h', day: 'd', year: { [CS]: 'r', [EN]: 'y' }
+        }
+    },
+
+    datasets: {
+        types: {
+            STAR_PROPERTIES: { [CS]: 'Hvězdy', [EN]: 'Stars' },
+            PLANET_PROPERTIES: { [CS]: 'Planety', [EN]: 'Planets' },
+            LIGHT_CURVE: { [CS]: 'Světelné křivky', [EN]: 'Light curves' }
+        },
+        priorities: [
+            { [CS]: 'Nejnižší', [EN]: 'Lowest' },
+            { [CS]: 'Nízká', [EN]: 'Low' },
+            { [CS]: 'Normální', [EN]: 'Normal' },
+            { [CS]: 'Vysoká', [EN]: 'High' },
+            { [CS]: 'Nejvyšší', [EN]: 'Highest' }
+        ]
     },
 
     stats: {
