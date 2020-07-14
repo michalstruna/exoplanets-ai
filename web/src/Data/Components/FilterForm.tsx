@@ -14,7 +14,7 @@ type Filter = {
 }
 
 interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
-    attributes: string[]
+    attributes: [string, string][]
     onChange: (values: Filter) => void
     initialValues?: Filter
     defaultRelation?: Validator.Relation
@@ -75,7 +75,7 @@ type Values = {
 const FilterForm = ({ defaultRelation, attributes, initialValues, onChange, ...props }: Props) => {
 
     const strings = useStrings().filter
-    const form = useForm<Values>({ defaultValues: { filter: [{ attribute: attributes[0], relation: defaultRelation, value: '' }] } })
+    const form = useForm<Values>({ defaultValues: { filter: [{ attribute: attributes[0] && attributes[0][0], relation: defaultRelation, value: '' }] } })
     const fields = useFieldArray({ name: 'filter', control: form.control })
 
     const getHandleFieldChange = (i: any) => (
@@ -113,7 +113,7 @@ const FilterForm = ({ defaultRelation, attributes, initialValues, onChange, ...p
                         <Field
                             name={`filter[${i}].attribute`}
                             type={Field.Type.SELECT}
-                            options={attributes.map(attr => ({ text: attr, value: attr }))} />
+                            options={attributes.map(attr => ({ text: attr[1], value: attr[0] }))} />
                         <Field
                             name={`filter[${i}].relation`}
                             type={Field.Type.SELECT}

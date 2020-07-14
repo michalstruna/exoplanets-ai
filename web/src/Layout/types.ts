@@ -1,4 +1,5 @@
 import { Validator } from '../Native'
+import React from 'react'
 
 export type Filter<TValue = string | number> = {
     attribute: string[]
@@ -29,4 +30,19 @@ export type TooltipData = {
         x: number
         y: number
     }
+}
+
+export interface Column<TItem, TValue> {
+    title: React.ReactNode
+    accessor: (item: TItem, index: number) => TValue
+    render?: (value: TValue, item: TItem, index: number) => React.ReactNode
+    icon?: string
+    headerIcon?: string
+    width?: number | string
+    interactive?: boolean
+}
+
+export type Level = {
+    columns: Column<any, any>[] // TODO: Remove any.
+    accessor?: (item: any) => any[]
 }

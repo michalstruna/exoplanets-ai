@@ -6,7 +6,7 @@ import { IconText } from '../../Layout'
 import Auth from './Auth'
 import { UserSimple } from '../types'
 import { useActions } from '../../Data'
-import { image, dots, size, flexCenter } from '../../Style'
+import { image, dots, size } from '../../Style'
 import { logout } from '../Redux/Slice'
 import Avatar from './Avatar'
 

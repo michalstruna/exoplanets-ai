@@ -16,58 +16,60 @@ export default {
     },
 
     home: {
-        title: {
-            [CS]: 'Nadpis',
-            [EN]: 'Title'
-        },
-        toggle: {
-            [CS]: 'Změnit jazyk',
-            [EN]: 'Change language'
-        },
-        help: {
-            [CS]: 'Nápověda',
-            [EN]: 'Help'
-        }
+        title: { [CS]: 'Nadpis', [EN]: 'Title' },
+        toggle: { [CS]: 'Změnit jazyk', [EN]: 'Change language' },
+        help: { [CS]: 'Nápověda', [EN]: 'Help' }
     },
 
     help: {
-        home: {
-            [CS]: 'Domů',
-            [EN]: 'Home'
-        }
+        home: { [CS]: 'Domů', [EN]: 'Home' }
     },
 
     filter: {
         relations: {
-            [Validator.Relation.CONTAINS]: {
-                [CS]: 'Obsahuje',
-                [EN]: 'Contains'
-            },
-            [Validator.Relation.EQUALS]: {
-                [CS]: 'Rovná se',
-                [EN]: 'Equals'
-            },
-            [Validator.Relation.ENDS_WITH]: {
-                [CS]: 'Končí na',
-                [EN]: 'Ends with'
-            },
-            [Validator.Relation.STARTS_WITH]: {
-                [CS]: 'Začíná na',
-                [EN]: 'Starts with'
-            },
-            [Validator.Relation.LESS_THAN]: {
-                [CS]: 'Je menší než',
-                [EN]: 'Is less than'
-            },
-            [Validator.Relation.MORE_THAN]: {
-                [CS]: 'Je větší než',
-                [EN]: 'Is more than'
-            }
+            [Validator.Relation.CONTAINS]: { [CS]: 'Obsahuje', [EN]: 'Contains' },
+            [Validator.Relation.EQUALS]: { [CS]: 'Rovná se', [EN]: 'Equals' },
+            [Validator.Relation.ENDS_WITH]: { [CS]: 'Končí na', [EN]: 'Ends with' },
+            [Validator.Relation.STARTS_WITH]: { [CS]: 'Začíná na', [EN]: 'Starts with' },
+            [Validator.Relation.LESS_THAN]: { [CS]: 'Je menší než', [EN]: 'Is less than' },
+            [Validator.Relation.MORE_THAN]: { [CS]: 'Je větší než', [EN]: 'Is more than' }
         },
-        value: {
-            [CS]: 'Hodnota filtru...',
-            [EN]: 'Filter value...'
+        value: { [CS]: 'Hodnota filtru...', [EN]: 'Filter value...' }
+    },
+
+    properties: {
+        // Datasets
+        name: { [CS]: 'Název', [EN]: 'Name' },
+        objects: { [CS]: 'Objektů', [EN]: 'Objects' },
+        processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
+        type: { [CS]: 'Typ', [EN]: 'Type' },
+        date: { [CS]: 'Datum', [EN]: 'Date' },
+        published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
+        url: 'URL',
+        processTime: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
+        lastActivity: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
+        priority: { [CS]: 'Priorita', [EN]: 'Priority' }
+    },
+
+    units: {
+        time: {
+            second: 's', minute: 'm', hour: 'h', day: 'd', year: { [CS]: 'r', [EN]: 'y' }
         }
+    },
+
+    datasets: {
+        types: {
+            STAR_PROPERTIES: { [CS]: 'Hvězdy', [EN]: 'Stars' },
+            PLANET_PROPERTIES: { [CS]: 'Planety', [EN]: 'Planets' },
+            LIGHT_CURVE: { [CS]: 'Světelné křivky', [EN]: 'Light curves' }
+        },
+        priorities: [
+            { [CS]: 'Nejnižší', [EN]: 'Lowest' },
+            { [CS]: 'Nízká', [EN]: 'Low' },
+            { [CS]: 'Normální', [EN]: 'Normal' },
+            { [CS]: 'Vysoká', [EN]: 'High' },
+            { [CS]: 'Nejvyšší', [EN]: 'Highest' }
+        ]
     },
 
     stats: {

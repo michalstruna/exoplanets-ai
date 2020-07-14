@@ -10,7 +10,7 @@ enum Query {
     SEGMENT_START = 'gt',
     SEGMENT_SIZE = 'gi',
 
-    SYNC_KEY = 'sk'
+    SYNC_KEY = 'sk',
 }
 
 export default Query

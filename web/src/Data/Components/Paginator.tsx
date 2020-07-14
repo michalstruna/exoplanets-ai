@@ -129,7 +129,7 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
             </Row>
             <Row>
                 <Stats>
-                    Zobrazeno {page.index * page.size + 1}-{(page.index + 1) * page.size} z {cache.itemsCount}. Velikost stránky {(
+                    Zobrazeno {page.index * page.size + 1}-{Math.min(cache.itemsCount, (page.index + 1) * page.size)} z {cache.itemsCount}. Velikost stránky {(
                     <PerPage onChange={event => handleChangeSize(parseInt(event.target.value))}>
                         {[5, 10, 20, 50, 100, 200].map((value, i) => (
                             <option key={i} value={value} selected={value === page.size}>

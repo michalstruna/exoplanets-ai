@@ -22,4 +22,4 @@ export { default as SpectralType } from './Constants/SpectralType'
  * Components.
  */
 export { default as Database } from './Components/Database'
-export { default as UsersList } from '../User/Components/UsersRank'
+export { default as ItemControls } from './Components/ItemControls'

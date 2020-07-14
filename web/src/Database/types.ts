@@ -1,6 +1,8 @@
 import PlanetType from './Constants/PlanetType'
 import StarType from './Constants/StarType'
 import SpectralType from './Constants/SpectralType'
+import React from 'react'
+import { Level } from '../Layout'
 
 export interface Planet {
     diameter?: number
@@ -24,4 +26,19 @@ export interface Star {
     planets?: Planet[]
     type?: StarType
     distance?: number
+}
+
+export type Dataset = {
+    _id: string
+    name: string
+    fields: Record<string, string>
+    items_getter?: string
+    type: string
+    total_size: number
+    current_size: number
+}
+
+export type SegmentData<T> = {
+    items: T[]
+    count: number
 }

@@ -48,10 +48,10 @@ const VirtualizedList = ({ itemsCount, itemRenderer, itemHeight, scrollable, ...
         const offsetTop = root.current ? root.current.offsetTop : 0
         const scrollableHeight = scrollable && scrollable.current ? scrollable.current.getBoundingClientRect().height : window.innerHeight
         const start = Math.min(totalHeight, Math.max(0, x - offsetTop))
-        const end = Math.min(totalHeight, Math.max(0, x - offsetTop + scrollableHeight))
+        const end = Math.min(totalHeight, Math.max(0, x - offsetTop + scrollableHeight, itemsCount - 1))
 
         return { from: Math.max(0, getIndexByOffset(start) - 1), to: getIndexByOffset(end) }
-    }, [scrollable, totalHeight, getItemHeight])
+    }, [scrollable, totalHeight, getItemHeight, itemsCount])
 
     const root = React.useRef<HTMLDivElement>()
 
@@ -71,11 +71,15 @@ const VirtualizedList = ({ itemsCount, itemRenderer, itemHeight, scrollable, ...
         const renderedItems = []
 
         for (let i = indexRange.from; i < indexRange.to; i++) {
+            if (i >= itemsCount) {
+                break
+            }
+
             renderedItems.push(itemRenderer({ index: i, style: { position: 'absolute', top: cumulatedHeights[i] } }))
         }
 
         return renderedItems
-    }, [itemRenderer, cumulatedHeights, indexRange])
+    }, [itemRenderer, cumulatedHeights, indexRange, itemsCount])
 
     return (
         <Root {...props} style={{ height: totalHeight }} ref={root as any}>

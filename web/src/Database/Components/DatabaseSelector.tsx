@@ -2,9 +2,12 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { useFixedX } from '../../Style'
-import { Paginator, FilterForm, useActions } from '../../Data'
-import { setBodiesSegment, setBodiesFilter } from '../Redux/Slice'
-import { useBodies, useBodiesFilter, useBodiesSegment } from '..'
+import { Paginator, FilterForm, useActions, useStrings } from '../../Data'
+import { setSegment, setFilter } from '../Redux/Slice'
+import { useCursor, useItems, useTable } from '..'
+import DbTable from '../Constants/DbTable'
+import { provideFilterColumns } from '../Utils/StructureProvider'
+import { Urls } from '../../Routing'
 
 interface Props extends React.ComponentPropsWithRef<'div'> {
 
@@ -24,29 +27,44 @@ const Root = Styled.div`
 
 const DatabaseSelector = ({ ...props }: Props) => {
 
-    const actions = useActions({ setBodiesSegment, setBodiesFilter })
+    const actions = useActions({ setSegment, setFilter })
 
     const root = React.useRef()
     useFixedX(root as any)
-    const segment = useBodiesSegment()
-    const filter = useBodiesFilter()
-    const bodies = useBodies()
-    const bodiesCount = bodies.payload ? bodies.payload.count : 0
+    const { segment, filter } = useCursor()
+
+    const table = useTable()
+    const items = useItems(table)
+
+    const strings = useStrings()
+
+    const filterColumns = React.useMemo(() => provideFilterColumns(table, strings.properties), [table]) as [string, string][]
+
+
+    const tables = React.useMemo(() => (
+        <select onChange={e => Urls.replace({ pathname: e.target.value })}>
+            {Object.values(DbTable).map((table, i) => (
+                <option key={i} value={table}>
+                    {table}
+                </option>
+            ))}
+        </select>
+    ), [])
 
     return (
         <Root {...props} ref={root as any}>
             <div>
-                <select>
-                    <option>Hvězdy a planety</option>
-                    <option>Hvězdy</option>
-                    <option>Planety</option>
-                </select>
+                {tables}
             </div>
             <FilterForm
-                attributes={['starName', 'starMass']}
-                onChange={actions.setBodiesFilter}
+                attributes={filterColumns}
+                onChange={actions.setFilter}
                 initialValues={filter} />
-            <Paginator page={segment} itemsCount={bodiesCount} onChange={actions.setBodiesSegment} freeze={bodies.pending} />
+            <Paginator
+                page={segment}
+                itemsCount={items.payload ? items.payload.count : 0}
+                onChange={actions.setSegment}
+                freeze={items.pending} />
         </Root>
     )
 

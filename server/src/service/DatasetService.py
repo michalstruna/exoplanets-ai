@@ -4,6 +4,7 @@ from mongoengine.errors import DoesNotExist
 from .Service import Service
 from .StarService import StarService
 from constants.Dataset import DatasetType
+from time import time
 
 
 class DatasetService(Service):
@@ -19,6 +20,7 @@ class DatasetService(Service):
         self.star_service = StarService()
 
     def add(self, dataset):
+        start = time()
         items = pd.read_csv(dataset["items_getter"])
         dataset["total_size"] = len(items.index)
         items = self.standardize_dataset(dataset, items)
@@ -26,13 +28,16 @@ class DatasetService(Service):
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
             dataset["items"] = []
+            dataset["processed"] = items.memory_usage().sum()
             result = self.json(self.collection(**dataset).save())
             stars = list(map(lambda star: self.db.Star(properties=[{**star, "dataset": result["_id"]}]), items.to_dict("records")))
             self.star_service.upsert_all_by_name(stars)
         else:
             result = self.json(self.collection(**dataset).save())
 
-        return self.get(result["_id"])
+        end = time()
+
+        return self.update(result["_id"], {"time": end - start})
 
     def get_item_from_dataset(self, id):
         items = self.aggregate([

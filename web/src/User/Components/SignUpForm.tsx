@@ -63,7 +63,7 @@ const Submit = Styled(PrimaryButton)`
 
 const LoginForm = ({ handleLogin, ...props }: Props) => {
 
-    const actions = useActions({ login })
+    //const actions = useActions({ login })
     const strings = useStrings().auth
 
     const handleSubmit = async (values: RegistrationData, form: FormContextValues<RegistrationData>) => {

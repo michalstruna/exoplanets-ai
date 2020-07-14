@@ -2,6 +2,7 @@ from abc import ABC
 from bson.objectid import ObjectId
 from mongoengine.errors import DoesNotExist
 import json
+import math
 
 import db
 
@@ -36,19 +37,27 @@ class Service(ABC):
     def id(self, id):
         return ObjectId(id)
 
-    def get_all(self, filter={}, limit=None, skip=None):
-        return self.aggregate(self.pipeline, filter, limit, skip)
+    def get_all(self, filter=[], sort=[], limit=math.inf, offset=0):
+        return self.aggregate(self.pipeline, filter, limit, offset, sort)
 
-    def aggregate(self, operations, filter={}, limit=None, skip=None):
+    def get_count(self, filter={}):
+        result = self.aggregate([{"$count": "count"}], filter)
+
+        return result[0]["count"] if result else 0
+
+    def aggregate(self, operations, filter={}, limit=None, skip=None, sort=None):
         pipeline = [{"$match": filter}]
-
-        if limit:
-            pipeline.append({"$limit": limit})
 
         if skip:
             pipeline.append({"$skip": skip})
 
+        if limit:
+            pipeline.append({"$limit": limit})
+
         pipeline += operations
+
+        if sort:
+            pass
 
         return list(self.collection.objects.aggregate(pipeline))
 
