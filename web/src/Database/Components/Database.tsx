@@ -5,11 +5,10 @@ import { useActions, useStrings } from '../../Data'
 import { useDrag, useElement } from '../../Native'
 import { ZIndex, size } from '../../Style'
 import { HierarchicalTable } from '../../Layout'
-import { setSort, useCursor } from '..'
+import { setSort, useCursor, useItems, useTable } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'
-import { providedStructure } from '../Utils/StructureProvider'
-import useRouter from 'use-react-router'
+import { provideStructure } from '../Utils/StructureProvider'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -145,11 +144,11 @@ const Database = ({ ...props }: Props) => {
 
     const { filter, segment, sort } = useCursor()
     const actions = useActions({ setSort })
-    const table = useRouter<any>().match.params.table
+    const table = useTable()
     const { app } = useElement()
     const strings = useStrings()
-    const { levels, rowHeight, getter, selector } = React.useMemo(() => providedStructure(table, strings), [table, strings])
-    const items = selector()
+    const { levels, rowHeight, getter } = React.useMemo(() => provideStructure(table, strings), [table, strings])
+    const items = useItems(table)
 
     const handleSort = (newSort: any) => {
         if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level) {

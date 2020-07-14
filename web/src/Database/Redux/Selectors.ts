@@ -1,11 +1,10 @@
 import { useSelector } from 'react-redux'
 import { Cursor } from '../../Layout'
+import DbTable from '../Constants/DbTable'
+import useRouter from 'use-react-router'
 
-const selectBodies = (state: any) => state.database.bodies
 const selectBodiesSort = (state: any) => state.database.sort
 const selectUsersRank = (state: any) => state.database.usersRank
-
-export const useBodies = () => useSelector(selectBodies)
 
 export const useSort = () => useSelector(selectBodiesSort)
 
@@ -17,4 +16,17 @@ export const useCursor = () => useSelector((state: any): Cursor => ({
 
 export const useUsersRank = () => useSelector(selectUsersRank)
 
-export const useDatasets = () => useSelector((state: any) => state.database.datasets)
+export const useTable = () => useRouter<any>().match.params.table
+
+export const useItems = (table: DbTable) => useSelector(({ database }: any) => {
+    switch (table) {
+        case DbTable.BODIES:
+            return database.bodies
+        case DbTable.STARS:
+            return database.stars
+        case DbTable.PLANETS:
+            return database.planets
+        case DbTable.DATASETS:
+            return database.datasets
+    }
+})

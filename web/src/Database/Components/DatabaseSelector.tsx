@@ -4,10 +4,9 @@ import Styled from 'styled-components'
 import { useFixedX } from '../../Style'
 import { Paginator, FilterForm, useActions, useStrings } from '../../Data'
 import { setSegment, setFilter } from '../Redux/Slice'
-import { useBodies, useCursor } from '..'
+import { useCursor, useItems, useTable } from '..'
 import DbTable from '../Constants/DbTable'
 import { provideFilterColumns } from '../Utils/StructureProvider'
-import useRouter from 'use-react-router'
 import { Urls } from '../../Routing'
 
 interface Props extends React.ComponentPropsWithRef<'div'> {
@@ -33,9 +32,9 @@ const DatabaseSelector = ({ ...props }: Props) => {
     const root = React.useRef()
     useFixedX(root as any)
     const { segment, filter } = useCursor()
-    const bodies = useBodies()
-    const bodiesCount = bodies.payload ? bodies.payload.count : 0
-    const table = useRouter<any>().match.params.table
+
+    const table = useTable()
+    const items = useItems(table)
 
     const strings = useStrings()
 
@@ -63,9 +62,9 @@ const DatabaseSelector = ({ ...props }: Props) => {
                 initialValues={filter} />
             <Paginator
                 page={segment}
-                itemsCount={bodiesCount}
+                itemsCount={items.payload ? items.payload.count : 0}
                 onChange={actions.setSegment}
-                freeze={bodies.pending} />
+                freeze={items.pending} />
         </Root>
     )
 

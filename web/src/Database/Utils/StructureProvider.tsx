@@ -10,8 +10,6 @@ import { image, size } from '../../Style'
 import ItemControls from '../Components/ItemControls'
 import { Link } from '../../Routing'
 import { getBodies, getDatasets } from '../Redux/Slice'
-import { useBodies, useDatasets } from '..'
-import { AsyncData } from '../../Data'
 import { Dates, Numbers } from '../../Native'
 import ProgressBar from '../../Layout/Components/ProgressBar'
 
@@ -52,6 +50,7 @@ const Priority = ({ value, label }: { value: number, label: string }) => (
     </div>
 )
 
+// TODO: Hooks instaed providers?
 // TODO: Root strings in parameter.
 export const provideFilterColumns = (table: DbTable, strings: any): [string, string][] => {
     switch (table) {
@@ -77,11 +76,10 @@ export const provideFilterColumns = (table: DbTable, strings: any): [string, str
 type Structure = {
     levels: Level[]
     getter: (cursor: Cursor) => void
-    selector: () => AsyncData<any>
     rowHeight: (row: number, level: number) => number
 }
 
-export const providedStructure = (table: DbTable, strings: any): Structure => {
+export const provideStructure = (table: DbTable, strings: any): Structure => {
     switch (table) {
         case DbTable.BODIES:
             return {
@@ -218,7 +216,6 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                     }
                 ],
                 getter: getBodies,
-                selector: useBodies,
                 rowHeight: (index, level) => level === 0 ? 96 : 72
             }
         case DbTable.DATASETS:
@@ -229,7 +226,7 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                             { title: '#', accessor: (dataset, i) => i + 1, width: '3rem' },
                             {
                                 title: <PlanetImage />,
-                                accessor: (dataset: any) => '',
+                                accessor: dataset => dataset.type,
                                 render: () => <PlanetImage />,
                                 width: '4rem'
                             },
@@ -287,7 +284,6 @@ export const providedStructure = (table: DbTable, strings: any): Structure => {
                         ]
                     }
                 ],
-                selector: useDatasets,
                 getter: getDatasets,
                 rowHeight: () => 72
             }

@@ -4,7 +4,6 @@ import { Query } from '../../Routing'
 import { Redux } from '../../Data'
 import { Requests } from '../../Async'
 import { Dataset } from '../types'
-import DbTable from '../Constants/DbTable'
 
 const get = (val: any, i = 0) => Math.round(val * Math.random())
 

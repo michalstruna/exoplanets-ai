@@ -34,7 +34,7 @@ const Inner = Styled.div`
 const ProgressBar = ({ range, value, label, ...props }: Props) => {
 
     const min = Array.isArray(range) ? range[0] : 0
-    const max = Array.isArray(range) ? range[1] : range * 1.5
+    const max = Array.isArray(range) ? range[1] : range
 
     const percentage = Math.round(100 * value / (max - min))
 
