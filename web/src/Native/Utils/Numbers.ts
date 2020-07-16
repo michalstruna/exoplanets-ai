@@ -4,6 +4,10 @@ Numeral.localeData().delimiters.thousands = ' '
 
 // TODO: Create component React.Fragment and useLanguage?
 export const format = (value: number): string => {
+    if (value === undefined || value === null) {
+        return ''
+    }
+
     const abs = Math.abs(value)
     const pattern = abs < 1 ? '0,0.[000]' : (abs < 10 ? '0,0.[00]' : (abs < 100 ? '0,0.[0]' : '0,0'))
 

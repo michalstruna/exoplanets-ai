@@ -216,7 +216,6 @@ const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, ren
     const headerRenderer = renderHeader ? renderHeader : (header: any) => header
     const bodyRenderer = renderBody ? renderBody : (body: any) => body
 
-    // TODO: InfiniteLoader.
     return (
         <Root {...props}>
             {headerRenderer(renderedHeader)}

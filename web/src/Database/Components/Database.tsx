@@ -43,55 +43,32 @@ const Table = Styled(HierarchicalTable)`
             }
         }
     }
-    
-    &.table--${DbTable.DATASETS} {
-        ${HierarchicalTable.Row} {
-            &[data-is-odd="true"] {
-                ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
-                    background-color: #2F2F2F;
-                }
-            }
-        
-            &[data-is-odd="false"] {
-                ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
-                    background-color: #383838;
-                }
+
+    ${HierarchicalTable.Row} {
+        &[data-is-odd="true"] {
+            ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
+                background-color: #2F2F2F;
             }
         }
     
-        ${HierarchicalTable.Cell} {        
-            &:nth-of-type(3) {
-                border-right: 2px solid black;
-                left: 0;
-                position: sticky;
-                z-index: ${ZIndex.TABLE_BODY_NAME};
+        &[data-is-odd="false"] {
+            ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
+                background-color: #383838;
             }
         }
     }
-    
-    &.table--${DbTable.BODIES} { 
-        ${HierarchicalTable.Row} {
-            &[data-is-odd="true"] {
-                ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
-                    background-color: #2F2F2F;
-                }
-            }
-        
-            &[data-is-odd="false"] {
-                ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
-                    background-color: #383838;
-                }
-            }
+
+    ${HierarchicalTable.Cell} {        
+        &:nth-of-type(3) {
+            border-right: 2px solid black;
+            left: 0;
+            position: sticky;
+            z-index: ${ZIndex.TABLE_BODY_NAME};
         }
+    }
     
-        ${HierarchicalTable.Cell} {        
-            &:nth-of-type(3) {
-                border-right: 2px solid black;
-                left: 0;
-                position: sticky;
-                z-index: ${ZIndex.TABLE_BODY_NAME};
-            }
-            
+    &.table--${DbTable.BODIES} {     
+        ${HierarchicalTable.Cell} {                    
             &:nth-of-type(11) {            
                 &:not([data-header])[data-level="0"] {
                     padding-left: 0;

@@ -119,9 +119,15 @@ Tyto změny však nemusí být na první pohled viditelné, protože v~soustavě
 
 Tranzitní metoda vzbuzuje velký zájem především kvůli možnosti objevovat i~malé planety podobné Zemi~--~takové planety by mohly spíše splňovat podmínky pro život. Nevýhodou je, že pouze malé procento planet má dráhu v~rovině směrem k~pozorovateli na Zemi. Odhadem 97 \% \textbf{[TODO]} všech potenciálních planet nemůže být tranzitní metodou zachyceno.
 
-\subsubsection{Target pixel image}
+\subsubsection{Target pixel file}
 
-\subsubsection{Měření jasu hvězdy}
+Prvním krokem v~analýze hvězdy tranzitní metodou je její fyzické pozorování. Teleskop obvykle pozoruje část oblohy po dobu několika měsíců, přičemž každých několik desítek minut vytvoří snímek dané části oblohy. Z~výsledných fotografií se následně vyextrahují jednotlivé hvězdy, čímž vzniknou tzv. target pixel files.
+
+TPF obsahuje část oblohy o velikosti několika pixelů, na které se v původní fotografii nacházela zkoumaná hvězda a~její okolí. Barva pixelů je určena jasem.
+
+\img{Target pixel file hvězdy Kepler-10}{img/tpf.png}
+
+\subsubsection{Světelná křivka hvězdy}
 
 \img[1]{Rozklad periodické funkce na složky}{stats/sinus.pdf}
 \footnotetext[1]{Vytvořeno autorem.}

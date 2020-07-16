@@ -4,12 +4,12 @@ import Url from 'url'
 import prettyBytes from 'pretty-bytes'
 
 import DbTable from '../Constants/DbTable'
-import { Cursor, Level } from '../../Layout'
+import { Cursor, Fraction, Level } from '../../Layout'
 import { MiniGraph } from '../../Stats'
 import { image, size } from '../../Style'
 import ItemControls from '../Components/ItemControls'
 import { Link } from '../../Routing'
-import { getBodies, getDatasets } from '../Redux/Slice'
+import { getBodies, getStars, getDatasets } from '../Redux/Slice'
 import { Dates, Numbers } from '../../Native'
 import ProgressBar from '../../Layout/Components/ProgressBar'
 
@@ -28,11 +28,22 @@ const Detail = Styled(Link)`
     }
 `
 
+const SpectralClassRoot = Styled.div`
+    display: inline-block;
+    font-weight: bold;
+`
+
+const SpectralClass = ({ temperature }: { temperature: number }) => (
+    <SpectralClassRoot style={{ color: `#A00` }}>
+        O
+    </SpectralClassRoot>
+)
+
 const DateTime = ({ s }: { s: number }) => (
     <>
-        {Dates.formatDate(s * 1000)}
+        {Dates.formatDate(s)}
         <br />
-        {Dates.formatTime(s * 1000)}
+        {Dates.formatTime(s)}
     </>
 )
 
@@ -40,6 +51,12 @@ const OptionalLine = ({ lines }: { lines: (string | null)[] }) => (
     <>
         {lines.filter(line => !!line).map(line => <div>{line}</div>)}
     </>
+)
+
+const MultiValue = ({ items, property, formatter = val => val }: { items: any[], property: string, formatter?: (val: any) => any }) => (
+    <div>
+        {items.filter(item => !!item[property]).map(item => <div>{formatter(item[property])}</div>)}
+    </div>
 )
 
 const priorityColor = ['#666', '#888', '#EEE', '#EAA', '#F55']
@@ -55,6 +72,8 @@ const Priority = ({ value, label }: { value: number, label: string }) => (
 export const provideFilterColumns = (table: DbTable, strings: any): [string, string][] => {
     switch (table) {
         case DbTable.BODIES:
+            return []
+        case DbTable.STARS:
             return []
         case DbTable.DATASETS:
             return [
@@ -218,6 +237,94 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                 getter: getBodies,
                 rowHeight: (index, level) => level === 0 ? 96 : 72
             }
+        case DbTable.STARS:
+            return {
+                levels: [
+                    {
+                        columns: [
+                            { title: '#', accessor: (dataset, i) => i + 1, width: '3rem' },
+                            {
+                                title: <Image />,
+                                accessor: dataset => dataset.type,
+                                render: () => <Image />,
+                                width: '5rem'
+                            },
+                            {
+                                title: strings.properties.name,
+                                accessor: star => star.properties[0].name,
+                                render: (name, star) => <Detail pathname='/abc'>
+                                    <div><b>{name}</b><br /><i>{strings.stars.types.YELLOW_DWARF}</i></div>
+                                </Detail>,
+                                width: 1.5,
+                                interactive: true
+                            },
+                            {
+                                title: strings.properties.diameter,
+                                accessor: star => star.properties[0].diameter,
+                                render: (diameter, star) => <MultiValue items={star.properties} property='diameter' formatter={val => Numbers.format(val) + ' ☉'} />,
+                                icon: '/img/Universe/Database/Diameter.svg'
+                            },
+                            {
+                                title: strings.properties.mass,
+                                accessor: star => star.properties[0].mass,
+                                render: (mass, star) => <MultiValue items={star.properties} property='mass' formatter={val => Numbers.format(val) + ' ☉'} />,
+                                icon: '/img/Universe/Database/Mass.svg'
+                            },
+                            {
+                                title: strings.properties.temperature,
+                                accessor: star => star.properties[0].temperature,
+                                render: (_, star) => <MultiValue items={star.properties} property='temperature' formatter={val => <>{Numbers.format(val)} K (<SpectralClass temperature={val} />)</>} />,
+                                icon: '/img/Universe/Database/Temperature.svg'
+                            },
+                            {
+                                title: strings.properties.luminosity,
+                                accessor: star => star.properties[0].luminosity,
+                                render: (_, star) => <MultiValue items={star.properties} property='luminosity' formatter={val => Numbers.format(val) + ' ☉'} />,
+                                icon: '/img/Universe/Database/Luminosity.svg'
+                            },
+                            {
+                                title: strings.properties.density,
+                                accessor: star => star.properties[0].density,
+                                render: (_, star) => <MultiValue items={star.properties} property='density' formatter={val => <>{Numbers.format(val)} <Fraction top='kg' bottom={<>m<sup>3</sup></>}/></>} />,
+                                icon: '/img/Universe/Database/Density.svg'
+                            },
+                            {
+                                title: strings.properties.distance,
+                                accessor: star => star.properties[0].distance,
+                                render: distance => Numbers.format(distance) + ' ly',
+                                icon: '/img/Universe/Database/Distance.svg'
+                            },
+                            {
+                                title: strings.properties.gravity,
+                                accessor: star => star.properties[0].gravity,
+                                render: (_, star) => <MultiValue items={star.properties} property='gravity' formatter={val => <>{Numbers.format(val)} <Fraction top='m' bottom={<>s<sup>2</sup></>}/></>} />,
+                                icon: '/img/Universe/Database/Gravity.svg'
+                            },
+                            {
+                                title: strings.properties.planets,
+                                accessor: star => star.planets,
+                                render: () => 3,
+                                icon: '/img/Universe/Database/Planet.svg'
+                            },
+                            {
+                                title: strings.properties.datasets,
+                                accessor: star => star.properties.length, // TODO: Light curve
+                                render: (_, star) => <MultiValue items={star.properties} property='dataset' />,
+                                icon: '/img/Universe/Database/Datasets.svg',
+                                width: 1.5
+                            },
+                            {
+                                title: '',
+                                accessor: () => '',
+                                render: () => <ItemControls onEdit={() => null} onRemove={() => null} />,
+                                width: 1.5
+                            }
+                        ]
+                    }
+                ],
+                getter: getStars,
+                rowHeight: () => 96
+            }
         case DbTable.DATASETS:
             return {
                 levels: [
@@ -246,12 +353,14 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                             {
                                 title: strings.properties.processed,
                                 accessor: dataset => 100 - Math.floor(10000 * dataset.current_size / dataset.total_size) / 100,
-                                render: (processed, dataset) => <ProgressBar range={dataset.total_size} value={dataset.total_size - dataset.current_size} label={prettyBytes(dataset.processed || 0)} />
+                                render: (processed, dataset) => <ProgressBar range={dataset.total_size}
+                                                                             value={dataset.total_size - dataset.current_size}
+                                                                             label={prettyBytes(dataset.processed || 0)} />
                             },
                             {
                                 title: strings.properties.processTime,
                                 accessor: dataset => dataset.time,
-                                render: time => Dates.formatDistance(strings, 0, time * 1000, true),
+                                render: time => Dates.formatDistance(strings, 0, time, true)
                             },
                             {
                                 title: strings.properties.published,
@@ -261,12 +370,13 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                             {
                                 title: strings.properties.lastActivity,
                                 accessor: dataset => dataset.modified,
-                                render: modified => Dates.formatDistance(strings, modified * 1000)
+                                render: modified => Dates.formatDistance(strings, modified)
                             },
                             {
                                 title: strings.properties.priority,
                                 accessor: dataset => dataset.priority,
-                                render: priority => <Priority label={strings.datasets.priorities[priority - 1]} value={priority} />
+                                render: priority => <Priority label={strings.datasets.priorities[priority - 1]}
+                                                              value={priority} />
                             },
                             {
                                 title: strings.properties.url,

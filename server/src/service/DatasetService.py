@@ -20,10 +20,15 @@ class DatasetService(Service):
         self.star_service = StarService()
 
     def add(self, dataset):
-        start = time()
+        start = time() * 1000
         items = pd.read_csv(dataset["items_getter"])
         dataset["total_size"] = len(items.index)
         items = self.standardize_dataset(dataset, items)
+        items["density"] = 1410 * items["mass"] / items["diameter"] ** 3
+        items["gravity"] = 274 * items["mass"] / items["diameter"] ** 2
+        items["luminosity"] = (items["diameter"] ** 2) * ((items["temperature"] / 5780) ** 4)  # TODO: Constants.
+
+        items = items.where(pd.notnull(items), None)
         dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
@@ -35,7 +40,7 @@ class DatasetService(Service):
         else:
             result = self.json(self.collection(**dataset).save())
 
-        end = time()
+        end = time() * 1000
 
         return self.update(result["_id"], {"time": end - start})
 

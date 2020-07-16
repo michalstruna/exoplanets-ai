@@ -5,6 +5,7 @@ export { default as VirtualizedList } from './Components/VirtualizedList'
 export { default as HierarchicalTable } from './Components/HierarchicalTable'
 export { default as IconText } from './Components/IconText'
 export { default as Log } from './Components/Log'
+export { default as Fraction } from './Components/Fraction'
 export * from './Components/Styled'
 
 export { default as Reducer } from './Redux/Slice'

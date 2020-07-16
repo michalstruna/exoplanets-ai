@@ -14,6 +14,6 @@ api = Api(
 )
 
 api.add_namespace(datasets_api.ns)
+api.add_namespace(stars_api.ns)
 api.add_namespace(planets_api)
-api.add_namespace(stars_api)
 api.add_namespace(users_api)
