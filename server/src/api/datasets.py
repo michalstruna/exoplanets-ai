@@ -26,9 +26,9 @@ dataset = api.ns.model("Dataset", {
     "total_size": fields.Integer(required=True, description="Count of all items in dataset."),
     "current_size": fields.Integer(required=True, description="Count of not yet processed items in dataset."),
     "processed": fields.Integer(required=True, description="Count of processed bytes from dataset."),
-    "created": fields.Integer(required=True, description="Timestamp of dataset publication [s]."),
-    "modified": fields.Integer(required=True, description="Timestamp of last dataset change [s]."),
-    "time": fields.Integer(required=True, description="Total process time in dataset [s]."),
+    "created": fields.Integer(required=True, description="Timestamp of dataset publication [ms]."),
+    "modified": fields.Integer(required=True, description="Timestamp of last dataset change [ms]."),
+    "time": fields.Integer(required=True, description="Total process time in dataset [ms]."),
     "priority": fields.Integer(required=True, min=1, max=5, default=3, description="1 = lowest, 2 = low, 3 = normal, 4 = high, 5 = highest. More prioritized datasets will be processed first.")
 })
 

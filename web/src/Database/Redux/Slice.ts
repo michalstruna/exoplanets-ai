@@ -3,7 +3,7 @@ import { Filter, Sort, Segment, Cursor } from '../../Layout'
 import { Query } from '../../Routing'
 import { Redux } from '../../Data'
 import { Requests } from '../../Async'
-import { Dataset } from '../types'
+import { Dataset, Star } from '../types'
 
 const get = (val: any, i = 0) => Math.round(val * Math.random())
 
@@ -117,6 +117,7 @@ const slice = Redux.slice(
     'database',
     {
         bodies: Redux.async<any /* TODO: Body[] */>(),
+        stars: Redux.async<any[]>(), // TODO: Star
         datasets: Redux.async<Dataset[]>(),
         filter: Redux.empty<Filter>({}),
         sort: Redux.empty<Sort>({}),
@@ -152,9 +153,10 @@ const slice = Redux.slice(
                 isAsc: [Query.SORT_IS_ASC, [false, true], true]
             })
         }),
-        getDatasets: async<Cursor, Dataset[]>('datasets', ({ segment, sort, filter }) => Requests.get(`datasets`))
+        getStars: async<Cursor, any[]>('stars', ({ segment, sort, filter }) => Requests.get('stars')), // TODO: Star[], sent cursor.
+        getDatasets: async<Cursor, Dataset[]>('datasets', ({ segment, sort, filter }) => Requests.get(`datasets`)) // TODO: Sent cursor.
     })
 )
 
 export default slice.reducer
-export const { getBodies, setFilter, setSort, setSegment, getDatasets } = slice.actions
+export const { getBodies, setFilter, setSort, setSegment, getStars, getDatasets } = slice.actions

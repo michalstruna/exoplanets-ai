@@ -48,7 +48,19 @@ export default {
         url: 'URL',
         processTime: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
         lastActivity: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
-        priority: { [CS]: 'Priorita', [EN]: 'Priority' }
+        priority: { [CS]: 'Priorita', [EN]: 'Priority' },
+
+        // Stars
+        diameter: { [CS]: 'Průměr', [EN]: 'Diameter' },
+        mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
+        distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
+        temperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
+        spectralClass: { [CS]: 'Spektr. třída', [EN]: 'Spectr. class' },
+        density: { [CS]: 'Hustota', [EN]: 'Density' },
+        luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
+        gravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
+        planets: { [CS]: 'Planet', [EN]: 'Planets' },
+        datasets: { [CS]: 'Datasety', [EN]: 'Datasets' }
     },
 
     units: {
@@ -70,6 +82,12 @@ export default {
             { [CS]: 'Vysoká', [EN]: 'High' },
             { [CS]: 'Nejvyšší', [EN]: 'Highest' }
         ]
+    },
+
+    stars: {
+        types: {
+            YELLOW_DWARF: { [CS]: 'Žlutý trpaslík', [EN]: 'Yellow dwarf' }
+        }
     },
 
     stats: {

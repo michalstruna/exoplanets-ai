@@ -4,6 +4,7 @@ import Paginate from 'react-paginate'
 
 import { size, Color, Duration } from '../../Style'
 import { Segment } from '../../Layout/types'
+import { Numbers } from '../../Native'
 
 interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
     page: Segment
@@ -26,12 +27,15 @@ const Root = Styled.div`
      }
 
     .${PAGE}, .${BREAK}, .${EDGE} {
-        ${size('2.5rem', '2rem', true)}
+        ${size('auto', '2rem', true)}
         background-color: ${Color.DARKEST};
+        box-sizing: border-box;
         display: inline-block;
         overflow: hidden;
+        padding: 0 0.2rem;
         text-align: center;
-        transition: background-color: ${Duration.MEDIUM}
+        transition: background-color: ${Duration.MEDIUM};
+        min-width: 2.5rem;
         
         &:hover {
             background-color: #2A2A2A;
@@ -41,6 +45,7 @@ const Root = Styled.div`
             ${size()}
             display: block;
             outline: none;
+            padding: 0;
         }
     }
 
@@ -48,6 +53,7 @@ const Root = Styled.div`
         background-color: transparent;
         pointer-events: none;
         width: 0.5rem;
+        min-width: 0;
     }
     
     .${ACTIVE} {
@@ -129,7 +135,7 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
             </Row>
             <Row>
                 <Stats>
-                    Zobrazeno {page.index * page.size + 1}-{Math.min(cache.itemsCount, (page.index + 1) * page.size)} z {cache.itemsCount}. Velikost stránky {(
+                    Zobrazeno {page.index * page.size + 1}-{Math.min(cache.itemsCount, (page.index + 1) * page.size)} z {Numbers.format(cache.itemsCount)}. Velikost stránky {(
                     <PerPage onChange={event => handleChangeSize(parseInt(event.target.value))}>
                         {[5, 10, 20, 50, 100, 200].map((value, i) => (
                             <option key={i} value={value} selected={value === page.size}>
