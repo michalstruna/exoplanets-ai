@@ -1,56 +1,114 @@
 import React from 'react'
-import { LineChart, Line, YAxis } from 'recharts'
+import { LineChart, Line, YAxis, XAxis, ReferenceArea } from 'recharts'
 
 interface Props extends React.ComponentPropsWithoutRef<'canvas'> {
     data: any
     width: number
     height: number
-    lines: string[]
-    labels?: string[]
 }
 
-const MiniGraph = ({ data, lines, labels, ...props }: Props) => {
+const initState = { left: 'dataMin', right: 'dataMax', refAreaLeft: '', refAreaRight: '', animation: false, top: 'dataMax', bottom: 'dataMin' }
 
-    const renderYAxis = (orientation: string = 'left', color: string) => (
-        <YAxis
-            axisLine={false}
-            tickLine={false}
-            type='number'
-            tickCount={10}
-            interval={'preserveStartEnd'}
-            domain={['dataMin', 'dataMax']}
-            yAxisId={orientation}
-            tick={{ fill: color, fontSize: 13 }}
-            orientation={orientation as 'left' | 'right'} />
-    )
+const MiniGraph = ({ data, height, width }: Props) => {
 
-    const renderLine = (name: string, key: string, color: string, axisId: string) => (
-        <Line
-            name={name}
-            type='monotone'
-            dataKey={key}
-            stroke={color}
-            strokeWidth={2}
-            opacity={0.7}
-            dot={false}
-            yAxisId={axisId}
-            isAnimationActive={false} />
-    )
+    const [zoom, setZoom] = React.useState(initState)
 
-    const withLeft = data && data[0][lines[0]]
+    return React.useMemo(() => {
+        const values = data.map((value: any, i: number) => ({ value, i }))
 
-    return React.useMemo(() => (
-        <LineChart data={data} width={320} height={80}>
-            {renderLine((labels as any)[0] || lines[0], lines[0], '#77CC77', withLeft ? 'left' : 'right')}
-            {renderYAxis(withLeft ? 'left' : 'right', '#77CC77')}
-            {renderLine((labels as any)[1] || lines[1], lines[1], '#CC7777', withLeft ? 'right' : 'left')}
-            {renderYAxis(withLeft ? 'right' : 'left', '#CC7777')}
-        </LineChart>
-    ), [data, lines, labels, withLeft])
+        const getAxisYDomain = (from: any, to: any, ref: any) => {
+            const refData = values.slice(from - 1, to)
+            let [bottom, top] = [refData[0][ref], refData[0][ref]]
+
+            refData.forEach( (d: any) => {
+                if (d[ref] > top) top = d[ref]
+                if (d[ref] < bottom) bottom = d[ref]
+            })
+
+            return [bottom, top]
+        }
+
+        const zoomIn = () => {
+            if (zoom.refAreaLeft === zoom.refAreaRight || zoom.refAreaRight === '') {
+                setZoom({ ...zoom, refAreaLeft: '', refAreaRight: '' })
+                return
+            }
+
+            let { refAreaLeft, refAreaRight } = zoom
+
+            if (zoom.refAreaLeft > zoom.refAreaRight) {
+                [refAreaLeft, refAreaRight] = [refAreaRight, refAreaLeft]
+            }
+
+            const [bottom, top] = getAxisYDomain(refAreaLeft, refAreaRight, 'value')
+
+            console.log(bottom, top, refAreaLeft, refAreaRight)
+
+            setZoom({ ...zoom, refAreaLeft: '', refAreaRight: '', left: refAreaLeft, right: refAreaRight, bottom, top })
+        }
+
+        const zoomOut = () => {
+            setZoom({ ...zoom, refAreaLeft: '', refAreaRight: '', left: 'dataMin', right: 'dataMax', bottom: 'dataMin', top: 'dataMin' })
+        }
+
+        const renderLine = (name: string, color: string) => (
+            <Line
+                name={name}
+                type='monotone'
+                dataKey='value'
+                stroke={color}
+                strokeWidth={1}
+                opacity={0.7}
+                dot={false}
+                isAnimationActive={zoom.animation}
+                animationDuration={200} />
+        )
+
+        return (
+            <div onDoubleClick={zoomOut} onMouseDown={e => e.stopPropagation()} onMouseMove={e => e.stopPropagation()}>
+                <LineChart
+                    data={values}
+                    width={width}
+                    height={height}
+                    margin={{ left: 0, right: 0 }}
+                    onMouseDown={e => e && setZoom({ ...zoom, refAreaLeft: e.activeLabel}) }
+                    onMouseMove={e => e && zoom.refAreaLeft && setZoom({ ...zoom, refAreaRight: e.activeLabel}) }
+                    onMouseUp={zoomIn}
+                    onMouseEnter={() => setZoom({ ...zoom, animation: true })}
+                    onMouseLeave={() => setZoom({ ...zoom, animation: false })}>
+                    {renderLine('line', '#FAA')}
+
+                    <XAxis
+                        allowDataOverflow={true}
+                        axisLine={false}
+                        tickLine={false}
+                        height={0}
+                        dataKey='i'
+                        type='number'
+                        domain={[zoom.left, zoom.right]} />
+
+                    <YAxis
+                        allowDataOverflow={true}
+                        axisLine={false}
+                        tickLine={false}
+                        tickFormatter={x => Math.round(x * 1000) / 1000}
+                        type='number'
+                        tickCount={10}
+                        interval={'preserveStart'}
+                        domain={[zoom.bottom, zoom.top]}
+                        tick={{ fill: '#FAA', fontSize: 13 }}
+                        minTickGap={40} />
+
+                    {(zoom.refAreaLeft && zoom.refAreaRight) ? <ReferenceArea x1={zoom.refAreaLeft} x2={zoom.refAreaRight} strokeOpacity={0.3} /> : null}
+                </LineChart>
+            </div>
+        )
+    }, [data, zoom])
 }
 
 MiniGraph.defaultProps = {
-    labels: []
+    height: 80,
+    width: 280
 }
 
 export default MiniGraph

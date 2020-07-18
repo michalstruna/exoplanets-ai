@@ -27,12 +27,15 @@ const Root = Styled.div`
      }
 
     .${PAGE}, .${BREAK}, .${EDGE} {
-        ${size('2.5rem', '2rem', true)}
+        ${size('auto', '2rem', true)}
         background-color: ${Color.DARKEST};
+        box-sizing: border-box;
         display: inline-block;
         overflow: hidden;
+        padding: 0 0.2rem;
         text-align: center;
-        transition: background-color: ${Duration.MEDIUM}
+        transition: background-color: ${Duration.MEDIUM};
+        min-width: 2.5rem;
         
         &:hover {
             background-color: #2A2A2A;
@@ -42,6 +45,7 @@ const Root = Styled.div`
             ${size()}
             display: block;
             outline: none;
+            padding: 0;
         }
     }
 
@@ -49,6 +53,7 @@ const Root = Styled.div`
         background-color: transparent;
         pointer-events: none;
         width: 0.5rem;
+        min-width: 0;
     }
     
     .${ACTIVE} {
