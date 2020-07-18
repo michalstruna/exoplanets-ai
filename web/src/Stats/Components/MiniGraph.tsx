@@ -14,6 +14,10 @@ const MiniGraph = ({ data, height, width }: Props) => {
     const [zoom, setZoom] = React.useState(initState)
 
     return React.useMemo(() => {
+        if (!data) {
+            return null // TODO: Error.
+        }
+
         const values = data.map((value: any, i: number) => ({ value, i }))
 
         const getAxisYDomain = (from: any, to: any, ref: any) => {
