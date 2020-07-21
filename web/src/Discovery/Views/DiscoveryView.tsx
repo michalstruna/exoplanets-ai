@@ -5,6 +5,7 @@ import io from 'socket.io-client'
 import DiscoveryTutorial from '../Components/DiscoveryTutorial'
 import { Color } from '../../Style'
 import Process from '../Components/Process'
+import { useProcesses } from '..'
 
 interface Props {
 
@@ -31,12 +32,13 @@ socket.on('connect', () => {
 
 const DiscoveryView = ({ ...props }: Props) => {
 
+    const processes = useProcesses()
+
     return (
         <Root {...props}>
             <DiscoveryTutorial />
             <Processes>
-                <Process />
-                <Process />
+                {processes.map((process, i) => <Process key={i} data={process} />)}
             </Processes>
         </Root>
     )

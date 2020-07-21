@@ -13,3 +13,4 @@ export { default as Config } from './Constants/Config'
  * Utils.
  */
 export { default as Requests } from './Utils/Requests'
+export { default as Socket } from './Utils/Sockets'

@@ -1,16 +1,44 @@
 import socketio
+import sys
+
+from utils import time
+from service.DeviceService import DeviceService
 
 sio = socketio.Client()
-sio.connect("http://localhost:5000")
+sio.connect("http://localhost:5000")  # TODO: Config.
+
+device = DeviceService()
+
+sio.emit("client_connect", {
+    "name": device.get_host(),
+    "os": device.get_os(),
+    "cpu": device.get_cpu(),
+    "start": time.now(),
+    "state": 3,
+    "pause_start": None,
+    "pause_total": 0
+})
 
 @sio.event
-def connect():
-    sio.emit("client_init")
+def connected():
+    print("=== CONNECTED ===")
 
 
 @sio.event
-def connected(identity):
-    print("CONNECTED", identity)
+def resume():
+    print("=== RESUME ===")
+
+
+@sio.event
+def pause():
+    print("=== PAUSE ===")
+
+
+@sio.event
+def terminate():
+    print("=== TERMINATE ===")
+    sio.disconnect()
+    sys.exit()
 
 
 """

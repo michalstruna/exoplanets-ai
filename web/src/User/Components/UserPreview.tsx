@@ -176,7 +176,7 @@ const UserPreview = ({ user, ...props }: Props) => {
                 </Stats>
             </Left>
             <Right>
-                <Item title='Aktivní' value={'Před ' + 23 + ' m'} icon='User/Online.svg' />
+                <Item title='Aktivní' value={'Před ' + 23 + ' m'} icon='Controls/Active.svg' />
                 <Item title='Členem' value='2,2 roku' icon='User/Origin.svg' />
                 <IconText icon='User/Male.svg' text='23 let' />
                 {country && (

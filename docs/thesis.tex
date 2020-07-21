@@ -61,7 +61,7 @@
 
 \begin{description}[font=\mdseries,leftmargin=6em,labelwidth=!,]
 \item[ly]		Light year
-\item[AU]		Astronomical unit
+\item[au]		Astronomical unit
 \end{description}
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Úvod}
@@ -125,12 +125,37 @@ Prvním krokem v~analýze hvězdy tranzitní metodou je její fyzické pozorová
 
 TPF obsahuje část oblohy o velikosti několika pixelů, na které se v původní fotografii nacházela zkoumaná hvězda a~její okolí. Barva pixelů je určena jasem.
 
-\img{Target pixel file hvězdy Kepler-10}{img/tpf.png}
+\img[1]{Target pixel file hvězdy Kepler-10}{img/tpf.png}
+\footnotetext[1]{Vytvořeno autorem v~Jupyter Notebook z~dat Kepleru od NASA}
 
 \subsubsection{Světelná křivka hvězdy}
 
-\img[1]{Rozklad periodické funkce na složky}{stats/sinus.pdf}
+Po složení všech TPF do časové řady a~vypočítání jejich jasu dostaneme světelnou křivku. Na obrázku~5 je světelná křivka hvězdy Kepler-13 očištěná od dlouhodobého trendu, šumu a~extrémních hodnot. Křivka vykazuje velice výraznou periodickou složku s~periodou 1,763~dne. Ve většině případů ale vliv planety není takto výrazný a~detekovat planetu je obtížnější.
+
+\img[1]{Světelná křivka soustavy Kepler-13}{img/light_curve.png}
 \footnotetext[1]{Vytvořeno autorem.}
+
+Každý tranzit má charakteristické fáze, které pomohou odlišit působení exoplanety od ostatních možných příčin, jako je např. proměnlivost hvězdy, dvojhvězda nebo pulzar.
+
+
+\img[1]{Detail světelné křivky soustavy Kepler-13}{img/light_curve_detail.png}
+
+\begin{enumerate}
+\item Planeta je schovaná za hvězdou, hvězda je vidět se svým základním jasem.
+\item Planeta je vedle hvězdy, jas hvězdy je posilněn o~světlo odražené od planety.
+\item Planeta je vedle hvězdy, ale její viditelná část není osvětlena. Hvězda je vidět se svým základním jasem.
+\item Planeta je před hvězdou, jas hvězdy je snížen v~důsledku zakrytí části kotouče.
+\end{enumerate}
+
+Tyto fáze společně s~důležitými parametry tranzitu potřebnými pro další výpočty jsou vyznačeny na obrázku~6:
+
+\begin{enumerate}[label=\Alph*.]
+\item Perioda -- čím větší perioda, tím delší planetární rok a větší velká poloosa dráhy,
+\item Hloubka -- čím větší hloubka, tím je planeta vůči hvězdě větší,
+\item Trvání -- čím je trvání kratší, tím menší trajektorii přes hvězdu planeta má,
+\item Délka nástupu -- čím prudší a~kratší je nástup, tím menší je úhel mezi rovinou orbity exoplanety a~přímkou od hvězdy k~pozorovateli,
+\item Délka minima -- čím větší délka minima v~porovnání s~délkou transitu, tím je úhel mezi rovinou orbity exoplanety a~přímkou od hvězdy k~pozorovateli menší.
+\end{enumerate}
 
 \subsubsection{Detekce exoplanety}
 

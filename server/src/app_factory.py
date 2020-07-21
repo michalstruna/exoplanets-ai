@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
 from api import api
+from service.SocketService import SocketService
 
 
 def create_app(config_name=None):
@@ -23,5 +24,6 @@ def create_app(config_name=None):
 
     api.init_app(app, doc="/api-docs")
     socketio = SocketIO(app, cors_allowed_origins="*")  # TODO: Allow only exoplanets-ai.
+    SocketService(socketio)
 
     return app, api, socketio

@@ -1,6 +1,7 @@
 import Language from './Language'
 import Url from '../../Routing/Constants/Url'
 import { Validator } from '../../Native'
+import ProcessState from '../../Discovery/Constants/ProcessState'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -65,7 +66,7 @@ export default {
 
     units: {
         time: {
-            second: 's', minute: 'm', hour: 'h', day: 'd', year: { [CS]: 'r', [EN]: 'y' }
+            second: 's', minute: 'm', hour: 'h', day: 'd', year: { [CS]: 'r', [EN]: 'y' }, millisecond: 'ms'
         }
     },
 
@@ -152,6 +153,22 @@ export default {
                     title: 'Nechte počítač, ať hledá exoplanety'
                 }
             ]
+        },
+        process: {
+            state: {
+                [ProcessState.ACTIVE]: { [CS]: 'Aktivní', [EN]: 'Active' },
+                [ProcessState.WAITING_FOR_TERMINATE]: { [CS]: 'Aktivní', [EN]: 'Active' },
+                [ProcessState.WAITING_FOR_PAUSE]: { [CS]: 'Aktivní', [EN]: 'Active' },
+                [ProcessState.PAUSED]: { [CS]: 'Pauza', [EN]: 'Pause' },
+                [ProcessState.WAITING_FOR_RESUME]: { [CS]: 'Pauza', [EN]: 'Pause' },
+                [ProcessState.TERMINATED]: { [CS]: 'Ukončen', [EN]: 'Terminated' }
+            },
+            stateMessage: {
+                [ProcessState.WAITING_FOR_PAUSE]: { [CS]: 'Čeká na pauzu.', [EN]: 'Waiting for pause.' },
+                [ProcessState.WAITING_FOR_RESUME]: { [CS]: 'Čeká na spuštění', [EN]: 'Waiting for run.' },
+                [ProcessState.WAITING_FOR_TERMINATE]: { [CS]: 'Čeká na ukončení.', [EN]: 'Waiting for terminate.' },
+                [ProcessState.TERMINATED]: { [CS]: 'Proces byl ukončen.', [EN]: 'Process was terminated.' }
+            }
         }
     },
 

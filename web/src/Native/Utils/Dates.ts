@@ -19,8 +19,8 @@ export const formatTime = (date: number, s: boolean = false, ms: boolean = false
     return result
 }
 
-const ms = [31556926000, 86400000, 3600000, 60000, 1000, 1]
-const units = ['year', 'day', 'hour', 'minute', 'second', 'millisecond']
+const ms = [31556926000, 86400000, 3600000, 60000, 1000]
+const units = ['year', 'day', 'hour', 'minute', 'second']
 
 export const formatDate = (date: number): string => {
     const obj = new Date(date)
@@ -28,19 +28,43 @@ export const formatDate = (date: number): string => {
     return `${obj.getDate()}. ${obj.getMonth() + 1}. ${obj.getFullYear()}`
 }
 
-export const formatDistance = (strings: any, date1: number, date2?: number, exact: boolean = false): string => {
+
+export enum Format {
+    SHORT,
+    EXACT,
+    LONG
+}
+
+export const formatDistance = (strings: any, date1: number, date2?: number, format: Format = Format.SHORT): string => {
     const from = date1
     const end = date2 === undefined ? new Date().getTime() : date2
     const diff = end - from
 
-    for (const i in ms) {
-        const val = diff / ms[i]
+    if (format === Format.LONG) {
+        let rest = diff
+        let result: string[] = []
 
-        if (diff / ms[i] >= 1) {
-            console.log(val, units[i], diff)
-            return (exact ? Numbers.format(val) : Math.floor(val)) + ' ' + strings.units.time[units[i]]
+        for (const i in ms) {
+            if (rest >= ms[i]) {
+                const val = Math.floor(rest / ms[i])
+
+                if (val > 0) {
+                    rest -= val * ms[i]
+                    result.push(`${val} ${strings.units.time[units[i]]}`)
+                }
+            }
+        }
+
+        return result.join(' ') || '0 s'
+    } else {
+        for (const i in ms) {
+            const val = diff / ms[i]
+
+            if (diff / ms[i] >= 1) {
+                return (format === Format.EXACT ? Numbers.format(val) : Math.floor(val)) + ' ' + strings.units.time[units[i]]
+            }
         }
     }
 
-    return '' // TODO
+    return '0 s'
 }

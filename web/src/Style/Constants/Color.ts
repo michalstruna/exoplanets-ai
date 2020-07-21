@@ -18,7 +18,9 @@ enum Color {
     GOOGLE_HOVER = '#CCC',
     GOOGLE_FOREGROUND = '#737373',
 
-    DARKEST_HOVER = '#252525'
+    DARKEST_HOVER = '#252525',
+
+    YELLOW = '#DB0'
 }
 
 export default Color
