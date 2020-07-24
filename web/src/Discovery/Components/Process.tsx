@@ -85,13 +85,15 @@ const getIconByState = (state: ProcessState) => {
     switch (state) {
         case ProcessState.TERMINATED:
             return 'Inactive'
-        case ProcessState.WAITING_FOR_RESUME:
         case ProcessState.PAUSED:
+        case ProcessState.WAITING_FOR_RUN:
             return 'Semiactive'
         default:
             return 'Active'
     }
 }
+
+const immediateTerminateStates = [ProcessState.PAUSED, ProcessState.WAITING_FOR_RUN]
 
 const Process = ({ data, ...props }: Props) => {
 
@@ -100,22 +102,23 @@ const Process = ({ data, ...props }: Props) => {
 
     const memoControls = React.useMemo(() => {
         const handleRun = () => {
-            Socket.emit('web_resume_client', data.id)
-            actions.updateProcess([data.id, { state: ProcessState.WAITING_FOR_RESUME }])
+            Socket.emit('web_run_client', data.id)
+            actions.updateProcess([data.id, { state: ProcessState.WAITING_FOR_RUN }])
         }
 
         const handlePause = () => {
             Socket.emit('web_pause_client', data.id)
-            actions.updateProcess([data.id, { state: ProcessState.WAITING_FOR_PAUSE }])
+            actions.updateProcess([data.id, { state: immediateTerminateStates.includes(data.state) ? ProcessState.PAUSED : ProcessState.WAITING_FOR_PAUSE }])
         }
 
         const handleStop = () => {
             Socket.emit('web_terminate_client', data.id)
-            actions.updateProcess([data.id, { state: data.state === ProcessState.PAUSED ? ProcessState.TERMINATED : ProcessState.WAITING_FOR_TERMINATE }])
+            actions.updateProcess([data.id, { state: immediateTerminateStates.includes(data.state) ? ProcessState.TERMINATED : ProcessState.WAITING_FOR_TERMINATE }])
         }
 
         switch (data.state) {
             case ProcessState.ACTIVE:
+            case ProcessState.WAITING_FOR_RUN:
                 return (
                     <>
                         <IconText icon='Controls/Pause.svg' text={'Pozastavit'} onClick={handlePause} />
@@ -148,7 +151,8 @@ const Process = ({ data, ...props }: Props) => {
                     <IconText
                         icon={`Controls/${getIconByState(data.state)}.svg`}
                         text={strings.state[data.state]}
-                        value={<TimeAgo time={data.start + data.pause_total} refTime={data.pause_start || undefined} />} />
+                        value={<TimeAgo time={data.start + data.pause_total}
+                                        refTime={data.pause_start || undefined} />} />
                 </Row>
                 <Row>
                     <OsLabel os={data.os} />

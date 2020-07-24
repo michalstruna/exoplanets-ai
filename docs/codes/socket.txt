@@ -1,0 +1,8 @@
+# Client:
+@socketio.event
+def process(task):
+    print(f"Data processing from address {task['url']}...")
+
+# Server:
+task = {type: "LIGHT_CURVE", "url": "http://exoplanetarchive.ipac"}
+socketio.emit("process", task)

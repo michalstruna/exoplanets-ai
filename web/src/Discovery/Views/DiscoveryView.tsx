@@ -38,7 +38,7 @@ const DiscoveryView = ({ ...props }: Props) => {
         <Root {...props}>
             <DiscoveryTutorial />
             <Processes>
-                {processes.map((process, i) => <Process key={i} data={process} />)}
+                {processes.map((process, i) => <Process key={process.id} data={process} />)}
             </Processes>
         </Root>
     )

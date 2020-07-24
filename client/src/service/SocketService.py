@@ -3,21 +3,13 @@ import sys
 
 from utils import time
 from service.DeviceService import DeviceService
+from constants.Process import ProcessState
 
 sio = socketio.Client()
 sio.connect("http://localhost:5000")  # TODO: Config.
 
 device = DeviceService()
 
-sio.emit("client_connect", {
-    "name": device.get_host(),
-    "os": device.get_os(),
-    "cpu": device.get_cpu(),
-    "start": time.now(),
-    "state": 3,
-    "pause_start": None,
-    "pause_total": 0
-})
 
 @sio.event
 def connected():
@@ -25,8 +17,8 @@ def connected():
 
 
 @sio.event
-def resume():
-    print("=== RESUME ===")
+def run():
+    print("=== RUN ===")
 
 
 @sio.event
@@ -39,6 +31,18 @@ def terminate():
     print("=== TERMINATE ===")
     sio.disconnect()
     sys.exit()
+
+
+
+sio.emit("client_connect", {
+    "name": device.get_host(),
+    "os": device.get_os(),
+    "cpu": device.get_cpu(),
+    "start": time.now(),
+    "state": ProcessState.WAITING_FOR_RUN.value,
+    "pause_start": time.now(),
+    "pause_total": 0
+})
 
 
 """

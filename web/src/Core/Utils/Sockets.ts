@@ -3,7 +3,7 @@ import { ProcessData, addProcess, setProcesses, updateProcess } from '../../Disc
 import { Socket } from '../../Async'
 
 export const init = () => {
-    Socket.emit('web_connect', { name: 'Michal' })
+    Socket.emit('web_connect')
 
     Socket.on('clients_update', (processes: ProcessData[]) => {
         Store.dispatch(setProcesses(processes))
@@ -13,7 +13,7 @@ export const init = () => {
         Store.dispatch(addProcess(process))
     })
 
-    Socket.on('update_client', (processId: string, process: ProcessData) => {
-        Store.dispatch(updateProcess([processId, process]))
+    Socket.on('update_client', (process: ProcessData) => {
+        Store.dispatch(updateProcess([process.id, process]))
     })
 }

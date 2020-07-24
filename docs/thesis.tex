@@ -338,8 +338,79 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 \section{Umělá inteligence}
 
 \section{Použité technologie}
+
+\subsection{TypeScript}
+
+\subsubsection{React}
+
+\subsubsection{Styled Components}
+
+\subsubsection{NPM}
+
+\subsection{Python}
+
+\subsubsection{Flask}
+
+\subsubsection{Astropy}
+
+\subsubsection{LightKurve}
+
+\subsubsection{TensorFlow}
+
+\subsubsection{Pip}
+
+\subsection{MongoDB}
+
+\subsection{Socket.io}
+
+\subsection{Git}
+
+
 \section{Návrh~a~vývoj aplikace}
+
+\img[1]{Komponenty projektu a~jejich komunikace}{img/communication.png}
+\draw
+
+\subsection{Server}
+
+Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci.
+
+\subsubsection{REST API}
+
+aa
+
+\subsubsection{Socket.io API}
+
+Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní HTTP poskytuje také rozhraní Socket.io.
+
+\lstinputlisting[caption={Ukázka komunikace pomocí socket.io.}]{codes/socket.txt}
+
+\subsection{Webová aplikace}
+
+
+\subsection{Klientská aplikace}
+
+\img[1]{Stavy procesů a~přechody mezi nimi}{img/process_state.png}
+\draw
+
+\subsection{Databáze}
+
 \section{Rozvržení aplikace}
+
+\subsection{Přehled}
+
+\subsection{Databáze}
+
+\subsection{Detail hvězdy}
+
+\subsection{Detail planety}
+
+\subsection{Objevování}
+
+\subsection{Nápověda}
+
+\subsection{Autentizace}
+
 \section{Problémy řešené při implementaci}
 
 \subsection{Virtualizace vykreslovaného seznamu}

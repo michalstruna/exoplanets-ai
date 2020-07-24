@@ -160,12 +160,11 @@ export default {
                 [ProcessState.WAITING_FOR_TERMINATE]: { [CS]: 'Aktivní', [EN]: 'Active' },
                 [ProcessState.WAITING_FOR_PAUSE]: { [CS]: 'Aktivní', [EN]: 'Active' },
                 [ProcessState.PAUSED]: { [CS]: 'Pauza', [EN]: 'Pause' },
-                [ProcessState.WAITING_FOR_RESUME]: { [CS]: 'Pauza', [EN]: 'Pause' },
-                [ProcessState.TERMINATED]: { [CS]: 'Ukončen', [EN]: 'Terminated' }
+                [ProcessState.TERMINATED]: { [CS]: 'Ukončen', [EN]: 'Terminated' },
+                [ProcessState.WAITING_FOR_RUN]: { [CS]: 'Čeká na data', [EN]: 'Waiting for data' }
             },
             stateMessage: {
                 [ProcessState.WAITING_FOR_PAUSE]: { [CS]: 'Čeká na pauzu.', [EN]: 'Waiting for pause.' },
-                [ProcessState.WAITING_FOR_RESUME]: { [CS]: 'Čeká na spuštění', [EN]: 'Waiting for run.' },
                 [ProcessState.WAITING_FOR_TERMINATE]: { [CS]: 'Čeká na ukončení.', [EN]: 'Waiting for terminate.' },
                 [ProcessState.TERMINATED]: { [CS]: 'Proces byl ukončen.', [EN]: 'Process was terminated.' }
             }
