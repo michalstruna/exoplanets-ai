@@ -1,10 +1,18 @@
 import React from 'react'
 import Styled from 'styled-components'
+
 import { Color } from '../../Style'
 import { IconText, Log } from '../../Layout'
+import { ProcessData } from '../types'
+import OsLabel from './OsLabel'
+import { useActions, useStrings } from '../../Data'
+import TimeAgo from '../../Native/Components/TimeAgo'
+import { Socket } from '../../Async'
+import { updateProcess } from '../Redux/Slice'
+import ProcessState from '../Constants/ProcessState'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-
+    data: ProcessData
 }
 
 const Root = Styled.div`
@@ -30,10 +38,13 @@ const Row = Styled.div`
         flex: 1 1 0;
     }
     
-    &:last-of-type {
-        border-top: 1px solid #555;
-        padding-top: 0.5rem;
-        padding-bottom: 0;
+    & > div > div:last-of-type {
+        width: calc(100% - 2rem);
+        
+        & > div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
     
     button {
@@ -41,41 +52,111 @@ const Row = Styled.div`
     }
 `
 
+const ControlRow = Styled(Row)`
+    border-top: 1px solid #555;
+    height: 1.5rem;
+    margin-bottom: -0.4rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0;
+    overflow: hidden;
+`
+
 const Name = Styled.div`
     font-size: 150%;
     font-weight: bold;
+    margin-bottom: 0.5rem;
 `
 
 const DiscoveryLog = Styled(Log)`
-    height: 14.5rem;
+    height: 15rem;
 `
 
-const Process = ({ ...props }: Props) => {
+interface MessageProps {
+    red?: boolean
+}
 
-    const handleRun = () => {
+const Message = Styled.p<MessageProps>`
+    color: ${props => props.red ? Color.RED : Color.YELLOW};
+    font-size: 85%;
+    line-height: 1.4rem;
+`
 
+const getIconByState = (state: ProcessState) => {
+    switch (state) {
+        case ProcessState.TERMINATED:
+            return 'Inactive'
+        case ProcessState.PAUSED:
+        case ProcessState.WAITING_FOR_RUN:
+            return 'Semiactive'
+        default:
+            return 'Active'
     }
+}
 
-    const handlePause = () => {
+const immediateTerminateStates = [ProcessState.PAUSED, ProcessState.WAITING_FOR_RUN]
 
-    }
+const Process = ({ data, ...props }: Props) => {
 
-    const handleStop = () => {
+    const strings = useStrings().discovery.process
+    const actions = useActions({ updateProcess })
 
-    }
+    const memoControls = React.useMemo(() => {
+        const handleRun = () => {
+            Socket.emit('web_run_client', data.id)
+            actions.updateProcess([data.id, { state: ProcessState.WAITING_FOR_RUN }])
+        }
+
+        const handlePause = () => {
+            Socket.emit('web_pause_client', data.id)
+            actions.updateProcess([data.id, { state: immediateTerminateStates.includes(data.state) ? ProcessState.PAUSED : ProcessState.WAITING_FOR_PAUSE }])
+        }
+
+        const handleStop = () => {
+            Socket.emit('web_terminate_client', data.id)
+            actions.updateProcess([data.id, { state: immediateTerminateStates.includes(data.state) ? ProcessState.TERMINATED : ProcessState.WAITING_FOR_TERMINATE }])
+        }
+
+        switch (data.state) {
+            case ProcessState.ACTIVE:
+            case ProcessState.WAITING_FOR_RUN:
+                return (
+                    <>
+                        <IconText icon='Controls/Pause.svg' text={'Pozastavit'} onClick={handlePause} />
+                        <IconText icon='Controls/Stop.svg' text={'Ukončit'} onClick={handleStop} />
+                    </>
+                )
+            case ProcessState.PAUSED:
+                return (
+                    <>
+                        <IconText icon='Controls/PlayGreen.svg' text={'Spustit'} onClick={handleRun} />
+                        <IconText icon='Controls/Stop.svg' text={'Ukončit'} onClick={handleStop} />
+                    </>
+                )
+            default:
+                return (
+                    <Message red={data.state === ProcessState.TERMINATED}>
+                        {strings.stateMessage[data.state]}
+                    </Message>
+                )
+        }
+    }, [data.id, data.state, actions])
 
     return (
         <Root {...props}>
             <Main>
                 <Row>
                     <Name>
-                        Domov
+                        {data.name}
                     </Name>
-                    <IconText icon='User/Online.svg' text='Běží 51 m 13 s' />
+                    <IconText
+                        icon={`Controls/${getIconByState(data.state)}.svg`}
+                        text={strings.state[data.state]}
+                        value={<TimeAgo time={data.start + data.pause_total}
+                                        refTime={data.pause_start || undefined} />} />
                 </Row>
                 <Row>
-                    <IconText icon='Discovery/Process/OS/Windows.svg' text='OS' value={'Windows 10'} />
-                    <IconText icon='Discovery/Process/CPU/Intel.svg' text='CPU' value={'Intel Core i9'} />
+                    <OsLabel os={data.os} />
+                    <IconText icon='Discovery/Process/CPU/Intel.svg' text='CPU' value={data.cpu} title={data.cpu} />
                 </Row>
                 <Row>
                     <IconText icon='Discovery/Process/Processing.svg' text='% vašeho výkonu' value={50} />
@@ -85,10 +166,9 @@ const Process = ({ ...props }: Props) => {
                     <IconText icon='Discovery/Process/Star.svg' text={'Analyzovaných hvězd'} value={1363} />
                     <IconText icon='Discovery/Process/Planet.svg' text={'Objevených planet'} value={1} />
                 </Row>
-                <Row>
-                    <IconText icon='Controls/PlayGreen.svg' text={'Spustit'} onClick={handleRun} />
-                    <IconText icon='Controls/Stop.svg' text={'Ukončit'} onClick={handleStop} />
-                </Row>
+                <ControlRow>
+                    {memoControls}
+                </ControlRow>
             </Main>
             <DiscoveryLog messages={[
                 { time: 1592202214316, text: 'Úspěšné spuštění (Michal Struna).' },

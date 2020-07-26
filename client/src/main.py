@@ -1,25 +1,9 @@
 #!/usr/bin/python3
 
 import webbrowser
+import service.SocketService as x
 
-
-import socketio
-
-sio = socketio.Client()
-sio.connect("http://localhost:5000")
-
-@sio.event
-def connect_success():
-    sio.emit("client_init")
-
-
-@sio.event
-def connect_error(error):
-    print("The connection failed!", error)
-
-
-
-
+y = x.sio
 
 
 #socket = SocketService()

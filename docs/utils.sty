@@ -4,6 +4,8 @@
 \usepackage[T1]{fontenc} % Output encoding.
 \usepackage[english,czech]{babel} % Languages.
 \selectlanguage{czech} % Default language.
+\usepackage{float}
+\usepackage{enumitem}
 
 % Layout.
 \usepackage[top=25mm, left=35mm, total={160mm,247mm}, includehead=false, includefoot=false]{geometry}	
@@ -159,7 +161,7 @@
 % Render image fugire.
 % \img[Short caption]{Full caption}{Path of grahics}
 \newcommand{\img}[3][]{    
-	\begin{figure}[!htb]
+	\begin{figure}[H]
 		\begin{center}
 			\includegraphics[width=\textwidth]{#3}
 		\end{center}
@@ -199,6 +201,9 @@
 		\vspace{-15pt}
 	\end{eq}
 }
+
+% Insert page note with reference to draw.io.
+\newcommand{\draw}[1][1]{\footnotetext[#1]{Vytvořeno autorem v \url{https://www.draw.io}.}}
 
 
 % Insert page note with reference to draw.io and GIMP.

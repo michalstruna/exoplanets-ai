@@ -6,10 +6,10 @@ import { Link, Target } from '../../Routing'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'>, Partial<Target> {
     icon?: string
-    text?: string
+    text?: React.ReactNode
     size?: string
     isActive?: boolean
-    value?: string | number
+    value?: React.ReactNode
 }
 
 interface RootProps {

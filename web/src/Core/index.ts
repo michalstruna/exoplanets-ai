@@ -1,3 +1,5 @@
+import * as Sockets from './Utils/Sockets'
+
 /**
  * Components.
  */
@@ -13,3 +15,5 @@ export { default as HomeView } from './Views/HomeView'
  * Redux.
  */
 export { default as Store } from './Redux/Store'
+
+export { Sockets }

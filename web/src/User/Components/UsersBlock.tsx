@@ -29,7 +29,7 @@ const Content = Styled.div`
 
 const links = [
     { icon: 'Universe/RealTime/Volunteers.svg', text: 'Dobrovolníci' },
-    { icon: 'User/Online.svg', text: 'Online (451)' },
+    { icon: 'Controls/Active.svg', text: 'Online (451)' },
     { icon: 'Universe/RealTime/Discussion.svg', text: 'Diskuse (2)' }
 ]
 

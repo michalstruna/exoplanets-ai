@@ -371,7 +371,7 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                             {
                                 title: strings.properties.processTime,
                                 accessor: dataset => dataset.time,
-                                render: time => Dates.formatDistance(strings, 0, time, true)
+                                render: time => Dates.formatDistance(strings, 0, time, Dates.Format.EXACT)
                             },
                             {
                                 title: strings.properties.published,
