@@ -366,7 +366,8 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                                 accessor: dataset => 100 - Math.floor(10000 * dataset.current_size / dataset.total_size) / 100,
                                 render: (processed, dataset) => <ProgressBar range={dataset.total_size}
                                                                              value={dataset.total_size - dataset.current_size}
-                                                                             label={prettyBytes(dataset.processed || 0)} />
+                                                                             label={prettyBytes(dataset.processed || 0)}
+                                                                             title={`${Numbers.format(dataset.total_size - dataset.current_size)} / ${Numbers.format(dataset.total_size)}`} />
                             },
                             {
                                 title: strings.properties.processTime,

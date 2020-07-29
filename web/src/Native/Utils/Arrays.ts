@@ -35,3 +35,17 @@ export const range = (from: number, to: number, step: number = 1): number[] => {
 
     return result
 }
+
+type UpdateItem<T> = T | ((item: T, i: number) => T)
+
+export const update = <T>(array: T[], condition: Validator.BiPredicate<T, number>, update: UpdateItem<T>) => {
+    for (const i in array) {
+        if (Validator.is2(array[i], parseInt(i), condition)) {
+            if (update instanceof Function) {
+                array[i] = update(array[i], parseInt(i))
+            } else {
+                array[i] = update
+            }
+        }
+    }
+}

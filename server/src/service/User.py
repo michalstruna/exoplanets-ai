@@ -3,16 +3,16 @@ from http import HTTPStatus
 from mongoengine.errors import DoesNotExist
 from datetime import datetime
 
-from .Service import Service
-from .SecurityService import SecurityService
+from .Base import Service
+from .Security import SecurityService
+import db
 
 
 class UserService(Service):
 
     def __init__(self):
-        super().__init__()
+        super().__init__(db.user_dao)
         self.security_service = SecurityService()
-        self.setup(self.db.User, [])
 
     def facebook_login(self, token):
         # TODO: FacebookService or ExternalService?

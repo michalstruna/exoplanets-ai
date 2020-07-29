@@ -1,5 +1,5 @@
 import Store from '../Redux/Store'
-import { ProcessData, addProcess, setProcesses, updateProcess } from '../../Discovery'
+import { ProcessData, addProcess, setProcesses, updateProcess, logProcess, ProcessLog } from '../../Discovery'
 import { Socket } from '../../Async'
 
 export const init = () => {
@@ -15,5 +15,9 @@ export const init = () => {
 
     Socket.on('update_client', (process: ProcessData) => {
         Store.dispatch(updateProcess([process.id, process]))
+    })
+
+    Socket.on('client_log', (log: any) => {
+        Store.dispatch(logProcess([log.client_id, log]))
     })
 }

@@ -1,6 +1,6 @@
 from flask_restx import fields
 
-from service.StarService import StarService
+from service.Star import StarService
 from utils.http import Api
 from .planets import planet
 

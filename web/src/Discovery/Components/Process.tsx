@@ -170,41 +170,7 @@ const Process = ({ data, ...props }: Props) => {
                     {memoControls}
                 </ControlRow>
             </Main>
-            <DiscoveryLog messages={[
-                { time: 1592202214316, text: 'Úspěšné spuštění (Michal Struna).' },
-                { time: 1592202214516, text: 'KIC 4567123: Stahuji světelnou křivku.' },
-                { time: 1592202214516, text: 'KIC 4567123: Analyzuji světelnou křivku.' },
-                { time: 1592202219316, text: 'KIC 4567123: Nalezeni kandidáti (3).' },
-                { time: 1592202219456, text: 'KIC 4567123: Vyřazeny false positive (1).' },
-                { time: 1592202219516, text: 'KIC 4567123: Analyzuji složku (T = 23.8 d).' },
-                { time: 1592202219816, text: 'KIC 4567123: Analyzuji složku (T = 73.6 d).' },
-                { time: 1592202214516, text: 'Kepler-10: Stahuji světelnou křivku.' },
-                { time: 1592202214516, text: 'Kepler-10: Analyzuji světelnou křivku.' },
-                { time: 1592202219316, text: 'Kepler-10: Nalezeni kandidáti (5).' },
-                { time: 1592202219456, text: 'Kepler-10: Vyřazeny false positive (3).' },
-                { time: 1592202219516, text: 'Kepler-10: Analyzuji složku (T = 0.83 d).' },
-                { time: 1592202219816, text: 'Kepler-10: Analyzuji složku (T = 45.29 d).' },
-
-
-                { time: 1592202214316, text: 'Úspěšné spuštění (Michal Struna).' },
-                { time: 1592202214516, text: 'KIC 4567123: Analyzuji.' },
-                { time: 1592202219316, text: 'KIC 4567123: Nalezeny periodické složky (3).' },
-                { time: 1592202219456, text: 'KIC 4567123: Vyřazeny false positive (1).' },
-                { time: 1592202219516, text: 'KIC 4567123: Analyzuji složku (T = 23.8 d).' },
-                { time: 1592202219816, text: 'KIC 4567123: Analyzuji složku (T = 73.6 d).' },
-                { time: 1592202214316, text: 'Úspěšné spuštění (Michal Struna).' },
-                { time: 1592202214516, text: 'KIC 4567123: Analyzuji.' },
-                { time: 1592202219316, text: 'KIC 4567123: Nalezeny periodické složky (3).' },
-                { time: 1592202219456, text: 'KIC 4567123: Vyřazeny false positive (1).' },
-                { time: 1592202219516, text: 'KIC 4567123: Analyzuji složku (T = 23.8 d).' },
-                { time: 1592202219816, text: 'KIC 4567123: Analyzuji složku (T = 73.6 d).' },
-                { time: 1592202214316, text: 'Úspěšné spuštění (Michal Struna).' },
-                { time: 1592202214516, text: 'KIC 4567123: Analyzuji.' },
-                { time: 1592202219316, text: 'KIC 4567123: Nalezeny periodické složky (3).' },
-                { time: 1592202219456, text: 'KIC 4567123: Vyřazeny false positive (1).' },
-                { time: 1592202219516, text: 'KIC 4567123: Analyzuji složku (T = 23.8 d).' },
-                { time: 1592202219816, text: 'KIC 4567123: Analyzuji složku (T = 73.6 d).' }
-            ]} />
+            <DiscoveryLog messages={data.logs.map(() => ({ time: 1592202214316, text: 'Úspěšné spuštění (Michal Struna).' }))}/>
         </Root>
     )
 
