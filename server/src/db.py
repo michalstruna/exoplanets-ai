@@ -65,6 +65,9 @@ class Dao:
     def aggregate(self, operations, filter={}, limit=None, offset=None, sort=None):
         pipeline = [{"$match": filter}]
 
+        if sort:
+            pipeline.append({"$sort": sort})
+
         if offset:
             pipeline.append({"$skip": offset})
 
@@ -72,9 +75,6 @@ class Dao:
             pipeline.append({"$limit": limit})
 
         pipeline += operations
-
-        if sort:
-            pass  # TODO
 
         return list(self.collection.objects.aggregate(pipeline))
 

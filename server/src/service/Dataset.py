@@ -38,7 +38,7 @@ class DatasetService(Service):
             stars = list(map(lambda star: db.Star(properties=[{**star, "dataset": result["_id"]}]), items.to_dict("records")))
             self.star_service.upsert_all_by_name(stars)
         else:
-            result = self.json(self.collection(**dataset).save())
+            result = self.dao.add(dataset)
 
         end = time.now()
 

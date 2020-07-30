@@ -1,5 +1,4 @@
 from abc import ABC
-import json
 import math
 
 
@@ -7,11 +6,6 @@ class Service(ABC):
 
     def __init__(self, dao=None):
         self.dao = dao
-
-    def json(self, queryset):  # TODO: Delete.
-        result = json.loads(queryset.to_json())
-        result["_id"] = result["_id"]["$oid"]
-        return result
 
     def get(self, id):
         return self.dao.get_by_id(id)

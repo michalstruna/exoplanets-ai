@@ -29,10 +29,9 @@ def connected():
 def run(task):
     print("=== RUN ===")
     print(task)
-    task["meta"]["size"] = 12345
-    time.sleep(1000)
+    task["meta"]["size"] = 147521
 
-    if task["type"] == TaskType.LIGHT_CURVE.value:
+    if task["type"] == TaskType.TARGET_PIXEL.value:
         """
         log(LogType.DOWNLOAD_TP, name=task["item"])
         lc_service = LightCurveService()
@@ -46,6 +45,7 @@ def run(task):
         periods = lc_service.get_periods(norm_lc)
         print(periods)
         """
+
 
         """
         for period in periods:

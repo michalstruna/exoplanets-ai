@@ -57,15 +57,7 @@ class SocketService(metaclass=patterns.Singleton):
         def web_pause_client(client_id):
             time.sleep(1000)
             # TODO: ...
-
-            client, user_id = self.clients[client_id]["data"], self.clients[client_id]["user_id"]
-            client["state"] = ProcessState.PAUSED.value
-
-            if not client["pause_start"]:
-                client["pause_start"] = time.now()
-
-            self.emit_web("update_client", client, user=user_id)
-            self.emit_client("pause", id=client_id)
+            self.pause_client(client_id)
 
         @sio.on("web_run_client")
         def web_run_client(client_id):
@@ -85,7 +77,9 @@ class SocketService(metaclass=patterns.Singleton):
 
         @sio.on("client_submit_task")
         def client_submit_task(task):
+            self.pause_client(request.sid)
             self.finish_task(task)
+            self.add_task(request.sid)
 
     def update_client(self, id):
         client = self.clients[id]
@@ -93,6 +87,16 @@ class SocketService(metaclass=patterns.Singleton):
         update = {**client}
         del update["logs"]
         self.emit_web("update_client", update, user=user_id)
+
+    def pause_client(self, client_id):
+        client, user_id = self.clients[client_id]["data"], self.clients[client_id]["user_id"]
+        client["state"] = ProcessState.PAUSED.value
+
+        if not client["pause_start"]:
+            client["pause_start"] = time.now()
+
+        self.emit_web("update_client", client, user=user_id)
+        self.emit_client("pause", id=client_id)
 
     def add_task(self, client_id):
         """
@@ -102,9 +106,11 @@ class SocketService(metaclass=patterns.Singleton):
 
         try:
             task = self.dataset_service.get_task()
-            client["state"] = ProcessState.ACTIVE.value
-            client["pause_total"] = time.now() - client["pause_start"]
-            client["pause_start"] = None
+
+            if client["state"] != ProcessState.ACTIVE.value:
+                client["state"] = ProcessState.ACTIVE.value
+                client["pause_total"] = time.now() - client["pause_start"]
+                client["pause_start"] = None
 
             self.update_client(client_id)
             self.emit_client("run", task, id=client_id)

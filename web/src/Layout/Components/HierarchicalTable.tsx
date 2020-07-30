@@ -62,6 +62,7 @@ const Cell = Styled.div<CellProps>`
             content: "";
             display: inline-block;
             margin-right: 0.5rem;
+            min-width: 1.2rem;
         }
     `}
     
