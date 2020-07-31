@@ -64,7 +64,11 @@ export default {
         luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
         gravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
-        datasets: { [CS]: 'Datasety', [EN]: 'Datasets' }
+        datasets: { [CS]: 'Datasety', [EN]: 'Datasets' },
+
+        // Planets
+        semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
+        transit: { [CS]: 'Tranzit', [EN]: 'Transit' }
     },
 
     units: {

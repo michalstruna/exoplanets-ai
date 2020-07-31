@@ -68,10 +68,6 @@ const Cell = Styled.div<CellProps>`
     
     ${props => props.interactive && css`
         padding: 0;
-
-        &:hover {
-            background-color: #3B3B3B !important;
-        }
         
         & > a, & > button, & > div, & > p {
             box-sizing: border-box;

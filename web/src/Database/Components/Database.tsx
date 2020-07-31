@@ -8,7 +8,7 @@ import { HierarchicalTable } from '../../Layout'
 import { setSort, useCursor, useItems, useTable } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'
-import { provideStructure } from '../Utils/StructureProvider'
+import { provideStructure, Detail } from '../Utils/StructureProvider'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -35,12 +35,17 @@ const Table = Styled(HierarchicalTable)`
             min-width: 0;
         }
         
+        &:nth-of-type(3) {
+            &:hover {
+                ${Detail}:after {
+                    opacity: 1;
+                    transform: scale(1.3) translateX(25%);
+                }
+            }
+        }
+        
         &[data-header] {
             height: 2.5rem;
-        
-            .image--star {
-                ${size('1.5rem')}
-            }
         }
     }
 
@@ -69,48 +74,40 @@ const Table = Styled(HierarchicalTable)`
     
     &.table--${DbTable.BODIES} {     
         ${HierarchicalTable.Cell} {                    
-            &:nth-of-type(11) {            
+            &:nth-of-type(12) {            
                 &:not([data-header])[data-level="0"] {
                     padding-left: 0;
                     padding-right: 0;
                 }
             }
             
-            &[data-level="0"] {
-                &:nth-of-type(2) {
-                    width: 5rem;
-                }
-            }
-            
             &[data-level="1"] {
                 &:nth-of-type(2) {
-                    padding-left: 3rem;
+                    margin-left: 3rem;
+                    margin-right: -2rem;
                 }
                 
                 &:nth-of-type(3) {
-                    margin-left: -2rem;
-                    padding-left: 3rem;
+                    padding-left: 2rem;
                 }
             }
             
             &[data-header] {
-                height: 3rem;
-                padding-top: 0;
-                padding-bottom: 0;
-            
-                &[data-level="0"] {                            
-                    .image--star {
-                        ${size('2.5rem')}
-                    }
-                    
-                    &:first-of-type {
-                        font-size: 110%;
-                        transform: translateY(30%);
+                &[data-level="0"] {
+                     &:nth-of-type(1) {
+                        transform: translateY(1rem);
                     }
                 }
+            
+                &[data-level="1"] {                
+                    &:nth-of-type(2) {
+                        margin-left: 2rem;
+                        width: 5rem !important;
+                    }
                 
-                &[data-level="1"] {
-                    height: 2rem;
+                    &:nth-of-type(3) {
+                        padding-left: 3rem;
+                    }
                 }
             }
         }

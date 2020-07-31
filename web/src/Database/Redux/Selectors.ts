@@ -21,7 +21,7 @@ export const useTable = () => useRouter<any>().match.params.table
 export const useItems = (table: DbTable) => useSelector(({ database }: any) => {
     switch (table) {
         case DbTable.BODIES:
-            return database.bodies
+            return database.stars
         case DbTable.STARS:
             return database.stars
         case DbTable.PLANETS:

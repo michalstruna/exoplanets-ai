@@ -7,10 +7,10 @@ class Service(ABC):
     def __init__(self, dao=None):
         self.dao = dao
 
-    def get(self, id):
+    def get_by_id(self, id):
         return self.dao.get_by_id(id)
 
-    def get_by_filter(self, filter):
+    def get(self, filter):
         return self.dao.get(filter)
 
     def get_all(self, filter=[], sort=[], limit=math.inf, offset=0):

@@ -4,6 +4,8 @@ from flask_socketio import join_room, leave_room
 from utils import time, patterns
 from constants.Discovery import ProcessState
 from service.Dataset import DatasetService
+from service.Planet import PlanetService
+from service.Star import StarService
 
 
 class SocketService(metaclass=patterns.Singleton):
@@ -14,6 +16,8 @@ class SocketService(metaclass=patterns.Singleton):
         self.webs = {}
         self.users = {}
         self.dataset_service = DatasetService()
+        self.star_service = StarService()
+        self.planet_service = PlanetService()
         self.tasks = {}
 
         @sio.on("client_connect")
@@ -127,6 +131,12 @@ class SocketService(metaclass=patterns.Singleton):
             "pop__items": -1
         }
         dataset = self.dataset_service.update(task["dataset_id"], updated)
+        star = self.star_service.get({"properties.name": task["item"]})
+        
+        planet = {"star": star["_id"], "properties": [task["solution"]["planets"][0]]}
+        planet = self.planet_service.add(planet)
+        print(planet)
+
 
     def _add_user(self, user_id):
         if user_id not in self.users:

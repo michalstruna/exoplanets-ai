@@ -24,7 +24,7 @@ class UserService(Service):
         identity = fb_profile_res.json()
 
         try:
-            user = self.get_by_filter({"fb_id": identity["id"]})
+            user = self.get({"fb_id": identity["id"]})
         except DoesNotExist:
             user = self.add({
                 "name": identity["name"],

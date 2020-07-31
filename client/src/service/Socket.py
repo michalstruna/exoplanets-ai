@@ -5,6 +5,7 @@ from utils import time
 from service.Device import DeviceService
 from constants.Process import ProcessState, TaskType, LogType
 from service.Astro import LightCurveService
+from constants.Universe import LiveType
 
 sio = socketio.Client()
 sio.connect("http://localhost:5000")  # TODO: Config.
@@ -30,6 +31,7 @@ def run(task):
     print("=== RUN ===")
     print(task)
     task["meta"]["size"] = 147521
+    time.sleep(1000)
 
     if task["type"] == TaskType.TARGET_PIXEL.value:
         """
@@ -65,6 +67,27 @@ def run(task):
             else:
                 pass
         """
+        task["solution"] = {
+            "planets": [
+                {
+                    "name": "Star I",
+                    "diameter": 1.13,
+                    "mass": 1.26,
+                    "density": 0.85,
+                    "semi_major_axis": 0.05,
+                    "orbital_velocity": 25,
+                    "live_conditions": LiveType.PROMISING.value,
+                    "orbital_period": 0.877,
+                    "surface_temperature": 168,
+                    "transit": {
+                        "period": 0.811,
+                        "depth": 0.001,
+                        "duration": 0.01
+                    },
+                    "dataset": 123456789
+                }
+            ]
+        }
         pass
 
     submit(task)

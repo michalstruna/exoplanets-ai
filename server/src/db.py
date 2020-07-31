@@ -152,6 +152,8 @@ class PlanetProperties(EmbeddedDocument):
     density = FloatField(min_value=0)
     semi_major_axis = FloatField(min_value=0)
     orbital_velocity = FloatField(min_value=0)
+    orbital_period = FloatField(min_value=0)
+    surface_temperature = FloatField(min_value=0)
     live_conditions = StringField()  # TODO: DB table LiveType?
     transit = EmbeddedDocumentField(Transit)
     dataset = ReferenceField(Dataset, required=True)
@@ -161,9 +163,12 @@ class Planet(Document):
     properties = ListField(EmbeddedDocumentField(PlanetProperties, required=True), required=True, default=[])
     star = ReferenceField("Star", required=True)
 
-    #meta = {
-    #    "indexes": ["properties.name"]
-    #}
+    meta = {
+        "indexes": ["properties.name"]
+    }
+
+
+planet_dao = Dao(Planet)
 
 
 class LightCurve(EmbeddedDocument):
@@ -176,9 +181,9 @@ class Star(Document):
     light_curve = ListField(EmbeddedDocumentField(LightCurve), default=[])
     planets = ListField(ReferenceField(Planet), default=[])
 
-    #meta = {
-    #    "indexes": ["properties.name"]
-    #}
+    meta = {
+        "indexes": ["properties.name"]
+    }
 
 
 star_dao = Dao(Star, [
@@ -186,7 +191,8 @@ star_dao = Dao(Star, [
     {"$lookup": {"from": "dataset", "localField": "properties.dataset", "foreignField": "_id", "as": "properties.dataset"}},
     {"$addFields": {"properties.dataset": "$properties.dataset.name"}},
     {"$unwind": "$properties.dataset"},
-    {"$group": {"_id": "$_id", "properties": {"$push": "$properties"}}}
+    {"$group": {"_id": "$_id", "properties": {"$push": "$properties"}}},
+    {"$lookup": {"from": "planet", "localField": "_id", "foreignField": "star", "as": "planets"}}
 ])
 
 
