@@ -9,6 +9,7 @@ export type Filter<TValue = string | number> = {
 
 export type Sort = {
     column: number
+    columnName?: string
     isAsc: boolean
     level: number
 }
@@ -39,7 +40,8 @@ export interface Column<TItem, TValue> {
     icon?: string
     headerIcon?: string
     width?: number | string
-    interactive?: boolean
+    interactive?: boolean // TODO: Remove?
+    name?: string
 }
 
 export type Level = {

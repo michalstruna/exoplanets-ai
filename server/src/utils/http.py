@@ -77,9 +77,9 @@ class Response:
         })
 
     @staticmethod
-    def page(service):
+    def page(service, map_sort=None):
         def get_page():
-            cursor = Request.cursor()
+            cursor = Request.cursor(map_sort)
 
             return {
                 "content": service.get_all(**cursor),
@@ -102,18 +102,18 @@ class Request:
         return parser
 
     @staticmethod
-    def cursor():
+    def cursor(map_sort=None):
         args = Request.cursor_parser().parse_args()
 
         return {
             "limit": args["limit"],
             "offset": args["offset"],
             "filter": Request.parse_filter(args["filter"]),
-            "sort": Request.parse_sort(args["sort"])
+            "sort": Request.parse_sort(args["sort"], map_sort)
         }
 
     @staticmethod
-    def parse_sort(sort):
+    def parse_sort(sort, map_sort=None):
         sort = list(map(lambda item: item.split(","), sort))
         result = {}
 
@@ -122,11 +122,15 @@ class Request:
                 raise Exception(f"'{','.join(item)}' is not valid sort.")
 
             prop, order = item
+            final_prop = map_sort(prop) if map_sort else prop
+
+            if not final_prop:
+                raise Exception(f"Items are not sortable by '{prop}' prop.")
 
             if order not in ["asc", "desc"]:
                 raise Exception(f"'{order}' is no valid order.")
 
-            result[prop] = 1 if order == "asc" else -1
+            result[final_prop] = 1 if order == "asc" else -1
 
         return result
 
@@ -174,13 +178,14 @@ class Api:
 
     def __init__(self, name, description=None):
         self.ns = Namespace(name, description=description)
-        self.service, self.full_model, self.new_model, self.model_name = None, None, None, None
+        self.service, self.full_model, self.new_model, self.model_name, self.map_sort = None, None, None, None, None
 
-    def init(self, full_model=None, new_model=None, service=None, model_name=None):
+    def init(self, full_model=None, new_model=None, service=None, model_name=None, map_sort=None):
         self.service = service
         self.full_model = full_model
         self.new_model = new_model
         self.model_name = model_name
+        self.map_sort = map_sort
 
         self.all_resources()
         self.single_resource()
@@ -196,7 +201,7 @@ class Api:
         @self.ns.response(400, "Invalid query parameters.")
         @self.ns.expect(Request.cursor_parser())
         def get(_self):
-            return Response.page(self.service)
+            return Response.page(self.service, self.map_sort)
 
         @self.ns.marshal_with(self.full_model, code=201, description=f"{self.model_name} was successfully created.")
         @self.ns.response(400, f"{self.model_name} is invalid.")

@@ -39,7 +39,7 @@ const slice = Redux.slice(
             })
         }),
         getStars: async<Cursor, Star[]>('stars', ({ segment, sort, filter }) => Requests.get('stars')), // TODO: Send cursor.
-        getPlanets: async<Cursor, Planet[]>('planets', ({  }) => Requests.get('planets')), // TODO: Planet[], Send cursor.
+        getPlanets: async<Cursor, Planet[]>('planets', cursor => Requests.get('planets', undefined, cursor)), // TODO: Send cursor.
         getDatasets: async<Cursor, Dataset[]>('datasets', ({ segment, sort, filter }) => Requests.get(`datasets`)) // TODO: Send cursor.
     })
 )

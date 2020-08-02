@@ -4,21 +4,21 @@ import Cookies from 'js-cookie'
 
 import { Cookie } from '../../Native'
 import Config from '../../Async/Constants/Config'
+import { Cursor } from '../../Layout'
+import { Query } from '../../Routing'
 
 export default class Requests {
 
-    public static get<T>(path: string, query: Record<string, any> = {}): Promise<T> {
+    public static get<T>(path: string, query: Record<string, any> = {}, cursor?: Cursor): Promise<T> {
         return this.process<T>(
             Axios.get(
                 Url.resolve(Config.apiUrl, path),
-                this.getOptions(query)
+                this.getOptions(query, cursor)
             )
         )
     }
 
     public static post<T>(path: string, body: Record<string, any> = {}, query: Record<string, any> = {}): Promise<T> {
-        console.log(Config.apiUrl, path, Url.resolve(Config.apiUrl, path))
-
         return this.process<T>(
             Axios.post(
                 Url.resolve(Config.apiUrl, path),
@@ -55,11 +55,16 @@ export default class Requests {
         ))
     }
 
-    private static getOptions(query: Record<string, any>): object {
+    private static getOptions(query: Record<string, any>, cursor?: Cursor): object {
         const identity = Cookies.getJSON(Cookie.IDENTITY.name)
+        const finalQuery = {...query}
+
+        if (cursor) {
+            finalQuery.sort = cursor.sort.columnName + ',' + ( cursor.sort.isAsc ? 'asc' : 'desc')
+        }
 
         return {
-            params: query,
+            params: finalQuery,
             headers: { [Config.authHeaderName]: identity ? ('Bearer ' + identity.token) : null }
         }
     }

@@ -3,6 +3,15 @@ from flask_restx import fields
 from utils.http import Api
 from service.Planet import PlanetService
 
+
+def map_sort(sort):
+    if sort == "datasets":
+        return sort
+
+    if sort in ["type", "name", "diameter", "mass", "density", "semi_major_axis", "distance", "datasets", "orbital_period", "orbital_velocity", "surface_temperature", "life_conditions", "semi_major_axis", "transit_depth", "distance"]:
+        return f"properties.{sort}"
+
+
 api = Api("planets", description="Discovered planets.")
 
 transit = api.ns.model("Transit", {
@@ -32,4 +41,4 @@ planet = api.ns.model("Planet", {
 })
 
 planet_service = PlanetService()
-api.init(full_model=planet, new_model=planet_properties, service=planet_service, model_name="Planet")
+api.init(full_model=planet, new_model=planet_properties, service=planet_service, model_name="Planet", map_sort=map_sort)

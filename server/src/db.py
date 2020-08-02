@@ -168,7 +168,9 @@ class Planet(Document):
     }
 
 
-planet_dao = Dao(Planet)
+planet_dao = Dao(Planet, [
+    {"$addFields": {"datasets": {"$size": "$properties"}}}
+])
 
 
 class LightCurve(EmbeddedDocument):

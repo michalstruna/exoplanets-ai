@@ -403,7 +403,8 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                                 title: strings.properties.type,
                                 accessor: planet => planet.properties[0].type,
                                 render: (type, planet, i) => <ItemImage image={`Database/Planet/${['Terrestrial', 'Gas'][1 - i % 2]}.png`} />,
-                                width: '4rem'
+                                width: '4rem',
+                                name: 'type' // TODO
                             },
                             {
                                 title: strings.properties.name,
@@ -412,63 +413,73 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                                     <div><b>{name}</b><br /><i>Plynný obr</i></div>
                                 </Detail>,
                                 width: 1.5,
-                                interactive: true
+                                interactive: true,
+                                name: 'name'
                             },
                             {
                                 title: strings.properties.diameter,
                                 accessor: planet => planet.properties[0].diameter,
                                 render: (diameter, planet) => <MultiValue items={planet.properties} property='diameter' formatter={val => Numbers.format(val) + ' ⊕'} />,
-                                headerIcon: '/img/Database/Table/Diameter.svg'
+                                headerIcon: '/img/Database/Table/Diameter.svg',
+                                name: 'diameter'
                             },
                             {
                                 title: strings.properties.mass,
                                 accessor: planet => planet.properties[0].mass,
                                 render: (mass, planet) => <MultiValue items={planet.properties} property='mass' formatter={val => Numbers.format(val) + ' ⊕'} />,
-                                headerIcon: '/img/Database/Table/Mass.svg'
+                                headerIcon: '/img/Database/Table/Mass.svg',
+                                name: 'mass'
                             },
                             {
                                 title: strings.properties.density,
                                 accessor: planet => planet.properties[0].density,
                                 render: (_, planet) => <MultiValue items={planet.properties} property='density' formatter={val => <>{Numbers.format(val)} <Fraction top='kg' bottom={<>m<sup>3</sup></>}/></>} />,
-                                headerIcon: '/img/Database/Table/Density.svg'
+                                headerIcon: '/img/Database/Table/Density.svg',
+                                name: 'density'
                             },
                             {
                                 title: strings.properties.semiMajorAxis,
                                 accessor: planet => planet.properties[0].semi_major_axis,
                                 render: (_, planet) => <MultiValue items={planet.properties} property='semi_major_axis' formatter={val => Numbers.format(val) + ' au'} />,
-                                headerIcon: '/img/Database/Table/Orbit.svg'
+                                headerIcon: '/img/Database/Table/Orbit.svg',
+                                name: 'semi_major_axis'
                             },
                             {
                                 title: 'Teplota',
                                 accessor: (planet: any) => planet.surface_temperature,
                                 render: (_, planet) => <MultiValue items={planet.properties} property='surface_temperature' formatter={val => Numbers.format(val) + ' °C'} />,
-                                headerIcon: '/img/Database/Table/Temperature.svg'
+                                headerIcon: '/img/Database/Table/Temperature.svg',
+                                name: 'surface_temperature'
                             },
                             {
                                 title: 'Perioda',
                                 accessor: (planet: any) => planet.orbital_period,
                                 render: (_, planet) => <MultiValue items={planet.properties} property='orbital_period' formatter={val => Numbers.format(val) + ' d'} />,
-                                headerIcon: '/img/Database/Table/Period.svg'
+                                headerIcon: '/img/Database/Table/Period.svg',
+                                name: 'orbital_period'
                             },
                             {
                                 title: 'Rychlost',
                                 accessor: (planet: any) => planet.properties[0].orbital_velocity,
                                 render: (_, planet) => <MultiValue items={planet.properties} property='orbital_velocity' formatter={val => <>{Numbers.format(val)} <Fraction top='km' bottom='s' /></>} />,
-                                headerIcon: '/img/Database/Table/Velocity.svg'
+                                headerIcon: '/img/Database/Table/Velocity.svg',
+                                name: 'orbital_velocity'
                             },
-                            { title: 'Život', accessor: () => 'Vyloučen', headerIcon: '/img/Database/Table/Life.svg' },
+                            { title: 'Život', accessor: () => 'Vyloučen', headerIcon: '/img/Database/Table/Life.svg', name: 'life_conditions' },
                             {
                                 title: strings.properties.distance,
                                 accessor: planet => planet.properties[0].distance,
                                 render: (_, planet) => <MultiValue items={planet.properties} property='distance' formatter={val => Numbers.format(val) + ' ly'} />,
-                                headerIcon: '/img/Database/Table/Distance.svg'
+                                headerIcon: '/img/Database/Table/Distance.svg',
+                                name: 'distance'
                             },
                             {
-                                title: <Colored color='#FAA'>Světelná křivka</Colored>,
+                                title: <Colored color='#AFA'>{strings.properties.transit}</Colored>,
                                 accessor: () => '',
                                 render: (_, __, i) => <MiniGraph data={i % 2 ? dd : dd2} />,
                                 headerIcon: '/img/Database/Table/Discovery.svg',
-                                width: '20rem'
+                                width: '20rem',
+                                name: 'transit_depth'
                             },
                             {
                                 title: strings.properties.datasets,
@@ -479,7 +490,8 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                                     </>
                                 ),
                                 headerIcon: '/img/Database/Table/Datasets.svg',
-                                width: 1.5
+                                width: 1.5,
+                                name: 'datasets'
                             },
                             {
                                 title: '',
