@@ -4,7 +4,7 @@ import Styled from 'styled-components'
 import { useActions, useStrings } from '../../Data'
 import { useDrag, useElement } from '../../Native'
 import { ZIndex, size } from '../../Style'
-import { HierarchicalTable } from '../../Layout'
+import { HierarchicalTable, Sort } from '../../Layout'
 import { setSort, useCursor, useItems, useTable } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'
@@ -124,8 +124,8 @@ const Database = ({ ...props }: Props) => {
     const { levels, rowHeight, getter } = React.useMemo(() => provideStructure(table, strings), [table, strings])
     const items = useItems(table)
 
-    const handleSort = (newSort: any) => {
-        if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level) {
+    const handleSort = (newSort: Sort) => {
+        if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level || newSort.columnName !== sort.columnName) {
             actions.setSort(newSort)
         }
     }
