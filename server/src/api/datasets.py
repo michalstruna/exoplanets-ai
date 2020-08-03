@@ -2,7 +2,7 @@ from flask_restx import fields
 
 from service.Dataset import DatasetService
 from utils.http import Api
-from constants.Dataset import DatasetType
+from constants.Database import DatasetType
 
 api = Api("datasets", description="Input datasets.")
 

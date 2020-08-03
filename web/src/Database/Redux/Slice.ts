@@ -38,9 +38,9 @@ const slice = Redux.slice(
                 isAsc: [Query.SORT_IS_ASC, [false, true], true]
             })
         }),
-        getStars: async<Cursor, Star[]>('stars', ({ segment, sort, filter }) => Requests.get('stars')), // TODO: Send cursor.
-        getPlanets: async<Cursor, Planet[]>('planets', cursor => Requests.get('planets', undefined, cursor)), // TODO: Send cursor.
-        getDatasets: async<Cursor, Dataset[]>('datasets', ({ segment, sort, filter }) => Requests.get(`datasets`)) // TODO: Send cursor.
+        getStars: async<Cursor, Star[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
+        getPlanets: async<Cursor, Planet[]>('planets', cursor => Requests.get('planets', undefined, cursor)),
+        getDatasets: async<Cursor, Dataset[]>('datasets', cursor => Requests.get(`datasets`, undefined, cursor))
     })
 )
 

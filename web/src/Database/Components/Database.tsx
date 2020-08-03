@@ -8,7 +8,8 @@ import { HierarchicalTable, Sort } from '../../Layout'
 import { setSort, useCursor, useItems, useTable } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'
-import { provideStructure, Detail } from '../Utils/StructureProvider'
+import { provideStructure } from '../Utils/StructureProvider'
+import TableItemDetail from './TableItemDetail'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -37,7 +38,7 @@ const Table = Styled(HierarchicalTable)`
         
         &:nth-of-type(3) {
             &:hover {
-                ${Detail}:after {
+                ${TableItemDetail.Root}:after {
                     opacity: 1;
                     transform: scale(1.3) translateX(25%);
                 }

@@ -3,6 +3,8 @@ import Url from '../../Routing/Constants/Url'
 import { Validator } from '../../Native'
 import ProcessState from '../../Discovery/Constants/ProcessState'
 import DatasetType from '../../Database/Constants/DatasetType'
+import LifeType from '../../Database/Constants/LifeType'
+import PlanetType from '../../Database/Constants/PlanetType'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -58,17 +60,20 @@ export default {
         diameter: { [CS]: 'Průměr', [EN]: 'Diameter' },
         mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
         distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
-        temperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
+        surfaceTemperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
         spectralClass: { [CS]: 'Spektr. třída', [EN]: 'Spectr. class' },
         density: { [CS]: 'Hustota', [EN]: 'Density' },
         luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
         gravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
-        datasets: { [CS]: 'Datasety', [EN]: 'Datasets' },
+        dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
 
         // Planets
         semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
-        transit: { [CS]: 'Tranzit', [EN]: 'Transit' }
+        transit: { [CS]: 'Tranzit', [EN]: 'Transit' },
+        orbitalPeriod: { [CS]: 'Perioda', [EN]: 'Period' },
+        orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
+        lifeConditions: { [CS]: 'Život', [EN]: 'Life' }
     },
 
     units: {
@@ -97,6 +102,22 @@ export default {
     stars: {
         types: {
             YELLOW_DWARF: { [CS]: 'Žlutý trpaslík', [EN]: 'Yellow dwarf' }
+        }
+    },
+
+    planets: {
+        lifeConditions: {
+            [LifeType.IMPOSSIBLE]: { [CS]: 'Vyloučen', [EN]: 'Impossible' },
+            [LifeType.POSSIBLE]: { [CS]: 'Možný', [EN]: 'Possible' },
+            [LifeType.UNKNOWN]: { [CS]: 'Neznámý', [EN]: 'Unknown' },
+            [LifeType.PROMISING]: { [CS]: 'Slibný', [EN]: 'Promising' }
+        },
+        types: {
+            [PlanetType.MERCURY]: { [CS]: 'Typ Merkur', [EN]: 'Mercury-like' },
+            [PlanetType.EARTH]: { [CS]: 'Typ Země', [EN]: 'Earth-like' },
+            [PlanetType.SUPEREARTH]: { [CS]: 'Superzemě', [EN]: 'Superearth' },
+            [PlanetType.NEPTUNE]: { [CS]: 'Typ Neptun', [EN]: 'Neptune-like' },
+            [PlanetType.JUPITER]: { [CS]: 'Typ Jupiter', [EN]: 'Jupiter-like' }
         }
     },
 

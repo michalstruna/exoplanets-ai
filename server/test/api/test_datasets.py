@@ -3,7 +3,7 @@ from http import HTTPStatus
 from uuid import uuid4
 
 from app_factory import create_app
-from constants.Dataset import DatasetType
+from constants.Database import DatasetType
 
 
 @pytest.fixture

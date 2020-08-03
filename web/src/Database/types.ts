@@ -4,6 +4,10 @@ import SpectralType from './Constants/SpectralType'
 import React from 'react'
 import { Level } from '../Layout'
 
+export interface PlanetProperties extends Record<any, any> {
+
+}
+
 export interface Planet {
     diameter?: number
     mass?: number
@@ -13,6 +17,7 @@ export interface Planet {
     density?: number
     surfaceTemperature?: number
     type?: PlanetType
+    properties: PlanetProperties[]
 }
 
 export interface Star {

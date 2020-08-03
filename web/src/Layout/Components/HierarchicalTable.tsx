@@ -37,7 +37,6 @@ const Row = Styled.div<RowProps>`
 
 interface CellProps {
     icon?: string
-    interactive?: boolean
 }
 
 const Cell = Styled.div<CellProps>`
@@ -63,15 +62,6 @@ const Cell = Styled.div<CellProps>`
             display: inline-block;
             margin-right: 0.5rem;
             min-width: 1.2rem;
-        }
-    `}
-    
-    ${props => props.interactive && css`
-        padding: 0;
-        
-        & > a, & > button, & > div, & > p {
-            box-sizing: border-box;
-            padding: 0.5rem 1rem;
         }
     `}
 `
@@ -202,7 +192,7 @@ const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, ren
         return (
             <Row key={index} style={{ ...style, height: rowHeight!(index, level) + 'px' }} isOdd={index % 2 === 1} data-is-odd={index % 2 === 1}>
                 {levels[level].columns.map((column, j) => (
-                    <Cell key={j} icon={column.icon} data-level={level} style={getWidth(column.width)} interactive={column.interactive}>
+                    <Cell key={j} icon={column.icon} data-level={level} style={getWidth(column.width)}>
                         {column.render ? column.render(column.accessor(item, index), item, index) : column.accessor(item, index)}
                     </Cell>
                 ))}

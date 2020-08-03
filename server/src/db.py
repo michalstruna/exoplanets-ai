@@ -147,6 +147,7 @@ class Transit(EmbeddedDocument):
 
 class PlanetProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50)#, unique=True)
+    type = StringField(enum=["A", "B"])
     diameter = FloatField(min_value=0)
     mass = FloatField(min_value=0)
     density = FloatField(min_value=0)
@@ -154,7 +155,7 @@ class PlanetProperties(EmbeddedDocument):
     orbital_velocity = FloatField(min_value=0)
     orbital_period = FloatField(min_value=0)
     surface_temperature = FloatField(min_value=0)
-    live_conditions = StringField()  # TODO: DB table LiveType?
+    life_conditions = StringField()  # TODO: DB table LiveType?
     transit = EmbeddedDocumentField(Transit)
     dataset = ReferenceField(Dataset, required=True)
 

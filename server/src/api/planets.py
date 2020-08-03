@@ -2,6 +2,7 @@ from flask_restx import fields
 
 from utils.http import Api
 from service.Planet import PlanetService
+from constants.Database import PlanetType
 
 
 def map_sort(sort):
@@ -22,6 +23,7 @@ transit = api.ns.model("Transit", {
 
 planet_properties = api.ns.model("PlanetProperties", {
     "name": fields.String(required=True, description="Name of planet."),
+    "type": fields.String(required=True, enum=PlanetType.values(), description=f"Type of planet."),
     "diameter": fields.Float(min=0, description="Diameter of planet [Earth diameters]."),
     "mass": fields.Float(min=0, description="Mass of planet [Earth masses]."),
     "density": fields.Float(min=0, description="Density of planet [Earth density]."),
@@ -29,7 +31,7 @@ planet_properties = api.ns.model("PlanetProperties", {
     "orbital_velocity": fields.Float(min=0, description="Average orbital velocity around star."),
     "surface_temperature": fields.Integer(description="Estimated surface temperature [°C]."),
     "semi_major_axis": fields.Float(min=0, description="Semi-major axis of planet orbit [au]."),
-    "live_conditions": fields.String(description="Planet's live conditions."),
+    "life_conditions": fields.String(description="Planet's life conditions."),
     "distance": fields.Float(min=0, description="Distance of planet from Earth [ly]."),
     "dataset": fields.String(required=True, max_length=50, description="Name of dataset from which properties originate."),
     "transit": fields.Nested(transit, default=None, description="Transit of planet's host star.")

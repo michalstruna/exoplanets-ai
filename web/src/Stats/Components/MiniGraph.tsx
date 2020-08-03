@@ -94,7 +94,7 @@ const MiniGraph = ({ data, height, width, color }: Props) => {
                         allowDataOverflow={true}
                         axisLine={false}
                         tickLine={false}
-                        tickFormatter={x => Math.round(x * 1000) / 1000}
+                        tickFormatter={x => Math.round(x * 10000) / 10000}
                         type='number'
                         tickCount={10}
                         interval={'preserveStart'}

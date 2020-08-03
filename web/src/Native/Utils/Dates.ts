@@ -38,7 +38,7 @@ export enum Format {
 export const formatDistance = (strings: any, date1: number, date2?: number, format: Format = Format.SHORT): string => {
     const from = date1
     const end = date2 === undefined ? new Date().getTime() : date2
-    const diff = end - from
+    const diff = Math.abs(end - from)
 
     if (format === Format.LONG) {
         let rest = diff
@@ -67,4 +67,8 @@ export const formatDistance = (strings: any, date1: number, date2?: number, form
     }
 
     return '0 s'
+}
+
+export const daysToMs = (days: number) => { // TODO: convert(10, Unit.DAY, UNIT.MS)
+    return days * 86400 * 1000
 }
