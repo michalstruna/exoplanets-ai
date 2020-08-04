@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 
 import { useActions, useStrings } from '../../Data'
 import { useDrag, useElement } from '../../Native'
-import { ZIndex, size } from '../../Style'
+import { ZIndex } from '../../Style'
 import { HierarchicalTable, Sort } from '../../Layout'
 import { setSort, useCursor, useItems, useTable } from '..'
 import { Async } from '../../Async'
@@ -85,11 +85,11 @@ const Table = Styled(HierarchicalTable)`
             &[data-level="1"] {
                 &:nth-of-type(2) {
                     margin-left: 3rem;
-                    margin-right: -2rem;
+                    margin-right: -3rem;
                 }
                 
                 &:nth-of-type(3) {
-                    padding-left: 2rem;
+                    padding-left: 3rem;
                 }
             }
             
@@ -100,9 +100,12 @@ const Table = Styled(HierarchicalTable)`
                     }
                 }
             
-                &[data-level="1"] {                
+                &[data-level="1"] {   
+                    &:nth-of-type(1) {
+                        visibility: hidden;
+                    }
+                             
                     &:nth-of-type(2) {
-                        margin-left: 2rem;
                         width: 5rem !important;
                     }
                 

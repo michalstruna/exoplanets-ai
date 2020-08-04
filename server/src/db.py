@@ -2,6 +2,7 @@ from mongoengine import *
 from bson.objectid import ObjectId
 import math
 
+from constants.Database import PlanetType, StarType, SpectralClass
 from utils import time
 
 
@@ -132,11 +133,13 @@ class StarProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50, unique=True)
     diameter = FloatField(min_value=0)
     mass = FloatField(min_value=0)
-    temperature = IntField()
+    surface_temperature = IntField()
     distance = FloatField(min_value=0)
     density = IntField(min_value=0)
     gravity = IntField(min_value=0)
     luminosity = FloatField(min_value=0)
+    type = StringField(enum=StarType.values())
+    spectral_class = StringField(enum=SpectralClass.values())
 
 
 class Transit(EmbeddedDocument):
@@ -147,7 +150,7 @@ class Transit(EmbeddedDocument):
 
 class PlanetProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50)#, unique=True)
-    type = StringField(enum=["A", "B"])
+    type = StringField(enum=PlanetType.values())
     diameter = FloatField(min_value=0)
     mass = FloatField(min_value=0)
     density = FloatField(min_value=0)

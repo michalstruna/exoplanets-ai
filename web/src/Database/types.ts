@@ -4,33 +4,38 @@ import SpectralType from './Constants/SpectralType'
 import React from 'react'
 import { Level } from '../Layout'
 
-export interface PlanetProperties extends Record<any, any> {
-
-}
-
-export interface Planet {
+export interface PlanetProperties {
+    name: string
     diameter?: number
     mass?: number
     orbitalPeriod?: number
     semiMajorAxis?: number
     orbitalVelocity?: number
     density?: number
-    surfaceTemperature?: number
-    type?: PlanetType
+    surface_temperature?: number
+    type: PlanetType
+}
+
+export interface Planet {
     properties: PlanetProperties[]
 }
 
-export interface Star {
+export interface StarProperties {
     name: string
     mass?: number
     diameter?: number
-    temperature?: number
+    surface_temperature?: number
     luminosity?: number
-    absoluteMagnitude?: number
-    spectralClass?: SpectralType
+    absolute_magnitude?: number
+    spectral_type?: SpectralType
     planets?: Planet[]
-    type?: StarType
+    type: StarType
     distance?: number
+}
+
+export interface Star {
+    properties: StarProperties[]
+    planets: Planet[]
 }
 
 export type Dataset = {
@@ -38,9 +43,11 @@ export type Dataset = {
     name: string
     fields: Record<string, string>
     items_getter?: string
+    item_getter?: string
     type: string
     total_size: number
     current_size: number
+    processed: number
 }
 
 export type SegmentData<T> = {

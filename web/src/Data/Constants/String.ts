@@ -5,6 +5,7 @@ import ProcessState from '../../Discovery/Constants/ProcessState'
 import DatasetType from '../../Database/Constants/DatasetType'
 import LifeType from '../../Database/Constants/LifeType'
 import PlanetType from '../../Database/Constants/PlanetType'
+import StarType from '../../Database/Constants/StarType'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -47,13 +48,13 @@ export default {
         name: { [CS]: 'Název', [EN]: 'Name' },
 
         // Datasets
-        objects: { [CS]: 'Objektů', [EN]: 'Objects' },
+        totalSize: { [CS]: 'Objektů', [EN]: 'Objects' },
         processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
         date: { [CS]: 'Datum', [EN]: 'Date' },
         published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
         url: 'URL',
-        processTime: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
-        lastActivity: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
+        time: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
+        modified: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
         priority: { [CS]: 'Priorita', [EN]: 'Priority' },
 
         // Stars
@@ -67,6 +68,7 @@ export default {
         gravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
         dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
+        lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
 
         // Planets
         semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
@@ -101,7 +103,8 @@ export default {
 
     stars: {
         types: {
-            YELLOW_DWARF: { [CS]: 'Žlutý trpaslík', [EN]: 'Yellow dwarf' }
+            [StarType.YELLOW_DWARF]: { [CS]: 'Žlutý trpaslík', [EN]: 'Yellow dwarf' },
+            [StarType.RED_DWARF]: { [CS]: 'Červený trpaslík', [EN]: 'Red dwarf' }
         }
     },
 

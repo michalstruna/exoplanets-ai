@@ -46,6 +46,7 @@ const Cell = Styled.div<CellProps>`
     flex: 1 1 0;
     height: 100%;
     padding: 0.5rem 1rem;
+    position: relative;
     vertical-align: middle;
     transition: background-color ${Duration.MEDIUM};
     
@@ -64,6 +65,12 @@ const Cell = Styled.div<CellProps>`
             min-width: 1.2rem;
         }
     `}
+    
+    &[data-sorted]:not([data-header]) {
+        &:after {
+
+        }
+    }
 `
 
 const Header = Styled.div`
@@ -192,7 +199,7 @@ const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, ren
         return (
             <Row key={index} style={{ ...style, height: rowHeight!(index, level) + 'px' }} isOdd={index % 2 === 1} data-is-odd={index % 2 === 1}>
                 {levels[level].columns.map((column, j) => (
-                    <Cell key={j} icon={column.icon} data-level={level} style={getWidth(column.width)}>
+                    <Cell key={j} icon={column.icon} data-level={level} style={getWidth(column.width)} data-sorted={sortedLevel === level && sortedColumn === j ? (isAsc ? 'asc' : 'desc') : undefined}>
                         {column.render ? column.render(column.accessor(item, index), item, index) : column.accessor(item, index)}
                     </Cell>
                 ))}

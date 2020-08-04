@@ -1,5 +1,6 @@
 from flask_restx import fields
 
+from constants.Database import StarType, SpectralClass
 from service.Star import StarService
 from utils.http import Api
 from .planets import planet
@@ -11,7 +12,7 @@ new_star = api.ns.model("NewStar", {
     "name": fields.String(required=True, max_length=50, description="Name of star within dataset."),
     "diameter": fields.Float(min=0, description="Diameter of star in [sun diameters]."),
     "mass": fields.Float(min=0, description="Mass of star [sun masses]."),
-    "temperature": fields.Integer(description="Surface temperature of star [K]."),
+    "surface_temperature": fields.Integer(description="Surface temperature of star [K]."),
     "distance": fields.Float(min=0, description="Distance of star from Earth [ly].")
 })
 
@@ -19,7 +20,9 @@ star_properties = api.ns.inherit("StarProperties", new_star, {
     "dataset": fields.String(required=True, max_length=50, description="Name of dataset from which properties originate."),
     "density": fields.Integer(min=0, description="Density of star [kg/m^3]."),
     "gravity": fields.Integer(min=0, description="Surface gravity [m/s^2]."),
-    "luminosity": fields.Float(min=0, description="Star luminosity [sun luminosity].")
+    "luminosity": fields.Float(min=0, description="Star luminosity [sun luminosity]."),
+    "type": fields.String(enum=StarType.values(), description="Type of star."),
+    "spectral_type": fields.String(enum=SpectralClass.values(), description="Spectral type of star.")
 })
 
 light_curve = api.ns.model("LightCurve", {
