@@ -84,6 +84,17 @@ export default {
         }
     },
 
+    database: {
+        select: { [CS]: 'Tabulka', [EN]: 'Table' },
+        tables: {
+            bodies: { [CS]: 'Tělesa', [EN]: 'Bodies' },
+            stars: { [CS]: 'Hvězdy', [EN]: 'Stars' },
+            planets: { [CS]: 'Planety', [EN]: 'Planets' },
+            datasets: { [CS]: 'Datasety', [EN]: 'Datasety' },
+            users: { [CS]: 'Uživatelé', [EN]: 'Users' }
+        }
+    },
+
     datasets: {
         types: {
             [DatasetType.STAR_PROPERTIES]: { [CS]: 'Hvězdy', [EN]: 'Stars' },

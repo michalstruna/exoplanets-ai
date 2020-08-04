@@ -26,7 +26,7 @@ class DatasetService(Service):
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
             items["density"] = 1410 * items["mass"] / items["diameter"] ** 3
             items["gravity"] = 274 * items["mass"] / items["diameter"] ** 2
-            items["luminosity"] = (items["diameter"] ** 2) * ((items["temperature"] / 5780) ** 4)  # TODO: Constants.
+            items["luminosity"] = (items["diameter"] ** 2) * ((items["surface_temperature"] / 5780) ** 4)  # TODO: Constants.
             items = items.where(pd.notnull(items), None)
 
             dataset["items"] = []

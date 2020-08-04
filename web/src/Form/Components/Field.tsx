@@ -89,7 +89,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
     }
 
     const renderComponent = (register: any) => type === FieldType.SELECT ? (
-        <select onChange={handleChange} ref={register(registerOptions)} name={name}>
+        <select onChange={handleChange} ref={register(registerOptions)} name={name} {...props as any}>
             {(options || []).map(({ text, value }, i) => (
                 <option key={i} value={value}>
                     {text}

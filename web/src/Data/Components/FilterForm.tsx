@@ -24,7 +24,7 @@ interface RowProps {
     isActive: boolean
 }
 
-const Root = Styled.div`
+const Root = Styled(Form)`
     font-size: 110%;
     margin: 1.5rem auto;
     width: 40rem;
@@ -75,7 +75,15 @@ type Values = {
 const FilterForm = ({ defaultRelation, attributes, initialValues, onChange, ...props }: Props) => {
 
     const strings = useStrings().filter
-    const form = useForm<Values>({ defaultValues: { filter: [{ attribute: attributes[0] && attributes[0][0], relation: defaultRelation, value: '' }] } })
+    const form = useForm<Values>({
+        defaultValues: {
+            filter: [{
+                attribute: attributes[0] && attributes[0][0],
+                relation: defaultRelation,
+                value: ''
+            }]
+        }
+    })
     const fields = useFieldArray({ name: 'filter', control: form.control })
 
     const getHandleFieldChange = (i: any) => (
@@ -106,27 +114,28 @@ const FilterForm = ({ defaultRelation, attributes, initialValues, onChange, ...p
     }
 
     return (
-        <Root>
-            <Form onSubmit={() => null} form={form}>
-                {fields.fields.map((field, i) => (
-                    <Row key={field.id} isActive={true}>
-                        <Field
-                            name={`filter[${i}].attribute`}
-                            type={Field.Type.SELECT}
-                            options={attributes.map(attr => ({ text: attr[1], value: attr[0] }))} />
-                        <Field
-                            name={`filter[${i}].relation`}
-                            type={Field.Type.SELECT}
-                            options={Object.values(Validator.Relation).filter(item => typeof item === 'number').map(item => ({ value: item, text: strings.relations[item] }))}/>
-                        <Field
-                            name={`filter[${i}].value`}
-                            type={Field.Type.EMAIL}
-                            placeholder={strings.value}
-                            onChange={getHandleFieldChange(i)} />
-                        <Delete onClick={() => removeRow(form.getValues({ nest: true }), i)} />
-                    </Row>
-                ))}
-            </Form>
+        <Root onSubmit={() => null} form={form} {...props as any}>
+            {fields.fields.map((field, i) => (
+                <Row key={field.id} isActive={true}>
+                    <Field
+                        name={`filter[${i}].attribute`}
+                        type={Field.Type.SELECT}
+                        options={attributes.map(attr => ({ text: attr[1], value: attr[0] }))} />
+                    <Field
+                        name={`filter[${i}].relation`}
+                        type={Field.Type.SELECT}
+                        options={Object.values(Validator.Relation).filter(item => typeof item === 'number').map(item => ({
+                            value: item,
+                            text: strings.relations[item]
+                        }))} />
+                    <Field
+                        name={`filter[${i}].value`}
+                        type={Field.Type.EMAIL}
+                        placeholder={strings.value}
+                        onChange={getHandleFieldChange(i)} />
+                    <Delete onClick={() => removeRow(form.getValues({ nest: true }), i)} />
+                </Row>
+            ))}
         </Root>
     )
 }
