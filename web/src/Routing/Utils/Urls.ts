@@ -63,14 +63,10 @@ export const safePathname = (pathParamName: string, predicate: Validator.Predica
 export const safeQuery = <T extends QueryValue>(queryName: string, predicate: Validator.Predicate<QueryValue>, defaultValue: QueryValue = undefined): T => {
     let value = QueryString.parse(History.location.search, { parseNumbers: true, parseBooleans: true })[queryName]
 
-    console.log(5555, queryName, value)
-
     if (!Validator.is(value, predicate)) {
         replace({ query: { [queryName]: defaultValue } })
         return defaultValue as T
     }
-
-    console.log('----------')
 
     return value as T
 }

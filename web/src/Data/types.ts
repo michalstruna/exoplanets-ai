@@ -12,7 +12,7 @@ export type TextValue<TValue = any> = {
 }
 
 export type EnumTextValue<TValue = any> = TextValue & {
-    values: TextValue<TValue>[]
+    values?: TextValue<TValue>[]
 }
 
 export type FilterData<TValue = string | number> = {

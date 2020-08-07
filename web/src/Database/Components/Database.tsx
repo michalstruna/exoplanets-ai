@@ -120,7 +120,7 @@ const Table = Styled(HierarchicalTable)`
 
 const Database = ({ ...props }: Props) => {
 
-    const { filter, segment, sort } = useCursor()
+    let { filter, segment, sort } = useCursor()
     const actions = useActions({ setSort })
     const table = useTable()
     const { app } = useElement()
@@ -151,7 +151,8 @@ const Database = ({ ...props }: Props) => {
                 renderBody={body => (
                     <Async
                         data={[items, () => getter({ sort, filter, segment }), [sort, filter, segment, table]]}
-                        success={() => body} />
+                        success={() => body}
+                        active={() => sort.columnName} />
                 )} />
         </Root>
     )

@@ -9,6 +9,7 @@ export interface Props<T> {
     pending?: () => React.ReactNode
     success?: () => React.ReactNode
     fail?: () => React.ReactNode
+    active?: () => boolean
 }
 
 type AsyncDataAction<TPayload, TError = string> = {
@@ -17,7 +18,7 @@ type AsyncDataAction<TPayload, TError = string> = {
     2?: any[] // Array of updaters.
 }
 
-const Async: any = <T extends any>({ data: rawData, pending, success, fail }: Props<T>) => {
+const Async: any = <T extends any>({ data: rawData, pending, success, fail, active }: Props<T>) => {
 
     const isSingle = !Array.isArray(rawData) || (('payload' in rawData[0]) && typeof rawData[1] === 'function')
     const data = ((isSingle ? [rawData] : rawData) as any).map((item: any) => Array.isArray(item) ? item : [item])
@@ -37,15 +38,21 @@ const Async: any = <T extends any>({ data: rawData, pending, success, fail }: Pr
     const [deps, setDeps] = React.useState(data.map(() => []))
 
     React.useEffect(() => {
-        for (const item of data) {
-            if (!item[2] && item[1]) {
-                dispatch(item[1]())
+        if (active!()) {
+            for (const item of data) {
+                if (!item[2] && item[1]) {
+                    dispatch(item[1]())
+                }
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     React.useEffect(() => {
+        if (!active!()) {
+            return
+        }
+
         let isChanged = false
 
         for (const i in data) {
@@ -67,7 +74,7 @@ const Async: any = <T extends any>({ data: rawData, pending, success, fail }: Pr
         if (isChanged) {
             setDeps(data.map((item: AsyncDataAction<any>) => item[2]))
         }
-    }, [data, deps, dispatch]) // TODO: Effect is called on each render because of data.
+    }, [data, deps, dispatch, active]) // TODO: Effect is called on each render because of data.
 
     const { isPending, error, hasPayloads } = getState()
 
@@ -80,6 +87,10 @@ const Async: any = <T extends any>({ data: rawData, pending, success, fail }: Pr
     }
 
     return null
+}
+
+Async.defaultProps = {
+    active: () => true
 }
 
 export default Async

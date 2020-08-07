@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { EnumTextValue, FilterData, TextValue } from '../types'
+import { EnumTextValue, FilterData } from '../types'
 import { useForm } from 'react-hook-form'
 import { Field, Form } from '../../Form'
 import { Duration, image, opacityHover, size } from '../../Style'
@@ -9,10 +9,8 @@ import { Validator } from '../../Native'
 import { useStrings } from '..'
 import { Relation } from '../../Native/Utils/Validator'
 
-type Attribute = TextValue | EnumTextValue
-
 interface Props extends Omit<Omit<React.ComponentPropsWithoutRef<'form'>, 'onChange'>, 'onSubmit'> {
-    attributes: Attribute[]
+    attributes: EnumTextValue[]
     onChange?: (values: FilterData) => void
     onSubmit?: (values: FilterData) => void
     initialValues?: FilterData
@@ -92,7 +90,8 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
         const attr = getAttrByName(attribute)
         let newValues = [...values]
         newValues[i].attribute = attribute
-        newValues = setValue(newValues, 'values' in attr && attr.values ? attr.values[0].value : '', i)
+        newValues[i].relation = attr.values ? Validator.Relation.EQUALS : Validator.Relation.CONTAINS
+        newValues = setValue(newValues, attr.values ? attr.values[0].value : '', i)
         setValues(newValues)
     }
 
@@ -146,7 +145,7 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
         onSubmit?.(fromInternal(values))
     }
 
-    const getAttrByName = (name: string): Attribute => (
+    const getAttrByName = (name: string): EnumTextValue => (
         attributes.find(attr => attr.value === name)!
     )
 
@@ -167,7 +166,9 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
                         <Field
                             name={`filter[${i}].relation`}
                             type={Field.Type.SELECT}
-                            options={Object.values(Validator.Relation).filter(item => typeof item === 'number').map(item => ({
+                            options={options ?
+                                [{ value: Validator.Relation.EQUALS, text: strings.relations[Validator.Relation.EQUALS] }] :
+                                Object.values(Validator.Relation).filter(item => typeof item === 'number').map(item => ({
                                 value: item,
                                 text: strings.relations[item]
                             }))}
