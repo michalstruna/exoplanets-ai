@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 
 import { Cookie } from '../../Native'
 import Config from '../../Async/Constants/Config'
-import { Cursor } from '../../Layout'
+import { Cursor } from '../../Data'
 import { Query } from '../../Routing'
 
 export default class Requests {

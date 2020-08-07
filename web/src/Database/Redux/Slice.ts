@@ -1,6 +1,5 @@
-import { Filter, Sort, Segment, Cursor } from '../../Layout'
 import { Query } from '../../Routing'
-import { Redux } from '../../Data'
+import { Redux,  FilterData, Sort, Segment, Cursor } from '../../Data'
 import { Requests } from '../../Async'
 import { Dataset, Star, Planet } from '../types'
 
@@ -12,18 +11,18 @@ const slice = Redux.slice(
         stars: Redux.async<Star[]>(),
         planets: Redux.async<Planet[]>(),
         datasets: Redux.async<Dataset[]>(),
-        filter: Redux.empty<Filter>({}),
+        filter: Redux.empty<FilterData>({}),
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),
         usersRank: 0
     },
     ({ async, set }) => ({
-        setFilter: set<Filter>('filter', {
-            syncObject: () => ({ // TODO: Validate filter.
+        setFilter: set<FilterData>('filter', {
+            /*syncObject: () => ({ // TODO: Validate filter.
                 attribute: [Query.FILTER_ATTRIBUTE, () => true, []],
                 relation: [Query.FILTER_RELATION, () => true, []],
                 value: [Query.FILTER_VALUE, () => true, []]
-            })
+            })*/
         }),
         setSegment: set<Segment>('segment', {
             syncObject: () => ({

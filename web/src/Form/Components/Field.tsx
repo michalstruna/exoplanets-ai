@@ -83,30 +83,34 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
         (type.validator(value) && (!validator || validator(value))) || invalid || label || placeholder || 'Error'
     )
 
-    const registerOptions = {
-        required: { value: !!required, message: required! },
-        validate: { value: validate }
-    }
+    const registerOptions = { required: { value: !!required, message: required! }, validate: { value: validate } }
 
-    const renderComponent = (register: any) => type === FieldType.SELECT ? (
-        <select onChange={handleChange} ref={register(registerOptions)} name={name} {...props as any}>
-            {(options || []).map(({ text, value }, i) => (
-                <option key={i} value={value}>
-                    {text}
-                </option>
-            ))}
-        </select>
-    ) : (
-        <Input
-            {...props}
-            name={name}
-            placeholder={placeholder}
-            type={type.name}
-            autoComplete='off'
-            ref={register(registerOptions)}
-            data-empty={value === '' || undefined}
-            onChange={handleChange} />
-    )
+    const renderComponent = (register: any) => {
+        switch (type) {
+            case FieldType.SELECT:
+                return (
+                    <select {...props as any} onChange={handleChange} ref={register(registerOptions)} name={name}>
+                        {(options || []).map(({ text, value }, i) => (
+                            <option key={value} value={value}>
+                                {text}
+                            </option>
+                        ))}
+                    </select>
+                )
+            default:
+                return (
+                    <Input
+                        {...props}
+                        name={name}
+                        placeholder={placeholder}
+                        type={type.name}
+                        autoComplete='off'
+                        ref={register(registerOptions)}
+                        data-empty={value === '' || undefined}
+                        onChange={handleChange} />
+                )
+        }
+    }
 
     return (
         <Root>

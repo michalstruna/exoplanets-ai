@@ -3,7 +3,7 @@ import * as Languages from './Utils/Languages'
 import * as Redux from './Utils/Redux'
 
 export { default as Paginator } from './Components/Paginator'
-export { default as FilterForm } from './Components/FilterForm'
+export { default as Filter } from './Components/Filter'
 
 export { default as Reducer } from './Redux/Slice'
 export * from './Redux/Slice'

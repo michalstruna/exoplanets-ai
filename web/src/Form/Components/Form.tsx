@@ -59,7 +59,7 @@ const Button = Styled.button`
     margin-top: 1rem;
 `
 
-const Form = <Values extends any>({ defaultValues, onSubmit, children, form: outerForm, buttons, ...props }: Props<Values>) => {
+const Form = <Values extends any = any>({ defaultValues, onSubmit, children, form: outerForm, buttons, ...props }: Props<Values>) => {
 
     const localForm = useForm<Values>({ defaultValues })
     const form = outerForm || localForm
@@ -69,7 +69,11 @@ const Form = <Values extends any>({ defaultValues, onSubmit, children, form: out
             {...props}
             noValidate={true}
             data-invalid={!(form.formState.isValid || !form.formState.isSubmitted) || undefined}
-            onSubmit={form.handleSubmit(values => onSubmit(values, form))}>
+            onSubmit={e => {
+                e.preventDefault()
+                onSubmit(form.getValues({ nest: true }), form)
+                //form.handleSubmit(values => onSubmit(values, form)) // TODO: Async error.
+            }}>
             <FormContext {...form}>
                 {children}
             </FormContext>

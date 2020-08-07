@@ -3,7 +3,8 @@ import Styled, { css } from 'styled-components'
 
 import { useSort } from '../../Data'
 import { Color, size, image, Duration, ZIndex } from '../../Style'
-import { Column, Level, Sort } from '../types'
+import { Column, Level } from '../types'
+import { Sort } from '../../Data'
 import { useElement } from '../../Native'
 import VirtualizedList from './VirtualizedList'
 

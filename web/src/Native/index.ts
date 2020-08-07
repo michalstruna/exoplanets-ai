@@ -1,10 +1,10 @@
 // TODO: export * as Name
 // TODO: Test hooks.
-import * as Arrays from '../Native/Utils/Arrays'
-import * as Numbers from '../Native/Utils/Numbers'
-import * as Validator from '../Native/Utils/Validator'
-import * as Dates from '../Native/Utils/Dates'
-import * as Strings from '../Native/Utils/Strings'
+import * as Arrays from './Utils/Arrays'
+import * as Numbers from './Utils/Numbers'
+import * as Validator from './Utils/Validator'
+import * as Dates from './Utils/Dates'
+import * as Strings from './Utils/Strings'
 
 export { default as Cookie } from './Constants/Cookie'
 

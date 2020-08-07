@@ -1,10 +1,10 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useActions, useStrings } from '../../Data'
+import { useActions, useStrings, Sort } from '../../Data'
 import { useDrag, useElement } from '../../Native'
 import { ZIndex } from '../../Style'
-import { HierarchicalTable, Sort } from '../../Layout'
+import { HierarchicalTable } from '../../Layout'
 import { setSort, useCursor, useItems, useTable } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'

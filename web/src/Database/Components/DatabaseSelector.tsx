@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { useFixedX } from '../../Style'
-import { Paginator, FilterForm, useActions, useStrings } from '../../Data'
+import { Paginator, Filter, useActions, useStrings } from '../../Data'
 import { setSegment, setFilter } from '../Redux/Slice'
 import { useCursor, useItems, useTable } from '..'
 import DbTable from '../Constants/DbTable'
@@ -35,7 +35,7 @@ const Select = Styled(Form)`
     }
 `
 
-const Filter = Styled(FilterForm)`
+const FilterForm = Styled(Filter)`
     margin: 1.5rem 1rem;
     min-width: 35rem;
 `
@@ -47,18 +47,18 @@ const Page = Styled(Paginator)`
 
 const DatabaseSelector = ({ ...props }: Props) => {
 
+    const { segment, filter } = useCursor()
     const actions = useActions({ setSegment, setFilter })
 
     const root = React.useRef()
     useFixedX(root as any)
-    const { segment, filter } = useCursor()
 
     const table = useTable()
     const items = useItems(table)
 
     const strings = useStrings()
 
-    const filterColumns = React.useMemo(() => provideFilterColumns(table, strings.properties), [table]) as [string, string][]
+    const filterColumns = React.useMemo(() => provideFilterColumns(table, strings).map(x => ({ text: x[1], value: x[0], values: x[2] })), [table])
 
     return (
         <Root {...props} ref={root as any}>
@@ -70,10 +70,10 @@ const DatabaseSelector = ({ ...props }: Props) => {
                     label={strings.database.select}
                     options={Object.values(DbTable).map(table => ({ text: strings.database.tables[table], value: table }))} />
             </Select>
-            <Filter
+            <FilterForm
                 attributes={filterColumns}
-                onChange={actions.setFilter}
-                initialValues={filter} />
+                onChange={() => null}
+                onSubmit={actions.setFilter} />
             <Page
                 page={segment}
                 itemsCount={items.payload ? items.payload.count : 0}

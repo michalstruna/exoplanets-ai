@@ -1,29 +1,4 @@
-import { Validator } from '../Native'
 import React from 'react'
-
-export type Filter<TValue = string | number> = {
-    attribute: string[]
-    relation: Validator.Relation[]
-    value: TValue[]
-}
-
-export type Sort = {
-    column: number
-    columnName?: string
-    isAsc: boolean
-    level: number
-}
-
-export type Segment = {
-    index: number
-    size: number
-}
-
-export type Cursor = {
-    filter: Filter
-    sort: Sort
-    segment: Segment
-}
 
 export type TooltipData = {
     render: () => React.ReactNode
