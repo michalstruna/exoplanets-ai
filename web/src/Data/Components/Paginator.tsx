@@ -101,7 +101,7 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
     React.useEffect(() => {
         const newPagesCount = getPagesCount()
 
-        if (!freeze && itemsCount > 0) {
+        if (!freeze) {
             setCache({ pages: newPagesCount, itemsCount })
         }
     }, [itemsCount, page, freeze, getPagesCount])

@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { EnumTextValue, FilterData } from '../types'
+import { EnumTextValue, FilterData, TextValue } from '../types'
 import { useForm } from 'react-hook-form'
 import { Field, Form } from '../../Form'
 import { Duration, image, opacityHover, size } from '../../Style'
@@ -75,6 +75,10 @@ const Submit = Styled.button`
     min-width: 1.75rem;
 `
 
+const stringRelations = Object.values(Validator.Relation)
+const numberRelations = [Validator.Relation.EQUALS, Validator.Relation.LESS_THAN, Validator.Relation.GREATER_THAN]
+const selectRelations = [Validator.Relation.EQUALS]
+
 const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Props) => {
 
     const strings = useStrings().filter
@@ -90,9 +94,19 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
         const attr = getAttrByName(attribute)
         let newValues = [...values]
         newValues[i].attribute = attribute
-        newValues[i].relation = attr.values ? Validator.Relation.EQUALS : Validator.Relation.CONTAINS
-        newValues = setValue(newValues, attr.values ? attr.values[0].value : '', i)
+        newValues[i].relation = attr.values === String ? Validator.Relation.CONTAINS : Validator.Relation.EQUALS
+        newValues = setValue(newValues, getDefaultValue(attr.values), i)
         setValues(newValues)
+    }
+
+    const getDefaultValue = (values: TextValue[] | StringConstructor | NumberConstructor) => {
+        if (Array.isArray(values)) {
+            return values[0].value
+        } else if (values === Number) {
+            return 0
+        } else {
+            return ''
+        }
     }
 
     const handleChangeRelation = (relation: Validator.Relation, i: number) => {
@@ -102,17 +116,18 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
     }
 
     const setValue = (target: InternalFilterData, value: string | number, i: number) => {
-        const isEmpty = !value
         target[i].value = value
 
-        if (isEmpty && values.length === i + 2) {
+        if (isEmpty(value) && values.length === i + 2) {
             target = removeEmptyFromEnd(target)
-        } else if (value && values.length === i + 1) {
+        } else if (!isEmpty(value) && values.length === i + 1) {
             target.push({ attribute: attributes[0].value, relation: Relation.CONTAINS, value: '' })
         }
 
         return target
     }
+
+    const isEmpty = (value: any) => !value && value !== 0
 
     const handleChangeValue = (value: string | number, i: number) => {
         let newValues = setValue([...values], value, i)
@@ -153,7 +168,6 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
         <Root {...props} onSubmit={handleSubmit} form={form}>
             {values.map((value, i) => {
                 const attr = getAttrByName(value.attribute)
-                const options = 'values' in attr ? attr.values : null
 
                 return (
                     <Row key={i}>
@@ -166,25 +180,23 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
                         <Field
                             name={`filter[${i}].relation`}
                             type={Field.Type.SELECT}
-                            options={options ?
-                                [{ value: Validator.Relation.EQUALS, text: strings.relations[Validator.Relation.EQUALS] }] :
-                                Object.values(Validator.Relation).filter(item => typeof item === 'number').map(item => ({
+                            options={(attr.values === String ? stringRelations : (attr.values === Number ? numberRelations : selectRelations)).map(item => ({
                                 value: item,
                                 text: strings.relations[item]
                             }))}
                             onChange={e => handleChangeRelation(e.target.value as any, i)}
                             value={value.relation} />
-                        {options ? (
+                        {Array.isArray(attr.values) ? (
                             <Field
                                 name={`filter[${i}].value`}
                                 type={Field.Type.SELECT}
                                 onChange={e => handleChangeValue(e.target.value, i)}
                                 value={value.value}
-                                options={options} />
+                                options={attr.values} />
                         ) : (
                             <Field
                                 name={`filter[${i}].value`}
-                                type={Field.Type.TEXT}
+                                type={attr.values === Number ? Field.Type.NUMBER : Field.Type.TEXT}
                                 placeholder={strings.value}
                                 onChange={e => handleChangeValue(e.target.value, i)}
                                 value={value.value} />

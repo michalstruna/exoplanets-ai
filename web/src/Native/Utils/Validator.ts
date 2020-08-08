@@ -10,12 +10,12 @@ export type Predicate<T> = FunctionPredicate<T> | ValuePredicate<T> | ArrayPredi
 export type BiPredicate<T1, T2> = BiFunctionPredicate<T1, T2>
 
 export enum Relation {
-    EQUALS,
-    CONTAINS,
-    LESS_THAN,
-    MORE_THAN,
-    STARTS_WITH,
-    ENDS_WITH
+    EQUALS = 'eq',
+    CONTAINS = 'cont',
+    LESS_THAN = 'lt',
+    GREATER_THAN = 'gt',
+    STARTS_WITH = 'starts',
+    ENDS_WITH = 'ends'
 }
 
 /**
@@ -61,7 +61,7 @@ export const compare = <T extends string | number>(value1: T, relation: Relation
             return value1.toString().endsWith(value2.toString())
         case Relation.LESS_THAN:
             return value1 < value2
-        case Relation.MORE_THAN:
+        case Relation.GREATER_THAN:
             return value1 > value2
     }
 }

@@ -37,7 +37,7 @@ export default {
             [Validator.Relation.ENDS_WITH]: { [CS]: 'Končí na', [EN]: 'Ends with' },
             [Validator.Relation.STARTS_WITH]: { [CS]: 'Začíná na', [EN]: 'Starts with' },
             [Validator.Relation.LESS_THAN]: { [CS]: 'Je menší než', [EN]: 'Is less than' },
-            [Validator.Relation.MORE_THAN]: { [CS]: 'Je větší než', [EN]: 'Is more than' }
+            [Validator.Relation.GREATER_THAN]: { [CS]: 'Je větší než', [EN]: 'Is more than' }
         },
         value: { [CS]: 'Hodnota filtru...', [EN]: 'Filter value...' }
     },

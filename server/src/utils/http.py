@@ -1,8 +1,9 @@
 from http import HTTPStatus
-from flask_restx import abort
 from mongoengine.errors import ValidationError, NotUniqueError, DoesNotExist
 from bson.errors import InvalidId
 from flask_restx.reqparse import RequestParser
+from flask_restx import Namespace, Resource, fields, abort
+from flask import request
 
 from constants.Data import Relation
 
@@ -77,9 +78,9 @@ class Response:
         })
 
     @staticmethod
-    def page(service, map_sort=None):
+    def page(service, map_props=None):
         def get_page():
-            cursor = Request.cursor(map_sort)
+            cursor = Request.cursor(map_props)
 
             return {
                 "content": service.get_all(**cursor),
@@ -102,18 +103,18 @@ class Request:
         return parser
 
     @staticmethod
-    def cursor(map_sort=None):
+    def cursor(map_props=None):
         args = Request.cursor_parser().parse_args()
 
         return {
             "limit": args["limit"],
             "offset": args["offset"],
-            "filter": Request.parse_filter(args["filter"]),
-            "sort": Request.parse_sort(args["sort"], map_sort)
+            "filter": Request.parse_filter(args["filter"], map_props),
+            "sort": Request.parse_sort(args["sort"], map_props)
         }
 
     @staticmethod
-    def parse_sort(sort, map_sort=None):
+    def parse_sort(sort, map_props=None):
         sort = list(map(lambda item: item.split(","), sort))
         result = {}
 
@@ -122,7 +123,7 @@ class Request:
                 raise Exception(f"'{','.join(item)}' is not valid sort.")
 
             prop, order = item
-            final_prop = map_sort(prop) if map_sort else prop
+            final_prop, type = map_props(prop) if map_props else prop
 
             if not final_prop:
                 raise Exception(f"Items are not sortable by '{prop}' prop.")
@@ -135,7 +136,7 @@ class Request:
         return result
 
     @staticmethod
-    def parse_filter(filter):
+    def parse_filter(filter, map_props=None):
         def parse_filter_item(item):
             if len(item) < 3:
                 raise Exception(f"'{','.join(item)}' is not valid filter.")
@@ -146,31 +147,32 @@ class Request:
             if rel not in Relation._value2member_map_:
                 raise Exception(f"'{rel}' is not valid relation.")
 
-            return [prop, rel, val]
+            final_prop, type = map_props(prop) if map_props else prop
+
+            if not final_prop:
+                raise Exception(f"Items are not filerable by '{prop}' prop.")
+
+            return [final_prop, rel, type(val) if val != "" and isinstance(val, str) else ("" if type == str else 0)]
 
         filter = list(map(parse_filter_item, filter))
-        result = {}
+
+        rules = []
 
         for prop, rel, val in filter:
             if rel == Relation.EQ.value:
-                item = val
+                rule = {"$regex": f"^{val}$", "$options": "i"}
             elif rel == Relation.CONT.value:
-                item = {"$regex": ".*" + val + ".*"}
+                rule = {"$regex": val, "$options": "i"}
             elif rel == Relation.STARTS.value:
-                item = {"$regex": val + ".*"}
+                rule = {"$regex": f"^{val}", "$options": "i"}
             elif rel == Relation.ENDS.value:
-                item = {"$regex": ".*" + val}
+                rule = {"$regex": f"{val}$", "$options": "i"}
             else:
-                item = {"$" + rel: val}
+                rule = {"$" + rel: val}
 
-            result[prop] = item
+            rules.append({prop: rule})
 
-        return result
-
-
-from flask_restx import Namespace, Resource, fields
-from flask import request
-
+        return {"$and": rules} if rules else {}
 
 class Api:
 
@@ -180,12 +182,12 @@ class Api:
         self.ns = Namespace(name, description=description)
         self.service, self.full_model, self.new_model, self.model_name, self.map_sort = None, None, None, None, None
 
-    def init(self, full_model=None, new_model=None, service=None, model_name=None, map_sort=None):
+    def init(self, full_model=None, new_model=None, service=None, model_name=None, map_props=None):
         self.service = service
         self.full_model = full_model
         self.new_model = new_model
         self.model_name = model_name
-        self.map_sort = map_sort
+        self.map_props = map_props
 
         self.all_resources()
         self.single_resource()
@@ -201,7 +203,7 @@ class Api:
         @self.ns.response(400, "Invalid query parameters.")
         @self.ns.expect(Request.cursor_parser())
         def get(_self):
-            return Response.page(self.service, self.map_sort)
+            return Response.page(self.service, self.map_props)
 
         @self.ns.marshal_with(self.full_model, code=201, description=f"{self.model_name} was successfully created.")
         @self.ns.response(400, f"{self.model_name} is invalid.")

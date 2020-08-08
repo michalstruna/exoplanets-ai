@@ -5,12 +5,15 @@ from service.Planet import PlanetService
 from constants.Database import PlanetType
 
 
-def map_sort(sort):
-    if sort == "datasets":
-        return sort
+def map_props(prop):
+    if prop == "datasets":
+        return prop, str
 
-    if sort in ["type", "name", "diameter", "mass", "density", "semi_major_axis", "distance", "datasets", "orbital_period", "orbital_velocity", "surface_temperature", "life_conditions", "semi_major_axis", "transit_depth", "distance"]:
-        return f"properties.{sort}"
+    if prop in ["type", "name", "life_conditions", "semi_major_axis", "transit_depth", "distance"]:
+        return f"properties.{prop}", str
+
+    if prop in ["diameter", "mass", "density", "semi_major_axis", "distance", "orbital_period", "orbital_velocity", "surface_temperature"]:
+        return f"properties.{prop}", float
 
 
 api = Api("planets", description="Discovered planets.")
@@ -43,4 +46,4 @@ planet = api.ns.model("Planet", {
 })
 
 planet_service = PlanetService()
-api.init(full_model=planet, new_model=planet_properties, service=planet_service, model_name="Planet", map_sort=map_sort)
+api.init(full_model=planet, new_model=planet_properties, service=planet_service, model_name="Planet", map_props=map_props)
