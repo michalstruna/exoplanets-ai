@@ -6,6 +6,7 @@ import DatasetType from '../../Database/Constants/DatasetType'
 import LifeType from '../../Database/Constants/LifeType'
 import PlanetType from '../../Database/Constants/PlanetType'
 import StarType from '../../Database/Constants/StarType'
+import DatasetPriority from '../../Database/Constants/DatasetPriority'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -103,13 +104,13 @@ export default {
             [DatasetType.TARGET_PIXEL]: 'Target pixel',
             [DatasetType.RADIAL_VELOCITY]: { [CS]: 'Radiální rychlosti', [EN]: 'Radial velocity' }
         },
-        priorities: [
-            { [CS]: 'Nejnižší', [EN]: 'Lowest' },
-            { [CS]: 'Nízká', [EN]: 'Low' },
-            { [CS]: 'Normální', [EN]: 'Normal' },
-            { [CS]: 'Vysoká', [EN]: 'High' },
-            { [CS]: 'Nejvyšší', [EN]: 'Highest' }
-        ]
+        priorities: {
+            [DatasetPriority.LOWEST]: { [CS]: 'Nejnižší', [EN]: 'Lowest' },
+            [DatasetPriority.LOW]: { [CS]: 'Nízká', [EN]: 'Low' },
+            [DatasetPriority.NORMAL]: { [CS]: 'Normální', [EN]: 'Normal' },
+            [DatasetPriority.HIGH]: { [CS]: 'Vysoká', [EN]: 'High' },
+            [DatasetPriority.HIGHEST]: { [CS]: 'Nejvyšší', [EN]: 'Highest' }
+        }
     },
 
     stars: {

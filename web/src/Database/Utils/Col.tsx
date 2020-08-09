@@ -51,7 +51,8 @@ export const list = <T extends any>(cols: ColOptions<any, T>[], strings: any): a
     const result = [...cols]
 
     if (true) {
-        result.unshift({ title: '#', format: (val: T, item: any, i: number) => i + 1, width: '3rem' })
+        //result.unshift({ title: '#', format: (val: T, item: any, i: number) => i + 1, width: '3rem' })
+        result.unshift({ name: 'index', width: '3rem', title: '#', headerIcon: false })
     }
 
     if (true) {

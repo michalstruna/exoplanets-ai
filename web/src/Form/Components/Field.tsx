@@ -40,11 +40,11 @@ const Root = Styled.label`
 `
 
 const Input = Styled.input`
+    ${size('100%', '2.3rem')}
     box-sizing: border-box;
     display: block;
     padding: 0.5rem 0;
     outline: none;
-    width: 100%;
 `
 
 const Text = Styled.section`

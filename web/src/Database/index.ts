@@ -18,6 +18,7 @@ export { default as StarType } from './Constants/StarType'
 export { default as PlanetType } from './Constants/PlanetType'
 export { default as SpectralType } from './Constants/SpectralType'
 export { default as DatasetType } from './Constants/DatasetType'
+export { default as DatasetPriority } from './Constants/DatasetPriority'
 export { default as LifeType } from './Constants/LifeType'
 
 /**

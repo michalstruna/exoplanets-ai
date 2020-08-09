@@ -6,6 +6,15 @@ from constants.Database import DatasetType
 
 api = Api("datasets", description="Input datasets.")
 
+
+def map_props(prop):
+    if prop in ["type", "name", "priority", "items_getter", "item_getter"]:
+        return prop, str
+
+    if prop in ["total_size", "processed", "priority", "created", "modified", "time"]:
+        return prop, float
+
+
 dataset_field = api.ns.model("DatasetField", {
     "name": fields.String(required=True, max_length=50, description="Name of field in dataset."),
     "prefix": fields.String(max_length=20, description="Add field value prefix before processing."),
@@ -45,4 +54,4 @@ dataset_item = api.ns.model("DatasetItem", {
 })
 
 dataset_service = DatasetService()
-api.init(full_model=dataset, new_model=new_dataset, service=dataset_service, model_name="Dataset")
+api.init(full_model=dataset, new_model=new_dataset, service=dataset_service, model_name="Dataset", map_props=map_props)

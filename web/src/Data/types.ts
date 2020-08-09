@@ -11,8 +11,10 @@ export type TextValue<TValue = any> = {
     value: TValue
 }
 
+export type EnumTextValues<TValue = any> = TextValue<TValue>[] | StringConstructor | NumberConstructor | DateConstructor
+
 export type EnumTextValue<TValue = any> = TextValue<TValue> & {
-    values: TextValue<TValue>[] | StringConstructor | NumberConstructor
+    values: EnumTextValues<TValue>
 }
 
 export type FilterData<TValue = string | number> = {

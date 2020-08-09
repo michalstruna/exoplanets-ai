@@ -69,13 +69,13 @@ class Dao:
         if sort:
             pipeline.append({"$sort": sort})
 
+        pipeline += operations
+
         if offset:
             pipeline.append({"$skip": offset})
 
         if limit:
             pipeline.append({"$limit": limit})
-
-        pipeline += operations
 
         return list(self.collection.objects.aggregate(pipeline))
 
@@ -173,6 +173,9 @@ class Planet(Document):
 
 
 planet_dao = Dao(Planet, [
+    {"$group": {"_id": 1, "items": {"$push": {"properties": "$properties"}}}},
+    {"$unwind": {"path": "$items", "includeArrayIndex": "index"}},
+    {"$project": {"properties": "$items.properties", "index": {"$add": ["$index", 1]}}},
     {"$addFields": {"datasets": {"$size": "$properties"}}}
 ])
 

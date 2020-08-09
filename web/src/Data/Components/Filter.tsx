@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { EnumTextValue, FilterData, TextValue } from '../types'
+import { EnumTextValue, EnumTextValues, FilterData, TextValue } from '../types'
 import { useForm } from 'react-hook-form'
 import { Field, Form } from '../../Form'
 import { Duration, image, opacityHover, size } from '../../Style'
@@ -55,7 +55,11 @@ const Row = Styled.div`
     
     & > * {
         margin: 0 0.5rem;
-        width: calc(100% - 1rem);
+        flex: 1 1 0;
+        
+        &:last-child {
+            flex: 0 0 1.75rem;
+        }
     }
     
     &:hover {
@@ -75,16 +79,49 @@ const Submit = Styled.button`
     min-width: 1.75rem;
 `
 
-const stringRelations = Object.values(Validator.Relation)
-const numberRelations = [Validator.Relation.EQUALS, Validator.Relation.LESS_THAN, Validator.Relation.GREATER_THAN]
-const selectRelations = [Validator.Relation.EQUALS]
+const getDefaultValue = (values: EnumTextValues) => {
+    if (Array.isArray(values)) {
+        return values[0].value
+    } else if (values === Number) {
+        return 0
+    } else {
+        return ''
+    }
+}
+
+const getDefaultRelation = (values: EnumTextValues) => (
+    values === String ? Validator.Relation.CONTAINS : Validator.Relation.EQUALS
+)
+
+const getRelations = (values: EnumTextValues) => {
+    switch (values) {
+        case String:
+            return Object.values(Validator.Relation)
+        case Number:
+        case Date:
+            return [Validator.Relation.EQUALS, Validator.Relation.LESS_THAN, Validator.Relation.GREATER_THAN]
+        default:
+            return [Validator.Relation.EQUALS]
+    }
+}
+
+const getInputType = (values: EnumTextValues) => {
+    switch (values) {
+        case Number:
+            return Field.Type.NUMBER
+        case Date:
+            return Field.Type.DATE
+        default:
+            return Field.Type.TEXT
+    }
+}
 
 const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Props) => {
 
     const strings = useStrings().filter
 
     const defaultValues = initialValues ? { filter: toInternal(initialValues) } : {
-        filter: [{ attribute: attributes[0].value, relation: Validator.Relation.CONTAINS, value: '' }]
+        filter: [{ attribute: attributes[0].value, relation: getDefaultRelation(attributes[0].values), value: getDefaultValue(attributes[0].values) }]
     }
 
     const form = useForm<Values>({ defaultValues })
@@ -94,19 +131,9 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
         const attr = getAttrByName(attribute)
         let newValues = [...values]
         newValues[i].attribute = attribute
-        newValues[i].relation = attr.values === String ? Validator.Relation.CONTAINS : Validator.Relation.EQUALS
+        newValues[i].relation = getDefaultRelation(attr.values)
         newValues = setValue(newValues, getDefaultValue(attr.values), i)
         setValues(newValues)
-    }
-
-    const getDefaultValue = (values: TextValue[] | StringConstructor | NumberConstructor) => {
-        if (Array.isArray(values)) {
-            return values[0].value
-        } else if (values === Number) {
-            return 0
-        } else {
-            return ''
-        }
     }
 
     const handleChangeRelation = (relation: Validator.Relation, i: number) => {
@@ -121,7 +148,7 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
         if (isEmpty(value) && values.length === i + 2) {
             target = removeEmptyFromEnd(target)
         } else if (!isEmpty(value) && values.length === i + 1) {
-            target.push({ attribute: attributes[0].value, relation: Relation.CONTAINS, value: '' })
+            target.push({ attribute: attributes[0].value, relation: getDefaultRelation(attributes[0].values), value: getDefaultValue(attributes[0].values) })
         }
 
         return target
@@ -180,7 +207,7 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
                         <Field
                             name={`filter[${i}].relation`}
                             type={Field.Type.SELECT}
-                            options={(attr.values === String ? stringRelations : (attr.values === Number ? numberRelations : selectRelations)).map(item => ({
+                            options={getRelations(attr.values).map(item => ({
                                 value: item,
                                 text: strings.relations[item]
                             }))}
@@ -196,7 +223,7 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
                         ) : (
                             <Field
                                 name={`filter[${i}].value`}
-                                type={attr.values === Number ? Field.Type.NUMBER : Field.Type.TEXT}
+                                type={getInputType(attr.values)}
                                 placeholder={strings.value}
                                 onChange={e => handleChangeValue(e.target.value, i)}
                                 value={value.value} />

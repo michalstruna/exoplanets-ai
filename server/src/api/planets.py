@@ -42,7 +42,8 @@ planet_properties = api.ns.model("PlanetProperties", {
 
 planet = api.ns.model("Planet", {
     "_id": fields.String(requred=True, description="Star unique identifier."),
-    "properties": fields.List(fields.Nested(planet_properties), required=True, default=[])
+    "properties": fields.List(fields.Nested(planet_properties), required=True, default=[]),
+    "index": fields.Integer()
 })
 
 planet_service = PlanetService()
