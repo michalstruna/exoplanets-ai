@@ -1,14 +1,15 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useActions, useStrings } from '../../Data'
+import { useActions, useStrings, Sort } from '../../Data'
 import { useDrag, useElement } from '../../Native'
-import { ZIndex, size } from '../../Style'
+import { ZIndex } from '../../Style'
 import { HierarchicalTable } from '../../Layout'
 import { setSort, useCursor, useItems, useTable } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'
-import { provideStructure, Detail } from '../Utils/StructureProvider'
+import { provideStructure } from '../Utils/StructureProvider'
+import TableItemDetail from './TableItemDetail'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -37,7 +38,7 @@ const Table = Styled(HierarchicalTable)`
         
         &:nth-of-type(3) {
             &:hover {
-                ${Detail}:after {
+                ${TableItemDetail.Root}:after {
                     opacity: 1;
                     transform: scale(1.3) translateX(25%);
                 }
@@ -84,11 +85,11 @@ const Table = Styled(HierarchicalTable)`
             &[data-level="1"] {
                 &:nth-of-type(2) {
                     margin-left: 3rem;
-                    margin-right: -2rem;
+                    margin-right: -3rem;
                 }
                 
                 &:nth-of-type(3) {
-                    padding-left: 2rem;
+                    padding-left: 3rem;
                 }
             }
             
@@ -99,9 +100,12 @@ const Table = Styled(HierarchicalTable)`
                     }
                 }
             
-                &[data-level="1"] {                
+                &[data-level="1"] {   
+                    &:nth-of-type(1) {
+                        visibility: hidden;
+                    }
+                             
                     &:nth-of-type(2) {
-                        margin-left: 2rem;
                         width: 5rem !important;
                     }
                 
@@ -116,7 +120,7 @@ const Table = Styled(HierarchicalTable)`
 
 const Database = ({ ...props }: Props) => {
 
-    const { filter, segment, sort } = useCursor()
+    let { filter, segment, sort } = useCursor()
     const actions = useActions({ setSort })
     const table = useTable()
     const { app } = useElement()
@@ -124,8 +128,8 @@ const Database = ({ ...props }: Props) => {
     const { levels, rowHeight, getter } = React.useMemo(() => provideStructure(table, strings), [table, strings])
     const items = useItems(table)
 
-    const handleSort = (newSort: any) => {
-        if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level) {
+    const handleSort = (newSort: Partial<Sort>) => {
+        if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level || newSort.columnName !== sort.columnName) {
             actions.setSort(newSort)
         }
     }
@@ -147,7 +151,8 @@ const Database = ({ ...props }: Props) => {
                 renderBody={body => (
                     <Async
                         data={[items, () => getter({ sort, filter, segment }), [sort, filter, segment, table]]}
-                        success={() => body} />
+                        success={() => body}
+                        active={() => sort.column === undefined || sort.columnName} />
                 )} />
         </Root>
     )
@@ -155,5 +160,3 @@ const Database = ({ ...props }: Props) => {
 }
 
 export default Database
-
-// 188

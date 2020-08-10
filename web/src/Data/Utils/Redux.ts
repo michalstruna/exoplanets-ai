@@ -9,9 +9,9 @@ export const empty = <T>(value: any = undefined) => value as T
 
 type PlainOptions<State, Payload> = {
     syncObject?: (state: State) => ({
-        [K in keyof Payload]?: [Query, Validator.Predicate<Payload[K]>, Payload[K]]
+        [K in keyof Payload]?: [Query, Validator.Predicate<Payload[K]>, Payload[K]?]
     })
-    sync?: (state: State) => ([Query, Validator.Predicate<Payload>, Payload])
+    sync?: (state: State) => ([Query, Validator.Predicate<Payload>, Payload?])
 }
 
 type AsyncOptions<State, Payload> = {

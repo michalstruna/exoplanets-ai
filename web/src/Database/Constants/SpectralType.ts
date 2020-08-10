@@ -1,11 +1,11 @@
 enum SpectralType {
-    O,
-    B,
-    A,
-    F,
-    G,
-    K,
-    M
+    O = 'O',
+    B = 'B',
+    A = 'A',
+    F = 'F',
+    G = 'G',
+    K = 'K',
+    M = 'M'
 }
 
 export default SpectralType

@@ -3,8 +3,8 @@ import Styled from 'styled-components'
 import Paginate from 'react-paginate'
 
 import { size, Color, Duration } from '../../Style'
-import { Segment } from '../../Layout/types'
 import { Numbers } from '../../Native'
+import { Segment } from '../types'
 
 interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
     page: Segment
@@ -80,6 +80,12 @@ const Stats = Styled.p`
     font-size: 85%;
 `
 
+const Line = Styled.div`
+    display: inline-block;
+    margin-left: 0.5em;
+    white-space: nowrap;
+`
+
 const PerPage = Styled.select`
     padding: 0.25rem;
     text-align: center;
@@ -95,7 +101,7 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
     React.useEffect(() => {
         const newPagesCount = getPagesCount()
 
-        if (!freeze && itemsCount > 0) {
+        if (!freeze) {
             setCache({ pages: newPagesCount, itemsCount })
         }
     }, [itemsCount, page, freeze, getPagesCount])
@@ -135,7 +141,11 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
             </Row>
             <Row>
                 <Stats>
-                    Zobrazeno {page.index * page.size + 1}-{Math.min(cache.itemsCount, (page.index + 1) * page.size)} z {Numbers.format(cache.itemsCount)}. Velikost stránky {(
+                    <Line>
+                    Zobrazeno {page.index * page.size + 1}-{Math.min(cache.itemsCount, (page.index + 1) * page.size)} z {Numbers.format(cache.itemsCount)}.
+                        </Line>
+                        <Line>
+                        Velikost stránky {(
                     <PerPage onChange={event => handleChangeSize(parseInt(event.target.value))}>
                         {[5, 10, 20, 50, 100, 200].map((value, i) => (
                             <option key={i} value={value} selected={value === page.size}>
@@ -144,6 +154,7 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
                         ))}
                     </PerPage>
                 )}.
+                        </Line>
                 </Stats>
             </Row>
         </Root>

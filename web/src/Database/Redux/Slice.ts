@@ -1,6 +1,5 @@
-import { Filter, Sort, Segment, Cursor } from '../../Layout'
 import { Query } from '../../Routing'
-import { Redux } from '../../Data'
+import { Redux,  FilterData, Sort, Segment, Cursor } from '../../Data'
 import { Requests } from '../../Async'
 import { Dataset, Star, Planet } from '../types'
 
@@ -12,18 +11,18 @@ const slice = Redux.slice(
         stars: Redux.async<Star[]>(),
         planets: Redux.async<Planet[]>(),
         datasets: Redux.async<Dataset[]>(),
-        filter: Redux.empty<Filter>({}),
+        filter: Redux.empty<FilterData>({}),
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),
         usersRank: 0
     },
     ({ async, set }) => ({
-        setFilter: set<Filter>('filter', {
-            syncObject: () => ({ // TODO: Validate filter.
+        setFilter: set<FilterData>('filter', {
+            /*syncObject: () => ({ // TODO: Validate filter.
                 attribute: [Query.FILTER_ATTRIBUTE, () => true, []],
                 relation: [Query.FILTER_RELATION, () => true, []],
                 value: [Query.FILTER_VALUE, () => true, []]
-            })
+            })*/
         }),
         setSegment: set<Segment>('segment', {
             syncObject: () => ({
@@ -31,16 +30,16 @@ const slice = Redux.slice(
                 size: [Query.SEGMENT_SIZE, [5, 10, 20, 50, 100, 200], 20]
             })
         }),
-        setSort: set<Sort>('sort', {
+        setSort: set<Partial<Sort>>('sort', {
             syncObject: state => ({ // TODO: Level must be before column. Object is not order-safe. Replace key by first item array?
-                level: [Query.SORT_LEVEL, [0, 1], 0],
-                column: [Query.SORT_COLUMN, v => Number.isInteger(v) && v > 0 && v < levels[state.sort.level].columns.length, 1],
-                isAsc: [Query.SORT_IS_ASC, [false, true], true]
+                level: [Query.SORT_LEVEL, [0, 1]],
+                column: [Query.SORT_COLUMN, v => Number.isInteger(v!) && v! > 0 && v! < levels[state.sort.level].columns.length],
+                isAsc: [Query.SORT_IS_ASC, [false, true]]
             })
         }),
-        getStars: async<Cursor, Star[]>('stars', ({ segment, sort, filter }) => Requests.get('stars')), // TODO: Send cursor.
-        getPlanets: async<Cursor, Planet[]>('planets', cursor => Requests.get('planets', undefined, cursor)), // TODO: Send cursor.
-        getDatasets: async<Cursor, Dataset[]>('datasets', ({ segment, sort, filter }) => Requests.get(`datasets`)) // TODO: Send cursor.
+        getStars: async<Cursor, Star[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
+        getPlanets: async<Cursor, Planet[]>('planets', cursor => Requests.get('planets', undefined, cursor)),
+        getDatasets: async<Cursor, Dataset[]>('datasets', cursor => Requests.get(`datasets`, undefined, cursor))
     })
 )
 

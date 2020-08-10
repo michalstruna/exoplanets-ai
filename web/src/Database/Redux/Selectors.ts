@@ -1,12 +1,10 @@
 import { useSelector } from 'react-redux'
-import { Cursor } from '../../Layout'
-import DbTable from '../Constants/DbTable'
 import useRouter from 'use-react-router'
 
-const selectBodiesSort = (state: any) => state.database.sort
-const selectUsersRank = (state: any) => state.database.usersRank
+import { Cursor } from '../../Data'
+import DbTable from '../Constants/DbTable'
 
-export const useSort = () => useSelector(selectBodiesSort)
+export const useSort = () => useSelector((state: any) => state.database.sort)
 
 export const useCursor = () => useSelector((state: any): Cursor => ({
     sort: state.database.sort,
@@ -14,7 +12,7 @@ export const useCursor = () => useSelector((state: any): Cursor => ({
     filter: state.database.filter
 }))
 
-export const useUsersRank = () => useSelector(selectUsersRank)
+export const useUsersRank = () => useSelector((state: any) => state.database.usersRank)
 
 export const useTable = () => useRouter<any>().match.params.table
 

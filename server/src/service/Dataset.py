@@ -3,7 +3,7 @@ from mongoengine.errors import DoesNotExist
 
 from .Base import Service
 from .Star import StarService
-from constants.Dataset import DatasetType
+from constants.Database import DatasetType
 from utils import time
 import db
 
@@ -26,7 +26,7 @@ class DatasetService(Service):
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
             items["density"] = 1410 * items["mass"] / items["diameter"] ** 3
             items["gravity"] = 274 * items["mass"] / items["diameter"] ** 2
-            items["luminosity"] = (items["diameter"] ** 2) * ((items["temperature"] / 5780) ** 4)  # TODO: Constants.
+            items["luminosity"] = (items["diameter"] ** 2) * ((items["surface_temperature"] / 5780) ** 4)  # TODO: Constants.
             items = items.where(pd.notnull(items), None)
 
             dataset["items"] = []

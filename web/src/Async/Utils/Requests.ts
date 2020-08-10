@@ -1,11 +1,13 @@
 import Axios, { AxiosPromise } from 'axios'
 import Url from 'url'
 import Cookies from 'js-cookie'
+import QueryString from 'query-string'
 
 import { Cookie } from '../../Native'
 import Config from '../../Async/Constants/Config'
-import { Cursor } from '../../Layout'
-import { Query } from '../../Routing'
+import { Cursor } from '../../Data'
+
+Axios.defaults.paramsSerializer = (params) => QueryString.stringify(params, { arrayFormat: 'none' })
 
 export default class Requests {
 
@@ -60,7 +62,18 @@ export default class Requests {
         const finalQuery = {...query}
 
         if (cursor) {
-            finalQuery.sort = cursor.sort.columnName + ',' + ( cursor.sort.isAsc ? 'asc' : 'desc')
+            if (cursor.sort && cursor.sort.columnName) {
+                finalQuery.sort = cursor.sort.columnName + ',' + ( cursor.sort.isAsc ? 'asc' : 'desc')
+            }
+
+            if (cursor.filter && cursor.filter.attribute) {
+                finalQuery.filter = cursor.filter.attribute.map((attr, i) => `${attr},${cursor.filter.relation[i]},${cursor.filter.value[i]}`)
+            }
+
+            if (cursor.segment) {
+                finalQuery.offset = cursor.segment.index * cursor.segment.size
+                finalQuery.limit = cursor.segment.size
+            }
         }
 
         return {

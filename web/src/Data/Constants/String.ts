@@ -3,6 +3,10 @@ import Url from '../../Routing/Constants/Url'
 import { Validator } from '../../Native'
 import ProcessState from '../../Discovery/Constants/ProcessState'
 import DatasetType from '../../Database/Constants/DatasetType'
+import LifeType from '../../Database/Constants/LifeType'
+import PlanetType from '../../Database/Constants/PlanetType'
+import StarType from '../../Database/Constants/StarType'
+import DatasetPriority from '../../Database/Constants/DatasetPriority'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -34,7 +38,7 @@ export default {
             [Validator.Relation.ENDS_WITH]: { [CS]: 'Končí na', [EN]: 'Ends with' },
             [Validator.Relation.STARTS_WITH]: { [CS]: 'Začíná na', [EN]: 'Starts with' },
             [Validator.Relation.LESS_THAN]: { [CS]: 'Je menší než', [EN]: 'Is less than' },
-            [Validator.Relation.MORE_THAN]: { [CS]: 'Je větší než', [EN]: 'Is more than' }
+            [Validator.Relation.GREATER_THAN]: { [CS]: 'Je větší než', [EN]: 'Is more than' }
         },
         value: { [CS]: 'Hodnota filtru...', [EN]: 'Filter value...' }
     },
@@ -45,35 +49,51 @@ export default {
         name: { [CS]: 'Název', [EN]: 'Name' },
 
         // Datasets
-        objects: { [CS]: 'Objektů', [EN]: 'Objects' },
+        totalSize: { [CS]: 'Objektů', [EN]: 'Objects' },
         processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
         date: { [CS]: 'Datum', [EN]: 'Date' },
         published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
         url: 'URL',
-        processTime: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
-        lastActivity: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
+        time: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
+        modified: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
         priority: { [CS]: 'Priorita', [EN]: 'Priority' },
 
         // Stars
         diameter: { [CS]: 'Průměr', [EN]: 'Diameter' },
         mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
         distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
-        temperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
+        surfaceTemperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
         spectralClass: { [CS]: 'Spektr. třída', [EN]: 'Spectr. class' },
         density: { [CS]: 'Hustota', [EN]: 'Density' },
         luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
         gravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
-        datasets: { [CS]: 'Datasety', [EN]: 'Datasets' },
+        dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
+        lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
 
         // Planets
         semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
-        transit: { [CS]: 'Tranzit', [EN]: 'Transit' }
+        transit: { [CS]: 'Tranzit', [EN]: 'Transit' },
+        orbitalPeriod: { [CS]: 'Perioda', [EN]: 'Period' },
+        orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
+        lifeConditions: { [CS]: 'Život', [EN]: 'Life' },
+        planet: { [CS]: 'Planeta', [EN]: 'Planet' }
     },
 
     units: {
         time: {
             second: 's', minute: 'm', hour: 'h', day: 'd', year: { [CS]: 'r', [EN]: 'y' }, millisecond: 'ms'
+        }
+    },
+
+    database: {
+        select: { [CS]: 'Tabulka', [EN]: 'Table' },
+        tables: {
+            bodies: { [CS]: 'Tělesa', [EN]: 'Bodies' },
+            stars: { [CS]: 'Hvězdy', [EN]: 'Stars' },
+            planets: { [CS]: 'Planety', [EN]: 'Planets' },
+            datasets: { [CS]: 'Datasety', [EN]: 'Datasety' },
+            users: { [CS]: 'Uživatelé', [EN]: 'Users' }
         }
     },
 
@@ -85,18 +105,35 @@ export default {
             [DatasetType.TARGET_PIXEL]: 'Target pixel',
             [DatasetType.RADIAL_VELOCITY]: { [CS]: 'Radiální rychlosti', [EN]: 'Radial velocity' }
         },
-        priorities: [
-            { [CS]: 'Nejnižší', [EN]: 'Lowest' },
-            { [CS]: 'Nízká', [EN]: 'Low' },
-            { [CS]: 'Normální', [EN]: 'Normal' },
-            { [CS]: 'Vysoká', [EN]: 'High' },
-            { [CS]: 'Nejvyšší', [EN]: 'Highest' }
-        ]
+        priorities: {
+            [DatasetPriority.LOWEST]: { [CS]: 'Nejnižší', [EN]: 'Lowest' },
+            [DatasetPriority.LOW]: { [CS]: 'Nízká', [EN]: 'Low' },
+            [DatasetPriority.NORMAL]: { [CS]: 'Normální', [EN]: 'Normal' },
+            [DatasetPriority.HIGH]: { [CS]: 'Vysoká', [EN]: 'High' },
+            [DatasetPriority.HIGHEST]: { [CS]: 'Nejvyšší', [EN]: 'Highest' }
+        }
     },
 
     stars: {
         types: {
-            YELLOW_DWARF: { [CS]: 'Žlutý trpaslík', [EN]: 'Yellow dwarf' }
+            [StarType.YELLOW_DWARF]: { [CS]: 'Žlutý trpaslík', [EN]: 'Yellow dwarf' },
+            [StarType.RED_DWARF]: { [CS]: 'Červený trpaslík', [EN]: 'Red dwarf' }
+        }
+    },
+
+    planets: {
+        lifeConditions: {
+            [LifeType.IMPOSSIBLE]: { [CS]: 'Vyloučen', [EN]: 'Impossible' },
+            [LifeType.POSSIBLE]: { [CS]: 'Možný', [EN]: 'Possible' },
+            [LifeType.UNKNOWN]: { [CS]: 'Neznámý', [EN]: 'Unknown' },
+            [LifeType.PROMISING]: { [CS]: 'Slibný', [EN]: 'Promising' }
+        },
+        types: {
+            [PlanetType.MERCURY]: { [CS]: 'Typ Merkur', [EN]: 'Mercury-like' },
+            [PlanetType.EARTH]: { [CS]: 'Typ Země', [EN]: 'Earth-like' },
+            [PlanetType.SUPEREARTH]: { [CS]: 'Superzemě', [EN]: 'Superearth' },
+            [PlanetType.NEPTUNE]: { [CS]: 'Typ Neptun', [EN]: 'Neptune-like' },
+            [PlanetType.JUPITER]: { [CS]: 'Typ Jupiter', [EN]: 'Jupiter-like' }
         }
     },
 

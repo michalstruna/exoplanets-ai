@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg enable-background="new 0 0 480 480" version="1.1" viewBox="0 70 480 480" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+<svg class="chart" fill="none" viewBox="0 0 500 500">
+    <defs>
+  <linearGradient id="gradient" x2="0" y2="100%">
+   <stop offset="0%" stop-color="#CA0" />
+      <stop offset="100%" stop-color="#C40" />
+  </linearGradient>
+ </defs>
+
+<polyline stroke="url(#gradient)" points="0 200 140 180 180 400 220 470 250 490 280 470 320 400 360 180 500 200" stroke-width="40"/>
+</svg>
+</svg>
