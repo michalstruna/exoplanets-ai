@@ -71,7 +71,7 @@ export default class Requests {
             }
 
             if (cursor.segment) {
-                finalQuery.offset = cursor.segment.index
+                finalQuery.offset = cursor.segment.index * cursor.segment.size
                 finalQuery.limit = cursor.segment.size
             }
         }

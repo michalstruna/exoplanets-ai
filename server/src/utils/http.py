@@ -84,7 +84,7 @@ class Response:
 
             return {
                 "content": service.get_all(**cursor),
-                "count": service.get_count(cursor["filter"])
+                "count": service.get_count(**cursor)
             }
 
         return Response.get(lambda: get_page())
@@ -173,6 +173,7 @@ class Request:
             rules.append({prop: rule})
 
         return {"$and": rules} if rules else {}
+
 
 class Api:
 

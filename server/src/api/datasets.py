@@ -38,7 +38,8 @@ dataset = api.ns.model("Dataset", {
     "created": fields.Integer(required=True, description="Timestamp of dataset publication [ms]."),
     "modified": fields.Integer(required=True, description="Timestamp of last dataset change [ms]."),
     "time": fields.Integer(required=True, description="Total process time in dataset [ms]."),
-    "priority": fields.Integer(required=True, min=1, max=5, default=3, description="1 = lowest, 2 = low, 3 = normal, 4 = high, 5 = highest. More prioritized datasets will be processed first.")
+    "priority": fields.Integer(required=True, min=1, max=5, default=3, description="1 = lowest, 2 = low, 3 = normal, 4 = high, 5 = highest. More prioritized datasets will be processed first."),
+    "index": fields.Integer(min=1)
 })
 
 new_dataset = api.ns.model("NewDataset", {

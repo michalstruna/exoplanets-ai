@@ -128,7 +128,7 @@ const Database = ({ ...props }: Props) => {
     const { levels, rowHeight, getter } = React.useMemo(() => provideStructure(table, strings), [table, strings])
     const items = useItems(table)
 
-    const handleSort = (newSort: Sort) => {
+    const handleSort = (newSort: Partial<Sort>) => {
         if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level || newSort.columnName !== sort.columnName) {
             actions.setSort(newSort)
         }
@@ -152,7 +152,7 @@ const Database = ({ ...props }: Props) => {
                     <Async
                         data={[items, () => getter({ sort, filter, segment }), [sort, filter, segment, table]]}
                         success={() => body}
-                        active={() => sort.columnName} />
+                        active={() => sort.column === undefined || sort.columnName} />
                 )} />
         </Root>
     )
@@ -160,5 +160,3 @@ const Database = ({ ...props }: Props) => {
 }
 
 export default Database
-
-// 188

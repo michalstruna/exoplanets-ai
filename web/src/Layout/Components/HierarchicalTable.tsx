@@ -11,7 +11,7 @@ import VirtualizedList from './VirtualizedList'
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     items: any[]
     levels: Level[]
-    onSort?: (sort: Sort) => void
+    onSort?: (sort: Partial<Sort>) => void
     defaultSort?: { column: number, isAsc: boolean, level: number }
     renderBody?: (body: React.ReactNode) => React.ReactNode
     renderHeader?: (header: React.ReactNode) => React.ReactNode
@@ -142,8 +142,13 @@ const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, ren
     }
 
     React.useEffect(() => {
-        if (onSort) {
-            onSort({ column: sortedColumn, isAsc, level: sortedLevel, columnName: levels[sortedLevel].columns[sortedColumn].name })
+        if (onSort && levels[sortedLevel!] && levels[sortedLevel!].columns[sortedColumn!]) {
+            onSort({
+                column: sortedColumn, isAsc, level: sortedLevel,
+                columnName: levels[sortedLevel!].columns[sortedColumn!].name
+            })
+        } else if (onSort && sortedLevel === undefined && sortedColumn === undefined && isAsc === undefined) {
+            onSort({})
         }
 
     }, [sortedLevel, sortedColumn, isAsc, items, onSort, levels])

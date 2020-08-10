@@ -6,6 +6,14 @@ from utils.http import Api
 from .planets import planet
 
 
+def map_props(prop):
+    if prop in ["type", "name", "life_conditions", "semi_major_axis", "transit_depth", "distance", "dataset"]:
+        return f"properties.{prop}", str
+
+    if prop in ["diameter", "mass", "density", "surface_temperature", "distance", "luminosity", "gravity"]:
+        return f"properties.{prop}", float
+
+
 api = Api("stars", description="Explored stars.")
 
 new_star = api.ns.model("NewStar", {
@@ -34,8 +42,9 @@ star = api.ns.model("Star", {
     "_id": fields.String(requred=True, description="Star unique identifier."),
     "properties": fields.List(fields.Nested(star_properties), required=True, default=[]),
     "light_curve": fields.List(fields.Nested(light_curve), required=True, default=[]),
-    "planets": fields.List(fields.Nested(planet))
+    "planets": fields.List(fields.Nested(planet)),
+    "index": fields.Integer(min=1)
 })
 
 star_service = StarService()
-api.init(full_model=star, new_model=star_properties, service=star_service, model_name="Star")
+api.init(full_model=star, new_model=star_properties, service=star_service, model_name="Star", map_props=map_props)

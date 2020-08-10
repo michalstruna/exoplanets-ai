@@ -26,8 +26,10 @@ class Dao:
 
         return items[0]
 
-    def get_count(self, filter):
-        result = self.aggregate([{"$count": "count"}], filter)
+    def get_count(self, operations, filter={}):
+        pipeline = [*operations, {"$match": filter}, {"$count": "count"}]  # TODO: Use self.aggregate.
+        result = list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
+        #result = self.aggregate(operations + [{"$count": "count"}], filter)
         return result[0]["count"] if result else 0
 
     def add(self, item, with_return=True):
@@ -64,12 +66,10 @@ class Dao:
         pass
 
     def aggregate(self, operations, filter={}, limit=None, offset=None, sort=None):
-        pipeline = [{"$match": filter}]
+        pipeline = [*operations, {"$match": filter}]
 
         if sort:
             pipeline.append({"$sort": sort})
-
-        pipeline += operations
 
         if offset:
             pipeline.append({"$skip": offset})
@@ -77,7 +77,7 @@ class Dao:
         if limit:
             pipeline.append({"$limit": limit})
 
-        return list(self.collection.objects.aggregate(pipeline))
+        return list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
 
     @staticmethod
     def id(id):
@@ -172,12 +172,7 @@ class Planet(Document):
     }
 
 
-planet_dao = Dao(Planet, [
-    {"$group": {"_id": 1, "items": {"$push": {"properties": "$properties"}}}},
-    {"$unwind": {"path": "$items", "includeArrayIndex": "index"}},
-    {"$project": {"properties": "$items.properties", "index": {"$add": ["$index", 1]}}},
-    {"$addFields": {"datasets": {"$size": "$properties"}}}
-])
+planet_dao = Dao(Planet, [{"$addFields": {"datasets": {"$size": "$properties"}}}])
 
 
 class LightCurve(EmbeddedDocument):
@@ -196,12 +191,9 @@ class Star(Document):
 
 
 star_dao = Dao(Star, [
-    {"$unwind": "$properties"},
-    {"$lookup": {"from": "dataset", "localField": "properties.dataset", "foreignField": "_id", "as": "properties.dataset"}},
-    {"$addFields": {"properties.dataset": "$properties.dataset.name"}},
-    {"$unwind": "$properties.dataset"},
-    {"$group": {"_id": "$_id", "properties": {"$push": "$properties"}}},
-    {"$lookup": {"from": "planet", "localField": "_id", "foreignField": "star", "as": "planets"}}
+    {"$lookup": {"from": "planet", "localField": "_id", "foreignField": "star", "as": "planets"}},
+    {"$lookup": {"from": "dataset", "localField": "properties.dataset", "foreignField": "_id", "as": "dataset"}},
+    {"$addFields": {"properties": {"$map": {"input": "$properties", "as": "p", "in": {"$mergeObjects": ["$$p", {"dataset": {"$arrayElemAt": ["$dataset.name", {"$indexOfArray": ["$properties", "$$p"]}]}}]}}}}}
 ])
 
 

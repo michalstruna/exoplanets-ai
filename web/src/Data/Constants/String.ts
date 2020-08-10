@@ -76,7 +76,8 @@ export default {
         transit: { [CS]: 'Tranzit', [EN]: 'Transit' },
         orbitalPeriod: { [CS]: 'Perioda', [EN]: 'Period' },
         orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
-        lifeConditions: { [CS]: 'Život', [EN]: 'Life' }
+        lifeConditions: { [CS]: 'Život', [EN]: 'Life' },
+        planet: { [CS]: 'Planeta', [EN]: 'Planet' }
     },
 
     units: {

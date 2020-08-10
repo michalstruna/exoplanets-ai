@@ -30,11 +30,11 @@ const slice = Redux.slice(
                 size: [Query.SEGMENT_SIZE, [5, 10, 20, 50, 100, 200], 20]
             })
         }),
-        setSort: set<Sort>('sort', {
+        setSort: set<Partial<Sort>>('sort', {
             syncObject: state => ({ // TODO: Level must be before column. Object is not order-safe. Replace key by first item array?
-                level: [Query.SORT_LEVEL, [0, 1], 0],
-                column: [Query.SORT_COLUMN, v => Number.isInteger(v) && v > 0 && v < levels[state.sort.level].columns.length, 2],
-                isAsc: [Query.SORT_IS_ASC, [false, true], true]
+                level: [Query.SORT_LEVEL, [0, 1]],
+                column: [Query.SORT_COLUMN, v => Number.isInteger(v!) && v! > 0 && v! < levels[state.sort.level].columns.length],
+                isAsc: [Query.SORT_IS_ASC, [false, true]]
             })
         }),
         getStars: async<Cursor, Star[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
