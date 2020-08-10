@@ -1,6 +1,6 @@
 from flask_restx import fields
 
-from service.StarService import StarService
+from service.Star import StarService
 from utils.http import Api
 from .planets import planet
 
@@ -30,7 +30,8 @@ light_curve = api.ns.model("LightCurve", {
 star = api.ns.model("Star", {
     "_id": fields.String(requred=True, description="Star unique identifier."),
     "properties": fields.List(fields.Nested(star_properties), required=True, default=[]),
-    "light_curve": fields.List(fields.Nested(light_curve), required=True, default=[])
+    "light_curve": fields.List(fields.Nested(light_curve), required=True, default=[]),
+    "planets": fields.List(fields.Nested(planet))
 })
 
 star_service = StarService()

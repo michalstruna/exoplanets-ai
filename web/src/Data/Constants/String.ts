@@ -2,6 +2,7 @@ import Language from './Language'
 import Url from '../../Routing/Constants/Url'
 import { Validator } from '../../Native'
 import ProcessState from '../../Discovery/Constants/ProcessState'
+import DatasetType from '../../Database/Constants/DatasetType'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -39,11 +40,13 @@ export default {
     },
 
     properties: {
-        // Datasets
+        // General
+        type: { [CS]: 'Typ', [EN]: 'Type' },
         name: { [CS]: 'Název', [EN]: 'Name' },
+
+        // Datasets
         objects: { [CS]: 'Objektů', [EN]: 'Objects' },
         processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
-        type: { [CS]: 'Typ', [EN]: 'Type' },
         date: { [CS]: 'Datum', [EN]: 'Date' },
         published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
         url: 'URL',
@@ -61,7 +64,11 @@ export default {
         luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
         gravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
-        datasets: { [CS]: 'Datasety', [EN]: 'Datasets' }
+        datasets: { [CS]: 'Datasety', [EN]: 'Datasets' },
+
+        // Planets
+        semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
+        transit: { [CS]: 'Tranzit', [EN]: 'Transit' }
     },
 
     units: {
@@ -72,9 +79,11 @@ export default {
 
     datasets: {
         types: {
-            STAR_PROPERTIES: { [CS]: 'Hvězdy', [EN]: 'Stars' },
-            PLANET_PROPERTIES: { [CS]: 'Planety', [EN]: 'Planets' },
-            LIGHT_CURVE: { [CS]: 'Světelné křivky', [EN]: 'Light curves' }
+            [DatasetType.STAR_PROPERTIES]: { [CS]: 'Hvězdy', [EN]: 'Stars' },
+            [DatasetType.PLANET_PROPERTIES]: { [CS]: 'Planety', [EN]: 'Planets' },
+            [DatasetType.LIGHT_CURVE]: { [CS]: 'Světelné křivky', [EN]: 'Light curves' },
+            [DatasetType.TARGET_PIXEL]: 'Target pixel',
+            [DatasetType.RADIAL_VELOCITY]: { [CS]: 'Radiální rychlosti', [EN]: 'Radial velocity' }
         },
         priorities: [
             { [CS]: 'Nejnižší', [EN]: 'Lowest' },

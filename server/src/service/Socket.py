@@ -3,6 +3,9 @@ from flask_socketio import join_room, leave_room
 
 from utils import time, patterns
 from constants.Discovery import ProcessState
+from service.Dataset import DatasetService
+from service.Planet import PlanetService
+from service.Star import StarService
 
 
 class SocketService(metaclass=patterns.Singleton):
@@ -12,6 +15,10 @@ class SocketService(metaclass=patterns.Singleton):
         self.clients = {}
         self.webs = {}
         self.users = {}
+        self.dataset_service = DatasetService()
+        self.star_service = StarService()
+        self.planet_service = PlanetService()
+        self.tasks = {}
 
         @sio.on("client_connect")
         def client_connect(client):
@@ -21,7 +28,7 @@ class SocketService(metaclass=patterns.Singleton):
             self.emit_web("client_connect", client, user="user_id")
 
             sio.sleep(1)  # TODO: Sleep not working.
-            self.next_task(client["id"])
+            self.add_task(client["id"])
 
         @sio.on("disconnect")
         def disconnect():
@@ -35,7 +42,7 @@ class SocketService(metaclass=patterns.Singleton):
                     client["pause_start"] = time.now()
 
                 client["state"] = ProcessState.TERMINATED.value
-                self.emit_web("update_client", client, user=user_id)
+                self.update_client(id)
 
                 leave_room(self._get_room_name(None, "clients"))
                 leave_room(self._get_room_name(user_id, "clients"))
@@ -54,38 +61,82 @@ class SocketService(metaclass=patterns.Singleton):
         def web_pause_client(client_id):
             time.sleep(1000)
             # TODO: ...
-
-            client, user_id = self.clients[client_id]["data"], self.clients[client_id]["user_id"]
-            client["state"] = ProcessState.PAUSED.value
-
-            if not client["pause_start"]:
-                client["pause_start"] = time.now()
-
-            self.emit_web("update_client", client, user=user_id)
-            self.emit_client("pause", id=client_id)
+            self.pause_client(client_id)
 
         @sio.on("web_run_client")
         def web_run_client(client_id):
             time.sleep(1000)
-            self.next_task(client_id)
+            self.add_task(client_id)
 
         @sio.on("web_terminate_client")
         def web_terminate_client(client_id):
             time.sleep(1000)
             self.emit_client("terminate", id=client_id)
 
-    def next_task(self, client_id):
+        @sio.on("client_log")
+        def client_log(log):
+            client = self.clients[request.sid]
+            client["data"]["logs"].insert(0, log)
+            self.emit_web("client_log", {**log, "client_id": request.sid}, user=client["user_id"])
+
+        @sio.on("client_submit_task")
+        def client_submit_task(task):
+            self.pause_client(request.sid)
+            self.finish_task(task)
+            self.add_task(request.sid)
+
+    def update_client(self, id):
+        client = self.clients[id]
+        user_id, client = client["user_id"], client["data"]
+        update = {**client}
+        del update["logs"]
+        self.emit_web("update_client", update, user=user_id)
+
+    def pause_client(self, client_id):
+        client, user_id = self.clients[client_id]["data"], self.clients[client_id]["user_id"]
+        client["state"] = ProcessState.PAUSED.value
+
+        if not client["pause_start"]:
+            client["pause_start"] = time.now()
+
+        self.emit_web("update_client", client, user=user_id)
+        self.emit_client("pause", id=client_id)
+
+    def add_task(self, client_id):
+        """
+        Add task to client with specified id.
+        """
         client, user_id = self.clients[client_id]["data"], self.clients[client_id]["user_id"]
 
-        if True:  # If there is data to process:
-            client["state"] = ProcessState.ACTIVE.value
-            client["pause_total"] = time.now() - client["pause_start"]
-            client["pause_start"] = None
+        try:
+            task = self.dataset_service.get_task()
 
-            self.emit_web("update_client", client, user=user_id)
-            self.emit_client("run", id=client_id)
-        else:
+            if client["state"] != ProcessState.ACTIVE.value:
+                client["state"] = ProcessState.ACTIVE.value
+                client["pause_total"] = time.now() - client["pause_start"]
+                client["pause_start"] = None
+
+            self.update_client(client_id)
+            self.emit_client("run", task, id=client_id)
+        except:
             pass
+
+    def finish_task(self, task):
+        """
+        Finish task by client.
+        """
+        updated = {
+            "inc__time": time.now() - task["meta"]["created"],
+            "inc__processed": task["meta"]["size"],
+            "pop__items": -1
+        }
+        dataset = self.dataset_service.update(task["dataset_id"], updated)
+        star = self.star_service.get({"properties.name": task["item"]})
+        
+        planet = {"star": star["_id"], "properties": [task["solution"]["planets"][0]]}
+        planet = self.planet_service.add(planet)
+        print(planet)
+
 
     def _add_user(self, user_id):
         if user_id not in self.users:

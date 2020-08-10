@@ -1,7 +1,7 @@
-from flask_restx import Resource, fields
+from flask_restx import fields
 
-from service.DatasetService import DatasetService
-from utils.http import Response, Api
+from service.Dataset import DatasetService
+from utils.http import Api
 from constants.Dataset import DatasetType
 
 api = Api("datasets", description="Input datasets.")
@@ -46,21 +46,3 @@ dataset_item = api.ns.model("DatasetItem", {
 
 dataset_service = DatasetService()
 api.init(full_model=dataset, new_model=new_dataset, service=dataset_service, model_name="Dataset")
-
-
-@api.ns.route("/<string:id>/item")
-class DatasetItem(Resource):
-
-    @api.ns.marshal_with(dataset_item, description="Successfully get first unprocessed item from dataset.")
-    @api.ns.response(400, "Dataset is empty, so there are no items to process.")
-    @api.ns.response(404, "Dataset with specified ID was not found or is empty.")
-    def get(self, id):
-        return Response.get(lambda: dataset_service.get_item_from_dataset(id))
-
-
-@api.ns.route("/<string:id>/item/<string:name>/process")
-class DatasetItem(Resource):
-
-    @api.ns.marshal_with(dataset, description="Successfully process item from dataset.")
-    def put(self):
-        pass

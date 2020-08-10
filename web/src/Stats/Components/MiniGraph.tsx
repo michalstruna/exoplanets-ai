@@ -5,11 +5,12 @@ interface Props extends React.ComponentPropsWithoutRef<'canvas'> {
     data: any
     width: number
     height: number
+    color?: string
 }
 
 const initState = { left: 'dataMin', right: 'dataMax', refAreaLeft: '', refAreaRight: '', animation: false, top: 'dataMax', bottom: 'dataMin' }
 
-const MiniGraph = ({ data, height, width }: Props) => {
+const MiniGraph = ({ data, height, width, color }: Props) => {
 
     const [zoom, setZoom] = React.useState(initState)
 
@@ -46,8 +47,6 @@ const MiniGraph = ({ data, height, width }: Props) => {
 
             const [bottom, top] = getAxisYDomain(refAreaLeft, refAreaRight, 'value')
 
-            console.log(bottom, top, refAreaLeft, refAreaRight)
-
             setZoom({ ...zoom, refAreaLeft: '', refAreaRight: '', left: refAreaLeft, right: refAreaRight, bottom, top })
         }
 
@@ -80,7 +79,7 @@ const MiniGraph = ({ data, height, width }: Props) => {
                     onMouseUp={zoomIn}
                     onMouseEnter={() => setZoom({ ...zoom, animation: true })}
                     onMouseLeave={() => setZoom({ ...zoom, animation: false })}>
-                    {renderLine('line', '#FAA')}
+                    {renderLine('line', color || '#FAA')}
 
                     <XAxis
                         allowDataOverflow={true}
@@ -100,7 +99,7 @@ const MiniGraph = ({ data, height, width }: Props) => {
                         tickCount={10}
                         interval={'preserveStart'}
                         domain={[zoom.bottom, zoom.top]}
-                        tick={{ fill: '#FAA', fontSize: 13 }}
+                        tick={{ fill: color || '#FAA', fontSize: 13 }}
                         minTickGap={40} />
 
                     {(zoom.refAreaLeft && zoom.refAreaRight) ? <ReferenceArea x1={zoom.refAreaLeft} x2={zoom.refAreaRight} strokeOpacity={0.3} /> : null}

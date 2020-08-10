@@ -32,7 +32,7 @@ const Root = Styled.div`
 `
 
 const Delete = Styled.button.attrs({ type: 'button' })`
-    ${image('Universe/Filter/Delete.svg', '60%')}
+    ${image('Database/Filter/Delete.svg', '60%')}
     ${opacityHover()}
     ${size('1.75rem !important')}
     min-width: 1.75rem;

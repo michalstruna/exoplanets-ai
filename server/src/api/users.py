@@ -2,7 +2,7 @@ from flask_restx import Namespace, Resource, fields
 from flask import request
 
 from utils.http import Response
-from service.UserService import UserService
+from service.User import UserService
 
 api = Namespace("users", description="Users and authentication.")
 

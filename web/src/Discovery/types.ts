@@ -1,5 +1,9 @@
 import ProcessState from './Constants/ProcessState'
 
+export type ProcessLog = {
+
+}
+
 export type ProcessData = {
     id: string
     name: string
@@ -11,4 +15,5 @@ export type ProcessData = {
     state: ProcessState
     pause_start?: number
     pause_total: number
+    logs: ProcessLog[]
 }

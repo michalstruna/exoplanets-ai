@@ -17,6 +17,7 @@ export { default as OverviewView } from './Views/OverviewView'
 export { default as StarType } from './Constants/StarType'
 export { default as PlanetType } from './Constants/PlanetType'
 export { default as SpectralType } from './Constants/SpectralType'
+export { default as DatasetType } from '../Database/Constants/DatasetType'
 
 /**
  * Components.

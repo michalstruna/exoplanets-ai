@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import webbrowser
-import service.SocketService as x
+import service.Socket as x
 
 y = x.sio
 

@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
 from api import api
-from service.SocketService import SocketService
+from service.Socket import SocketService
 
 
 def create_app(config_name=None):

@@ -62,15 +62,12 @@ const Cell = Styled.div<CellProps>`
             content: "";
             display: inline-block;
             margin-right: 0.5rem;
+            min-width: 1.2rem;
         }
     `}
     
     ${props => props.interactive && css`
         padding: 0;
-
-        &:hover {
-            background-color: #3B3B3B !important;
-        }
         
         & > a, & > button, & > div, & > p {
             box-sizing: border-box;
@@ -148,10 +145,10 @@ const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, ren
 
     React.useEffect(() => {
         if (onSort) {
-            onSort({ column: sortedColumn, isAsc, level: sortedLevel })
+            onSort({ column: sortedColumn, isAsc, level: sortedLevel, columnName: levels[sortedLevel].columns[sortedColumn].name })
         }
 
-    }, [sortedLevel, sortedColumn, isAsc, items, onSort])
+    }, [sortedLevel, sortedColumn, isAsc, items, onSort, levels])
 
     const renderedHeader = React.useMemo(() => {
         const renderHeader = (levelIndex: number): React.ReactNode => (

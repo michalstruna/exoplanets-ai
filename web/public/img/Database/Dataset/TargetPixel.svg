@@ -1,0 +1,24 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>background</title>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <rect id="svg_1" height="100" width="100" y="200" x="100" stroke-width="0" stroke="#000" fill="#FFFA8D"/>
+  <rect id="svg_5" height="100" width="100" y="200" x="200" stroke-width="0" stroke="#000" fill="#FABA6F"/>
+  <rect id="svg_6" height="100" width="100" y="300" x="100" stroke-width="0" stroke="#000" fill="#E6C36A"/>
+  <rect id="svg_7" height="100" width="100" y="200" x="0" stroke-width="0" stroke="#000" fill="#FABA6F"/>
+  <rect id="svg_8" height="100" width="100" y="100" x="100" stroke-width="0" stroke="#000" fill="#FABA6F"/>
+  <rect id="svg_9" height="100" width="100" y="300" x="200" stroke-width="0" stroke="#000" fill="#CC7C65"/>
+  <rect id="svg_10" height="100" width="100" y="300" x="0" stroke-width="0" stroke="#000" fill="#CC7C65"/>
+  <rect id="svg_11" height="100" width="100" y="100" x="200" stroke-width="0" stroke="#000" fill="#444444"/>
+  <rect id="svg_12" height="100" width="100" y="100" x="0" stroke-width="0" stroke="#000" fill="#CC7C65"/>
+  <rect id="svg_15" height="100" width="100" y="200" x="300" stroke-width="0" stroke="#000" fill="#000"/>
+  <rect id="svg_17" height="100" width="100" y="100" x="300" stroke-width="0" stroke="#000" fill="#522"/>
+  <rect id="svg_18" height="100" width="100" y="300" x="300" stroke-width="0" stroke="#000" fill="#000"/>
+  <rect id="svg_19" height="100" width="100" y="0" x="300" stroke-width="0" stroke="#000" fill="#642"/>
+  <rect id="svg_20" height="100" width="100" y="0" x="200" stroke-width="0" stroke="#000" fill="#000"/>
+  <rect id="svg_21" height="100" width="100" y="0" x="100" stroke-width="0" stroke="#000" fill="#000"/>
+  <rect id="svg_22" height="100" width="100" y="0" x="0" stroke-width="0" stroke="#000" fill="#000"/>
+ </g>
+</svg>
