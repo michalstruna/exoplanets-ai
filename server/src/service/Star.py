@@ -1,5 +1,6 @@
 from pymongo import UpdateOne
 import math
+import numbers
 
 from constants.Database import SpectralClass, SpectralSubclass, StarSize
 from .Base import Service
@@ -36,6 +37,7 @@ class StarService(Service):
         result["luminosity"] = self.get_luminosity(star)
         result["absolute_magnitude"] = self.get_absolute_magnitude(result)
         result["type"] = self.get_type(result)
+        result["distance"] = result["distance"] if isinstance(result["distance"], numbers.Number) and result["distance"] > 0 else None  # Kepler dataset has some stars with distance = 0.
 
         return result
 

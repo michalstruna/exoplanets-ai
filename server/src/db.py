@@ -69,7 +69,13 @@ class Dao:
         pipeline = [*operations, {"$match": filter}]
 
         if sort:
-            pipeline.append({"$sort": sort})
+            prop = list(sort.keys())[0]
+
+            if sort[prop] == 1:
+                pipeline.append({"$addFields": {"sort": {"$map": {"input": "$properties", "as": "properties", "in": {"$cond": {"if": {"$eq": [f"$${prop}", None]}, "then": {"$type": "maxKey"}, "else": f"$${prop}"}}}}}})
+                pipeline.append({"$sort": {"sort": 1}})
+            else:
+                pipeline.append({"$sort": sort})
 
         if offset:
             pipeline.append({"$skip": offset})
@@ -129,26 +135,26 @@ dataset_dao = Dao(Dataset, [
 
 
 class StarType(EmbeddedDocument):
-    size = StringField(enum=StarSize.values())
-    spectral_class = StringField(enum=SpectralClass.values())
-    spectral_subclass = StringField(enum=SpectralSubclass.values())
-    luminosity_class = StringField(enum=LuminosityClass.values())
-    luminosity_subclass = StringField(enum=LuminositySubclass.values())
+    size = StringField(enum=StarSize.values(), null=True)
+    spectral_class = StringField(enum=SpectralClass.values(), null=True)
+    spectral_subclass = StringField(enum=SpectralSubclass.values(), null=True)
+    luminosity_class = StringField(enum=LuminosityClass.values(), null=True)
+    luminosity_subclass = StringField(enum=LuminositySubclass.values(), null=True)
 
 
 class StarProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50, unique=True)
-    diameter = FloatField(min_value=0)
-    mass = FloatField(min_value=0)
-    density = FloatField(min_value=0)
-    surface_temperature = IntField()
-    surface_gravity = FloatField(min_value=0)
-    luminosity = FloatField(min_value=0)
-    distance = FloatField(min_value=0)
-    type = EmbeddedDocumentField(StarType)
-    distance = FloatField(min_value=0)
-    apparent_magnitude = FloatField()
-    absolute_magnitude = FloatField()
+    diameter = FloatField(min_value=0, null=True)
+    mass = FloatField(min_value=0, null=True)
+    density = FloatField(min_value=0, null=True)
+    surface_temperature = IntField(null=True)
+    surface_gravity = FloatField(min_value=0, null=True)
+    luminosity = FloatField(min_value=0, null=True)
+    distance = FloatField(min_value=0, null=True)
+    type = EmbeddedDocumentField(StarType, null=True)
+    distance = FloatField(min_value=0, null=True)
+    apparent_magnitude = FloatField(null=True)
+    absolute_magnitude = FloatField(null=True)
     metallicity = FloatField()
     dataset = StringField(required=True)
 
