@@ -24,18 +24,11 @@ class DatasetService(Service):
         dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
-            items["density"] = 1410 * items["mass"] / items["diameter"] ** 3
-            items["gravity"] = 274 * items["mass"] / items["diameter"] ** 2
-            items["luminosity"] = (items["diameter"] ** 2) * ((items["surface_temperature"] / 5780) ** 4)  # TODO: Constants.
             items = items.where(pd.notnull(items), None)
+            dataset["processed"], dataset["items"] = items.memory_usage().sum(), []
+            result = self.dao.add(dataset)
 
-            dataset["items"] = []
-            dataset["processed"] = items.memory_usage().sum()
-            #self.add_processed(dataset, items.memory_usage().sum())  # TODO
-
-            result = self.dao.add(dataset)#self.json(self.collection(**dataset).save())
-
-            stars = list(map(lambda star: db.Star(properties=[{**star, "dataset": result["_id"]}]), items.to_dict("records")))
+            stars = list(map(lambda star: db.Star(properties=[{**self.star_service.complete_star(star), "dataset": result["name"]}]), items.to_dict("records")))
             self.star_service.upsert_all_by_name(stars)
         else:
             result = self.dao.add(dataset)

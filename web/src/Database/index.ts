@@ -14,9 +14,10 @@ export { default as OverviewView } from './Views/OverviewView'
 /**
  * Constants.
  */
-export { default as StarType } from './Constants/StarType'
+export { default as StarSize } from './Constants/StarSize'
 export { default as PlanetType } from './Constants/PlanetType'
-export { default as SpectralType } from './Constants/SpectralType'
+export { default as SpectralClass } from './Constants/SpectralClass'
+export { default as SpectralSubclass } from './Constants/SpectralSubclass'
 export { default as DatasetType } from './Constants/DatasetType'
 export { default as DatasetPriority } from './Constants/DatasetPriority'
 export { default as LifeType } from './Constants/LifeType'

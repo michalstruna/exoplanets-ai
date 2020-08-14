@@ -9,13 +9,20 @@ export const format = (value: number): string => {
     }
 
     const abs = Math.abs(value)
+
+    if (abs < 0.001) {
+        return toExponential(value)
+    }
+
     const pattern = abs < 1 ? '0,0.[000]' : (abs < 10 ? '0,0.[00]' : (abs < 100 ? '0,0.[0]' : '0,0'))
 
     return Numeral(value).format(pattern)
 }
 
 export const toExponential = (value: number): string => {
-    return Math.abs(value) < 1000 ? value.toString() : Numeral(value).format('0,0[e+0]')
+    const abs = Math.abs(value)
+
+    return abs >= 0.001 &&  abs < 1000 ? value.toString() : Numeral(value).format('0,0[e+0]')
 }
 
 // TODO: Unit tests.

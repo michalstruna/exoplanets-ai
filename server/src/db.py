@@ -2,7 +2,7 @@ from mongoengine import *
 from bson.objectid import ObjectId
 import math
 
-from constants.Database import PlanetType, StarType, SpectralClass
+from constants.Database import *
 from utils import time
 
 
@@ -128,18 +128,29 @@ dataset_dao = Dao(Dataset, [
 ])
 
 
+class StarType(EmbeddedDocument):
+    size = StringField(enum=StarSize.values())
+    spectral_class = StringField(enum=SpectralClass.values())
+    spectral_subclass = StringField(enum=SpectralSubclass.values())
+    luminosity_class = StringField(enum=LuminosityClass.values())
+    luminosity_subclass = StringField(enum=LuminositySubclass.values())
+
+
 class StarProperties(EmbeddedDocument):
-    dataset = ReferenceField(Dataset, required=True)
     name = StringField(required=True, max_length=50, unique=True)
     diameter = FloatField(min_value=0)
     mass = FloatField(min_value=0)
+    density = FloatField(min_value=0)
     surface_temperature = IntField()
-    distance = FloatField(min_value=0)
-    density = IntField(min_value=0)
-    gravity = IntField(min_value=0)
+    surface_gravity = FloatField(min_value=0)
     luminosity = FloatField(min_value=0)
-    type = StringField(enum=StarType.values())
-    spectral_class = StringField(enum=SpectralClass.values())
+    distance = FloatField(min_value=0)
+    type = EmbeddedDocumentField(StarType)
+    distance = FloatField(min_value=0)
+    apparent_magnitude = FloatField()
+    absolute_magnitude = FloatField()
+    metallicity = FloatField()
+    dataset = StringField(required=True)
 
 
 class Transit(EmbeddedDocument):
@@ -160,7 +171,7 @@ class PlanetProperties(EmbeddedDocument):
     surface_temperature = FloatField(min_value=0)
     life_conditions = StringField()  # TODO: DB table LiveType?
     transit = EmbeddedDocumentField(Transit)
-    dataset = ReferenceField(Dataset, required=True)
+    dataset = ReferenceField(Dataset, required=True)  # TODO: Surface gravity.
 
 
 class Planet(Document):
@@ -191,9 +202,7 @@ class Star(Document):
 
 
 star_dao = Dao(Star, [
-    {"$lookup": {"from": "planet", "localField": "_id", "foreignField": "star", "as": "planets"}},
-    {"$lookup": {"from": "dataset", "localField": "properties.dataset", "foreignField": "_id", "as": "dataset"}},
-    {"$addFields": {"properties": {"$map": {"input": "$properties", "as": "p", "in": {"$mergeObjects": ["$$p", {"dataset": {"$arrayElemAt": ["$dataset.name", {"$indexOfArray": ["$properties", "$$p"]}]}}]}}}}}
+    {"$addFields": {"datasets": {"$add": [{"$size": "$properties"}]}}}
 ])
 
 

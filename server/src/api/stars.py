@@ -1,6 +1,6 @@
 from flask_restx import fields
 
-from constants.Database import StarType, SpectralClass
+from constants.Database import StarSize, SpectralClass, SpectralSubclass
 from service.Star import StarService
 from utils.http import Api
 from .planets import planet
@@ -10,7 +10,7 @@ def map_props(prop):
     if prop in ["type", "name", "life_conditions", "semi_major_axis", "transit_depth", "distance", "dataset"]:
         return f"properties.{prop}", str
 
-    if prop in ["diameter", "mass", "density", "surface_temperature", "distance", "luminosity", "gravity"]:
+    if prop in ["diameter", "mass", "density", "surface_temperature", "distance", "luminosity", "transit_depth", "planets", "surface_gravity", "absolute_magnitude", "apparent_magnitude", "metallicity", "datasets"]:
         return f"properties.{prop}", float
 
 
@@ -21,16 +21,24 @@ new_star = api.ns.model("NewStar", {
     "diameter": fields.Float(min=0, description="Diameter of star in [sun diameters]."),
     "mass": fields.Float(min=0, description="Mass of star [sun masses]."),
     "surface_temperature": fields.Integer(description="Surface temperature of star [K]."),
+    "apparent_magnitude": fields.Float(description="Apparent magnitude of star."),
+    "metallicity": fields.Float(description="Metallicity of star."),
     "distance": fields.Float(min=0, description="Distance of star from Earth [ly].")
+})
+
+star_type = api.ns.model("StarType", {
+    "size": fields.String(StarSize.values()),
+    "spectral_class": fields.String(enum=SpectralClass.values()),
+    "spectral_subclass": fields.String(enum=SpectralSubclass.values())
 })
 
 star_properties = api.ns.inherit("StarProperties", new_star, {
     "dataset": fields.String(required=True, max_length=50, description="Name of dataset from which properties originate."),
-    "density": fields.Integer(min=0, description="Density of star [kg/m^3]."),
-    "gravity": fields.Integer(min=0, description="Surface gravity [m/s^2]."),
+    "density": fields.Float(min=0, description="Density of star [kg/m^3]."),
+    "surface_gravity": fields.Float(min=0, description="Surface gravity [m/s^2]."),
     "luminosity": fields.Float(min=0, description="Star luminosity [sun luminosity]."),
-    "type": fields.String(enum=StarType.values(), description="Type of star."),
-    "spectral_type": fields.String(enum=SpectralClass.values(), description="Spectral type of star.")
+    "absolute_magnitude": fields.Float(description="Absolute magnitude of star."),
+    "type": fields.Nested(star_type, default={})
 })
 
 light_curve = api.ns.model("LightCurve", {
@@ -42,7 +50,7 @@ star = api.ns.model("Star", {
     "_id": fields.String(requred=True, description="Star unique identifier."),
     "properties": fields.List(fields.Nested(star_properties), required=True, default=[]),
     "light_curve": fields.List(fields.Nested(light_curve), required=True, default=[]),
-    "planets": fields.List(fields.Nested(planet)),
+    "planets": fields.List(fields.Nested(planet), default=[]),
     "index": fields.Integer(min=1)
 })
 

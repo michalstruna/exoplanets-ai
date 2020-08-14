@@ -5,8 +5,9 @@ import ProcessState from '../../Discovery/Constants/ProcessState'
 import DatasetType from '../../Database/Constants/DatasetType'
 import LifeType from '../../Database/Constants/LifeType'
 import PlanetType from '../../Database/Constants/PlanetType'
-import StarType from '../../Database/Constants/StarType'
+import StarSize from '../../Database/Constants/StarSize'
 import DatasetPriority from '../../Database/Constants/DatasetPriority'
+import SpectralClass from '../../Database/Constants/SpectralClass'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -66,10 +67,13 @@ export default {
         spectralClass: { [CS]: 'Spektr. třída', [EN]: 'Spectr. class' },
         density: { [CS]: 'Hustota', [EN]: 'Density' },
         luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
-        gravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
+        surfaceGravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
         dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
         lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
+        absoluteMagnitude: 'Abs. mag.',
+        apparentMagnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
+        metallicity: { [CS]: 'Metalicita', [EN]: 'Metallicity' },
 
         // Planets
         semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
@@ -116,8 +120,20 @@ export default {
 
     stars: {
         types: {
-            [StarType.YELLOW_DWARF]: { [CS]: 'Žlutý trpaslík', [EN]: 'Yellow dwarf' },
-            [StarType.RED_DWARF]: { [CS]: 'Červený trpaslík', [EN]: 'Red dwarf' }
+            [StarSize.DWARF]: { [CS]: 'Trpaslík', [EN]: 'Dwarf' },
+            [StarSize.SUBGIANT]: { [CS]: 'Podobr', [EN]: 'Subgiant' },
+            [StarSize.GIANT]: { [CS]: 'Obr', [EN]: 'Giant' },
+            [StarSize.SUPERGIANT]: { [CS]: 'Superobr', [EN]: 'Supergiant' },
+            [StarSize.HYPERGIANT]: { [CS]: 'Hyperobr', [EN]: 'Hyperobr' }
+        },
+        colors: {
+            [SpectralClass.O]: { [CS]: 'Modrý', [EN]: 'Blue' },
+            [SpectralClass.B]: { [CS]: 'Modrobílý', [EN]: 'Blue-white' },
+            [SpectralClass.A]: { [CS]: 'Bílomodrý', [EN]: 'White-blue' },
+            [SpectralClass.F]: { [CS]: 'Žlutobílý', [EN]: 'Yellow-white' },
+            [SpectralClass.G]: { [CS]: 'Žlutý', [EN]: 'Yellow' },
+            [SpectralClass.K]: { [CS]: 'Oranžový', [EN]: 'Orange' },
+            [SpectralClass.M]: { [CS]: 'Červený', [EN]: 'Red' }
         }
     },
 
