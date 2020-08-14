@@ -1,0 +1,9 @@
+credentials = api.model("Credentials", {
+    "email": fields.String(required=True, max_length=50),
+    "password": fields.String(required=True, max_length=100)
+})
+
+user = api.model("User", {
+    "name": fields.String(required=True, max_length=30),
+    "role": fields.Integer(required=True, enum=UserRole.values())
+})
