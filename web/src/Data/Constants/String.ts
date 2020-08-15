@@ -5,9 +5,9 @@ import ProcessState from '../../Discovery/Constants/ProcessState'
 import DatasetType from '../../Database/Constants/DatasetType'
 import LifeType from '../../Database/Constants/LifeType'
 import PlanetType from '../../Database/Constants/PlanetType'
-import StarSize from '../../Database/Constants/StarSize'
 import DatasetPriority from '../../Database/Constants/DatasetPriority'
 import SpectralClass from '../../Database/Constants/SpectralClass'
+import LuminosityClass from '../../Database/Constants/LuminosityClass'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -119,12 +119,15 @@ export default {
     },
 
     stars: {
-        types: {
-            [StarSize.DWARF]: { [CS]: 'Trpaslík', [EN]: 'Dwarf' },
-            [StarSize.SUBGIANT]: { [CS]: 'Podobr', [EN]: 'Subgiant' },
-            [StarSize.GIANT]: { [CS]: 'Obr', [EN]: 'Giant' },
-            [StarSize.SUPERGIANT]: { [CS]: 'Superobr', [EN]: 'Supergiant' },
-            [StarSize.HYPERGIANT]: { [CS]: 'Hyperobr', [EN]: 'Hyperobr' }
+        sizes: {
+            [LuminosityClass.ZERO]: { [CS]: 'Hyperobr', [EN]: 'Hypergiant' },
+            [LuminosityClass.I]: { [CS]: 'Superobr', [EN]: 'Supergiant' },
+            [LuminosityClass.II]: { [CS]: 'Obr', [EN]: 'Giant' },
+            [LuminosityClass.III]: { [CS]: 'Obr', [EN]: 'Giant' },
+            [LuminosityClass.IV]: { [CS]: 'Podobr', [EN]: 'Subgiant' },
+            [LuminosityClass.V]: { [CS]: 'Trpaslík', [EN]: 'Dwarf' },
+            [LuminosityClass.VI]: { [CS]: 'Podtrpaslík', [EN]: 'Subdwarf' },
+            [LuminosityClass.VII]: { [CS]: 'Trpaslík', [EN]: 'Dwarf' }
         },
         colors: {
             [SpectralClass.O]: { [CS]: 'Modrý', [EN]: 'Blue' },

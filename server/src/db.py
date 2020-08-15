@@ -135,7 +135,6 @@ dataset_dao = Dao(Dataset, [
 
 
 class StarType(EmbeddedDocument):
-    size = StringField(enum=StarSize.values(), null=True)
     spectral_class = StringField(enum=SpectralClass.values(), null=True)
     spectral_subclass = StringField(enum=SpectralSubclass.values(), null=True)
     luminosity_class = StringField(enum=LuminosityClass.values(), null=True)

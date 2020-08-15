@@ -2,7 +2,7 @@ from pymongo import UpdateOne
 import math
 import numbers
 
-from constants.Database import SpectralClass, SpectralSubclass, StarSize
+from constants.Database import SpectralClass, SpectralSubclass, LuminosityClass, LuminositySubclass
 from .Base import Service
 import db
 
@@ -54,8 +54,6 @@ class StarService(Service):
             tmp["type"]["luminosity_class"] = cls
             tmp["type"]["luminosity_subclass"] = subcls
 
-        tmp["type"]["size"] = self.get_size(star)
-
         return tmp["type"]
 
     def get_density(self, star):
@@ -69,18 +67,6 @@ class StarService(Service):
     def get_luminosity(self, star):
         if star["surface_temperature"] and star["diameter"]:
             return (star["diameter"] ** 2) * ((star["surface_temperature"] / 5780) ** 4)  # TODO: Constants.
-
-    def get_size(self, star):
-        if star["diameter"] < 5:
-            return StarSize.DWARF.value
-        elif star["diameter"] < 10:
-            return StarSize.SUBGIANT.value
-        elif star["diameter"] < 80:
-            return StarSize.GIANT.value
-        elif star["diameter"] < 200:
-            return StarSize.SUPERGIANT.value
-        else:
-            return StarSize.HYPERGIANT.value
 
     def get_spectral_class(self, star):
         teff = star["surface_temperature"]
@@ -111,7 +97,7 @@ class StarService(Service):
         if cls is None or mag is None:
             return None, None
 
-        return None, None  # TODO
+        return LuminosityClass.III.value, LuminositySubclass.A.value  # TODO
 
 
     def get_absolute_magnitude(self, star):

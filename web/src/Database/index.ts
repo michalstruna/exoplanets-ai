@@ -14,7 +14,6 @@ export { default as OverviewView } from './Views/OverviewView'
 /**
  * Constants.
  */
-export { default as StarSize } from './Constants/StarSize'
 export { default as PlanetType } from './Constants/PlanetType'
 export { default as SpectralClass } from './Constants/SpectralClass'
 export { default as SpectralSubclass } from './Constants/SpectralSubclass'

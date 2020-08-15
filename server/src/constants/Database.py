@@ -15,14 +15,6 @@ class PlanetType(Enum):
     JUPITER = "jupiter"
 
 
-class StarSize(Enum):
-    DWARF = "dwarf"
-    SUBGIANT = "subgiant"
-    GIANT = "giant"
-    SUPERGIANT = "supergiant"
-    HYPERGIANT = "hypergiant"
-
-
 class SpectralClass(Enum):
     O = "O"
     B = "B"

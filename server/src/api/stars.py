@@ -1,6 +1,6 @@
 from flask_restx import fields
 
-from constants.Database import StarSize, SpectralClass, SpectralSubclass
+from constants.Database import SpectralClass, SpectralSubclass, LuminosityClass, LuminositySubclass
 from service.Star import StarService
 from utils.http import Api
 from .planets import planet
@@ -27,7 +27,8 @@ new_star = api.ns.model("NewStar", {
 })
 
 star_type = api.ns.model("StarType", {
-    "size": fields.String(StarSize.values()),
+    "luminosity_class": fields.String(enum=LuminosityClass.values()),
+    "luminosity_subclass": fields.String(enum=LuminositySubclass.values()),
     "spectral_class": fields.String(enum=SpectralClass.values()),
     "spectral_subclass": fields.String(enum=SpectralSubclass.values())
 })

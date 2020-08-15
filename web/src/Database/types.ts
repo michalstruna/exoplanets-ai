@@ -1,7 +1,8 @@
 import PlanetType from './Constants/PlanetType'
-import StarSize from './Constants/StarSize'
 import SpectralClass from './Constants/SpectralClass'
 import SpectralSubclass from './Constants/SpectralSubclass'
+import LuminosityClass from './Constants/LuminosityClass'
+import LuminositySubclass from './Constants/LuminositySubclass'
 
 export interface PlanetProperties {
     name: string
@@ -31,7 +32,8 @@ export interface StarProperties {
     type: {
         spectral_class?: SpectralClass
         spectral_subclass?: SpectralSubclass
-        size?: StarSize
+        luminosity_class?: LuminosityClass
+        luminosity_subclass?: LuminositySubclass
     }
     planets?: Planet[]
     distance?: number
