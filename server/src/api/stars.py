@@ -7,6 +7,9 @@ from .planets import planet
 
 
 def map_props(prop):
+    if prop in ["spectral_class", "luminosity_class"]:
+        return f"properties.type.{prop}", str
+
     if prop in ["type", "name", "life_conditions", "semi_major_axis", "transit_depth", "distance", "dataset"]:
         return f"properties.{prop}", str
 

@@ -60,6 +60,8 @@ export default {
         priority: { [CS]: 'Priorita', [EN]: 'Priority' },
 
         // Stars
+        spectral_class: { [CS]: 'Spektrální třída', [EN]: 'Spectral class' },
+        luminosity_class: { [CS]: 'Třída svítivosti', [EN]: 'Luminosity class' },
         diameter: { [CS]: 'Průměr', [EN]: 'Diameter' },
         mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
         distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
