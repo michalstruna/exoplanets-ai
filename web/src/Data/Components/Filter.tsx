@@ -1,13 +1,12 @@
 import React from 'react'
 import Styled from 'styled-components'
-
-import { EnumTextValue, EnumTextValues, FilterData, TextValue } from '../types'
 import { useForm } from 'react-hook-form'
+
+import { EnumTextValue, EnumTextValues, FilterData } from '../types'
 import { Field, Form } from '../../Form'
 import { Duration, image, opacityHover, size } from '../../Style'
 import { Validator } from '../../Native'
 import { useStrings } from '..'
-import { Relation } from '../../Native/Utils/Validator'
 
 interface Props extends Omit<Omit<React.ComponentPropsWithoutRef<'form'>, 'onChange'>, 'onSubmit'> {
     attributes: EnumTextValue[]

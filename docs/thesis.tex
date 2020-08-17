@@ -371,11 +371,13 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 \section{Návrh~a~vývoj aplikace}
 
 \img[1]{Komponenty projektu a~jejich komunikace}{img/communication.png}
-\draw
 
 \subsection{Server}
 
-Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~jeho adresářová struktura se dělí na následovné moduly:
+Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~jeho adresářová struktura se dělí na následující moduly:
+
+\img[1]{Architektura serveru}{img/server.png}
+\draw
 
 \begin{itemize}
 \item \textbf{api} -- Definice REST a~Socket API a~zpracování příchozích požadavků. To zahrnuje autentizaci a~autorizaci odesílatele a~následné provedení operace v~servisní vrstvě. 
@@ -404,6 +406,9 @@ Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikac
 \lstinputlisting[caption={Ukázka komunikace pomocí socket.io.}]{codes/socket.txt}
 
 \subsection{Webová aplikace}
+
+\img[1]{Architektura webové aplikace}{img/web_app.png}
+\draw
 
 
 \subsection{Klientská aplikace}

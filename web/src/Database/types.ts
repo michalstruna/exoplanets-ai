@@ -14,6 +14,8 @@ export interface PlanetProperties {
     density?: number
     surface_temperature?: number
     type: PlanetType
+    dataset: string
+    processed: boolean
 }
 
 export interface Planet {

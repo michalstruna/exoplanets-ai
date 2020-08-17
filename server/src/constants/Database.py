@@ -15,6 +15,12 @@ class PlanetType(Enum):
     JUPITER = "jupiter"
 
 
+class PlanetStatus(Enum):
+    CANDIDATE = "candidate"
+    CONFIRMED = "confirmed"
+    REJECTED = "rejected"
+
+
 class SpectralClass(Enum):
     O = "O"
     B = "B"

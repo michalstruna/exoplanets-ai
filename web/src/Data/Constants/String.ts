@@ -8,6 +8,7 @@ import PlanetType from '../../Database/Constants/PlanetType'
 import DatasetPriority from '../../Database/Constants/DatasetPriority'
 import SpectralClass from '../../Database/Constants/SpectralClass'
 import LuminosityClass from '../../Database/Constants/LuminosityClass'
+import PlanetStatus from '../../Database/Constants/PlanetStatus'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -83,7 +84,8 @@ export default {
         orbitalPeriod: { [CS]: 'Perioda', [EN]: 'Period' },
         orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
         lifeConditions: { [CS]: 'Život', [EN]: 'Life' },
-        planet: { [CS]: 'Planeta', [EN]: 'Planet' }
+        planet: { [CS]: 'Planeta', [EN]: 'Planet' },
+        status: 'Status'
     },
 
     units: {
@@ -155,6 +157,11 @@ export default {
             [PlanetType.SUPEREARTH]: { [CS]: 'Superzemě', [EN]: 'Superearth' },
             [PlanetType.NEPTUNE]: { [CS]: 'Typ Neptun', [EN]: 'Neptune-like' },
             [PlanetType.JUPITER]: { [CS]: 'Typ Jupiter', [EN]: 'Jupiter-like' }
+        },
+        statuses: {
+            [PlanetStatus.CANDIDATE]: { [CS]: 'Kandidát', [EN]: 'Candidate' },
+            [PlanetStatus.CONFIRMED]: { [CS]: 'Potvrzena', [EN]: 'Confirmed' },
+            [PlanetStatus.REJECTED]: { [CS]: 'Zamítnuta', [EN]: 'Rejected' }
         }
     },
 

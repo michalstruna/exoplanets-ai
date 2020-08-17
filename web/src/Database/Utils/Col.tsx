@@ -19,7 +19,7 @@ interface ColOptions<TVal, TItem> {
 const MultiValue = ({ items, property, formatter = val => val }: { items: any[], property: string, formatter?: (val: any, i: any, item: any) => any }) => (
     <div>
         {items.filter(item => !!item[property]).map((item, i) => <div
-            title={'Dataset: ' + item.dataset}>{formatter(item[property], undefined, i)}</div>)}
+            title={'Dataset: ' + item.dataset}>{formatter(item[property], item, i)}</div>)}
     </div>
 )
 

@@ -70,9 +70,28 @@ class Dao:
 
         if sort:
             prop = list(sort.keys())[0]
+            single_prop = prop.split(".")[-1]
 
-            if sort[prop] == 1:
-                pipeline.append({"$addFields": {"sort": {"$map": {"input": "$properties", "as": "properties", "in": {"$cond": {"if": {"$eq": [f"$${prop}", None]}, "then": {"$type": "maxKey"}, "else": f"$${prop}"}}}}}})
+            if sort[prop] == 1:  # TODO: Move to service or dto parameter?
+                if prop.startswith("properties."):
+                    pipeline.append({"$addFields": {"sort": {"$map": {"input": "$properties", "as": "properties", "in": {"$cond": {"if": {"$eq": [f"$${prop}", None]}, "then": "Z" * 10, "else": f"$${prop}"}}}}}})
+                elif prop.startswith("planets.properties"):
+                    pipeline.append({"$addFields": {
+                        "sort": {
+                            "$map": {
+                                "input": "$planets.properties",
+                                "as": "properties",
+                                "in": {
+                                    "$cond": {
+                                        "if": {"$eq": [f"$$properties.{single_prop}", [None]]},
+                                        "then": ["Z" * 10],
+                                        "else": f"$$properties.{single_prop}"
+                                    }
+                                }
+                            }
+                        }
+                    }})
+
                 pipeline.append({"$sort": {"sort": 1}})
             else:
                 pipeline.append({"$sort": sort})
@@ -165,27 +184,26 @@ class Transit(EmbeddedDocument):
 
 
 class PlanetProperties(EmbeddedDocument):
-    name = StringField(required=True, max_length=50)#, unique=True)
-    type = StringField(enum=PlanetType.values())
-    diameter = FloatField(min_value=0)
-    mass = FloatField(min_value=0)
-    density = FloatField(min_value=0)
-    semi_major_axis = FloatField(min_value=0)
-    orbital_velocity = FloatField(min_value=0)
-    orbital_period = FloatField(min_value=0)
-    surface_temperature = FloatField(min_value=0)
+    name = StringField(required=True, max_length=50)
+    type = StringField(enum=PlanetType.values(), null=True)
+    diameter = FloatField(min_value=0, null=True)
+    mass = FloatField(min_value=0, null=True)
+    density = FloatField(min_value=0, null=True)
+    semi_major_axis = FloatField(min_value=0, null=True)
+    orbital_velocity = FloatField(min_value=0, null=True)
+    orbital_period = FloatField(min_value=0, null=True)
+    surface_gravity = FloatField(min_value=0, null=True)
+    surface_temperature = FloatField(min_value=0, null=True)
     life_conditions = StringField()  # TODO: DB table LiveType?
-    transit = EmbeddedDocumentField(Transit)
-    dataset = ReferenceField(Dataset, required=True)  # TODO: Surface gravity.
+    transit = EmbeddedDocumentField(Transit, null=True)
+    dataset = ReferenceField(Dataset, required=True, null=True)  # TODO: Surface gravity.
+    processed = BooleanField(null=True)
 
 
-class Planet(Document):
+class Planet(EmbeddedDocument):
+    _id = ObjectIdField(required=True, default=lambda: ObjectId())
     properties = ListField(EmbeddedDocumentField(PlanetProperties, required=True), required=True, default=[])
-    star = ReferenceField("Star", required=True)
-
-    meta = {
-        "indexes": ["properties.name"]
-    }
+    status = StringField(required=True, enum=PlanetStatus.values())
 
 
 planet_dao = Dao(Planet, [{"$addFields": {"datasets": {"$size": "$properties"}}}])
@@ -193,13 +211,13 @@ planet_dao = Dao(Planet, [{"$addFields": {"datasets": {"$size": "$properties"}}}
 
 class LightCurve(EmbeddedDocument):
     dataset = ReferenceField(Dataset, required=True)
-    planets = ListField(ReferenceField(Planet), required=True, default=[])
+    #planets = ListField(ReferenceField(Planet), required=True, default=[])
 
 
 class Star(Document):
     properties = ListField(EmbeddedDocumentField(StarProperties), default=[])
     light_curve = ListField(EmbeddedDocumentField(LightCurve), default=[])
-    planets = ListField(ReferenceField(Planet), default=[])
+    planets = EmbeddedDocumentListField(Planet, default=[])
 
     meta = {
         "indexes": ["properties.name"]

@@ -51,7 +51,7 @@ class DatasetService(Service):
         tasks = self.aggregate([
             {"$addFields": {"item": {"$arrayElemAt": ["$items", 0]}}},
             {"$project": {"_id": 0, "dataset_id": "$_id", "item": "$item", "item_getter": "$item_getter", "type": "$type"}}
-        ], filter={"items": {"$ne": []}}, limit=1, sort={"priority": -1, "created": 1})
+        ], filter={"item": {"$ne": None}}, limit=1, sort={"priority": -1, "created": 1})
 
         if not tasks or not "item" in tasks[0]:
             raise DoesNotExist(f"No data for processing.")

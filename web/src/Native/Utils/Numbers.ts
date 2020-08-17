@@ -10,7 +10,7 @@ export const format = (value: number): string => {
 
     const abs = Math.abs(value)
 
-    if (abs < 0.001) {
+    if (abs > 0 && abs < 0.001) {
         return toExponential(value)
     }
 

@@ -1,6 +1,7 @@
 from flask import request
 from flask_socketio import join_room, leave_room
 
+from constants.Database import PlanetStatus
 from utils import time, patterns
 from constants.Discovery import ProcessState
 from service.Dataset import DatasetService
@@ -118,7 +119,8 @@ class SocketService(metaclass=patterns.Singleton):
 
             self.update_client(client_id)
             self.emit_client("run", task, id=client_id)
-        except:
+        except Exception as e:
+            print(222, e)
             pass
 
     def finish_task(self, task):
@@ -132,11 +134,12 @@ class SocketService(metaclass=patterns.Singleton):
         }
         dataset = self.dataset_service.update(task["dataset_id"], updated)
         star = self.star_service.get({"properties.name": task["item"]})
+        properties = {**task["solution"]["planets"][0], "processed": True}
         
-        planet = {"star": star["_id"], "properties": [task["solution"]["planets"][0]]}
-        planet = self.planet_service.add(planet)
-        print(planet)
+        planet = {"properties": [properties], "status": PlanetStatus.CANDIDATE.value}
+        planet = self.planet_service.add(star["_id"], planet)
 
+        print(planet)  # TODO: Return value.
 
     def _add_user(self, user_id):
         if user_id not in self.users:

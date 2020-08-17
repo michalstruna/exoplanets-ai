@@ -1,4 +1,4 @@
-from flask_restx import fields
+from flask_restx import fields, Resource
 
 from constants.Database import SpectralClass, SpectralSubclass, LuminosityClass, LuminositySubclass
 from service.Star import StarService
@@ -7,14 +7,23 @@ from .planets import planet
 
 
 def map_props(prop):
-    if prop in ["spectral_class", "luminosity_class"]:
-        return f"properties.type.{prop}", str
+    if prop.startswith("planet_"):
+        prop = prop[7:]
 
-    if prop in ["type", "name", "life_conditions", "semi_major_axis", "transit_depth", "distance", "dataset"]:
-        return f"properties.{prop}", str
+        if prop in ["diameter", "mass", "density", "surface_temperature", "semi_major_axis", "orbital_period", "transit_depth", "surface_gravity", "orbital_velocity"]:
+            return f"planets.properties.{prop}", float
 
-    if prop in ["diameter", "mass", "density", "surface_temperature", "distance", "luminosity", "transit_depth", "planets", "surface_gravity", "absolute_magnitude", "apparent_magnitude", "metallicity", "datasets"]:
-        return f"properties.{prop}", float
+        if prop in ["life_conditions", "status"]:
+            return f"planets.properties.{prop}", str
+    else:
+        if prop in ["spectral_class", "luminosity_class"]:
+            return f"properties.type.{prop}", str
+
+        if prop in ["type", "name", "life_conditions", "semi_major_axis", "transit_depth", "distance", "dataset"]:
+            return f"properties.{prop}", str
+
+        if prop in ["diameter", "mass", "density", "surface_temperature", "distance", "luminosity", "transit_depth", "planets", "surface_gravity", "absolute_magnitude", "apparent_magnitude", "metallicity", "datasets"]:
+            return f"properties.{prop}", float
 
 
 api = Api("stars", description="Explored stars.")
@@ -58,5 +67,18 @@ star = api.ns.model("Star", {
     "index": fields.Integer(min=1)
 })
 
+
 star_service = StarService()
+
+
+@api.ns.route("/<string:starId>/merge/<string:targetId>")
+class MergePlanets(Resource):
+
+    @api.ns.marshal_with(star, description="Successfully merge stars.")
+    @api.ns.response(400, "It's not possible to merge two identical stars.")
+    @api.ns.response(404, "Star with specified ID was not found.")
+    def put(self):
+        pass
+
+
 api.init(full_model=star, new_model=star_properties, service=star_service, model_name="Star", map_props=map_props)

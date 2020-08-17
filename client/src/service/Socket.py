@@ -71,20 +71,22 @@ def run(task):
             "planets": [
                 {
                     "name": "Star I",
-                    "diameter": 1.13,
-                    "mass": 1.26,
-                    "density": 0.85,
-                    "semi_major_axis": 0.05,
-                    "orbital_velocity": 25,
-                    "live_conditions": LiveType.PROMISING.value,
-                    "orbital_period": 0.877,
-                    "surface_temperature": 168,
+                    "type": "superearth",
+                    "diameter": 1.12,
+                    "mass": 1.27,
+                    "density": 0.88,
+                    "semi_major_axis": 0.15,
+                    "orbital_velocity": 35,
+                    "life_conditions": LiveType.IMPOSSIBLE.value,
+                    "orbital_period": 47.5,
+                    "surface_temperature": 15,
+                    "surface_gravity": 11,
                     "transit": {
-                        "period": 0.811,
-                        "depth": 0.001,
-                        "duration": 0.01
+                        "period": 0.18,
+                        "depth": 0.19,
+                        "duration": 0.20
                     },
-                    "dataset": 123456789
+                    "dataset": "Kepler 11"
                 }
             ]
         }
