@@ -72,22 +72,28 @@ class Dao:
             prop = list(sort.keys())[0]
             single_prop = prop.split(".")[-1]
 
-            if sort[prop] == 1:  # TODO: Move to service or dto parameter?
+            if sort[prop] == 1:  # TODO: Move to service or dto parameter? Multiple props sort?
                 if prop.startswith("properties."):
                     pipeline.append({"$addFields": {"sort": {"$map": {"input": "$properties", "as": "properties", "in": {"$cond": {"if": {"$eq": [f"$${prop}", None]}, "then": "Z" * 10, "else": f"$${prop}"}}}}}})
                 elif prop.startswith("planets.properties"):
                     pipeline.append({"$addFields": {
                         "sort": {
-                            "$map": {
-                                "input": "$planets.properties",
-                                "as": "properties",
-                                "in": {
-                                    "$cond": {
-                                        "if": {"$eq": [f"$$properties.{single_prop}", [None]]},
-                                        "then": ["Z" * 10],
-                                        "else": f"$$properties.{single_prop}"
+                            "$cond": {
+                                "if": {"$and": [{"$ne": [{"$size": "$planets"}, 0]}]},
+                                "then": {
+                                    "$map": {
+                                        "input": "$planets.properties",
+                                        "as": "properties",
+                                        "in": {
+                                            "$cond": {
+                                                "if": {"$eq": [f"$$properties.{single_prop}", [None]]},
+                                                "then": ["Z" * 10],
+                                                "else": f"$$properties.{single_prop}"
+                                            }
+                                        }
                                     }
-                                }
+                                },
+                                "else":  [["Z" * 10]]
                             }
                         }
                     }})
@@ -102,7 +108,13 @@ class Dao:
         if limit:
             pipeline.append({"$limit": limit})
 
-        return list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
+        x = list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
+
+        print(11111111111, list(map(lambda star: star["sort"] if "sort" in star else "None", x)))
+        print(2222222222, x)
+        print(3333333333, pipeline)
+
+        return x
 
     @staticmethod
     def id(id):
