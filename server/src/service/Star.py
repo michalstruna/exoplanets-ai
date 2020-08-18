@@ -14,6 +14,40 @@ class StarService(Service):
     def __init__(self):
         super().__init__(db.star_dao)
 
+    def get_sort(self, sort):
+        if not sort:
+            return []
+
+        prop = list(sort.keys())[0]
+
+        return [{"$sort": sort}]
+
+    def aggregate(self, operations, filter={}, limit=None, skip=None, sort=None, with_index=False):
+        pipeline = [{"$unwind": "$planets"}, {"$match": filter}, *self.get_sort(sort), {"$limit": limit}, {"$skip": skip}]
+
+        if sort:
+            prop = list(sort.keys())[0]
+            is_planet_sort = prop.startswith("planets.")
+        else:
+            is_planet_sort = False
+
+        if is_planet_sort:
+            pipeline += [
+                {"$addFields": {"planets.star_id": "$_id", "planets.star_properties": "$properties"}},
+                {"$group": {"_id": 1, "planets": {"$push": "$planets"}}},
+                {"$unwind": {"path": "$planets", "includeArrayIndex": "planets.index"}},
+                {"$addFields": {"planets.index": {"$add": ["$planets.index", 1]}, "properties": "$planets.star_properties", "_id": "$planets.star_id"}},
+                {"$group": {"_id": "$_id", "properties": {"$first": "$planets.star_properties"}, "planets": {"$push": "$planets"}}},
+                {"$project": {"planets.star_properties": 0, "planets.star_id": 0}},
+                {"$sort": {"planets.index": 1}}
+            ]
+
+            result = self.dao.aggregate(pipeline, with_index=False)
+        else:
+            result = self.dao.aggregate(operations, filter, limit, skip, sort, with_index=with_index)
+
+        return result
+
     def upsert_all_by_name(self, stars):
         operations = []
 

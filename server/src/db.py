@@ -65,42 +65,11 @@ class Dao:
     def delete_all(self):
         pass
 
-    def aggregate(self, operations, filter={}, limit=None, offset=None, sort=None):
+    def aggregate(self, operations, filter={}, limit=None, offset=0, sort=None, with_index=True):
         pipeline = [*operations, {"$match": filter}]
 
         if sort:
-            prop = list(sort.keys())[0]
-            single_prop = prop.split(".")[-1]
-
-            if sort[prop] == 1:  # TODO: Move to service or dto parameter? Multiple props sort?
-                if prop.startswith("properties."):
-                    pipeline.append({"$addFields": {"sort": {"$map": {"input": "$properties", "as": "properties", "in": {"$cond": {"if": {"$eq": [f"$${prop}", None]}, "then": "Z" * 10, "else": f"$${prop}"}}}}}})
-                elif prop.startswith("planets.properties"):
-                    pipeline.append({"$addFields": {
-                        "sort": {
-                            "$cond": {
-                                "if": {"$and": [{"$ne": [{"$size": "$planets"}, 0]}]},
-                                "then": {
-                                    "$map": {
-                                        "input": "$planets.properties",
-                                        "as": "properties",
-                                        "in": {
-                                            "$cond": {
-                                                "if": {"$eq": [f"$$properties.{single_prop}", [None]]},
-                                                "then": ["Z" * 10],
-                                                "else": f"$$properties.{single_prop}"
-                                            }
-                                        }
-                                    }
-                                },
-                                "else":  [["Z" * 10]]
-                            }
-                        }
-                    }})
-
-                pipeline.append({"$sort": {"sort": 1}})
-            else:
-                pipeline.append({"$sort": sort})
+            pipeline.append({"$sort": sort})
 
         if offset:
             pipeline.append({"$skip": offset})
@@ -108,13 +77,15 @@ class Dao:
         if limit:
             pipeline.append({"$limit": limit})
 
-        x = list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
+        if with_index:
+            pipeline += [
+                {"$group": {"_id": 1, "items": {"$push": "$$ROOT"}}},
+                {"$unwind": {"path": "$items", "includeArrayIndex": "items.index"}},
+                {"$replaceRoot": {"newRoot": "$items"}},
+                {"$addFields": {"index": {"$add": ["$index", offset + 1]}}}
+            ]
 
-        print(11111111111, list(map(lambda star: star["sort"] if "sort" in star else "None", x)))
-        print(2222222222, x)
-        print(3333333333, pipeline)
-
-        return x
+        return list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
 
     @staticmethod
     def id(id):
@@ -166,25 +137,25 @@ dataset_dao = Dao(Dataset, [
 
 
 class StarType(EmbeddedDocument):
-    spectral_class = StringField(enum=SpectralClass.values(), null=True)
-    spectral_subclass = StringField(enum=SpectralSubclass.values(), null=True)
-    luminosity_class = StringField(enum=LuminosityClass.values(), null=True)
-    luminosity_subclass = StringField(enum=LuminositySubclass.values(), null=True)
+    spectral_class = StringField(enum=SpectralClass.values())
+    spectral_subclass = StringField(enum=SpectralSubclass.values())
+    luminosity_class = StringField(enum=LuminosityClass.values())
+    luminosity_subclass = StringField(enum=LuminositySubclass.values())
 
 
 class StarProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50, unique=True)
-    diameter = FloatField(min_value=0, null=True)
-    mass = FloatField(min_value=0, null=True)
-    density = FloatField(min_value=0, null=True)
-    surface_temperature = IntField(null=True)
-    surface_gravity = FloatField(min_value=0, null=True)
-    luminosity = FloatField(min_value=0, null=True)
-    distance = FloatField(min_value=0, null=True)
-    type = EmbeddedDocumentField(StarType, null=True)
-    distance = FloatField(min_value=0, null=True)
-    apparent_magnitude = FloatField(null=True)
-    absolute_magnitude = FloatField(null=True)
+    diameter = FloatField(min_value=0)
+    mass = FloatField(min_value=0)
+    density = FloatField(min_value=0)
+    surface_temperature = IntField()
+    surface_gravity = FloatField(min_value=0)
+    luminosity = FloatField(min_value=0)
+    distance = FloatField(min_value=0)
+    type = EmbeddedDocumentField(StarType)
+    distance = FloatField(min_value=0)
+    apparent_magnitude = FloatField()
+    absolute_magnitude = FloatField()
     metallicity = FloatField()
     dataset = StringField(required=True)
 
@@ -197,19 +168,19 @@ class Transit(EmbeddedDocument):
 
 class PlanetProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50)
-    type = StringField(enum=PlanetType.values(), null=True)
-    diameter = FloatField(min_value=0, null=True)
-    mass = FloatField(min_value=0, null=True)
-    density = FloatField(min_value=0, null=True)
-    semi_major_axis = FloatField(min_value=0, null=True)
-    orbital_velocity = FloatField(min_value=0, null=True)
-    orbital_period = FloatField(min_value=0, null=True)
-    surface_gravity = FloatField(min_value=0, null=True)
-    surface_temperature = FloatField(min_value=0, null=True)
+    type = StringField(enum=PlanetType.values())
+    diameter = FloatField(min_value=0)
+    mass = FloatField(min_value=0)
+    density = FloatField(min_value=0)
+    semi_major_axis = FloatField(min_value=0)
+    orbital_velocity = FloatField(min_value=0)
+    orbital_period = FloatField(min_value=0)
+    surface_gravity = FloatField(min_value=0)
+    surface_temperature = FloatField(min_value=0)
     life_conditions = StringField()  # TODO: DB table LiveType?
-    transit = EmbeddedDocumentField(Transit, null=True)
-    dataset = ReferenceField(Dataset, required=True, null=True)  # TODO: Surface gravity.
-    processed = BooleanField(null=True)
+    transit = EmbeddedDocumentField(Transit)
+    dataset = ReferenceField(Dataset, required=True)  # TODO: Surface gravity.
+    processed = BooleanField()
 
 
 class Planet(EmbeddedDocument):

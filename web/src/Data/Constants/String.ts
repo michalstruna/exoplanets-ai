@@ -123,6 +123,9 @@ export default {
     },
 
     stars: {
+        unknownSize: { [CS]: 'Typ', [EN]: 'Type' },
+        unknownType: { [CS]: 'Neznámý', [EN]: 'Unknown' },
+
         sizes: {
             [LuminosityClass.ZERO]: { [CS]: 'Hyperobr', [EN]: 'Hypergiant' },
             [LuminosityClass.I]: { [CS]: 'Superobr', [EN]: 'Supergiant' },

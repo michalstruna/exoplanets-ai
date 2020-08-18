@@ -48,7 +48,7 @@ const OptionalLine = ({ lines }: { lines: (string | null)[] }) => (
 const lifeTypeStyle = { [LifeType.PROMISING]: { color: '#AFA', fontWeight: 'bold' }, [LifeType.IMPOSSIBLE]: { color: '#FAA' }, [LifeType.UNKNOWN]: { color: '#777', fontStyle: 'italic' }, [LifeType.POSSIBLE]: { color: '#5FF', fontWeight: 'bold' } }
 const planetStatusStyle = { [PlanetStatus.CANDIDATE]: { color: '#AAA', fontStyle: 'italic' }, [PlanetStatus.CONFIRMED]: { color: '#AFA', fontWeight: 'bold' }, [PlanetStatus.REJECTED]: { color: '#F55' } }
 const priorityStyle = { 1: { color: '#666' }, 2: { color: '#888' }, 3: { color: '#EEE' }, 4: { color: '#EAA', fontWeight: 'bold' }, 5: { color: '#F55', fontWeight: 'bold' } }
-const spectralClassColor: Record<string, string> = { default: '#EEE', [SpectralClass.A]: '#DFF', [SpectralClass.B]: '#3FF', [SpectralClass.F]: '#EE0', [SpectralClass.G]: '#CC0', [SpectralClass.K]: '#F80', [SpectralClass.M]: '#F50', [SpectralClass.O]: '#0FF' }
+const spectralClassColor: Record<string, string> = { default: '#999', [SpectralClass.A]: '#DFF', [SpectralClass.B]: '#3FF', [SpectralClass.F]: '#EE0', [SpectralClass.G]: '#CC0', [SpectralClass.K]: '#F80', [SpectralClass.M]: '#F50', [SpectralClass.O]: '#0FF' }
 
 // TODO: Hooks instaed providers?
 // TODO: Root strings in parameter.
@@ -146,8 +146,8 @@ const StarType = ({ star, strings }: { star: Star, strings: any }) => {
 
     return (
         <Colored color={spectralClassColor[type.spectral_class || 'default']}>
-            {strings.stars.colors[type.spectral_class!] + ' '}
-            {strings.stars.sizes[type.luminosity_class || 'unknown'].toLowerCase() + ' '}
+            {(strings.stars.colors[type.spectral_class!] || strings.stars.unknownType) + ' '}
+            {(strings.stars.sizes[type.luminosity_class!] || strings.stars.unknownSize).toLowerCase() + ' '}
             <SpectralType>
                 {type.spectral_class}
                 {type.spectral_subclass}
@@ -166,7 +166,7 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                 levels: [
                     {
                         columns: Col.list<Star>([
-                            { name: 'type', format: (val, item) => <ItemImage image={`Database/Star/${item.properties[0].type.spectral_class}.svg`} large={true} />, width: '5rem', headerIcon: false },
+                            { name: 'type', format: (val, item) => <ItemImage image={`Database/Star/${item.properties[0].type.spectral_class || 'Unknown'}.svg`} large={true} />, width: '5rem', headerIcon: false },
                             { name: 'name', format: (val, item) => <Detail pathname='/abc' title={item.properties[0].name} subtitle={<StarType star={item} strings={strings} />} />, width: 1.5, headerIcon: false },
                             { name: 'diameter', unit: '☉', multi: 'properties' },
                             { name: 'mass', unit: '☉', multi: 'properties' },
@@ -185,8 +185,8 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                     },
                     {
                         columns: Col.list<Planet>([
-                            { name: 'type', format: (val, item) => <ItemImage image={`Database/Planet/${pascalCase(item.properties[0].type)}.png`} />, width: '5rem', headerIcon: false },
-                            { name: 'name', format: (val, item) => <Detail pathname='/abc' title={item.properties[0].name} subtitle={strings.planets.types[item.properties[0].type]} />, width: 1.5, headerIcon: false },
+                            { name: 'type', format: (val, item) => item.properties && item.properties[0] && <ItemImage image={`Database/Planet/${pascalCase(item.properties[0].type)}.png`} />, width: '5rem', headerIcon: false },
+                            { name: 'name', format: (val, item) => item.properties && item.properties[0] && <Detail pathname='/abc' title={item.properties[0].name} subtitle={strings.planets.types[item.properties[0].type]} />, width: 1.5, headerIcon: false },
                             { name: 'diameter', unit: '⊕', multi: 'properties' },
                             { name: 'mass', unit: '⊕', multi: 'properties' },
                             { name: 'density', unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/>, multi: 'properties' },
