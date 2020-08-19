@@ -63,7 +63,7 @@ export default class Requests {
 
         if (cursor) {
             if (cursor.sort && cursor.sort.columnName) {
-                finalQuery.sort = cursor.sort.columnName + ',' + ( cursor.sort.isAsc ? 'asc' : 'desc')
+                finalQuery.sort = (cursor.sort.level === 1 ? 'planet_' : '') + cursor.sort.columnName + ',' + ( cursor.sort.isAsc ? 'asc' : 'desc')
             }
 
             if (cursor.filter && cursor.filter.attribute) {

@@ -5,8 +5,10 @@ import ProcessState from '../../Discovery/Constants/ProcessState'
 import DatasetType from '../../Database/Constants/DatasetType'
 import LifeType from '../../Database/Constants/LifeType'
 import PlanetType from '../../Database/Constants/PlanetType'
-import StarType from '../../Database/Constants/StarType'
 import DatasetPriority from '../../Database/Constants/DatasetPriority'
+import SpectralClass from '../../Database/Constants/SpectralClass'
+import LuminosityClass from '../../Database/Constants/LuminosityClass'
+import PlanetStatus from '../../Database/Constants/PlanetStatus'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -59,6 +61,8 @@ export default {
         priority: { [CS]: 'Priorita', [EN]: 'Priority' },
 
         // Stars
+        spectral_class: { [CS]: 'Spektrální třída', [EN]: 'Spectral class' },
+        luminosity_class: { [CS]: 'Třída svítivosti', [EN]: 'Luminosity class' },
         diameter: { [CS]: 'Průměr', [EN]: 'Diameter' },
         mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
         distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
@@ -66,10 +70,13 @@ export default {
         spectralClass: { [CS]: 'Spektr. třída', [EN]: 'Spectr. class' },
         density: { [CS]: 'Hustota', [EN]: 'Density' },
         luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
-        gravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
+        surfaceGravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
         dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
         lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
+        absoluteMagnitude: 'Abs. mag.',
+        apparentMagnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
+        metallicity: { [CS]: 'Metalicita', [EN]: 'Metallicity' },
 
         // Planets
         semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
@@ -77,7 +84,8 @@ export default {
         orbitalPeriod: { [CS]: 'Perioda', [EN]: 'Period' },
         orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
         lifeConditions: { [CS]: 'Život', [EN]: 'Life' },
-        planet: { [CS]: 'Planeta', [EN]: 'Planet' }
+        planet: { [CS]: 'Planeta', [EN]: 'Planet' },
+        status: 'Status'
     },
 
     units: {
@@ -115,13 +123,33 @@ export default {
     },
 
     stars: {
-        types: {
-            [StarType.YELLOW_DWARF]: { [CS]: 'Žlutý trpaslík', [EN]: 'Yellow dwarf' },
-            [StarType.RED_DWARF]: { [CS]: 'Červený trpaslík', [EN]: 'Red dwarf' }
+        unknownSize: { [CS]: 'Typ', [EN]: 'Type' },
+        unknownType: { [CS]: 'Neznámý', [EN]: 'Unknown' },
+
+        sizes: {
+            [LuminosityClass.ZERO]: { [CS]: 'Hyperobr', [EN]: 'Hypergiant' },
+            [LuminosityClass.I]: { [CS]: 'Superobr', [EN]: 'Supergiant' },
+            [LuminosityClass.II]: { [CS]: 'Obr', [EN]: 'Giant' },
+            [LuminosityClass.III]: { [CS]: 'Obr', [EN]: 'Giant' },
+            [LuminosityClass.IV]: { [CS]: 'Podobr', [EN]: 'Subgiant' },
+            [LuminosityClass.V]: { [CS]: 'Trpaslík', [EN]: 'Dwarf' },
+            [LuminosityClass.VI]: { [CS]: 'Podtrpaslík', [EN]: 'Subdwarf' },
+            [LuminosityClass.VII]: { [CS]: 'Trpaslík', [EN]: 'Dwarf' }
+        },
+        colors: {
+            [SpectralClass.O]: { [CS]: 'Modrý', [EN]: 'Blue' },
+            [SpectralClass.B]: { [CS]: 'Modrobílý', [EN]: 'Blue-white' },
+            [SpectralClass.A]: { [CS]: 'Bílomodrý', [EN]: 'White-blue' },
+            [SpectralClass.F]: { [CS]: 'Žlutobílý', [EN]: 'Yellow-white' },
+            [SpectralClass.G]: { [CS]: 'Žlutý', [EN]: 'Yellow' },
+            [SpectralClass.K]: { [CS]: 'Oranžový', [EN]: 'Orange' },
+            [SpectralClass.M]: { [CS]: 'Červený', [EN]: 'Red' }
         }
     },
 
     planets: {
+        unknownType: { [CS]: 'Neznámý typ', [EN]: 'Unknown type' },
+
         lifeConditions: {
             [LifeType.IMPOSSIBLE]: { [CS]: 'Vyloučen', [EN]: 'Impossible' },
             [LifeType.POSSIBLE]: { [CS]: 'Možný', [EN]: 'Possible' },
@@ -134,6 +162,11 @@ export default {
             [PlanetType.SUPEREARTH]: { [CS]: 'Superzemě', [EN]: 'Superearth' },
             [PlanetType.NEPTUNE]: { [CS]: 'Typ Neptun', [EN]: 'Neptune-like' },
             [PlanetType.JUPITER]: { [CS]: 'Typ Jupiter', [EN]: 'Jupiter-like' }
+        },
+        statuses: {
+            [PlanetStatus.CANDIDATE]: { [CS]: 'Kandidát', [EN]: 'Candidate' },
+            [PlanetStatus.CONFIRMED]: { [CS]: 'Potvrzena', [EN]: 'Confirmed' },
+            [PlanetStatus.REJECTED]: { [CS]: 'Zamítnuta', [EN]: 'Rejected' }
         }
     },
 

@@ -1,4 +1,4 @@
-enum SpectralType {
+enum SpectralClass {
     O = 'O',
     B = 'B',
     A = 'A',
@@ -8,4 +8,4 @@ enum SpectralType {
     M = 'M'
 }
 
-export default SpectralType
+export default SpectralClass

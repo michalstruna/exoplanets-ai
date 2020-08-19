@@ -15,11 +15,10 @@ class PlanetType(Enum):
     JUPITER = "jupiter"
 
 
-class StarType(Enum):
-    YELLOW_DWARF = "yellow_dwarf"
-    WHITE_DWARF = "white_dwarf"
-    RED_DWARF = "red_dwarf"
-    BROWN_DWARF = "brown_dwarf"
+class PlanetStatus(Enum):
+    CANDIDATE = "candidate"
+    CONFIRMED = "confirmed"
+    REJECTED = "rejected"
 
 
 class SpectralClass(Enum):
@@ -30,3 +29,33 @@ class SpectralClass(Enum):
     G = "G"
     K = "K"
     M = "M"
+
+
+class SpectralSubclass(Enum):
+    ZERO = "0"
+    ONE = "1"
+    TWO = "2"
+    THREE = "3"
+    FOUR = "4"
+    FIVE = "5"
+    SIX = "6"
+    SEVEN = "7"
+    EIGHT = "8"
+    NINE = "9"
+
+
+class LuminosityClass(Enum):
+    ZERO = "0"
+    I = "I"
+    II = "II"
+    III = "III"
+    IV = "IV"
+    V = "V"
+    VI = "VI"
+    VII = "VII"
+
+
+class LuminositySubclass(Enum):
+    A = "a"
+    AB = "ab"
+    B = "b"

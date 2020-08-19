@@ -75,7 +75,7 @@ const Table = Styled(HierarchicalTable)`
     
     &.table--${DbTable.BODIES} {     
         ${HierarchicalTable.Cell} {                    
-            &:nth-of-type(12) {            
+            &:nth-of-type(10) {            
                 &:not([data-header])[data-level="0"] {
                     padding-left: 0;
                     padding-right: 0;

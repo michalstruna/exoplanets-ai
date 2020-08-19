@@ -24,18 +24,11 @@ class DatasetService(Service):
         dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
-            items["density"] = 1410 * items["mass"] / items["diameter"] ** 3
-            items["gravity"] = 274 * items["mass"] / items["diameter"] ** 2
-            items["luminosity"] = (items["diameter"] ** 2) * ((items["surface_temperature"] / 5780) ** 4)  # TODO: Constants.
             items = items.where(pd.notnull(items), None)
+            dataset["processed"], dataset["items"] = items.memory_usage().sum(), []
+            result = self.dao.add(dataset)
 
-            dataset["items"] = []
-            dataset["processed"] = items.memory_usage().sum()
-            #self.add_processed(dataset, items.memory_usage().sum())  # TODO
-
-            result = self.dao.add(dataset)#self.json(self.collection(**dataset).save())
-
-            stars = list(map(lambda star: db.Star(properties=[{**star, "dataset": result["_id"]}]), items.to_dict("records")))
+            stars = list(map(lambda star: db.Star(properties=[{**self.star_service.complete_star(star), "dataset": result["name"]}]), items.to_dict("records")))
             self.star_service.upsert_all_by_name(stars)
         else:
             result = self.dao.add(dataset)
@@ -58,7 +51,7 @@ class DatasetService(Service):
         tasks = self.aggregate([
             {"$addFields": {"item": {"$arrayElemAt": ["$items", 0]}}},
             {"$project": {"_id": 0, "dataset_id": "$_id", "item": "$item", "item_getter": "$item_getter", "type": "$type"}}
-        ], filter={"items": {"$ne": []}}, limit=1, sort={"priority": -1, "created": 1})
+        ], filter={"item": {"$ne": None}}, limit=1, sort={"priority": -1, "created": 1})
 
         if not tasks or not "item" in tasks[0]:
             raise DoesNotExist(f"No data for processing.")

@@ -1,6 +1,6 @@
 import Styled from 'styled-components'
 
-import { Color, Duration, opacityHover } from '../../Style'
+import { Color, Duration } from '../../Style'
 
 export const PageTitle = Styled.h1`
     font-size: 150%;

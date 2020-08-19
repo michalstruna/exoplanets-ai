@@ -60,6 +60,8 @@
 \shortlist
 
 \begin{description}[font=\mdseries,leftmargin=6em,labelwidth=!,]
+\item[csv]      Comma-separated values
+\item[fits]     Flexible image transport system
 \item[ly]		Light year
 \item[au]		Astronomical unit
 \end{description}
@@ -369,15 +371,33 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 \section{Návrh~a~vývoj aplikace}
 
 \img[1]{Komponenty projektu a~jejich komunikace}{img/communication.png}
-\draw
 
 \subsection{Server}
 
-Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci.
+Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~jeho adresářová struktura se dělí na následující moduly:
+
+\img[1]{Architektura serveru}{img/server.png}
+\draw
+
+\begin{itemize}
+\item \textbf{api} -- Definice REST a~Socket API a~zpracování příchozích požadavků. To zahrnuje autentizaci a~autorizaci odesílatele a~následné provedení operace v~servisní vrstvě. 
+\item \textbf{config} -- Konfigurace serveru (např. připojení k~databázi). Základním konfiguračním souborem je \code{base.cfg}, který je použit automaticky. Bez nutnosti tento soubor měnit je možné vytvořit nový soubor (např. \code{test.cfg}) s~novou konfigurací a~pomocí argumentu při spuštění serveru nastavit, aby se použila tato konfigurace (\code{./src/main.py -{}-env test}). [TODO!!!]
+\item \textbf{constants} -- Veškeré konstantní položky, ať už technického či fyzikálního typu.
+\item \textbf{service} -- Servisní vrstva obsahující logiku serveru a~manipulaci s~databází.
+\item \textbf{utils} -- Pomocné třídy uchovávající specifickou funkcionalitu.
+\end{itemize}
 
 \subsubsection{REST API}
 
-aa
+K~vytvoření rozhraní je nejdříve třeba nadefinovat příslušné struktury, které rozhraní bude očekávat nebo naopak vracet. Modul \code{fields} umožňuje určit složky jednotlivých struktur a~taktéž pro ně nastavit pravidla jako např. maximální délka, datový typ nebo seznam povolených hodnot.
+
+\lstinputlisting[caption={Vytvoření modelů v~REST API.}]{codes/api_model.txt}
+
+Následně může dojit k~nadefinování koncových bodů rozhraní. Koncovým bodem jsou metody jakékoliv třídy, jež je potomkem \code{Resource}, přičemž názvy metod třídy odpovídají názvům metod HTTP.
+
+\lstinputlisting[caption={Vytvoření koncového bodu v~REST API.}]{codes/rest_endpoint.txt}
+
+Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nesprávnosti vstupních parametrů je odeslána chybová odpověď a~díky anotacím je také automaticky generována dokumentace REST API v~nástroji Swagger~UI dostupná na adrese \url{exoplanets.now.sh/api-docs}. Ukázka dokumentace REST API je umístěna v~příloze [TODO!!!] na konci dokumentu.
 
 \subsubsection{Socket.io API}
 
@@ -387,6 +407,9 @@ Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikac
 
 \subsection{Webová aplikace}
 
+\img[1]{Architektura webové aplikace}{img/web_app.png}
+\draw
+
 
 \subsection{Klientská aplikace}
 
@@ -394,6 +417,75 @@ Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikac
 \draw
 
 \subsection{Databáze}
+
+\subsection{Datasety}
+
+Většina dat se do databáze nevkládá manuálně, jelikož je třeba pracovat se stovkami tisíc či miliony datových položkek. Namísto toho administrátor pouze definuje přístupový bod k~nějakému datasetu dostupnému přes webové rozhraní a~následně dojde k~automatickému zpracování datasetu a~všech položek v~něm. Některé typy datasetů jsou určeny k~jednorázovému uložení do databáze a~není nutno je nijak dál zpracovávat. Zpracování jiných je naopak výpočetně náročné a~připojené klientské aplikace postupně zpracovávají položku po položce. Jednotlivé typy datasetů jsou popsány níže.
+
+U~všech typů datasetů je také vyřešena situace, kdy by se jedna a~ta samá položka (např. hvězda) nacházela ve dvou datasetech zároveň. V~takovém případě dojde k uložení obou hodnot a~uživatel v~aplikaci pak bude vidět údaje dané položky z~obou datasetů vedle sebe.
+
+\subsubsection{Target pixel files}
+
+\subsubsection{Světelné křivky hvězd}
+
+\subsubsection{Radiální rychlosti hvězd}
+
+\subsubsection{Hvězdy}
+
+Informace o vlastnostech hvězd nejsou pro hledání exoplanet nutné, avšak pro spočítání dalších údajů o~nalezené exoplanetě je třeba je zahrnout do výpočtů. Datasety tohoto typu jsou k~dostání přes webová rozhraní nejčastěji ve formátu \code{csv}.
+
+\img[1]{Část datasetu s~vlastnostmi hvězd}{img/star_properties.png}
+\footnotetext[1]{Dataset pochází ze stránek \url{https://exoplanetarchive.ipac.caltech.edu}.}
+
+Tyto datasety neobnáší žádné další složité výpočty, pouze jsou společně s dopočítanými údaji jednorázově uloženy do databáze. Základními údaji, které jsou pro každou hvězdu třeba, jsou (šedou barvou jsou dopočítané údaje):
+
+
+\begin{multicols}{3}
+\begin{itemize}
+\item Název,
+\item Rovníkový průměr,
+\item Hmotnost,
+\item Povrchová teplota,
+\item Zdánlivá magnituda,
+\item Vzdálenost od Země,
+\item Metalicita,
+\color{gray}
+\item Průměrná hustota,
+\item Spektrální typ,
+\item Povrchová gravitace,
+\item Absolutní magnituda,
+\item Obyvatelná zóna.
+\end{itemize}
+\end{multicols}
+
+Aplikace je postavena flexibilně a~umožňuje libovolně namapovat sloupce z~datasetů do sloupců v~databázi. Datasety tak mohou mít pořadí i~názvy jednotlivých sloupců libovolné.
+
+
+\subsubsection{Planety}
+
+Datasety s~planetami nejsou pro běh aplikace taktéž nutné, protože veškeré informace o exoplanách jsou vypočítány z~jiných datasetů. Platí však, že čím více nezávislých zdrojů se na údajích o~exoplanetě shodne, tím spíše budou tyto údaje platné. Proto je umožněno ukládat do databáze i~datasety s~údaji o planetách -- mohou potvrdit nebo vyvrátit údaje vypočtené v~rámci aplikace.
+
+\img[1]{Část datasetu s~vlastnostmi planet}{img/planet_properties.png}
+\footnotetext[1]{Dataset pochází ze stránek \url{https://exoplanetarchive.ipac.caltech.edu}.}
+
+Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nijak složitě zpracovávat, pouze uložit do databáze. Údaje o~planetě, které se v aplikaci ukládají jsou:
+
+\begin{multicols}{3}
+\begin{itemize}
+\item Název,
+\item Rovníkový průměr,
+\item Hmotnost,
+\item Průměrná hustota,
+\item Povrchová teplota,
+\item Velká poloosa,
+\item Perioda oběhu,
+\item Rychlost oběhu,
+\item Excentricita dráhy,
+\item Typ,
+\item Tranzit přes hvězdu,
+\item Podmínky pro život.
+\end{itemize}
+\end{multicols}
 
 \section{Rozvržení aplikace}
 

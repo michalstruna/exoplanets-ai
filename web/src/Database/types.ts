@@ -1,8 +1,8 @@
 import PlanetType from './Constants/PlanetType'
-import StarType from './Constants/StarType'
-import SpectralType from './Constants/SpectralType'
-import React from 'react'
-import { Level } from '../Layout'
+import SpectralClass from './Constants/SpectralClass'
+import SpectralSubclass from './Constants/SpectralSubclass'
+import LuminosityClass from './Constants/LuminosityClass'
+import LuminositySubclass from './Constants/LuminositySubclass'
 
 export interface PlanetProperties {
     name: string
@@ -14,6 +14,8 @@ export interface PlanetProperties {
     density?: number
     surface_temperature?: number
     type: PlanetType
+    dataset: string
+    processed: boolean
 }
 
 export interface Planet {
@@ -26,10 +28,16 @@ export interface StarProperties {
     diameter?: number
     surface_temperature?: number
     luminosity?: number
+    apparent_magnitude?: number
     absolute_magnitude?: number
-    spectral_type?: SpectralType
+    metallicity?: number
+    type: {
+        spectral_class?: SpectralClass
+        spectral_subclass?: SpectralSubclass
+        luminosity_class?: LuminosityClass
+        luminosity_subclass?: LuminositySubclass
+    }
     planets?: Planet[]
-    type: StarType
     distance?: number
 }
 
