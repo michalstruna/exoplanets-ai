@@ -19,7 +19,7 @@ class Service(ABC):
     def get_count(self, filter={}, **kwargs):
         return self.dao.get_count(self.dao.pipeline, filter=filter)
 
-    def aggregate(self, operations, filter={}, limit=None, skip=None, sort=None, with_index=False):
+    def aggregate(self, operations, filter={}, limit=None, skip=0, sort=None, with_index=False):
         result = self.dao.aggregate(operations, filter, limit, skip, sort)
 
         if with_index:

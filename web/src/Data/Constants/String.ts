@@ -148,6 +148,8 @@ export default {
     },
 
     planets: {
+        unknownType: { [CS]: 'Neznámý typ', [EN]: 'Unknown type' },
+
         lifeConditions: {
             [LifeType.IMPOSSIBLE]: { [CS]: 'Vyloučen', [EN]: 'Impossible' },
             [LifeType.POSSIBLE]: { [CS]: 'Možný', [EN]: 'Possible' },
