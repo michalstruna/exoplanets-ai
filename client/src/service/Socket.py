@@ -1,5 +1,6 @@
 import socketio
 import sys
+import numpy as np
 
 from utils import time
 from service.Device import DeviceService
@@ -67,6 +68,7 @@ def run(task):
             else:
                 pass
         """
+
         task["solution"] = {
             "planets": [
                 {
@@ -88,7 +90,12 @@ def run(task):
                     },
                     "dataset": "Kepler 11"
                 }
-            ]
+            ],
+            "light_curve": {
+                "name": task["item"],
+                "flux": list(np.random.randint(9980, 10020, 100) / 10000),
+                "dataset": "Kepler 12"
+            }
         }
         pass
 

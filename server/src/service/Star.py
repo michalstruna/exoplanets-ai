@@ -18,9 +18,10 @@ class StarService(Service):
         if not sort:
             return []
 
-        prop = list(sort.keys())[0]
-
         return [{"$sort": sort}]
+
+    def get_by_name(self, name):
+        return self.dao.get({"$or": [{"properties.name": name}, {"light_curves.name": name}]})
 
     def aggregate(self, operations, filter={}, limit=None, skip=None, sort=None, with_index=False):
         pipeline = [{"$unwind": "$planets"}, {"$match": filter}, *self.get_sort(sort), {"$limit": limit}, {"$skip": skip}]

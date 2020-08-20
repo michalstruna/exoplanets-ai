@@ -155,22 +155,31 @@ class Request:
             return [final_prop, rel, type(val) if val != "" and isinstance(val, str) else ("" if type == str else 0)]
 
         filter = list(map(parse_filter_item, filter))
-
         rules = []
 
         for prop, rel, val in filter:
-            if rel == Relation.EQ.value:
-                rule = {"$regex": f"^{val}$", "$options": "i"}
-            elif rel == Relation.CONT.value:
-                rule = {"$regex": val, "$options": "i"}
-            elif rel == Relation.STARTS.value:
-                rule = {"$regex": f"^{val}", "$options": "i"}
-            elif rel == Relation.ENDS.value:
-                rule = {"$regex": f"{val}$", "$options": "i"}
-            else:
-                rule = {"$" + rel: val}
+            props = prop if isinstance(prop, list) else [prop]
+            prop_rules = []
 
-            rules.append({prop: rule})
+            for prop in props:
+
+                if rel == Relation.EQ.value:
+                    rule = {"$regex": f"^{val}$", "$options": "i"}
+                elif rel == Relation.CONT.value:
+                    rule = {"$regex": val, "$options": "i"}
+                elif rel == Relation.STARTS.value:
+                    rule = {"$regex": f"^{val}", "$options": "i"}
+                elif rel == Relation.ENDS.value:
+                    rule = {"$regex": f"{val}$", "$options": "i"}
+                else:
+                    rule = {"$" + rel: val}
+
+                prop_rules.append({prop: rule})
+
+            rules.append({"$or": prop_rules} if len(prop_rules) > 1 else prop_rules[0])
+            print(111, rules, 222, prop_rules)
+
+        print(333333, {"$and": rules} if rules else {})
 
         return {"$and": rules} if rules else {}
 

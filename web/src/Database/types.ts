@@ -41,8 +41,15 @@ export interface StarProperties {
     distance?: number
 }
 
+export interface LightCurve {
+    name: string
+    flux: number[]
+    dataset: string
+}
+
 export interface Star {
     properties: StarProperties[]
+    light_curves: LightCurve[]
     planets: Planet[]
 }
 

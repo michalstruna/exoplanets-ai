@@ -161,7 +161,9 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
     }
 
     React.useEffect(() => {
-        onChange?.(fromInternal(values))
+        const vals = [...values]
+        vals.pop()
+        onChange?.(fromInternal(vals))
     }, [values])
 
     const removeEmptyFromEnd = (values: InternalFilterData): InternalFilterData => {
@@ -183,7 +185,9 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
     }
 
     const handleSubmit = () => {
-        onSubmit?.(fromInternal(values))
+        const vals = [...values]
+        vals.pop()
+        onSubmit?.(fromInternal(vals))
     }
 
     const getAttrByName = (name: string): EnumTextValue => (
