@@ -35,69 +35,40 @@ def run(task):
     time.sleep(1000)
 
     if task["type"] == TaskType.TARGET_PIXEL.value:
-        """
         log(LogType.DOWNLOAD_TP, name=task["item"])
         lc_service = LightCurveService()
         print("=== Before download tps.")
-        tp = lc_service.download_tp(task["item"])
-        task["meta"]["size"] = lc_service.get_tp_size(tp)
+        tps = lc_service.download_tps(task["item"])
+        task["meta"]["size"] = lc_service.get_tps_size(tps)
         print("=== Before to_lc.")
-        lc = lc_service.tp_to_lc(tp)
-        norm_lc = lc_service.norm_lc(lc)
+        lc = lc_service.tps_to_lc(tps)
         print("=== Before pd.")
-        periods = lc_service.get_periods(norm_lc)
-        print(periods)
-        """
+        pd, peaks = lc_service.get_pd(lc)
 
+        lc.plot()
 
-        """
-        for period in periods:
-            print(f"=== Befo
-            re period {period}")
+        transits = []
 
-        lc = lc_service.tpfs_to_lc(tps)
-        periods = lc_service.get_periods()
+        for peak in peaks:
+            gv = lc_service.get_gv(lc, pd, peak)
+            lv = lc_service.get_lv(lc, pd, peak)
 
-        for period, power in periods:
-            gv = lc_service.get_global_view(lc, period)
-            lv = lc_service.get_local_view(lc, period)
-            is_planet = lc_service.is_planet(gv, lv)
-
-            if is_planet:
-                pass
-            else:
-                pass
-        """
+            if lc_service.is_planet(gv, lv):
+                transits.append({
+                    "period": pd.period[peak].value,
+                    "depth": pd.depth[peak],
+                    "duration": pd.duration[peak].value,
+                    "flux": list(lv.flux)
+                })
 
         task["solution"] = {
-            "planets": [
-                {
-                    "name": "Star I",
-                    "type": "superearth",
-                    "diameter": 1.12,
-                    "mass": 1.27,
-                    "density": 0.88,
-                    "semi_major_axis": 0.15,
-                    "orbital_velocity": 35,
-                    "life_conditions": LiveType.IMPOSSIBLE.value,
-                    "orbital_period": 47.5,
-                    "surface_temperature": 15,
-                    "surface_gravity": 11,
-                    "transit": {
-                        "period": 0.18,
-                        "depth": 0.19,
-                        "duration": 0.20
-                    },
-                    "dataset": "Kepler 11"
-                }
-            ],
+            "transits": transits,
             "light_curve": {
                 "name": task["item"],
-                "flux": list(np.random.randint(9980, 10020, 100) / 10000),
+                "flux": list(lc.bin(bins=99).remove_outliers().flux),
                 "dataset": "Kepler 12"
             }
         }
-        pass
 
     submit(task)
 

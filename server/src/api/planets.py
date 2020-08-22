@@ -21,7 +21,8 @@ api = Api("planets", description="Discovered planets.")
 transit = api.ns.model("Transit", {
     "period": fields.Float(required=True, min=0, description="Period of transit [days]."),
     "depth": fields.Float(required=True, min=0, max=1, description="Relative depth of transit from interval <0; 1>."),
-    "duration": fields.Float(required=True, min=0, description="Duration of transit [days].")
+    "duration": fields.Float(required=True, min=0, description="Duration of transit [days]."),
+    "flux": fields.List(fields.Float(description="Flux of folded light curve of parent star."))
 })
 
 planet_properties = api.ns.model("PlanetProperties", {

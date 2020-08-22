@@ -164,6 +164,7 @@ class Transit(EmbeddedDocument):
     period = FloatField(min_value=0, required=True)
     duration = FloatField(min_value=0, required=True)
     depth = FloatField(min_value=0, max_value=1, required=True)
+    flux = ListField(FloatField())
 
 
 class PlanetProperties(EmbeddedDocument):

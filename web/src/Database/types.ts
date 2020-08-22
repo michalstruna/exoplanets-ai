@@ -4,6 +4,13 @@ import SpectralSubclass from './Constants/SpectralSubclass'
 import LuminosityClass from './Constants/LuminosityClass'
 import LuminositySubclass from './Constants/LuminositySubclass'
 
+export interface PlanetTransit {
+    depth: number
+    duration: number
+    period: number
+    flux: number[]
+}
+
 export interface PlanetProperties {
     name: string
     diameter?: number
@@ -14,6 +21,7 @@ export interface PlanetProperties {
     density?: number
     surface_temperature?: number
     type: PlanetType
+    transit?: PlanetTransit
     dataset: string
     processed: boolean
 }

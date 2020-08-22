@@ -224,7 +224,7 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                             { name: 'surface_temperature', unit: '°C', multi: 'properties' },
                             { name: 'semi_major_axis', unit: 'au', multi: 'properties' },
                             { name: 'orbital_period', format: val => Dates.formatDistance(strings, Dates.daysToMs(val), 0, Dates.Format.EXACT), multi: 'properties' },
-                            { name: 'transit_depth', format: () => <MiniGraph data={dd3} color='#AFA' />, title: <Colored color='#AFA'>{strings.properties.transit}</Colored>, width: '20rem' },
+                            { name: 'transit_depth', format: (_, planet) => <MiniGraph data={planet.properties[0].transit!.flux} color='#AFA' />, title: <Colored color='#AFA'>{strings.properties.transit}</Colored>, width: '20rem' },
                             { name: 'life_conditions', format: val => strings.planets.lifeConditions[val], styleMap: lifeTypeStyle, multi: 'properties' },
                             { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
                             { name: 'orbital_velocity', unit: <Fraction top='km' bottom='s' />, multi: 'properties' },

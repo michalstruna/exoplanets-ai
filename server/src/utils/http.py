@@ -177,9 +177,6 @@ class Request:
                 prop_rules.append({prop: rule})
 
             rules.append({"$or": prop_rules} if len(prop_rules) > 1 else prop_rules[0])
-            print(111, rules, 222, prop_rules)
-
-        print(333333, {"$and": rules} if rules else {})
 
         return {"$and": rules} if rules else {}
 

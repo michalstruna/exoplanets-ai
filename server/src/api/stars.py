@@ -8,24 +8,15 @@ from .planets import planet
 
 def map_props(prop):
 
-    print(11, prop)
-
     if prop.startswith("planet_"):
-        print(111, prop)
-
         prop = prop[7:]
 
-        print(33, prop)
-
         if prop in ["diameter", "mass", "density", "surface_temperature", "semi_major_axis", "orbital_period", "transit_depth", "surface_gravity", "orbital_velocity"]:
-            print(44, prop)
             return f"planets.properties.{prop}", float
 
         if prop in ["life_conditions", "status", "type"]:
-            print(55, prop)
             return f"planets.properties.{prop}", str
     else:
-        print(66, prop)
         if prop in ["spectral_class", "luminosity_class"]:
             return f"properties.type.{prop}", str
 
