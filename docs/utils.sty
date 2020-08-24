@@ -163,7 +163,7 @@
 \newcommand{\img}[3][]{    
 	\begin{figure}[H]
 		\begin{center}
-			\includegraphics[width=\textwidth]{#3}
+			\includegraphics[width=\columnwidth]{#3}
 		\end{center}
 		\vspace{-5pt}
 		\caption[#2]{#2\ifx&#1&\else~\footnotemark[#1]\fi}
@@ -204,6 +204,8 @@
 
 % Insert page note with reference to draw.io.
 \newcommand{\draw}[1][1]{\footnotetext[#1]{Vytvořeno autorem v \url{https://www.draw.io}.}}
+
+\newcommand{\nasa}[1][1]{\footnotetext[#1]{\mbox{Vytvořeno autorem, zdroj dat: \url{https://exoplanetarchive.ipac.caltech.edu}.}}}
 
 
 % Insert page note with reference to draw.io and GIMP.

@@ -7,6 +7,8 @@
 
 \usepackage{utils}
 \usepackage{titletoc}
+\usepackage{amssymb}  % TODO: Odebrat
+\usepackage{amsmath}
 
 \def\code#1{\texttt{#1}}
 
@@ -159,6 +161,42 @@ Tyto fáze společně s~důležitými parametry tranzitu potřebnými pro dalš�
 \item Délka nástupu -- čím prudší a~kratší je nástup, tím menší je úhel mezi rovinou orbity exoplanety a~přímkou od hvězdy k~pozorovateli,
 \item Délka minima -- čím větší délka minima v~porovnání s~délkou transitu, tím je úhel mezi rovinou orbity exoplanety a~přímkou od hvězdy k~pozorovateli menší.
 \end{enumerate}
+
+\subsubsection{Vyřazení false positives}
+
+Většina periodických složek ve světelných křivkách hvězd jsou \emph{false positive}~--~patří jiným jevům, než je obíhající planeta. Tyto případy je třeba odfiltrovat, což byla až donedávna především manuální práce lidí -- vědců či dobrovolníků. Protože ale tranzit planety vykazuje specifický průběh popsaný v předchozí kapitole, je možné ho s~určitou úspěšností rozpoznat pomocí naučené umělé neuronové sítě automaticky.
+
+\begin{multicols}{2}
+\img[1]{Dvojhvězda KIC~8262223}{img/eclipsing_binary.png}
+\img[1]{Cefeida KIC 3733346}{img/cepheid.png}
+\end{multicols}
+
+\begin{multicols}{2}
+\img[1]{Proměnná hvězda KIC~9832227}{img/variable_star.png}
+\img[1]{Kataklizmická proměnná hvězda KIC 9406652}{img/cataclysmic.png}
+\end{multicols}
+
+Je třeba aby vstupní data do neuronové sítě měla stejné rozměry i~formát. Vzhledem k~různorodosti světelných křivek je nutno provést několik kroků, abychom dosáhli standardizovaného formátu. Prvním krokem je složení časové řady do jedné periody, čímž dojde k~posílení viditelnosti transitu (pokud zde nějaký je), nebo naopak k~jeho vyrušení (pokud zde žádný není).
+
+\begin{multicols}{2}
+\img[1]{Světelná křivka Kepler-10}{img/full_light_curve.png}
+\img[1]{Složená světelná křivka}{img/folded.png}
+\end{multicols}
+
+Na obrázku 12 je uprostřed slabě patrný transit. Má malou šířku, protože trvá pouze 0,25 dne, zatímco celá perioda je dlouhá 45,3 dne. Z~této složené časové řady se vytvoří dva pohledy, které budou vstupem do neuronové sítě:
+
+\begin{itemize}
+\item \textbf{Globální pohled} \emph{(obr. 13)} -- Šířka periody a~počet bodů v~časové řadě jsou fixní. Nevýhodou je, že u planet s~dlouhou periodou bude tranzit velice nepatrný, proto pouze globální pohled nestačí.
+\item \textbf{Lokální pohled} \emph{(obr. 14)} -- Šířka tranzitu a počet bodů v časové řadě jsou fixní. Nevýhodou je, že není viditelný celý průběh světelné křivky. Naproti tomu je ale zřetelný tranzit.
+\end{itemize}
+
+\begin{multicols}{2}
+\img[1]{Globál. pohled na Kepler-10}{img/global_view.png}
+\img[1]{Lokální pohled na Kepler-10}{img/local_view.png}
+\nasa
+\end{multicols}
+
+Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ sousedních bodů ($\alpha$ -- současný počet bodů, $\beta$ -- požadovaný počet bodů) jediným, který bude reprezentovat jejich medián. Pro potřeby neuronové sítě je nutno oba pohledy taktéž normalizovat tak, aby platilo $H~=~\left<1; -1\right>$. 
 
 \subsubsection{Výpočet poloměru planety}
 
@@ -419,8 +457,6 @@ Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikac
 \draw
 
 \subsection{Neuronová síť}
-
-V~kapitole 2.1.2 bylo popsáno získání světelné křivky hvězdy a~v~kapitole 2.1.3 výpočet veličin z~charakteristik této světelné křivky.
 
 \subsection{Databáze}
 
