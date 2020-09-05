@@ -84,7 +84,7 @@ class SocketService(metaclass=patterns.Singleton):
         def client_submit_task(task):
             self.pause_client(request.sid)
             self.finish_task(task)
-            #self.add_task(request.sid)
+            self.add_task(request.sid)
 
     def update_client(self, id):
         client = self.clients[id]
@@ -130,7 +130,7 @@ class SocketService(metaclass=patterns.Singleton):
         updated = {
             "inc__time": time.now() - task["meta"]["created"],
             "inc__processed": task["meta"]["size"],
-            #"pop__items": -1
+            "pop__items": -1
         }
         dataset = self.dataset_service.update(task["dataset_id"], updated)
         light_curve = task["solution"]["light_curve"]  # TODO: target_pixel

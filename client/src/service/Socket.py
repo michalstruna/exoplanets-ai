@@ -45,8 +45,6 @@ def run(task):
         print("=== Before pd.")
         pd, peaks = lc_service.get_pd(lc)
 
-        lc.plot()
-
         transits = []
 
         for peak in peaks:

@@ -1,6 +1,11 @@
 import lightkurve as lk
 import numpy as np
 import math
+import os
+from tensorflow.keras.models import load_model
+
+
+# TODO: Replace nan.
 
 
 class LightCurveService:
@@ -18,24 +23,20 @@ class LightCurveService:
 
     def tps_to_lc(self, tps):
         lcs = []
+        target = None
 
         for tp in tps:
-            lcs.append(tp.to_lightcurve(aperture_mask=tp.pipeline_mask))
+            if target is None or target == tp.targetid:
+                lcs.append(tp.to_lightcurve(aperture_mask=tp.pipeline_mask))
+                target = tp.targetid
 
         lc = lk.LightCurveCollection(lcs)
         return lc.stitch(corrector_func=lambda lc: lc.remove_outliers().flatten(window_length=401))
 
     def get_pd(self, lc):
-        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 50, 0.01))
+        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 150, 0.001))  # TODO: 0.001
         med = np.median(pd.power)
         return pd, self.get_peaks(pd.power, around=int(pd.power.shape[0] / 20), minimum=med)
-
-    def get_periods(self, lc):  # TODO: Remove
-        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 1, 0.0001))
-        med = np.median(pd.power)
-        peaks = self.get_peaks(pd.power, around=int(pd.power.shape[0] / 20), minimum=med)
-
-        return list(map(lambda peak: pd.period[peak], peaks))
 
     def get_peaks(self, values, minimum=-math.inf, maximum=math.inf, around=1):
         peaks = []
@@ -56,7 +57,10 @@ class LightCurveService:
         period = pd.period[peak]
 
         folded = lc.fold(period, t0=t0)
-        return folded.bin(bins=2001, method='median').normalize() - 1  # TODO: Normalize parameter?
+
+        gv = folded.bin(bins=2001, method='median').normalize() - 1
+        gv = (gv / np.abs(gv.flux.min())) * 2.0 + 1
+        return gv
 
     def get_lv(self, lc, pd, peak):
         t0 = pd.transit_time[peak]
@@ -69,7 +73,14 @@ class LightCurveService:
         phase_mask = (folded.phase > -4 * fractional_duration) & (folded.phase < 4.0 * fractional_duration)
         lc_zoom = folded[phase_mask]
 
-        return lc_zoom.bin(bins=101, method='median').normalize() - 1
+        lv = lc_zoom.bin(bins=201, method='median').normalize() - 1
+        lv = (lv / np.abs(lv.flux.min())) * 2.0 + 1
+        return lv
 
     def is_planet(self, gv, lv):
-        return True
+        model = load_model(os.path.join(os.path.dirname(__file__), "../data/transit.h5"))
+        return model.predict([self._to_cnn(lv), self._to_cnn(gv)]) > 0.5
+
+    def _to_cnn(self, lc):
+        flux = lc.flux.reshape((*lc.flux.shape, 1))
+        return np.array([flux])

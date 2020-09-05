@@ -178,6 +178,8 @@ Většina periodických složek ve světelných křivkách hvězd jsou \emph{fal
 
 Je třeba aby vstupní data do neuronové sítě měla stejné rozměry i~formát. Vzhledem k~různorodosti světelných křivek je nutno provést několik kroků, abychom dosáhli standardizovaného formátu. Prvním krokem je složení časové řady do jedné periody, čímž dojde k~posílení viditelnosti transitu (pokud zde nějaký je), nebo naopak k~jeho vyrušení (pokud zde žádný není).
 
+\pagebreak % TODO: Remove.
+
 \begin{multicols}{2}
 \img[1]{Světelná křivka Kepler-10}{img/full_light_curve.png}
 \img[1]{Složená světelná křivka}{img/folded.png}
@@ -191,12 +193,12 @@ Na obrázku 12 je uprostřed slabě patrný transit. Má malou šířku, protož
 \end{itemize}
 
 \begin{multicols}{2}
-\img[1]{Globál. pohled na Kepler-10}{img/global_view.png}
-\img[1]{Lokální pohled na Kepler-10}{img/local_view.png}
+\img[1]{Globální pohled na tranzit Kepler-10~c}{img/global_view.png}
+\img[1]{Lokální pohled na tranzit Kepler-10~c}{img/local_view.png}
 \nasa
 \end{multicols}
 
-Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ sousedních bodů ($\alpha$ -- současný počet bodů, $\beta$ -- požadovaný počet bodů) jediným, který bude reprezentovat jejich medián. Pro potřeby neuronové sítě je nutno oba pohledy taktéž normalizovat tak, aby platilo $H~=~\left<1; -1\right>$. 
+Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ sousedních bodů ($\alpha$ -- současný počet bodů, $\beta$ -- požadovaný počet bodů) jediným, který bude reprezentovat jejich medián. Pro potřeby neuronové sítě je nutno oba pohledy taktéž normalizovat tak, aby platilo $H~=~\left<1; -1\right>$. U~případů, které neuronová síť vyhodnotí jako planety, je možné pokračovat výpočtem dalších informací o~planetě.
 
 \subsubsection{Výpočet poloměru planety}
 
@@ -260,7 +262,7 @@ Změna vlnové délky záření se projevuje jako horizontální posun barevnéh
 
 \subsubsection{Výpočet radiální rychlosti hvězdy}
 
-Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek záření hvězdy může dojít k~vypočítání změn radiální rychlosti v~čase. Lze tak učinit dle následujícího vzorce. Platí, že radiální rychlost je kladná, pokud se zdroj od pozorovatele vzdaluje a~záporná pokud se přibližuje.
+Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek záření hvězdy může dojít k~vypočítání změn radiální rychlosti v~čase. Lze tak učinit dle vzorce~3. Platí, že radiální rychlost je kladná, pokud se zdroj od pozorovatele vzdaluje a~záporná pokud se přibližuje.
 
 \formula{Radiální rychlost na základě změny vlnové délky} {v = c * \frac{\Delta\lambda}{\lambda_0}}{
 \begin{tabular}{lll}
@@ -368,11 +370,6 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 \subsection{Přímé zobrazení}
 \subsection{Pulsar timing}
 
-\section{Satelity hledající exoplanety}
-\subsection{Kepler}
-\subsubsection{Mise K2}
-\subsection{TESS}
-
 \section{Umělá inteligence}
 
 \subsection{Neuronová sít}
@@ -457,6 +454,9 @@ Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikac
 \draw
 
 \subsection{Neuronová síť}
+
+
+\img[1]{Trénovací množina}{img/train_set.png}
 
 \subsection{Databáze}
 
@@ -607,5 +607,10 @@ Wavelength \url{http://spiff.rit.edu/classes/phys240/lectures/expand/expand.html
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Seznam příloh}
 \section*{Seznam příloh}
+
+\noindent Příloha~A~~~~Architektura neuronové sítě \dotfill \pageref{priloha_a}
+
+\section*{Příloha~A -- Architektura neuron. sítě}\label{priloha_a}
+\includegraphics[width=\linewidth]{img/cnn.png}
 
 \end{document}
