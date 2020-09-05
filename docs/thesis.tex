@@ -7,6 +7,8 @@
 
 \usepackage{utils}
 \usepackage{titletoc}
+\usepackage{amssymb}  % TODO: Odebrat
+\usepackage{amsmath}
 
 \def\code#1{\texttt{#1}}
 
@@ -19,7 +21,8 @@
 \def\jmenoFakulty{Fakulta elektrotechniky a informatiky}
 \def\jmenoAutora{Michal Struna}
 %\def\nazevPrace{Umělá inteligence pro detekci exoplanet}
-\def\nazevPrace{Distribuované výpočty a umělá inteligence\\ pro detekci a analýzu exoplanet}
+%\def\nazevPrace{Distribuované výpočty a umělá inteligence\\ pro detekci a analýzu exoplanet}
+\def\nazevPrace{Detekce a~analýza exoplanet s~využitím\\distribuovaných výpočtů a~umělé inteligence}
 \def\typPrace{Diplomová práce}
 \def\rok{2021}
 \def\prefixZadani{img/zadani}	% cesta a začátek jména, bude doplněno číslo strany
@@ -114,7 +117,7 @@ Málo hmotné planety byly objevovány jak tranzitní metodou, tak i~metodou rad
 
 Někdy se planeta při obíhání dostane mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu hvězdy (obvykle ve zlomku procenta). Pokud je hvězda teleskopem sledována dlouhodobě, je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost planety v~blízkosti této hvězdy.
 
-\img[1]{Tranzitní metoda}{img/transit.png}
+\img[1]{Přechod planety přes kotouč hvězdy}{img/transit.png}
 \drawgimp
 
 Tyto změny však nemusí být na první pohled viditelné, protože v~soustavě může být více planet, které svou hvězdu zastiňují různou měrou a~obíhají kolem ní s~různou periodou. Navíc i v situaci, kdy je ve změnách jasu hvězdy objevena periodická složka nemusí jít vždy o~obíhající planetu. Hvězda může být např. sama o~sobě proměnlivá nebo se může jednat o~dvojhvězdu, jejíž složky se vzájmně zastiňují.
@@ -159,7 +162,43 @@ Tyto fáze společně s~důležitými parametry tranzitu potřebnými pro dalš�
 \item Délka minima -- čím větší délka minima v~porovnání s~délkou transitu, tím je úhel mezi rovinou orbity exoplanety a~přímkou od hvězdy k~pozorovateli menší.
 \end{enumerate}
 
-\subsubsection{Detekce exoplanety}
+\subsubsection{Vyřazení false positives}
+
+Většina periodických složek ve světelných křivkách hvězd jsou \emph{false positive}~--~patří jiným jevům, než je obíhající planeta. Tyto případy je třeba odfiltrovat, což byla až donedávna především manuální práce lidí -- vědců či dobrovolníků. Protože ale tranzit planety vykazuje specifický průběh popsaný v předchozí kapitole, je možné ho s~určitou úspěšností rozpoznat pomocí naučené umělé neuronové sítě automaticky.
+
+\begin{multicols}{2}
+\img[1]{Dvojhvězda KIC~8262223}{img/eclipsing_binary.png}
+\img[1]{Cefeida KIC 3733346}{img/cepheid.png}
+\end{multicols}
+
+\begin{multicols}{2}
+\img[1]{Proměnná hvězda KIC~9832227}{img/variable_star.png}
+\img[1]{Kataklizmická proměnná hvězda KIC 9406652}{img/cataclysmic.png}
+\end{multicols}
+
+Je třeba aby vstupní data do neuronové sítě měla stejné rozměry i~formát. Vzhledem k~různorodosti světelných křivek je nutno provést několik kroků, abychom dosáhli standardizovaného formátu. Prvním krokem je složení časové řady do jedné periody, čímž dojde k~posílení viditelnosti transitu (pokud zde nějaký je), nebo naopak k~jeho vyrušení (pokud zde žádný není).
+
+\pagebreak % TODO: Remove.
+
+\begin{multicols}{2}
+\img[1]{Světelná křivka Kepler-10}{img/full_light_curve.png}
+\img[1]{Složená světelná křivka}{img/folded.png}
+\end{multicols}
+
+Na obrázku 12 je uprostřed slabě patrný transit. Má malou šířku, protože trvá pouze 0,25 dne, zatímco celá perioda je dlouhá 45,3 dne. Z~této složené časové řady se vytvoří dva pohledy, které budou vstupem do neuronové sítě:
+
+\begin{itemize}
+\item \textbf{Globální pohled} \emph{(obr. 13)} -- Šířka periody a~počet bodů v~časové řadě jsou fixní. Nevýhodou je, že u planet s~dlouhou periodou bude tranzit velice nepatrný, proto pouze globální pohled nestačí.
+\item \textbf{Lokální pohled} \emph{(obr. 14)} -- Šířka tranzitu a počet bodů v časové řadě jsou fixní. Nevýhodou je, že není viditelný celý průběh světelné křivky. Naproti tomu je ale zřetelný tranzit.
+\end{itemize}
+
+\begin{multicols}{2}
+\img[1]{Globální pohled na tranzit Kepler-10~c}{img/global_view.png}
+\img[1]{Lokální pohled na tranzit Kepler-10~c}{img/local_view.png}
+\nasa
+\end{multicols}
+
+Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ sousedních bodů ($\alpha$ -- současný počet bodů, $\beta$ -- požadovaný počet bodů) jediným, který bude reprezentovat jejich medián. Pro potřeby neuronové sítě je nutno oba pohledy taktéž normalizovat tak, aby platilo $H~=~\left<1; -1\right>$. U~případů, které neuronová síť vyhodnotí jako planety, je možné pokračovat výpočtem dalších informací o~planetě.
 
 \subsubsection{Výpočet poloměru planety}
 
@@ -181,8 +220,7 @@ Hmotnost planety z tranzitní metody narozdíl od metody radiálních rychlostí
 \end{tabular}
 }
 
-{ % TODO
-\catcode`\-=12
+{
 \tab{Odhad hmotnosti planety z~trantizní metody}{
 	\begin{tabular}{|l|l|}
 		\hline	
@@ -224,7 +262,7 @@ Změna vlnové délky záření se projevuje jako horizontální posun barevnéh
 
 \subsubsection{Výpočet radiální rychlosti hvězdy}
 
-Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek záření hvězdy může dojít k~vypočítání změn radiální rychlosti v~čase. Lze tak učinit dle následujícího vzorce. Platí, že radiální rychlost je kladná, pokud se zdroj od pozorovatele vzdaluje a~záporná pokud se přibližuje.
+Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek záření hvězdy může dojít k~vypočítání změn radiální rychlosti v~čase. Lze tak učinit dle vzorce~3. Platí, že radiální rychlost je kladná, pokud se zdroj od pozorovatele vzdaluje a~záporná pokud se přibližuje.
 
 \formula{Radiální rychlost na základě změny vlnové délky} {v = c * \frac{\Delta\lambda}{\lambda_0}}{
 \begin{tabular}{lll}
@@ -332,12 +370,11 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 \subsection{Přímé zobrazení}
 \subsection{Pulsar timing}
 
-\section{Satelity hledající exoplanety}
-\subsection{Kepler}
-\subsubsection{Mise K2}
-\subsection{TESS}
-
 \section{Umělá inteligence}
+
+\subsection{Neuronová sít}
+
+\subsubsection{Konvoluční neuronová síť}
 
 \section{Použité technologie}
 
@@ -416,6 +453,11 @@ Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikac
 \img[1]{Stavy procesů a~přechody mezi nimi}{img/process_state.png}
 \draw
 
+\subsection{Neuronová síť}
+
+
+\img[1]{Trénovací množina}{img/train_set.png}
+
 \subsection{Databáze}
 
 \subsection{Datasety}
@@ -439,24 +481,17 @@ Informace o vlastnostech hvězd nejsou pro hledání exoplanet nutné, avšak pr
 
 Tyto datasety neobnáší žádné další složité výpočty, pouze jsou společně s dopočítanými údaji jednorázově uloženy do databáze. Základními údaji, které jsou pro každou hvězdu třeba, jsou (šedou barvou jsou dopočítané údaje):
 
-
-\begin{multicols}{3}
-\begin{itemize}
-\item Název,
-\item Rovníkový průměr,
-\item Hmotnost,
-\item Povrchová teplota,
-\item Zdánlivá magnituda,
-\item Vzdálenost od Země,
-\item Metalicita,
-\color{gray}
-\item Průměrná hustota,
-\item Spektrální typ,
-\item Povrchová gravitace,
-\item Absolutní magnituda,
-\item Obyvatelná zóna.
-\end{itemize}
-\end{multicols}
+\tab{Údaje o~hvězdách ukládané do databáze}{
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Název & Zdánlivá magnituda & Rovníkový průměr & \color{gray} Spektrální typ \\
+    \hline
+    Vzdálenost od Země & Hmotnost & \color{gray} Absolutní magnituda & \color{gray} Povrchová gravitace \\
+    \hline
+     Metalicita & Povrchová teplota & \color{gray} Průměrná hustota & \color{gray} Obyvatelná zóna \\
+    \hline
+    \end{tabular}
+}
 
 Aplikace je postavena flexibilně a~umožňuje libovolně namapovat sloupce z~datasetů do sloupců v~databázi. Datasety tak mohou mít pořadí i~názvy jednotlivých sloupců libovolné.
 
@@ -468,24 +503,52 @@ Datasety s~planetami nejsou pro běh aplikace taktéž nutné, protože vešker�
 \img[1]{Část datasetu s~vlastnostmi planet}{img/planet_properties.png}
 \footnotetext[1]{Dataset pochází ze stránek \url{https://exoplanetarchive.ipac.caltech.edu}.}
 
-Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nijak složitě zpracovávat, pouze uložit do databáze. Údaje o~planetě, které se v aplikaci ukládají jsou:
+Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nijak složitě zpracovávat, pouze uložit do databáze.
 
-\begin{multicols}{3}
-\begin{itemize}
-\item Název,
-\item Rovníkový průměr,
-\item Hmotnost,
-\item Průměrná hustota,
-\item Povrchová teplota,
-\item Velká poloosa,
-\item Perioda oběhu,
-\item Rychlost oběhu,
-\item Excentricita dráhy,
-\item Typ,
-\item Tranzit přes hvězdu,
-\item Podmínky pro život.
-\end{itemize}
-\end{multicols}
+\tab{Údaje o~planetách ukládané do databáze}{
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Název & Povrchová teplota & Excentricita dráhy & Rovníkový průměr \\
+    \hline
+    Velká poloosa & Typ & Hmotnost & Perioda oběhu \\
+    \hline
+    Tranzit přes hvězdu & Průměrná hustota & Rychlost oběhu & Podmínky pro život \\
+    \hline
+    \end{tabular}
+}
+
+\subsubsection{Názvy}
+
+Často se stává, že jedno a~to samé těleso je v~různých datasetech pod různým označením.
+
+{
+\tab{Pojmenování soustavy Kepler-10 v~různých katalozích TODO: Zdroj}{
+	\begin{tabular}{|l|l|l|l|}
+		\hline	
+		\rowcolor{lightgray}
+		Katalog & Účel & Označení Kepler-10 \\	
+		\hline	
+		KIC (\textbf{K}epler \textbf{I}nput \textbf{C}atalog) & Hledání exoplanet (Kepler) & KIC 11904151  \\
+		\hline	
+		KOI (\textbf{K}epler \textbf{O}bject of \textbf{I}nterest) & Výběr z~KIC & KOI-72  \\
+		\hline	
+		Kepler & Potvrzené exoplanety z~KOI & Kepler-10  \\
+		\hline	
+		2MASS (\textbf{2} \textbf{M}icron \textbf{A}ll-\textbf{S}ky \textbf{S}urvey) & Infra. průzkum oblohy & 2MASS J19024305+5014286  \\
+		\hline		
+		GSC (\textbf{G}uide \textbf{S}tar \textbf{C}atalog) & Pozorování hvězd (Hubble) & GSC 03549-00354  \\
+		\hline
+		Gaia DR (\textbf{G}aia \textbf{D}ata \textbf{R}elease) & Měření polohy hvězd (Gaia) & Gaia DR2 2132155017099178624 \\
+		\hline
+		USNO-B1.0 & Pozorování hvězd a~galaxií & USNO-B1.0 1402-00324696 \\
+		\hline
+		UCAC3 & Pozorování hvězd & UCAC3 281-142262 \\
+		\hline
+	\end{tabular}
+}
+\footnotetext[2]{Zdroj katalogů: \url{http://simbad.u-strasbg.fr/simbad/sim-id?Ident=Kepler-10}.}
+
+K~zamezení toho, aby byly tyto položky vedeny jako dvě různé soustavy je nutno aplikaci poskytnout informace o~používaných názvech jednotlivých objektů. Právě k~tomu slouží tento typ datasetů.
 
 \section{Rozvržení aplikace}
 
@@ -544,5 +607,10 @@ Wavelength \url{http://spiff.rit.edu/classes/phys240/lectures/expand/expand.html
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Seznam příloh}
 \section*{Seznam příloh}
+
+\noindent Příloha~A~~~~Architektura neuronové sítě \dotfill \pageref{priloha_a}
+
+\section*{Příloha~A -- Architektura neuron. sítě}\label{priloha_a}
+\includegraphics[width=\linewidth]{img/cnn.png}
 
 \end{document}

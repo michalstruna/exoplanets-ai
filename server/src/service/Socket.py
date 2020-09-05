@@ -133,13 +133,17 @@ class SocketService(metaclass=patterns.Singleton):
             "pop__items": -1
         }
         dataset = self.dataset_service.update(task["dataset_id"], updated)
-        star = self.star_service.get({"properties.name": task["item"]})
-        properties = {**task["solution"]["planets"][0], "processed": True}
-        
-        planet = {"properties": [properties], "status": PlanetStatus.CANDIDATE.value}
-        planet = self.planet_service.add(star["_id"], planet)
+        light_curve = task["solution"]["light_curve"]  # TODO: target_pixel
 
-        print(planet)  # TODO: Return value.
+        try:
+            star = self.star_service.get_by_name(task["item"])
+        except:
+            star = self.star_service.add({"light_curves": [light_curve]})
+
+        for transit in task["solution"]["transits"]:
+            properties = self.planet_service.complete_planet(star, {"name": "KIC a", "transit": transit, "dataset": dataset["name"], "processed": True})
+            planet = {"properties": [properties], "status": PlanetStatus.CANDIDATE.value}
+            planet = self.planet_service.add(star["_id"], planet)
 
     def _add_user(self, user_id):
         if user_id not in self.users:

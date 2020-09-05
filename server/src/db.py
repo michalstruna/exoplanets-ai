@@ -144,7 +144,7 @@ class StarType(EmbeddedDocument):
 
 
 class StarProperties(EmbeddedDocument):
-    name = StringField(required=True, max_length=50, unique=True)
+    name = StringField(required=True, max_length=50, unique=True, sparse=True)
     diameter = FloatField(min_value=0)
     mass = FloatField(min_value=0)
     density = FloatField(min_value=0)
@@ -164,6 +164,7 @@ class Transit(EmbeddedDocument):
     period = FloatField(min_value=0, required=True)
     duration = FloatField(min_value=0, required=True)
     depth = FloatField(min_value=0, max_value=1, required=True)
+    flux = ListField(FloatField())
 
 
 class PlanetProperties(EmbeddedDocument):
@@ -193,17 +194,19 @@ planet_dao = Dao(Planet, [{"$addFields": {"datasets": {"$size": "$properties"}}}
 
 
 class LightCurve(EmbeddedDocument):
+    name = StringField(required=True, max_length=50)
     dataset = ReferenceField(Dataset, required=True)
+    flux = ListField(FloatField(required=True), max_length=100)
     #planets = ListField(ReferenceField(Planet), required=True, default=[])
 
 
 class Star(Document):
     properties = ListField(EmbeddedDocumentField(StarProperties), default=[])
-    light_curve = ListField(EmbeddedDocumentField(LightCurve), default=[])
+    light_curves = ListField(EmbeddedDocumentField(LightCurve), default=[])
     planets = EmbeddedDocumentListField(Planet, default=[])
 
     meta = {
-        "indexes": ["properties.name"]
+        "indexes": ["properties.name", "planets.properties.name", "light_curves.name"]
     }
 
 

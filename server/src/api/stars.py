@@ -7,19 +7,23 @@ from .planets import planet
 
 
 def map_props(prop):
+
     if prop.startswith("planet_"):
         prop = prop[7:]
 
         if prop in ["diameter", "mass", "density", "surface_temperature", "semi_major_axis", "orbital_period", "transit_depth", "surface_gravity", "orbital_velocity"]:
             return f"planets.properties.{prop}", float
 
-        if prop in ["life_conditions", "status"]:
+        if prop in ["life_conditions", "status", "type"]:
             return f"planets.properties.{prop}", str
     else:
         if prop in ["spectral_class", "luminosity_class"]:
             return f"properties.type.{prop}", str
 
-        if prop in ["type", "name", "life_conditions", "semi_major_axis", "transit_depth", "distance", "dataset"]:
+        if prop == "name":
+            return [f"properties.{prop}", f"light_curves.{prop}"], str
+
+        if prop in ["type", "life_conditions", "semi_major_axis", "transit_depth", "distance", "dataset"]:
             return f"properties.{prop}", str
 
         if prop in ["diameter", "mass", "density", "surface_temperature", "distance", "luminosity", "transit_depth", "planets", "surface_gravity", "absolute_magnitude", "apparent_magnitude", "metallicity", "datasets"]:
@@ -55,14 +59,16 @@ star_properties = api.ns.inherit("StarProperties", new_star, {
 })
 
 light_curve = api.ns.model("LightCurve", {
+    "name": fields.String(required=True, max_length=50, description="Name of star within dataset."),
+    "flux": fields.List(fields.Float(required=True), max_items=100, description="Preview of light curve."),
     "dataset": fields.String(required=True, max_length=50, description="Name of dataset from which light curve originates."),
-    "planets": fields.List(fields.Nested(planet), required=True)
+    #"planets": fields.List(fields.Nested(planet), required=True)
 })
 
 star = api.ns.model("Star", {
     "_id": fields.String(requred=True, description="Star unique identifier."),
     "properties": fields.List(fields.Nested(star_properties), required=True, default=[]),
-    "light_curve": fields.List(fields.Nested(light_curve), required=True, default=[]),
+    "light_curves": fields.List(fields.Nested(light_curve), required=True, default=[]),
     "planets": fields.List(fields.Nested(planet), default=[]),
     "index": fields.Integer(min=1)
 })
