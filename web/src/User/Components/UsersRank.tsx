@@ -27,6 +27,8 @@ const Title = Styled(MinorSectionTitle)`
     align-items: center;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 0;
+    padding: 1rem;
     
     select {
         font-size: 80%;

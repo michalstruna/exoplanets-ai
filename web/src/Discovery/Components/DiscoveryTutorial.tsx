@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 import { Color, image, size } from '../../Style'
 import { useStrings } from '../../Data'
 import { Link } from '../../Routing'
-import { PageTitle } from '../../Layout'
+import { PageTitle, SectionTitle } from '../../Layout'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -41,7 +41,8 @@ const Transition = Styled.div`
     transform: scaleX(0.5);
 `
 
-const Title = Styled.h2`
+const Title = Styled(PageTitle)`
+    font-size: 140%;
     margin-bottom: 2rem;
 `
 
@@ -56,9 +57,9 @@ const DiscoveryTutorial = ({ ...props }: Props) => {
         strings.steps.map((step: any, i: number) => (
             <React.Fragment key={i}>
                 <Block style={{ backgroundImage: `url(/img/Discovery/Tutorial/${step.icon})` }} pathname={step.download && DOWNLOAD_URL}>
-                    <PageTitle>
+                    <SectionTitle>
                         {step.title}
-                    </PageTitle>
+                    </SectionTitle>
                 </Block>
                 {i < strings.steps.length - 1 && <Transition />}
             </React.Fragment>

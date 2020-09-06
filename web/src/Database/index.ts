@@ -8,8 +8,9 @@ export * from './Redux/Selectors'
 /**
  * Views.
  */
-export { default as DatabaseView } from './Views/DatabaseView'
 export { default as OverviewView } from './Views/OverviewView'
+export { default as DatabaseView } from './Views/DatabaseView'
+export { default as SystemView } from './Views/SystemView'
 
 /**
  * Constants.
