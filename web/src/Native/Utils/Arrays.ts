@@ -49,3 +49,14 @@ export const update = <T>(array: T[], condition: Validator.BiPredicate<T, number
         }
     }
 }
+
+export const getNthExtreme = (arr: number[], extreme: Math['max'] | Math['min'], nth: number): number => {
+    let tmp = [...arr]
+
+    for (let i = 0; i < nth - 1; i++) {
+        const val = extreme(...tmp)
+        tmp.splice(tmp.indexOf(val), 1)
+    }
+
+    return extreme(...tmp)
+}

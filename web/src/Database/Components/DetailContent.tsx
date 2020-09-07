@@ -23,7 +23,6 @@ const Nav = Styled.nav`
 
     & > div {
         margin-left: 0;
-        padding: 0.5rem;
     }
 `
 
@@ -36,7 +35,8 @@ const Item = Styled.div`
 `
 
 const ItemButton = Styled.button`
-
+    box-sizing: border-box;
+    padding: 0 0.5rem;
 `
 
 const Title = Styled.h4`

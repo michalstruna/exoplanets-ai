@@ -200,7 +200,7 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                             { name: 'surface_temperature', unit: 'K', multi: 'properties' },
                             { name: 'distance', unit: 'ly', multi: 'properties' },
                             { name: 'luminosity', unit: '☉', multi: 'properties' },
-                            { name: 'transit_depth', format: (_, item) => <MiniGraph data={item.light_curves[0].flux} color='#FAA' />, title: <Colored color='#FAA'>{strings.properties.lightCurve}</Colored>, width: '20rem' },
+                            { name: 'transit_depth', format: (_, item) => item.light_curves[0] && <MiniGraph data={item.light_curves[0].flux} color='#FAA' />, title: <Colored color='#FAA'>{strings.properties.lightCurve}</Colored>, width: '20rem' },
                             { name: 'planets', format: (val, item) => item.planets.length },
                             { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
                             { name: 'absolute_magnitude', format: Numbers.format, multi: 'properties' },

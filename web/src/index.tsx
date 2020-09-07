@@ -22,7 +22,7 @@ ReactDOM.render(
                     <Route path={Url.DATABASE + `/:table(${Object.values(DbTable).join('|')})`} component={DatabaseView} />
                     <Redirect path={Url.DATABASE + '/:table?'} to={{ pathname: Url.DATABASE + '/' + DbTable.BODIES}} />
 
-                    <Route path={Url.SYSTEM + '/:systemName'} component={SystemView} />
+                    <Route path={Url.SYSTEM + '/:system'} component={SystemView} />
                     <Redirect path={Url.SYSTEM} to={{ pathname: Url.DATABASE }} />
 
                     <Route path={Url.DISCOVERY} component={DiscoveryView} />

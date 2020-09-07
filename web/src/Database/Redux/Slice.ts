@@ -14,6 +14,7 @@ const slice = Redux.slice(
         filter: Redux.empty<FilterData>({}),
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),
+        system: Redux.async<Star>(),
         usersRank: 0
     },
     ({ async, set }) => ({
@@ -39,9 +40,10 @@ const slice = Redux.slice(
         }),
         getStars: async<Cursor, Star[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
         getPlanets: async<Cursor, Planet[]>('planets', cursor => Requests.get('planets', undefined, cursor)),
-        getDatasets: async<Cursor, Dataset[]>('datasets', cursor => Requests.get(`datasets`, undefined, cursor))
+        getDatasets: async<Cursor, Dataset[]>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
+        getSystem: async<string, Star>('system', name => Requests.get(`stars/name/${name}`))
     })
 )
 
 export default slice.reducer
-export const { setFilter, setSort, setSegment, getStars, getDatasets, getPlanets } = slice.actions
+export const { setFilter, setSort, setSegment, getStars, getDatasets, getPlanets, getSystem } = slice.actions

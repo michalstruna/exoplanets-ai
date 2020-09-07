@@ -54,7 +54,8 @@ const Item = Styled.div<ItemProps>`
 `
 
 const ItemHeader = Styled(MinorSectionTitle)`
-
+    margin: 0;
+    padding: 1rem;
 `
 
 const ItemContent = Styled.div`
