@@ -83,7 +83,7 @@ const SizeVisualization = ({ systems, ...props }: Props) => {
         const ratio = 200 / minSize
 
         return systems.map((system, i) => (
-            <System>
+            <System key={i}>
                 {system.map((body, j) => {
                     const size = body.size * ratio
 

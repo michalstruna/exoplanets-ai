@@ -10,11 +10,14 @@ type ItemData = {
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     sections: ItemData[]
+    title?: string
 }
 
 const Root = Styled.div`
     background-color: ${Color.BACKGROUND};
     flex: 0 0 15rem;
+    left: 0;
+    position: sticky;
 `
 
 const Nav = Styled.nav`
@@ -45,7 +48,7 @@ const Title = Styled.h4`
     padding: 1rem 0.5rem;
 `
 
-const DetailContent = ({ sections, ...props }: Props) => {
+const DetailContent = ({ title, sections, ...props }: Props) => {
 
     const memoSections = React.useMemo(() => {
         const renderLevel = (level: ItemData[]) => (
@@ -68,7 +71,7 @@ const DetailContent = ({ sections, ...props }: Props) => {
         <Root {...props}>
             <Nav>
                 <Title>
-                    Obsah
+                    {title}
                 </Title>
                 {memoSections}
             </Nav>

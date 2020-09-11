@@ -6,9 +6,13 @@ import { MinorSectionTitle, PageTitle, SectionTitle, Tags } from '../../Layout'
 import SizeVisualization from '../Components/SizeVisualization'
 import DistanceVisualization from '../Components/DistanceVisualization'
 import { Async } from '../../Async'
-import { useSystem, getSystem } from '..'
+import { useSystem, getSystem, Value } from '..'
 import useRouter from 'use-react-router'
-import { Planet } from '../types'
+import { PlanetData } from '../types'
+import { useStrings } from '../../Data'
+import { MiniGraph } from '../../Stats'
+import ItemPreview from '../Components/ItemPreview'
+import SkyMap from '../Components/SkyMap'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -26,8 +30,11 @@ const Main = Styled.main`
     padding-top: 1.5rem;
 `
 
+const MainLeft = Styled.div`
+    width: 60rem;
+`
+
 const Title = Styled(PageTitle)`
-    
 `
 
 const Subtitle = Styled(SectionTitle)`
@@ -38,23 +45,114 @@ const Subsubtitle = Styled(MinorSectionTitle)`
 
 `
 
+const Table = Styled.table`
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-collapse: collapse;
+    margin: 1rem 0;
+    table-layout: fixed;
+    width: 20rem;
+    
+    tr {
+        &:nth-of-type(2n + 1) td:nth-of-type(2n + 1) {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        &:nth-of-type(2n) td:nth-of-type(2n) {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    td, th {
+        padding: 0.75rem 1rem;
+        width: 50%;
+    
+        &:nth-of-type(2n + 1) {
+            text-align: right;
+        }
+    }
+    
+    th {
+        background-color: rgba(0, 0, 0, 0.15);
+        text-align: center !important;
+    }
+`
+
+const HTable = Styled.table`
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-collapse: collapse;
+    margin: 1rem 0;
+    table-layout: fixed;
+    width: 100%;
+    
+    td, th {
+        box-sizing: border-box;
+        padding: 0.75rem 1rem;
+        width: calc(100% / 6);
+    }
+    
+    th {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+    tr {
+        &:nth-of-type(2n) {
+            background-color: rgba(0, 0, 0, 0.1);
+        
+            td:nth-of-type(2n + 1) {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+        }
+        
+        &:nth-of-type(2n + 1) {
+            td:nth-of-type(2n + 1) {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+        }
+    }
+`
+
+const Horizontal = Styled.div`
+    display: flex;
+    overflow: hidden;
+    padding: 1rem 0;
+    
+    & > * {
+        margin-right: 2rem;
+        
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+`
+
+const CenteredHorizontal = Styled(Horizontal)`
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0;
+`
+
 const SystemView = ({ ...props }: Props) => {
 
     const systemName = useRouter<any>().match.params.system
     const system = useSystem()
+    const strings = useStrings().system
 
     return (
         <Async
             data={[system, () => getSystem(systemName), [systemName]]}
             success={() => (
                 <Root {...props}>
-                    <DetailContent sections={[
-                        { name: 'xx', text: 'Souhrn' },
-                        { name: '', text: 'Hvězda' },
+                    <DetailContent title='Kepler-10' sections={[
+                        {
+                            name: '', text: 'Pozorování', children: [
+                                { name: '', text: 'Světelná křivka (0)' },
+                                { name: '', text: 'Radiální rychlost (0)' }
+                            ]
+                        },
                         {
                             name: '',
-                            text: 'Planety',
-                            children: system.payload.planets.map((planet: Planet) => ({
+                            text: strings.planets + ' (' + system.payload.planets.length + ')',
+                            children: system.payload.planets.map((planet: PlanetData) => ({
                                 name: planet.properties[0].name,
                                 text: planet.properties[0].name
                             }))
@@ -70,26 +168,159 @@ const SystemView = ({ ...props }: Props) => {
                         { name: '', text: 'Aktivity' }
                     ]} />
                     <Main>
-                        <Title>
-                            Kepler-10
-                        </Title>
-                        <Tags items={[
-                            { text: 'KIC 11904151' },
-                            { text: 'KOI-72' },
-                            { text: '2MASS J19024305+5014286' },
-                            { text: 'Gaia DR2 2132155017099178624' }
-                        ]} />
-                        <Subtitle>
-                            Hvězda
-                        </Subtitle>
-                        <Subtitle>
-                            Planety
-                        </Subtitle>
-                        {system.payload.planets.map((planet: Planet, i: number) => (
-                            <Subsubtitle key={i}>
-                                {planet.properties[0].name}
-                            </Subsubtitle>
-                        ))}
+                        <CenteredHorizontal>
+                            <ItemPreview.Star item={system.payload} titleComponent={Title} />
+                            <Tags items={Value.Star.names(system.payload, name => ({ text: name }))} />
+                        </CenteredHorizontal>
+
+                        <Horizontal style={{ paddingTop: 0 }}>
+                            <MainLeft>
+                                <Horizontal>
+                                    <SkyMap />
+                                </Horizontal>
+                                <Subtitle>
+                                    Pozorování
+                                </Subtitle>
+                                <Subsubtitle>
+                                    Světelná křivka (0)
+                                </Subsubtitle>
+                                <Subsubtitle>
+                                    Radiální rychlost (0)
+                                </Subsubtitle>
+                                <Subtitle>
+                                    {strings.planets} ({system.payload.planets.length})
+                                </Subtitle>
+                                {system.payload.planets.map((planet: PlanetData, i: number) => (
+                                    <>
+                                        <CenteredHorizontal>
+                                            <ItemPreview.Planet item={planet} titleComponent={Subsubtitle} />
+                                            <Tags items={Value.Star.names(system.payload, name => ({ text: name }))} />
+                                        </CenteredHorizontal>
+                                        <HTable>
+                                            <tbody>
+                                                <tr>
+                                                    <th colSpan={2}>Hmota</th>
+                                                    <th colSpan={2}>Dráha</th>
+                                                    <th colSpan={2}>Ostatní</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>Průměr</td>
+                                                    <td>12 756</td>
+                                                    <td>Perioda oběhu</td>
+                                                    <td>12 756</td>
+                                                    <td>Život</td>
+                                                    <td>12 756</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Hmotnost</td>
+                                                    <td>12 756</td>
+                                                    <td>Velká poloosa</td>
+                                                    <td>12 756</td>
+                                                    <td>Teplota</td>
+                                                    <td>12 756</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Hustota</td>
+                                                    <td>12 756</td>
+                                                    <td>Rychlost oběhu</td>
+                                                    <td>12 756</td>
+                                                    <td>Status</td>
+                                                    <td>12 756</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Gravitace</td>
+                                                    <td>12 756</td>
+                                                    <td>Excentricita</td>
+                                                    <td>12 756</td>
+                                                    <td>Hmotnost</td>
+                                                    <td>12 756</td>
+                                                </tr>
+                                            </tbody>
+                                        </HTable>
+                                        <Horizontal>
+                                            <MiniGraph data={planet.properties[0].transit!.flux} color='#AFA'
+                                                       width={390} height={200} />
+                                            <MiniGraph data={planet.properties[0].transit!.flux} color='#AFA'
+                                                       width={390} height={200} />
+                                        </Horizontal>
+                                    </>
+                                ))}
+                            </MainLeft>
+
+                            <Table>
+                                <tbody>
+                                    <tr>
+                                        <th colSpan={2}>Poloha</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Vzdálenost</td>
+                                        <td>3.26 ly</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Deklinace</td>
+                                        <td>11.23</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rehtascenze</td>
+                                        <td>4.12</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Souhvězdí</td>
+                                        <td>Orion</td>
+                                    </tr>
+                                    <tr>
+                                        <th colSpan={2}>Povrch</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Teplota</td>
+                                        <td>5600 K</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Zdánl. mag.</td>
+                                        <td>11.23</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Abs. mag.</td>
+                                        <td>4.12</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Zářivý výkon</td>
+                                        <td>10e6 O</td>
+                                    </tr>
+                                    <tr>
+                                        <th colSpan={2}>Hmota</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Průměr</td>
+                                        <td>1.28 O<br />1.56 O<br />1.22 O</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hmotnost</td>
+                                        <td>2.56 O</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hustota</td>
+                                        <td>0.56 O</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gravitace</td>
+                                        <td>222 m/s<sup>2</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <th colSpan={2}>Ostatní</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Metalicita</td>
+                                        <td>0.04</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stáří</td>
+                                        <td>4.26 mld. let</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+
+                        </Horizontal>
                         <Subtitle>
                             Vizualizace
                         </Subtitle>
@@ -98,7 +329,11 @@ const SystemView = ({ ...props }: Props) => {
                         </Subsubtitle>
                         <SizeVisualization systems={[
                             [
-                                { name: 'Slunce', size: 1392684, image: '/img/Database/Star/F.svg' },
+                                {
+                                    name: 'Slunce',
+                                    size: 1392684,
+                                    image: 'https://www.clker.com/cliparts/W/i/K/w/1/D/glossy-orange-circle-icon-md.png'
+                                },
                                 { name: 'Merkur', size: 4879, image: '/img/System/Size/Mercury.png' },
                                 { name: 'Venuše', size: 12104, image: '/img/System/Size/Venus.png' },
                                 { name: 'Země', size: 12756, image: '/img/System/Size/Earth.png' },
@@ -110,8 +345,12 @@ const SystemView = ({ ...props }: Props) => {
                                 { name: 'Pluto', size: 2376, image: '/img/System/Size/Pluto.png' }
                             ],
                             [
-                                { name: 'Kepler-10', size: 162147, image: '/img/Database/Star/F.svg' },
-                                ...system.payload.planets.map((planet: Planet) => ({
+                                {
+                                    name: 'Kepler-10',
+                                    size: 162147,
+                                    image: 'https://www.clker.com/cliparts/W/i/K/w/1/D/glossy-orange-circle-icon-md.png'
+                                },
+                                ...system.payload.planets.map((planet: PlanetData) => ({
                                     name: planet.properties[0].name,
                                     size: Math.random() * 10e4,
                                     image: '/img/System/Size/Mercury.png'
@@ -135,14 +374,14 @@ const SystemView = ({ ...props }: Props) => {
                             ],
                             [
                                 { name: 'Kepler-10', distance: 0, size: 162147 },
-                                ...system.payload.planets.map((planet: Planet) => ({
+                                ...system.payload.planets.map((planet: PlanetData) => ({
                                     name: planet.properties[0].name,
-                                    distance: Math.random() * 10e9
+                                    distance: Math.random() * 10e7
                                 }))
                             ]
                         ]} lifeZones={[
-                            { from: 100e6, to: 230e6 },
-                            { from: 100e6, to: 230e6 }
+                            { from: 90e6, to: 250e6 },
+                            { from: 90e6, to: 250e6 }
                         ]} />
                         <Subsubtitle>
                             Interaktivní model

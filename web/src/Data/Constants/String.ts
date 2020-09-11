@@ -170,6 +170,10 @@ export default {
         }
     },
 
+    system: {
+        planets: { [CS]: 'Planety', [EN]: 'Planets' }
+    },
+
     stats: {
         topLevelStats: {
             units: {

@@ -1,20 +1,20 @@
 import { Query } from '../../Routing'
 import { Redux,  FilterData, Sort, Segment, Cursor } from '../../Data'
 import { Requests } from '../../Async'
-import { Dataset, Star, Planet } from '../types'
+import { Dataset, StarData, PlanetData } from '../types'
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
 
 const slice = Redux.slice(
     'database',
     {
-        stars: Redux.async<Star[]>(),
-        planets: Redux.async<Planet[]>(),
+        stars: Redux.async<StarData[]>(),
+        planets: Redux.async<PlanetData[]>(),
         datasets: Redux.async<Dataset[]>(),
         filter: Redux.empty<FilterData>({}),
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),
-        system: Redux.async<Star>(),
+        system: Redux.async<StarData>(),
         usersRank: 0
     },
     ({ async, set }) => ({
@@ -38,10 +38,10 @@ const slice = Redux.slice(
                 isAsc: [Query.SORT_IS_ASC, [false, true]]
             })
         }),
-        getStars: async<Cursor, Star[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
-        getPlanets: async<Cursor, Planet[]>('planets', cursor => Requests.get('planets', undefined, cursor)),
+        getStars: async<Cursor, StarData[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
+        getPlanets: async<Cursor, PlanetData[]>('planets', cursor => Requests.get('planets', undefined, cursor)),
         getDatasets: async<Cursor, Dataset[]>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
-        getSystem: async<string, Star>('system', name => Requests.get(`stars/name/${name}`))
+        getSystem: async<string, StarData>('system', name => Requests.get(`stars/name/${name}`))
     })
 )
 

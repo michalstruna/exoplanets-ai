@@ -38,4 +38,6 @@ const Tags = ({ items, ...props }: Props) => {
 
 }
 
+Tags.Root = Root
+
 export default Tags

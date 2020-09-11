@@ -14,7 +14,7 @@ export const SectionTitle = Styled.h2`
 
 export const MinorSectionTitle = Styled.h3`
     box-sizing: border-box;
-    font-size: 110%;
+    font-size: 120%;
     font-weight: bold;
     margin: 0;
     margin-bottom: 0.5rem;

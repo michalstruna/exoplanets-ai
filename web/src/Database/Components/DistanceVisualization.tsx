@@ -55,9 +55,15 @@ const BodyName = Styled.p`
     white-space: nowrap;
 `
 
-const LifeZone = Styled(Orbit)`
-    border: 1px solid ${Color.GREEN};
-    opacity: 0.3;
+interface LifeZoneProps {
+    thickness: number
+    radius: number
+}
+
+const LifeZone = Styled(Orbit)<LifeZoneProps>`  
+    ${props => size(props.radius + 'px')}
+    background-image: radial-gradient(farthest-side, transparent calc(100% - ${props => props.thickness / 2}px), green, transparent 100%);
+    opacity: 0.5;
     z-index: 0;
 `
 
@@ -66,39 +72,42 @@ const getMinDistance = (systems: Item[][]) => {
     return Arrays.getNthExtreme(distances, Math.min, 3)
 }
 
+const getMaxDistance = (systems: Item[][]) => {
+    return Arrays.getNthExtreme(systems[1].map(system => system.distance), Math.max, 2)
+}
+
 const DistanceVisualization = ({ systems, lifeZones, ...props }: Props) => {
 
     const memo = React.useMemo(() => {
         const minDistance = getMinDistance(systems)
-        const ratio = 50 / minDistance
+        const maxDistance = getMaxDistance(systems)
+        const ratio = Math.min(50 / minDistance, window.screen.width * 0.67 / maxDistance)
 
         return systems.map((system, i) => (
-            <System>
+            <System key={i}>
                 <InnerSystem>
+                    {lifeZones && lifeZones[i] && (
+                        <LifeZone
+                            thickness={Math.round(ratio * (lifeZones[i].to - lifeZones[i].from))}
+                            radius={Math.round(ratio * lifeZones[i].to)} />
+                    )}
                     {system.map((body, j) => {
                         const distance = (body.distance || body.size!) * ratio
 
                         return (
-                                <Orbit style={{
-                                    backgroundColor: body.distance ? undefined : 'yellow',
-                                    border: body.distance ? `1px solid ${Color.LIGHTEST}` : undefined,
-                                    height: distance,
-                                    width: distance
-                                }} key={j}>
-                                    <BodyName
-                                        style={{ transform: `translateY(-50%) translateY(${j}rem)` }}>
-                                        {body.name}
-                                    </BodyName>
-                                </Orbit>
+                            <Orbit style={{
+                                backgroundColor: body.distance ? undefined : 'yellow',
+                                border: body.distance ? `1px solid ${Color.LIGHTEST}` : undefined,
+                                height: distance,
+                                width: distance
+                            }} key={j}>
+                                <BodyName
+                                    style={{ transform: `translateY(-50%) translateY(${j - 1}rem)` }}>
+                                    {body.name}
+                                </BodyName>
+                            </Orbit>
                         )
                     })}
-                    {lifeZones && lifeZones[i] && (
-                        <LifeZone style={{
-                            width: ratio * lifeZones[i].from,
-                            height: ratio * lifeZones[i].from,
-                            borderWidth: ratio * (lifeZones[i].to - lifeZones[i].from)
-                        }} />
-                    )}
                 </InnerSystem>
             </System>
         ))

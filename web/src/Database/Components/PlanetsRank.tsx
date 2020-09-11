@@ -23,7 +23,7 @@ const planets = [
 ]
 
 //const icons = ['https://lh5.ggpht.com/DDMIxegFhINdUiET3ZRNj1KQevPoPFSrczPIxUQq-DEwci4rIW3yQNyP3PzV3lYyUxo=h300', 'https://www.pngkey.com/png/full/178-1788085_wip-new-planet-textures-space-pendant-gas-giant.png']
-const icons = ['Database/Planet/Terrestrial.png', 'Database/Planet/Gas.png']
+const icons = ['Database/PlanetData/Terrestrial.png', 'Database/PlanetData/Gas.png']
 
 const PlanetsRank = ({ ...props }: Props) => {
 
