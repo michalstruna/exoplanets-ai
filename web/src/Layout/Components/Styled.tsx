@@ -3,15 +3,22 @@ import Styled from 'styled-components'
 import { Color, Duration } from '../../Style'
 
 export const PageTitle = Styled.h1`
-    font-size: 150%;
+    font-size: 180%;
+    margin-bottom: 1rem;
 `
 
-export const MinorSectionTitle = Styled.h2`
+export const SectionTitle = Styled.h2`
+    font-size: 150%;
+    margin-bottom: 0.75rem;
+`
+
+export const MinorSectionTitle = Styled.h3`
     box-sizing: border-box;
-    font-size: 110%;
+    font-size: 120%;
     font-weight: bold;
     margin: 0;
-    padding: 1rem;
+    margin-bottom: 0.5rem;
+    padding: 1rem 0;
     width: 100%;
     white-space: nowrap;
 `

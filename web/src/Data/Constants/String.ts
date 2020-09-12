@@ -170,6 +170,20 @@ export default {
         }
     },
 
+    system: {
+        content: { [CS]: 'Obsah', [EN]: 'Content' },
+        observations: { [CS]: 'Pozorování', [EN]: 'Observations' },
+        lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
+        radialVelocity: { [CS]: 'Radiální rychlost', [EN]: 'Radial velocity' },
+        planets: { [CS]: 'Planety', [EN]: 'Planets' },
+        visualization: { [CS]: 'Vizualizace', [EN]: 'Visualization' },
+        sizes: { [CS]: 'Velikosti', [EN]: 'Sizes' },
+        distances: { [CS]: 'Vzdálenosti', [EN]: 'Distances' },
+        model: { [CS]: 'Interaktivní model', [EN]: 'Interactive model' },
+        references: { [CS]: 'Reference', [EN]: 'References' },
+        activities: { [CS]: 'Aktivity', [EN]: 'Activities' }
+    },
+
     stats: {
         topLevelStats: {
             units: {

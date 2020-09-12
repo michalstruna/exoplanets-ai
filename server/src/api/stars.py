@@ -77,6 +77,15 @@ star = api.ns.model("Star", {
 star_service = StarService()
 
 
+@api.ns.route("/name/<string:name>")
+class StarByName(Resource):
+
+    @api.ns.marshal_with(star, description="Sucessfully get star by name,")
+    @api.ns.response(404, "Star with specified name was not found.")
+    def get(self, name):
+        return star_service.get_by_name(name)
+
+
 @api.ns.route("/<string:starId>/merge/<string:targetId>")
 class MergePlanets(Resource):
 

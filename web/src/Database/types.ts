@@ -26,7 +26,7 @@ export interface PlanetProperties {
     processed: boolean
 }
 
-export interface Planet {
+export interface PlanetData {
     properties: PlanetProperties[]
 }
 
@@ -45,7 +45,7 @@ export interface StarProperties {
         luminosity_class?: LuminosityClass
         luminosity_subclass?: LuminositySubclass
     }
-    planets?: Planet[]
+    planets?: PlanetData[]
     distance?: number
 }
 
@@ -55,10 +55,10 @@ export interface LightCurve {
     dataset: string
 }
 
-export interface Star {
+export interface StarData {
     properties: StarProperties[]
     light_curves: LightCurve[]
-    planets: Planet[]
+    planets: PlanetData[]
 }
 
 export type Dataset = {
@@ -77,3 +77,5 @@ export type SegmentData<T> = {
     items: T[]
     count: number
 }
+
+export type RefItem = Dataset

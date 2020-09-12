@@ -8,6 +8,7 @@ export { default as Log } from './Components/Log'
 export { default as Fraction } from './Components/Fraction'
 export { default as ProgressBar } from './Components/ProgressBar'
 export * from './Components/Styled'
+export { default as Tags } from './Components/Tags'
 
 export { default as Reducer } from './Redux/Slice'
 export * from './Redux/Slice'
