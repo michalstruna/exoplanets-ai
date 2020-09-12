@@ -13,6 +13,7 @@ import { useStrings } from '../../Data'
 import { MiniGraph } from '../../Stats'
 import ItemPreview from '../Components/ItemPreview'
 import SkyMap from '../Components/SkyMap'
+import References from '../Components/References'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -111,6 +112,20 @@ const HTable = Styled.table`
     }
 `
 
+const History = Styled.div`
+    overflow-y: scroll;
+    max-height: 20rem;
+    max-width: 60rem;
+    
+    th, td {
+        padding: 0.25rem 0.5rem;
+    }
+    
+    table {
+        margin: 0;   
+    }
+`
+
 const Horizontal = Styled.div`
     display: flex;
     overflow: hidden;
@@ -142,11 +157,12 @@ const SystemView = ({ ...props }: Props) => {
             data={[system, () => getSystem(systemName), [systemName]]}
             success={() => (
                 <Root {...props}>
-                    <DetailContent title='Kepler-10' sections={[
+                    <DetailContent title={strings.content} sections={[
+                        { name: 'top', text: (Value.Star.name(system.payload) || '') },
                         {
-                            name: '', text: 'Pozorování', children: [
-                                { name: '', text: 'Světelná křivka (0)' },
-                                { name: '', text: 'Radiální rychlost (0)' }
+                            name: '', text: strings.observations, children: [
+                                { name: '', text: strings.lightCurve + ' (0)' },
+                                { name: '', text: strings.radialVelocity + ' (0)' }
                             ]
                         },
                         {
@@ -158,14 +174,14 @@ const SystemView = ({ ...props }: Props) => {
                             }))
                         },
                         {
-                            name: '', text: 'Vizualizace', children: [
-                                { name: '', text: 'Velikosti' },
-                                { name: '', text: 'Vzdálenosti' },
-                                { name: '', text: 'Interaktivní model' }
+                            name: '', text: strings.visualization, children: [
+                                { name: '', text: strings.sizes },
+                                { name: '', text: strings.distances },
+                                { name: '', text: strings.model }
                             ]
                         },
-                        { name: '', text: 'Reference' },
-                        { name: '', text: 'Aktivity' }
+                        { name: '', text: strings.references },
+                        { name: '', text: strings.activities }
                     ]} />
                     <Main>
                         <CenteredHorizontal>
@@ -198,43 +214,43 @@ const SystemView = ({ ...props }: Props) => {
                                         </CenteredHorizontal>
                                         <HTable>
                                             <tbody>
-                                                <tr>
-                                                    <th colSpan={2}>Hmota</th>
-                                                    <th colSpan={2}>Dráha</th>
-                                                    <th colSpan={2}>Ostatní</th>
-                                                </tr>
-                                                <tr>
-                                                    <td>Průměr</td>
-                                                    <td>12 756</td>
-                                                    <td>Perioda oběhu</td>
-                                                    <td>12 756</td>
-                                                    <td>Život</td>
-                                                    <td>12 756</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Hmotnost</td>
-                                                    <td>12 756</td>
-                                                    <td>Velká poloosa</td>
-                                                    <td>12 756</td>
-                                                    <td>Teplota</td>
-                                                    <td>12 756</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Hustota</td>
-                                                    <td>12 756</td>
-                                                    <td>Rychlost oběhu</td>
-                                                    <td>12 756</td>
-                                                    <td>Status</td>
-                                                    <td>12 756</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Gravitace</td>
-                                                    <td>12 756</td>
-                                                    <td>Excentricita</td>
-                                                    <td>12 756</td>
-                                                    <td>Hmotnost</td>
-                                                    <td>12 756</td>
-                                                </tr>
+                                            <tr>
+                                                <th colSpan={2}>Hmota</th>
+                                                <th colSpan={2}>Dráha</th>
+                                                <th colSpan={2}>Ostatní</th>
+                                            </tr>
+                                            <tr>
+                                                <td>Průměr</td>
+                                                <td>12 756</td>
+                                                <td>Perioda oběhu</td>
+                                                <td>12 756</td>
+                                                <td>Život</td>
+                                                <td>12 756</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Hmotnost</td>
+                                                <td>12 756</td>
+                                                <td>Velká poloosa</td>
+                                                <td>12 756</td>
+                                                <td>Teplota</td>
+                                                <td>12 756</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Hustota</td>
+                                                <td>12 756</td>
+                                                <td>Rychlost oběhu</td>
+                                                <td>12 756</td>
+                                                <td>Status</td>
+                                                <td>12 756</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Gravitace</td>
+                                                <td>12 756</td>
+                                                <td>Excentricita</td>
+                                                <td>12 756</td>
+                                                <td>Hmotnost</td>
+                                                <td>12 756</td>
+                                            </tr>
                                             </tbody>
                                         </HTable>
                                         <Horizontal>
@@ -249,74 +265,74 @@ const SystemView = ({ ...props }: Props) => {
 
                             <Table>
                                 <tbody>
-                                    <tr>
-                                        <th colSpan={2}>Poloha</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Vzdálenost</td>
-                                        <td>3.26 ly</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Deklinace</td>
-                                        <td>11.23</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Rehtascenze</td>
-                                        <td>4.12</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Souhvězdí</td>
-                                        <td>Orion</td>
-                                    </tr>
-                                    <tr>
-                                        <th colSpan={2}>Povrch</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Teplota</td>
-                                        <td>5600 K</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Zdánl. mag.</td>
-                                        <td>11.23</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Abs. mag.</td>
-                                        <td>4.12</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Zářivý výkon</td>
-                                        <td>10e6 O</td>
-                                    </tr>
-                                    <tr>
-                                        <th colSpan={2}>Hmota</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Průměr</td>
-                                        <td>1.28 O<br />1.56 O<br />1.22 O</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Hmotnost</td>
-                                        <td>2.56 O</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Hustota</td>
-                                        <td>0.56 O</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gravitace</td>
-                                        <td>222 m/s<sup>2</sup></td>
-                                    </tr>
-                                    <tr>
-                                        <th colSpan={2}>Ostatní</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Metalicita</td>
-                                        <td>0.04</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Stáří</td>
-                                        <td>4.26 mld. let</td>
-                                    </tr>
+                                <tr>
+                                    <th colSpan={2}>Poloha</th>
+                                </tr>
+                                <tr>
+                                    <td>Vzdálenost</td>
+                                    <td>3.26 ly</td>
+                                </tr>
+                                <tr>
+                                    <td>Deklinace</td>
+                                    <td>11.23</td>
+                                </tr>
+                                <tr>
+                                    <td>Rehtascenze</td>
+                                    <td>4.12</td>
+                                </tr>
+                                <tr>
+                                    <td>Souhvězdí</td>
+                                    <td>Orion</td>
+                                </tr>
+                                <tr>
+                                    <th colSpan={2}>Povrch</th>
+                                </tr>
+                                <tr>
+                                    <td>Teplota</td>
+                                    <td>5600 K</td>
+                                </tr>
+                                <tr>
+                                    <td>Zdánl. mag.</td>
+                                    <td>11.23</td>
+                                </tr>
+                                <tr>
+                                    <td>Abs. mag.</td>
+                                    <td>4.12</td>
+                                </tr>
+                                <tr>
+                                    <td>Zářivý výkon</td>
+                                    <td>10e6 O</td>
+                                </tr>
+                                <tr>
+                                    <th colSpan={2}>Hmota</th>
+                                </tr>
+                                <tr>
+                                    <td>Průměr</td>
+                                    <td>1.28 O<br />1.56 O<br />1.22 O</td>
+                                </tr>
+                                <tr>
+                                    <td>Hmotnost</td>
+                                    <td>2.56 O</td>
+                                </tr>
+                                <tr>
+                                    <td>Hustota</td>
+                                    <td>0.56 O</td>
+                                </tr>
+                                <tr>
+                                    <td>Gravitace</td>
+                                    <td>222 m/s<sup>2</sup></td>
+                                </tr>
+                                <tr>
+                                    <th colSpan={2}>Ostatní</th>
+                                </tr>
+                                <tr>
+                                    <td>Metalicita</td>
+                                    <td>0.04</td>
+                                </tr>
+                                <tr>
+                                    <td>Stáří</td>
+                                    <td>4.26 mld. let</td>
+                                </tr>
                                 </tbody>
                             </Table>
 
@@ -389,9 +405,40 @@ const SystemView = ({ ...props }: Props) => {
                         <Subtitle>
                             Reference
                         </Subtitle>
+                        <References items={[
+                            ...system.payload.properties,
+                            ...(system.payload.light_curves || []),
+                            ...system.payload.planets
+                        ] as any} />
                         <Subtitle>
                             Aktivity
                         </Subtitle>
+                        <History>
+                            <HTable>
+                                <tbody>
+                                <tr>
+                                    <th>Datum</th>
+                                    <th>Uživatel</th>
+                                    <th>Akce</th>
+                                    <th colSpan={2}>Zdroj</th>
+                                </tr>
+                                <tr>
+                                    <td>12. 9. 2020 9.38:25</td>
+                                    <td>Michal</td>
+                                    <td>Přidány planety (1)</td>
+                                    <td colSpan={2}>Dataset Kepler mission</td>
+                                </tr>
+                                {new Array(100).fill(0).map((v, i) => (
+                                    <tr key={i}>
+                                        <td>12. 9. 2020 9.38:25</td>
+                                        <td>Michal</td>
+                                        <td>Editace</td>
+                                        <td colSpan={2}><i>Manuální</i></td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </HTable>
+                        </History>
                     </Main>
                 </Root>
             )}

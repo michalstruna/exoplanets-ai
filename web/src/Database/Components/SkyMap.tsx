@@ -500,10 +500,10 @@ const SkyMap = ({ ...props }: Props) => {
             showLayersControl: false
         })
 
-        const constellations = A.graphicOverlay({ lineWidth: 0.5, color: '#FFF' })
+        const constellations = A.graphicOverlay({ lineWidth: 1, color: '#FFF' })
         aladin.addOverlay(constellations)
 
-        const constellationLabels = A.catalog({ name: 'Co123', shape: renderLabel })
+        const constellationLabels = A.catalog({ name: 'Labels', shape: renderLabel })
         aladin.addCatalog(constellationLabels)
 
         for (const con of cons) {

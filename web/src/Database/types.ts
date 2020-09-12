@@ -77,3 +77,5 @@ export type SegmentData<T> = {
     items: T[]
     count: number
 }
+
+export type RefItem = Dataset
