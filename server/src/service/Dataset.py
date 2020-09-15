@@ -24,13 +24,29 @@ class DatasetService(Service):
         dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
+            print(111)
             items = items.where(pd.notnull(items), None)
-            dataset["processed"], dataset["items"] = items.memory_usage().sum(), []
-            result = self.dao.add(dataset)
+            print(222, items)
 
-            stars = list(map(lambda star: db.Star(properties=[{**self.star_service.complete_star(star), "dataset": result["name"]}]), items.to_dict("records")))
+            dataset["processed"], dataset["items"] = items.memory_usage().sum(), []
+            print(333, dataset)
+            result = self.dao.add(dataset)
+            print(444, result)
+
+            items["dataset"] = result["name"]
+
+            print(555, result)
+
+            stars = self.star_service.complete_stars(items.to_dict("records"))
+
+            print(666, stars)
+            #stars = list(map(lambda star: db.Star(properties=[{**star, "dataset": result["name"]}]), items.to_dict("records")))
+
             self.star_service.upsert_all_by_name(stars)
+
+            print(777)
         else:
+            print(888)
             result = self.dao.add(dataset)
 
         end = time.now()

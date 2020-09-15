@@ -153,11 +153,15 @@ class StarProperties(EmbeddedDocument):
     luminosity = FloatField(min_value=0)
     distance = FloatField(min_value=0)
     type = EmbeddedDocumentField(StarType)
-    distance = FloatField(min_value=0)
     apparent_magnitude = FloatField()
     absolute_magnitude = FloatField()
     metallicity = FloatField()
     dataset = StringField(required=True)
+    constellation = StringField()
+
+    ra = FloatField()
+    dec = FloatField()
+    distance = FloatField(min_value=0)
 
 
 class Transit(EmbeddedDocument):

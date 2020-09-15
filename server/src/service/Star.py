@@ -5,6 +5,7 @@ import numbers
 from constants.Database import SpectralClass, SpectralSubclass, LuminosityClass, LuminositySubclass
 from .Base import Service
 import db
+from .Constellation import ConstellationService
 
 spectral_temperatures = [50000, 30000, 11000, 7500, 6000, 5000, 3500, 3000]
 
@@ -13,6 +14,7 @@ class StarService(Service):
 
     def __init__(self):
         super().__init__(db.star_dao)
+        self.constellation_service = ConstellationService()
 
     def get_sort(self, sort):
         if not sort:
@@ -53,6 +55,8 @@ class StarService(Service):
         operations = []
 
         for star in stars:
+            star = self.dao.collection(properties=[star])
+            print("xXXXXXX", star)
             star.validate()
             star = star.to_mongo()  # TODO: Remove?
 
@@ -64,7 +68,9 @@ class StarService(Service):
 
         db.star_dao.collection._get_collection().bulk_write(operations, ordered=False)
 
-    def complete_star(self, star):
+        return stars
+
+    def complete_star(self, star, with_constellation=True):
         result = {**star}
 
         result["density"] = self.get_density(star)
@@ -74,6 +80,20 @@ class StarService(Service):
         result["type"] = self.get_type(result)
         result["distance"] = result["distance"] if isinstance(result["distance"], numbers.Number) and result["distance"] > 0 else None  # Kepler dataset has some stars with distance = 0.
 
+        if with_constellation:
+            result["constellation"] = self.constellation_service.get_by_coords(result["ra"], result["dec"])
+
+        return result
+
+        return stars
+
+    def complete_stars(self, stars):
+        result = []
+
+        for star in stars:
+            result.append(self.complete_star(star, with_constellation=False))
+
+        self.constellation_service.set_constellations(result)
         return result
 
     def get_type(self, star):
@@ -138,3 +158,4 @@ class StarService(Service):
     def get_absolute_magnitude(self, star):
         if "distance" in star and "apparent_magnitude" in star and star["distance"] and star["apparent_magnitude"]:
             return round(star["apparent_magnitude"] + 5 * (1 - math.log10(star["distance"])), 2)
+

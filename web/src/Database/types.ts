@@ -34,6 +34,8 @@ export interface StarProperties {
     name: string
     mass?: number
     diameter?: number
+    density?: number
+    surface_gravity?: number
     surface_temperature?: number
     luminosity?: number
     apparent_magnitude?: number
@@ -47,6 +49,11 @@ export interface StarProperties {
     }
     planets?: PlanetData[]
     distance?: number
+    dataset: string
+    age?: number
+    dec?: number
+    ra?: number
+    constellation?: string
 }
 
 export interface LightCurve {

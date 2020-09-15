@@ -137,6 +137,7 @@ class SocketService(metaclass=patterns.Singleton):
 
         try:
             star = self.star_service.get_by_name(task["item"])
+            star = self.star_service.update()
         except:
             star = self.star_service.add({"light_curves": [light_curve]})
 

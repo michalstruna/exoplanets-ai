@@ -73,7 +73,7 @@ const getMinDistance = (systems: Item[][]) => {
 }
 
 const getMaxDistance = (systems: Item[][]) => {
-    return Arrays.getNthExtreme(systems[1].map(system => system.distance), Math.max, 2)
+    return Arrays.getNthExtreme((systems[1].length > 1 ? systems[1] : systems[0]).map(system => system.distance), Math.max, 2)
 }
 
 const DistanceVisualization = ({ systems, lifeZones, ...props }: Props) => {

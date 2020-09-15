@@ -77,6 +77,8 @@ export default {
         absoluteMagnitude: 'Abs. mag.',
         apparentMagnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
         metallicity: { [CS]: 'Metalicita', [EN]: 'Metallicity' },
+        ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
+        dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
 
         // Planets
         semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },

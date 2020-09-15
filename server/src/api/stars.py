@@ -39,7 +39,9 @@ new_star = api.ns.model("NewStar", {
     "surface_temperature": fields.Integer(description="Surface temperature of star [K]."),
     "apparent_magnitude": fields.Float(description="Apparent magnitude of star."),
     "metallicity": fields.Float(description="Metallicity of star."),
-    "distance": fields.Float(min=0, description="Distance of star from Earth [ly].")
+    "distance": fields.Float(min=0, description="Distance of star from Earth [ly]."),
+    "ra": fields.Float(description=""),
+    "dec": fields.Float(descritpion="Declination.")
 })
 
 star_type = api.ns.model("StarType", {
@@ -55,6 +57,7 @@ star_properties = api.ns.inherit("StarProperties", new_star, {
     "surface_gravity": fields.Float(min=0, description="Surface gravity [m/s^2]."),
     "luminosity": fields.Float(min=0, description="Star luminosity [sun luminosity]."),
     "absolute_magnitude": fields.Float(description="Absolute magnitude of star."),
+    "constellation": fields.String(description="Constellation where star is located on sky."),
     "type": fields.Nested(star_type, default={})
 })
 

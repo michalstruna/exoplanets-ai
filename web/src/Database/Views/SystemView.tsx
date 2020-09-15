@@ -2,18 +2,19 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import DetailContent from '../Components/DetailContent'
-import { MinorSectionTitle, PageTitle, SectionTitle, Tags } from '../../Layout'
+import { Fraction, ListSection, MinorSectionTitle, PageTitle, SectionTitle, Tags } from '../../Layout'
 import SizeVisualization from '../Components/SizeVisualization'
 import DistanceVisualization from '../Components/DistanceVisualization'
 import { Async } from '../../Async'
 import { useSystem, getSystem, Value } from '..'
 import useRouter from 'use-react-router'
-import { PlanetData } from '../types'
+import { LightCurve, PlanetData } from '../types'
 import { useStrings } from '../../Data'
 import { MiniGraph } from '../../Stats'
 import ItemPreview from '../Components/ItemPreview'
 import SkyMap from '../Components/SkyMap'
 import References from '../Components/References'
+import { Numbers } from '../../Native'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -29,6 +30,7 @@ const Main = Styled.main`
     padding: 1rem;
     padding-left: 2rem;
     padding-top: 1.5rem;
+    width: calc(100% - 15rem);
 `
 
 const MainLeft = Styled.div`
@@ -43,7 +45,9 @@ const Subtitle = Styled(SectionTitle)`
 `
 
 const Subsubtitle = Styled(MinorSectionTitle)`
-
+    ${Subtitle} + & {
+        padding-top: 0;
+    }
 `
 
 const Table = Styled.table`
@@ -146,6 +150,8 @@ const CenteredHorizontal = Styled(Horizontal)`
     padding: 0;
 `
 
+const refMap = { 'Kepler': 1, 'Kepler 2': 2, 'Kepler 3': 3 }
+
 const SystemView = ({ ...props }: Props) => {
 
     const systemName = useRouter<any>().match.params.system
@@ -200,67 +206,79 @@ const SystemView = ({ ...props }: Props) => {
                                 <Subsubtitle>
                                     Světelná křivka (0)
                                 </Subsubtitle>
+                                <ListSection items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
+                                    <div key={i}>
+                                        LC
+                                    </div>
+                                ))}  />
                                 <Subsubtitle>
                                     Radiální rychlost (0)
                                 </Subsubtitle>
+                                <ListSection items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
+                                    <div key={i}>
+                                        RV
+                                    </div>
+                                ))}  />
                                 <Subtitle>
                                     {strings.planets} ({system.payload.planets.length})
                                 </Subtitle>
-                                {system.payload.planets.map((planet: PlanetData, i: number) => (
-                                    <>
-                                        <CenteredHorizontal>
-                                            <ItemPreview.Planet item={planet} titleComponent={Subsubtitle} />
-                                            <Tags items={Value.Star.names(system.payload, name => ({ text: name }))} />
-                                        </CenteredHorizontal>
-                                        <HTable>
-                                            <tbody>
-                                            <tr>
-                                                <th colSpan={2}>Hmota</th>
-                                                <th colSpan={2}>Dráha</th>
-                                                <th colSpan={2}>Ostatní</th>
-                                            </tr>
-                                            <tr>
-                                                <td>Průměr</td>
-                                                <td>12 756</td>
-                                                <td>Perioda oběhu</td>
-                                                <td>12 756</td>
-                                                <td>Život</td>
-                                                <td>12 756</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Hmotnost</td>
-                                                <td>12 756</td>
-                                                <td>Velká poloosa</td>
-                                                <td>12 756</td>
-                                                <td>Teplota</td>
-                                                <td>12 756</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Hustota</td>
-                                                <td>12 756</td>
-                                                <td>Rychlost oběhu</td>
-                                                <td>12 756</td>
-                                                <td>Status</td>
-                                                <td>12 756</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gravitace</td>
-                                                <td>12 756</td>
-                                                <td>Excentricita</td>
-                                                <td>12 756</td>
-                                                <td>Hmotnost</td>
-                                                <td>12 756</td>
-                                            </tr>
-                                            </tbody>
-                                        </HTable>
-                                        <Horizontal>
-                                            <MiniGraph data={planet.properties[0].transit!.flux} color='#AFA'
-                                                       width={390} height={200} />
-                                            <MiniGraph data={planet.properties[0].transit!.flux} color='#AFA'
-                                                       width={390} height={200} />
-                                        </Horizontal>
-                                    </>
-                                ))}
+                                <ListSection items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
+                                    system.payload.planets.map((planet: PlanetData, i: number) => (
+                                            <>
+                                                <CenteredHorizontal>
+                                                    <ItemPreview.Planet item={planet} titleComponent={Subsubtitle} />
+                                                    <Tags items={Value.Star.names(system.payload, name => ({ text: name }))} />
+                                                </CenteredHorizontal>
+                                                <HTable>
+                                                    <tbody>
+                                                    <tr>
+                                                        <th colSpan={2}>Hmota</th>
+                                                        <th colSpan={2}>Dráha</th>
+                                                        <th colSpan={2}>Ostatní</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Průměr</td>
+                                                        <td>12 756</td>
+                                                        <td>Perioda oběhu</td>
+                                                        <td>12 756</td>
+                                                        <td>Život</td>
+                                                        <td>12 756</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Hmotnost</td>
+                                                        <td>12 756</td>
+                                                        <td>Velká poloosa</td>
+                                                        <td>12 756</td>
+                                                        <td>Teplota</td>
+                                                        <td>12 756</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Hustota</td>
+                                                        <td>12 756</td>
+                                                        <td>Rychlost oběhu</td>
+                                                        <td>12 756</td>
+                                                        <td>Status</td>
+                                                        <td>12 756</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Gravitace</td>
+                                                        <td>12 756</td>
+                                                        <td>Excentricita</td>
+                                                        <td>12 756</td>
+                                                        <td>Hmotnost</td>
+                                                        <td>12 756</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </HTable>
+                                                <Horizontal>
+                                                    <MiniGraph data={planet.properties[0].transit!.flux} color='#AFA'
+                                                               width={390} height={200} />
+                                                    <MiniGraph data={planet.properties[0].transit!.flux} color='#AFA'
+                                                               width={390} height={200} />
+                                                </Horizontal>
+                                            </>
+                                        ))
+                                ))}  />
                             </MainLeft>
 
                             <Table>
@@ -270,68 +288,96 @@ const SystemView = ({ ...props }: Props) => {
                                 </tr>
                                 <tr>
                                     <td>Vzdálenost</td>
-                                    <td>3.26 ly</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'distance', { refMap, unit: 'pc' })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Deklinace</td>
-                                    <td>11.23</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'dec', { refMap, unit: '°' })}
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td>Rehtascenze</td>
-                                    <td>4.12</td>
+                                    <td>Rektascenze</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'ra', { refMap, unit: '°' })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Souhvězdí</td>
-                                    <td>Orion</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'constellation', { refMap })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th colSpan={2}>Povrch</th>
                                 </tr>
                                 <tr>
                                     <td>Teplota</td>
-                                    <td>5600 K</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'surface_temperature', { refMap, unit: 'K' })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Zdánl. mag.</td>
-                                    <td>11.23</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'apparent_magnitude', { refMap, format: Numbers.format })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Abs. mag.</td>
-                                    <td>4.12</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'absolute_magnitude', { refMap, format: Numbers.format })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Zářivý výkon</td>
-                                    <td>10e6 O</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'luminosity', { refMap, unit: <>L<sub>☉</sub></> })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th colSpan={2}>Hmota</th>
                                 </tr>
                                 <tr>
                                     <td>Průměr</td>
-                                    <td>1.28 O<br />1.56 O<br />1.22 O</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'diameter', { refMap, unit: <>d<sub>☉</sub></> })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Hmotnost</td>
-                                    <td>2.56 O</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'mass', { refMap, unit: <>M<sub>☉</sub></> })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Hustota</td>
-                                    <td>0.56 O</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'density', { refMap, unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/> })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Gravitace</td>
-                                    <td>222 m/s<sup>2</sup></td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'surface_gravity', { refMap, unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/> })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th colSpan={2}>Ostatní</th>
                                 </tr>
                                 <tr>
                                     <td>Metalicita</td>
-                                    <td>0.04</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'metallicity', { refMap })}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Stáří</td>
-                                    <td>4.26 mld. let</td>
+                                    <td>
+                                        {Value.Star.props(system.payload, 'age', { refMap, unit: 'mld. years' })}
+                                    </td>
                                 </tr>
                                 </tbody>
                             </Table>
