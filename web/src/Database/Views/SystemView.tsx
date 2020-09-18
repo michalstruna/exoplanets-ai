@@ -10,7 +10,7 @@ import { useSystem, getSystem, Value } from '..'
 import useRouter from 'use-react-router'
 import { LightCurve, PlanetData } from '../types'
 import { useStrings } from '../../Data'
-import { MiniGraph } from '../../Stats'
+import { Curve } from '../../Stats'
 import ItemPreview from '../Components/ItemPreview'
 import SkyMap from '../Components/SkyMap'
 import References from '../Components/References'
@@ -271,9 +271,9 @@ const SystemView = ({ ...props }: Props) => {
                                                     </tbody>
                                                 </HTable>
                                                 <Horizontal>
-                                                    <MiniGraph data={planet.properties[0].transit!.flux} color='#AFA'
+                                                    <Curve data={planet.properties[0].transit!.flux} color='#AFA'
                                                                width={390} height={200} />
-                                                    <MiniGraph data={planet.properties[0].transit!.flux} color='#AFA'
+                                                    <Curve data={planet.properties[0].transit!.flux} color='#AFA'
                                                                width={390} height={200} />
                                                 </Horizontal>
                                             </>

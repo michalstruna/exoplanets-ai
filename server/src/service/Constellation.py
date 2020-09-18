@@ -24,17 +24,9 @@ class ConstellationService(Service):
 
         constellations = self.get_by_coords(ra, dec)
 
-        print(777, stars)
-        print(888, ra, dec)
-
         i = 0
 
         for star in stars:
-            print(11, star)
-
             if star["ra"] is not None and ["dec"] is not None:
-                print(22, constellations)
                 star["constellation"] = constellations[i]
                 i += 1
-
-        print(999, stars)

@@ -130,15 +130,22 @@ class SocketService(metaclass=patterns.Singleton):
         updated = {
             "inc__time": time.now() - task["meta"]["created"],
             "inc__processed": task["meta"]["size"],
+
             "pop__items": -1
         }
         dataset = self.dataset_service.update(task["dataset_id"], updated)
         light_curve = task["solution"]["light_curve"]  # TODO: target_pixel
 
+        print(444, light_curve)
+
         try:
+            print(111, task)
             star = self.star_service.get_by_name(task["item"])
-            star = self.star_service.update()
-        except:
+            print(222, star)
+            star = self.star_service.update(star["_id"], {"push__light_curves": light_curve})
+            print(333, star)
+        except Exception as e:
+            print(e)
             star = self.star_service.add({"light_curves": [light_curve]})
 
         for transit in task["solution"]["transits"]:
