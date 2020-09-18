@@ -78,13 +78,12 @@ class StarService(Service):
         result["absolute_magnitude"] = self.get_absolute_magnitude(result)
         result["type"] = self.get_type(result)
         result["distance"] = result["distance"] if isinstance(result["distance"], numbers.Number) and result["distance"] > 0 else None  # Kepler dataset has some stars with distance = 0.
+        result["life_zone"] = self.get_life_zone(result)
 
         if with_constellation:
             result["constellation"] = self.constellation_service.get_by_coords(result["ra"], result["dec"])
 
         return result
-
-        return stars
 
     def complete_stars(self, stars):
         result = []
@@ -94,6 +93,13 @@ class StarService(Service):
 
         self.constellation_service.set_constellations(result)
         return result
+
+    def get_life_zone(self, star):
+        if "luminosity" in star and star["luminosity"]:
+            return {
+                "min_radius": round(math.sqrt(star["luminosity"] / 1.1), 3),
+                "max_radius": round(math.sqrt(star["luminosity"] / 0.53), 3)
+            }
 
     def get_type(self, star):
         tmp = {**star}

@@ -143,6 +143,11 @@ class StarType(EmbeddedDocument):
     luminosity_subclass = StringField(enum=LuminositySubclass.values())
 
 
+class LifeZone(EmbeddedDocument):
+    min_radius = FloatField(min=0)
+    max_radius = FloatField(min=0)
+
+
 class StarProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50, unique=True, sparse=True)
     diameter = FloatField(min_value=0)
@@ -159,6 +164,7 @@ class StarProperties(EmbeddedDocument):
     dataset = StringField(required=True)
     constellation = StringField()
 
+    life_zone = EmbeddedDocumentField(LifeZone, default={})
     ra = FloatField()
     dec = FloatField()
     distance = FloatField(min_value=0)

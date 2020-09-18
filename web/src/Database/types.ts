@@ -54,12 +54,18 @@ export interface StarProperties {
     dec?: number
     ra?: number
     constellation?: string
+    life_zone?: LifeZone
 }
 
 export interface LightCurve {
     name: string
     flux: number[]
     dataset: string
+}
+
+export interface LifeZone {
+    min_radius?: number
+    max_radius?: number
 }
 
 export interface StarData {

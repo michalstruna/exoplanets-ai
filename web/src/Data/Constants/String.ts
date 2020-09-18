@@ -146,7 +146,12 @@ export default {
             [SpectralClass.G]: { [CS]: 'Žlutý', [EN]: 'Yellow' },
             [SpectralClass.K]: { [CS]: 'Oranžový', [EN]: 'Orange' },
             [SpectralClass.M]: { [CS]: 'Červený', [EN]: 'Red' }
-        }
+        },
+
+        orbit: { [CS]: 'Orbita planety', [EN]: 'Planet orbit' },
+        lifeZone: { [CS]: 'Zóna života', [EN]: 'Life zone' },
+        legend: { [CS]: 'Legenda', [EN]: 'Legend' },
+        grid: { [CS]: 'Mřížka', [EN]: 'Grid' }
     },
 
     planets: {

@@ -17,10 +17,10 @@ interface ColOptions<TVal, TItem> {
 }
 
 export const MultiValue = ({ items, property, formatter = val => val }: { items: any[], property: string, formatter?: (val: any, i: any, item: any) => any }) => items ? (
-    <>
+    <div>
         {items.filter(item => !!item[property]).map((item, i) => <div
             title={'Dataset: ' + item.dataset}>{formatter(item[property], item, i)}</div>)}
-    </>
+    </div>
 ) : null
 
 export const list = <T extends any>(cols: ColOptions<any, T>[], strings: any): any => {

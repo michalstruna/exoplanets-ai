@@ -443,7 +443,7 @@ const SystemView = ({ ...props }: Props) => {
                             ]
                         ]} lifeZones={[
                             { from: 90e6, to: 250e6 },
-                            { from: 90e6, to: 250e6 }
+                            { from: system.payload.properties[0].life_zone.min_radius * 149597870, to: system.payload.properties[0].life_zone.max_radius * 149597870 }
                         ]} />
                         <Subsubtitle>
                             Interaktivní model
