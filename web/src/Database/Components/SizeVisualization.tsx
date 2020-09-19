@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { size } from '../../Style'
+import { Color, size } from '../../Style'
 import { Arrays } from '../../Native'
 
 type Item = {
@@ -14,7 +14,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = Styled.div`
-
+    position: relative;
 `
 
 const Body = Styled.img`
@@ -71,6 +71,27 @@ const System = Styled.div`
     padding-bottom: 2rem;
 `
 
+const GridLine = Styled.div`
+    ${size('1px', '100%')}
+    color: ${Color.MEDIUM_LIGHT};
+    font-size: 70%;
+    position: absolute;
+    text-indent: 0.5rem;
+    top: 0;
+    white-space: nowrap;
+    
+    &:after {
+        ${size('1px', '100%')}
+        background-color: ${Color.LIGHTEST};
+        content: "";
+        display: inline-block;
+        left: 0;
+        opacity: 0.15;
+        position: absolute;
+        top: 0;
+    }
+`
+
 const get2ndMaxSize = (systems: Item[][]) => {
     const sizes = systems.map(system => system.map(body => body.size)).reduce((prev, curr) => [...prev, ...curr], [])
     return Arrays.getNthExtreme(sizes, Math.max, 3)
@@ -78,31 +99,34 @@ const get2ndMaxSize = (systems: Item[][]) => {
 
 const SizeVisualization = ({ systems, ...props }: Props) => {
 
-    const memo = React.useMemo(() => {
-        const minSize = get2ndMaxSize(systems)
-        const ratio = 200 / minSize
-
-        return systems.map((system, i) => (
-            <System key={i}>
-                {system.map((body, j) => {
-                    const size = body.size * ratio
-
-                    return (
-                        <OuterBody key={j} style={{ width: size }}>
-                            <Body src={body.image} height={size} />
-                            {(i > 0 || j > 0) && <BodyName small={size < body.name.length * 8}>
-                                {body.name}
-                            </BodyName>}
-                        </OuterBody>
-                    )
-                })}
-            </System>
-        ))
-    }, [systems])
+    const minSize = get2ndMaxSize(systems)
+    const ratio = 200 / minSize
+    const step = 40000
+    const count = Math.ceil(window.screen.width / (step * ratio))
 
     return (
         <Root {...props}>
-            {memo}
+            {new Array(count).fill(null).map((_, i) => (
+                <GridLine style={{ left: ratio * step * i }} key={i}>
+                    {i === Math.floor(count / 2) ? '40k km' : ''}
+                </GridLine>
+            ))}
+            {systems.map((system, i) => (
+                <System key={i}>
+                    {system.map((body, j) => {
+                        const size = body.size * ratio
+
+                        return (
+                            <OuterBody key={j} style={{ width: size }}>
+                                <Body src={body.image} height={size} />
+                                {(i > 0 || j > 0) && <BodyName small={size < body.name.length * 8}>
+                                    {body.name}
+                                </BodyName>}
+                            </OuterBody>
+                        )
+                    })}
+                </System>
+            ))}
         </Root>
     )
 

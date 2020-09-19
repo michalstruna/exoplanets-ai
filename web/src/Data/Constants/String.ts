@@ -151,7 +151,7 @@ export default {
         orbit: { [CS]: 'Orbita planety', [EN]: 'Planet orbit' },
         lifeZone: { [CS]: 'Zóna života', [EN]: 'Life zone' },
         legend: { [CS]: 'Legenda', [EN]: 'Legend' },
-        grid: { [CS]: 'Mřížka', [EN]: 'Grid' }
+        distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' }
     },
 
     planets: {

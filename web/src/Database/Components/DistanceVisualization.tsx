@@ -30,15 +30,24 @@ const Root = Styled.div`
 `
 
 const GridLine = Styled.div`
-    background-color: ${Color.LIGHTEST};
+    ${size('1px', '100%')}
+    color: ${Color.MEDIUM_LIGHT};
     font-size: 90%;
-    height: 100%;
-    opacity: 0.15;
     position: absolute;
     text-indent: 0.5rem;
     top: 0;
     white-space: nowrap;
-    width: 1px;
+    
+    &:after {
+        ${size('1px', '100%')}
+        background-color: ${Color.LIGHTEST};
+        content: "";
+        display: inline-block;
+        left: 0;
+        opacity: 0.15;
+        position: absolute;
+        top: 0;
+    }
 `
 
 const Orbit = Styled.div`
@@ -132,7 +141,7 @@ const DistanceVisualization = ({ systems, lifeZones, ...props }: Props) => {
     return (
         <Root {...props}>
             {new Array(15).fill(null).map((_, i) => (
-                <GridLine style={{ left: ratio * step * i }}>
+                <GridLine style={{ left: ratio * step * i }} key={i}>
                     {Numbers.format(step * i / (0.5 * 149597870)) + ' au'}
                 </GridLine>
             ))}
@@ -147,7 +156,7 @@ const DistanceVisualization = ({ systems, lifeZones, ...props }: Props) => {
                     {strings.lifeZone}
                 </LegendItem>
                 <LegendItem color={Color.MEDIUM} thickness='1px'>
-                    {strings.grid}
+                    {strings.distance}
                 </LegendItem>
             </Legend>
             {systems.map((system, i) => (

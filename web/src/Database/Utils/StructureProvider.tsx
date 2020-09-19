@@ -173,8 +173,8 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                             { name: 'absolute_magnitude', format: Numbers.format, multi: 'properties' },
                             { name: 'apparent_magnitude', format: Numbers.format, multi: 'properties' },
                             { name: 'metallicity', format: Numbers.format, multi: 'properties' },
-                            { name: 'ra', format: Numbers.format, multi: 'properties' },
-                            { name: 'dec', format: Numbers.format, multi: 'properties' },
+                            { name: 'ra', format: Numbers.formatHours, multi: 'properties' },
+                            { name: 'dec', format: Numbers.formatDeg, multi: 'properties' },
                             { name: 'dataset', format: (_, item) => (
                                     <div>
                                         <MultiValue items={item.properties} property='dataset' formatter={val => <IconText text={val} icon='/img/Database/Dataset/StarProperties.svg' />} />

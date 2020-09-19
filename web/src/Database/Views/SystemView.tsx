@@ -22,19 +22,20 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 const Root = Styled.div`
     display: flex;
+    width: 100%;
 `
 
 const Main = Styled.main`
     box-sizing: border-box;
-    flex: 1 1 0;
+    flex: 1 1 calc(100vw - 15rem);
+    overflow: hidden;
     padding: 1rem;
     padding-left: 2rem;
     padding-top: 1.5rem;
-    width: calc(100% - 15rem);
 `
 
 const MainLeft = Styled.div`
-    width: 60rem;
+    width: calc(100% - 22rem);
 `
 
 const Title = Styled(PageTitle)`
@@ -293,15 +294,15 @@ const SystemView = ({ ...props }: Props) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Deklinace</td>
+                                    <td>Rektascenze</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'dec', { refMap, unit: '°' })}
+                                        {Value.Star.props(system.payload, 'ra', { refMap, format: Numbers.formatHours })}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Rektascenze</td>
+                                    <td>Deklinace</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'ra', { refMap, unit: '°' })}
+                                        {Value.Star.props(system.payload, 'dec', { refMap, format: Numbers.formatDeg })}
                                     </td>
                                 </tr>
                                 <tr>
