@@ -1,5 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
+import { renderToString } from 'react-dom/server'
 
 import { LightCurve, StarData as StarData, StarProperties } from '../types'
 import { Link } from '../../Routing'
@@ -17,6 +18,7 @@ type PropsOptions = {
 const RefLink = Styled(Link)`
     color: ${Color.BLUE};
     font-size: 90%;
+    margin-right: 0.3em;
     
     &:not(:hover) {
         border-bottom: 1px solid ${Color.BLUE};
@@ -56,18 +58,29 @@ export const Star = {
         return null
     },
 
-    props: <T extends any>(star: StarData, name: keyof StarProperties, options?: PropsOptions): React.ReactNode | null => (
-        star.properties.map((props, i) => {
+    props: <T extends any>(star: StarData, name: keyof StarProperties, options?: PropsOptions): React.ReactNode | null => {
+        const cache: Record<string, [any, (number | undefined)[]]> = {}
+
+        for (const props of star.properties) {
             const refId = options?.refMap?.[props.dataset]
             const rawValue = props[name] !== null && props[name] !== undefined ? (options?.format ? options.format(props[name]) : props[name]) : null
             const value = options?.unit ? <>{Numbers.format(rawValue as number)}{options.unit === '°' ? '' : ' '}{options.unit}</> : rawValue
+            const json = rawValue !== null && rawValue !== undefined ? renderToString(value as any) : null
 
-            return rawValue !== null && rawValue !== undefined ? (
-                <div key={i}>
-                    {value} {refId ? (<sup><RefLink hash={'ref' + refId}>[{refId}]</RefLink></sup>) : null}
-                </div>
-            ) : null
-        })
-)
+            if (json !== null) {
+                if (!cache[json]) {
+                    cache[json] = [value, []]
+                }
+
+                cache[json][1].push(refId)
+            }
+        }
+
+        return Object.entries(cache).map(([key, [value, refs]], i) => (
+            <div key={i}>
+                {value} <sup>{refs.map(ref => ref ? (<RefLink hash={'ref' + ref}>[{ref}]</RefLink>) : null)}</sup>
+            </div>
+        ))
+    }
 
 }

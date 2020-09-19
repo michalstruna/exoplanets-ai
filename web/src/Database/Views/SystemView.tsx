@@ -35,7 +35,7 @@ const Main = Styled.main`
 `
 
 const MainLeft = Styled.div`
-    width: calc(100% - 22rem);
+    width: calc(100% - 24rem);
 `
 
 const Title = Styled(PageTitle)`
@@ -56,7 +56,7 @@ const Table = Styled.table`
     border-collapse: collapse;
     margin: 1rem 0;
     table-layout: fixed;
-    width: 20rem;
+    width: 22rem;
     
     tr {
         &:nth-of-type(2n + 1) td:nth-of-type(2n + 1) {
@@ -151,7 +151,7 @@ const CenteredHorizontal = Styled(Horizontal)`
     padding: 0;
 `
 
-const refMap = { 'Kepler': 1, 'Kepler 2': 2, 'Kepler 3': 3 }
+const refMap = { 'Kepler': 1, 'Kepler2': 2, 'Kepler 3': 3 }
 
 const SystemView = ({ ...props }: Props) => {
 
