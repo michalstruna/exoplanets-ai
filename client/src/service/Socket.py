@@ -42,6 +42,7 @@ def run(task):
         task["meta"]["size"] = lc_service.get_tps_size(tps)
         print("=== Before to_lc.")
         lc = lc_service.tps_to_lc(tps)
+
         print("=== Before pd.")
         pd, peaks = lc_service.get_pd(lc)
 
@@ -59,11 +60,13 @@ def run(task):
                     "flux": list(lv.flux)
                 })
 
+        flux = lc[lc.time - lc.time[0] < 100].bin(bins=100).remove_nans().flux
+
         task["solution"] = {
             "transits": transits,
             "light_curve": {
                 "name": task["item"],
-                "flux": list(lc.bin(bins=99).remove_outliers().flux),
+                "flux": list(flux),
                 "dataset": "Kepler 12"
             }
         }

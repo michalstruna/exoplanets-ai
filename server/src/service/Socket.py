@@ -129,7 +129,7 @@ class SocketService(metaclass=patterns.Singleton):
         updated = {
             "inc__time": time.now() - task["meta"]["created"],
             "inc__processed": task["meta"]["size"],
-            "pop__items": -1
+            #"pop__items": -1
         }
         dataset = self.dataset_service.update(task["dataset_id"], updated)
         light_curve = task["solution"]["light_curve"]  # TODO: target_pixel

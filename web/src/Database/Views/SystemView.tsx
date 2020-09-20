@@ -205,11 +205,11 @@ const SystemView = ({ ...props }: Props) => {
                                     Pozorování
                                 </Subtitle>
                                 <Subsubtitle>
-                                    Světelná křivka (0)
+                                    Světelná křivka ({system.payload.light_curves.length})
                                 </Subsubtitle>
                                 <ListSection items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
                                     <div key={i}>
-                                        LC
+                                        <Curve data={lc.flux} color='#FAA' width={390} height={200} />
                                     </div>
                                 ))}  />
                                 <Subsubtitle>
