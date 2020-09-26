@@ -6,6 +6,7 @@ import { LightCurve, StarData as StarData, StarProperties } from '../types'
 import { Link } from '../../Routing'
 import { Color } from '../../Style'
 import { Numbers } from '../../Native'
+import Ref from '../Components/Ref'
 
 type PropRenderer<TValue, TItem> = (prop: TValue, i: number, item: TItem) => React.ReactNode
 
@@ -59,10 +60,10 @@ export const Star = {
     },
 
     props: <T extends any>(star: StarData, name: keyof StarProperties, options?: PropsOptions): React.ReactNode | null => {
-        const cache: Record<string, [any, (number | undefined)[]]> = {}
+        const cache: Record<string, [any, (string | undefined)[]]> = {}
 
         for (const props of star.properties) {
-            const refId = options?.refMap?.[props.dataset]
+            const refId = props.dataset
             const rawValue = props[name] !== null && props[name] !== undefined ? (options?.format ? options.format(props[name]) : props[name]) : null
             const value = options?.unit ? <>{Numbers.format(rawValue as number)}{options.unit === '°' ? '' : ' '}{options.unit}</> : rawValue
             const json = rawValue !== null && rawValue !== undefined ? renderToString(value as any) : null
@@ -78,7 +79,7 @@ export const Star = {
 
         return Object.entries(cache).map(([key, [value, refs]], i) => (
             <div key={i}>
-                {value} <sup>{refs.map(ref => ref ? (<RefLink hash={'ref' + ref}>[{ref}]</RefLink>) : null)}</sup>
+                {value} <Ref refMap={options?.refMap} refs={refs} />
             </div>
         ))
     }

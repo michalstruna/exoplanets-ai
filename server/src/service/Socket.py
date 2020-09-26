@@ -7,6 +7,7 @@ from constants.Discovery import ProcessState
 from service.Dataset import DatasetService
 from service.Planet import PlanetService
 from service.Star import StarService
+from service.File import FileService
 
 
 class SocketService(metaclass=patterns.Singleton):
@@ -20,6 +21,7 @@ class SocketService(metaclass=patterns.Singleton):
         self.star_service = StarService()
         self.planet_service = PlanetService()
         self.tasks = {}
+        self.file_service = FileService()
 
         @sio.on("client_connect")
         def client_connect(client):
@@ -126,6 +128,9 @@ class SocketService(metaclass=patterns.Singleton):
         """
         Finish task by client.
         """
+        lc_plot = self.file_service.save_lc(task["solution"]["light_curve"]["plot"])
+        task["solution"]["light_curve"]["plot"] = lc_plot
+
         updated = {
             "inc__time": time.now() - task["meta"]["created"],
             "inc__processed": task["meta"]["size"],

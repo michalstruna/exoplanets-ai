@@ -15,6 +15,7 @@ import ItemPreview from '../Components/ItemPreview'
 import SkyMap from '../Components/SkyMap'
 import References from '../Components/References'
 import { Numbers } from '../../Native'
+import Ref from '../Components/Ref'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -131,8 +132,13 @@ const History = Styled.div`
     }
 `
 
-const Horizontal = Styled.div`
+interface HorizontalProps {
+    reverse?: boolean
+}
+
+const Horizontal = Styled.div<HorizontalProps>`
     display: flex;
+    justify-content: flex-start;
     overflow: hidden;
     padding: 1rem 0;
     
@@ -143,15 +149,35 @@ const Horizontal = Styled.div`
             margin-right: 0;
         }
     }
+    
+    ${props => props.reverse && `
+        flex-direction: row-reverse;   
+        justify-content: flex-end;
+        
+        & > * {
+            margin-right: 0rem;
+            margin-left: 2rem;
+            
+            &:last-child {
+                margin-left: 0;
+            }
+        }
+    `}
 `
 
-const CenteredHorizontal = Styled(Horizontal)`
+const CenteredHorizontal = Styled(Horizontal)<HorizontalProps>`
     align-items: center;
     margin-top: 1rem;
     padding: 0;
 `
 
-const refMap = { 'Kepler': 1, 'Kepler2': 2, 'Kepler 3': 3 }
+const ListLc = Styled(ListSection)`
+    & > * {
+        margin-bottom: 2rem;
+    }
+`
+
+const refMap = { 'Kepler': 1, 'Kepler2': 2, 'Kepler11': 3, 'Kepler 12': 4 }
 
 const SystemView = ({ ...props }: Props) => {
 
@@ -202,15 +228,30 @@ const SystemView = ({ ...props }: Props) => {
                                     <SkyMap />
                                 </Horizontal>
                                 <Subtitle>
-                                    Pozorování
+                                    {strings.observations}
                                 </Subtitle>
                                 <Subsubtitle>
-                                    Světelná křivka ({system.payload.light_curves.length})
+                                    {strings.lightCurve} ({system.payload.light_curves.length})
                                 </Subsubtitle>
-                                <ListSection items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
-                                    <div key={i}>
-                                        <Curve data={lc.flux} color='#FAA' width={390} height={200} />
-                                    </div>
+                                <ListLc items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
+                                    <CenteredHorizontal key={i} reverse={i % 2 > 0}>
+                                        <Curve data={lc} color='#FAA' width={390} height={200} />
+                                        <Table>
+                                            <tbody>
+                                                <tr>
+                                                    <th colSpan={2}>{lc.dataset} <Ref refMap={refMap} refs={lc.dataset} /></th>
+                                                </tr>
+                                                <tr>
+                                                    <td>Počet pozorování</td>
+                                                    <td>{Numbers.format(lc.n_observations)}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Délka</td>
+                                                    <td>{Numbers.format(lc.n_days)} d</td>
+                                                </tr>
+                                            </tbody>
+                                        </Table>
+                                    </CenteredHorizontal>
                                 ))}  />
                                 <Subsubtitle>
                                     Radiální rychlost (0)
@@ -272,9 +313,9 @@ const SystemView = ({ ...props }: Props) => {
                                                     </tbody>
                                                 </HTable>
                                                 <Horizontal>
-                                                    <Curve data={planet.properties[0].transit!.flux} color='#AFA'
+                                                    <Curve data={planet.properties[0].transit!.flux as any} color='#AFA'
                                                                width={390} height={200} />
-                                                    <Curve data={planet.properties[0].transit!.flux} color='#AFA'
+                                                    <Curve data={planet.properties[0].transit!.flux as any} color='#AFA'
                                                                width={390} height={200} />
                                                 </Horizontal>
                                             </>
@@ -444,7 +485,7 @@ const SystemView = ({ ...props }: Props) => {
                             ]
                         ]} lifeZones={[
                             { from: 90e6, to: 250e6 },
-                            { from: system.payload.properties[0].life_zone.min_radius * 149597870, to: system.payload.properties[0].life_zone.max_radius * 149597870 }
+                            { from: system.payload.properties[0] ? system.payload.properties[0].life_zone.min_radius * 149597870 : 0, to: system.payload.properties[0] ? system.payload.properties[0].life_zone.max_radius * 149597870 : 0 }
                         ]} />
                         <Subsubtitle>
                             Interaktivní model

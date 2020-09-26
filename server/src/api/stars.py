@@ -69,7 +69,13 @@ star_properties = api.ns.inherit("StarProperties", new_star, {
 
 light_curve = api.ns.model("LightCurve", {
     "name": fields.String(required=True, max_length=50, description="Name of star within dataset."),
-    "flux": fields.List(fields.Float(required=True), max_items=100, description="Preview of light curve."),
+    "plot": fields.String(required=True, description="Name of file with rendered plot."),
+    "min_flux": fields.Float(required=True, description="Minimum flux in light curve."),
+    "max_flux": fields.Float(required=True, description="Maximum flux in light curve"),
+    "min_time": fields.Float(required=True, description="Minimum time in light curve."),
+    "max_time": fields.Float(required=True, description="Maximum time in light curve."),
+    "n_observations": fields.Float(required=True, description="Size of light curve."),
+    "n_days": fields.Float(required=True, description="Length of light curve."),
     "dataset": fields.String(required=True, max_length=50, description="Name of dataset from which light curve originates."),
 })
 

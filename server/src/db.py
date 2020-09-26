@@ -206,8 +206,13 @@ planet_dao = Dao(Planet, [{"$addFields": {"datasets": {"$size": "$properties"}}}
 class LightCurve(EmbeddedDocument):
     name = StringField(required=True, max_length=50)
     dataset = ReferenceField(Dataset, required=True)
-    flux = ListField(FloatField(required=True), max_length=100)
-    #planets = ListField(ReferenceField(Planet), required=True, default=[])
+    plot = StringField(required=True)
+    min_flux = FloatField(required=True)
+    max_flux = FloatField(required=True)
+    min_time = FloatField(required=True)
+    max_time = FloatField(required=True)
+    n_observations = FloatField(required=True)
+    n_days = FloatField(required=True)
 
 
 class Star(Document):

@@ -59,7 +59,13 @@ export interface StarProperties {
 
 export interface LightCurve {
     name: string
-    flux: number[]
+    plot: string
+    min_time: number
+    max_time: number
+    min_flux: number
+    max_flux: number
+    n_observations: number
+    n_days: number
     dataset: string
 }
 
