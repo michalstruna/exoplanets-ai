@@ -34,6 +34,8 @@ export interface StarProperties {
     name: string
     mass?: number
     diameter?: number
+    density?: number
+    surface_gravity?: number
     surface_temperature?: number
     luminosity?: number
     apparent_magnitude?: number
@@ -47,12 +49,29 @@ export interface StarProperties {
     }
     planets?: PlanetData[]
     distance?: number
+    dataset: string
+    age?: number
+    dec?: number
+    ra?: number
+    constellation?: string
+    life_zone?: LifeZone
 }
 
 export interface LightCurve {
     name: string
-    flux: number[]
+    plot: string
+    min_time: number
+    max_time: number
+    min_flux: number
+    max_flux: number
+    n_observations: number
+    n_days: number
     dataset: string
+}
+
+export interface LifeZone {
+    min_radius?: number
+    max_radius?: number
 }
 
 export interface StarData {

@@ -77,6 +77,8 @@ export default {
         absoluteMagnitude: 'Abs. mag.',
         apparentMagnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
         metallicity: { [CS]: 'Metalicita', [EN]: 'Metallicity' },
+        ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
+        dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
 
         // Planets
         semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
@@ -144,7 +146,12 @@ export default {
             [SpectralClass.G]: { [CS]: 'Žlutý', [EN]: 'Yellow' },
             [SpectralClass.K]: { [CS]: 'Oranžový', [EN]: 'Orange' },
             [SpectralClass.M]: { [CS]: 'Červený', [EN]: 'Red' }
-        }
+        },
+
+        orbit: { [CS]: 'Orbita planety', [EN]: 'Planet orbit' },
+        lifeZone: { [CS]: 'Zóna života', [EN]: 'Life zone' },
+        legend: { [CS]: 'Legenda', [EN]: 'Legend' },
+        distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' }
     },
 
     planets: {

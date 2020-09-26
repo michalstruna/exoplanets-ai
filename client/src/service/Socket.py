@@ -6,12 +6,13 @@ from utils import time
 from service.Device import DeviceService
 from constants.Process import ProcessState, TaskType, LogType
 from service.Astro import LightCurveService
-from constants.Universe import LiveType
+from service.Plot import PlotService
 
 sio = socketio.Client()
 sio.connect("http://localhost:5000")  # TODO: Config.
 
 device = DeviceService()
+plot = PlotService()
 
 
 def log(type, **values):
@@ -42,6 +43,7 @@ def run(task):
         task["meta"]["size"] = lc_service.get_tps_size(tps)
         print("=== Before to_lc.")
         lc = lc_service.tps_to_lc(tps)
+
         print("=== Before pd.")
         pd, peaks = lc_service.get_pd(lc)
 
@@ -59,11 +61,19 @@ def run(task):
                     "flux": list(lv.flux)
                 })
 
+        short_lc = lc[lc.time - lc.time[0] < 100].remove_nans()
+
         task["solution"] = {
             "transits": transits,
             "light_curve": {
                 "name": task["item"],
-                "flux": list(lc.bin(bins=99).remove_outliers().flux),
+                "plot": plot.plot_lc(short_lc.time, short_lc.flux),
+                "min_flux": round(np.min(short_lc.flux), 4),
+                "max_flux": round(np.max(short_lc.flux), 4),
+                "min_time": round(np.min(short_lc.time), 4),
+                "max_time": round(np.max(short_lc.time), 4),
+                "n_observations": len(lc.flux),
+                "n_days": round(lc.time[-1] - lc.time[0]),
                 "dataset": "Kepler 12"
             }
         }

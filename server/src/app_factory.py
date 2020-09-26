@@ -9,7 +9,7 @@ from service.Socket import SocketService
 
 
 def create_app(config_name=None):
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="../public", static_url_path="/public")
     CORS(app)
     JWTManager(app)
     app.config.from_pyfile("config/base.cfg", silent=True)

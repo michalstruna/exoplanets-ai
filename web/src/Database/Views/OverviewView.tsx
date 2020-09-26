@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Color, Dimension, size } from '../../Style'
-import { Chart, TopLevelStats } from '../../Stats'
+import { TopLevelStats } from '../../Stats'
 import { Table } from '../../Layout'
 import { UsersBlock } from '../../User'
 import PlanetsRank from '../Components/PlanetsRank'
@@ -69,20 +69,6 @@ const PlanetsRankBlock = Styled(PlanetsRank)`
     }
 `
 
-const FlexContainer = Styled.div`
-    display: flex;
-    overflow: hidden;
-    
-    & > * {
-        flex: 1 1 0;
-        margin-right: 1rem;
-        
-        &:last-of-type {
-            margin-right: 0;
-        }
-    }
-`
-
 const randomPlanets = [] as any
 
 for (let i = 0; i < 20; i++) {
@@ -92,15 +78,6 @@ for (let i = 0; i < 20; i++) {
         method: Math.round(Math.random() * 5).toString()
     })
 }
-
-const barData = [
-    { size: '< 0.5', count: 163 },
-    { size: '0.5-2', count: 463 },
-    { size: '2-6', count: 599 },
-    { size: '6-15', count: 415 },
-    { size: '> 15', count: 160 }
-]
-
 
 const OverviewView = ({ ...props }: Props) => {
 
@@ -113,29 +90,11 @@ const OverviewView = ({ ...props }: Props) => {
                     computingTime: 5235.231465,
                     volunteers: 123
                 }} />
-                <Chart
-                    type={Chart.Type.SCATTER}
-                    items={randomPlanets}
-                    x={{ name: 'period', title: 'Perioda [dny]' }}
-                    y={{ name: 'mass', title: 'Hmotnost [kg]', log: true }}
-                    z={{ name: 'method' }} />
 
-                <FlexContainer>
-                    <Chart
-                        type={Chart.Type.BAR}
-                        items={barData}
-                        x={{ name: 'size', title: 'Poloměr [poloměr Země]' }}
-                        y={{ name: 'count', title: 'Počet' }} />
-                    <div>
-                        Zemi nejpodobnější exoplanety
-                    </div>
-                </FlexContainer>
-
-                Objevených planet celkem | transit | radial velocity
                 <br />
-                Z toho potenciálně obyvatelných
-                Zkontrolovaných hvězd
-                Tabulka spektrálních tříd a objeveých exoplanet
+                Scatter chart (mass x period x method)
+                <br />
+                Bar chart (count x planet size)
             </Left>
             <Center>
                 <Todo />

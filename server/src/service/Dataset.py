@@ -27,8 +27,8 @@ class DatasetService(Service):
             items = items.where(pd.notnull(items), None)
             dataset["processed"], dataset["items"] = items.memory_usage().sum(), []
             result = self.dao.add(dataset)
-
-            stars = list(map(lambda star: db.Star(properties=[{**self.star_service.complete_star(star), "dataset": result["name"]}]), items.to_dict("records")))
+            items["dataset"] = result["name"]
+            stars = self.star_service.complete_stars(items.to_dict("records"))
             self.star_service.upsert_all_by_name(stars)
         else:
             result = self.dao.add(dataset)

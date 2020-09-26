@@ -9,6 +9,7 @@ enum Color {
     RED = '#D00',
     GREEN = '#3C3',
     DARK_GREEN = '#383',
+    BLUE = '#9EF',
 
     BACKGROUND = '#252A25',
 
@@ -20,7 +21,8 @@ enum Color {
 
     DARKEST_HOVER = '#252525',
 
-    YELLOW = '#DB0'
+    YELLOW = '#DB0',
+    DARK_YELLOW = 'rgba(200, 180, 0, 0.4)'
 }
 
 export default Color

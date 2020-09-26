@@ -7,6 +7,7 @@ from constants.Discovery import ProcessState
 from service.Dataset import DatasetService
 from service.Planet import PlanetService
 from service.Star import StarService
+from service.File import FileService
 
 
 class SocketService(metaclass=patterns.Singleton):
@@ -20,6 +21,7 @@ class SocketService(metaclass=patterns.Singleton):
         self.star_service = StarService()
         self.planet_service = PlanetService()
         self.tasks = {}
+        self.file_service = FileService()
 
         @sio.on("client_connect")
         def client_connect(client):
@@ -119,24 +121,27 @@ class SocketService(metaclass=patterns.Singleton):
 
             self.update_client(client_id)
             self.emit_client("run", task, id=client_id)
-        except Exception as e:
-            print(222, e)
+        except:
             pass
 
     def finish_task(self, task):
         """
         Finish task by client.
         """
+        lc_plot = self.file_service.save_lc(task["solution"]["light_curve"]["plot"])
+        task["solution"]["light_curve"]["plot"] = lc_plot
+
         updated = {
             "inc__time": time.now() - task["meta"]["created"],
             "inc__processed": task["meta"]["size"],
-            "pop__items": -1
+            #"pop__items": -1
         }
         dataset = self.dataset_service.update(task["dataset_id"], updated)
         light_curve = task["solution"]["light_curve"]  # TODO: target_pixel
 
         try:
             star = self.star_service.get_by_name(task["item"])
+            star = self.star_service.update(star["_id"], {"push__light_curves": light_curve})
         except:
             star = self.star_service.add({"light_curves": [light_curve]})
 

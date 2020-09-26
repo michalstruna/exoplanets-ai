@@ -143,6 +143,11 @@ class StarType(EmbeddedDocument):
     luminosity_subclass = StringField(enum=LuminositySubclass.values())
 
 
+class LifeZone(EmbeddedDocument):
+    min_radius = FloatField(min=0)
+    max_radius = FloatField(min=0)
+
+
 class StarProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50, unique=True, sparse=True)
     diameter = FloatField(min_value=0)
@@ -153,11 +158,16 @@ class StarProperties(EmbeddedDocument):
     luminosity = FloatField(min_value=0)
     distance = FloatField(min_value=0)
     type = EmbeddedDocumentField(StarType)
-    distance = FloatField(min_value=0)
     apparent_magnitude = FloatField()
     absolute_magnitude = FloatField()
     metallicity = FloatField()
     dataset = StringField(required=True)
+    constellation = StringField()
+
+    life_zone = EmbeddedDocumentField(LifeZone, default={})
+    ra = FloatField()
+    dec = FloatField()
+    distance = FloatField(min_value=0)
 
 
 class Transit(EmbeddedDocument):
@@ -196,8 +206,13 @@ planet_dao = Dao(Planet, [{"$addFields": {"datasets": {"$size": "$properties"}}}
 class LightCurve(EmbeddedDocument):
     name = StringField(required=True, max_length=50)
     dataset = ReferenceField(Dataset, required=True)
-    flux = ListField(FloatField(required=True), max_length=100)
-    #planets = ListField(ReferenceField(Planet), required=True, default=[])
+    plot = StringField(required=True)
+    min_flux = FloatField(required=True)
+    max_flux = FloatField(required=True)
+    min_time = FloatField(required=True)
+    max_time = FloatField(required=True)
+    n_observations = FloatField(required=True)
+    n_days = FloatField(required=True)
 
 
 class Star(Document):

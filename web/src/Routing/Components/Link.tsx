@@ -57,7 +57,7 @@ const Link = ({ hash, query, pathname, replace, enabledParent, ...props }: Props
             {...props}
             activeClassName={Link.ACTIVE.replace('.', '')}
             onClick={handleClick}
-            isActive={(match, location) => !pathname || ((enabledParent ? location.pathname === pathname : location.pathname.startsWith(pathname)) && (pathname !== '/' || pathname === location.pathname))}
+            isActive={(match, location) => !hash && (!pathname || ((enabledParent ? location.pathname === pathname : location.pathname.startsWith(pathname)) && (pathname !== '/' || pathname === location.pathname)))}
             to={Urls.merge(target)} />
     )
 }

@@ -9,7 +9,7 @@ export const PageTitle = Styled.h1`
 
 export const SectionTitle = Styled.h2`
     font-size: 150%;
-    margin-bottom: 0.75rem;
+    padding: 1rem 0;
 `
 
 export const MinorSectionTitle = Styled.h3`
@@ -17,7 +17,6 @@ export const MinorSectionTitle = Styled.h3`
     font-size: 120%;
     font-weight: bold;
     margin: 0;
-    margin-bottom: 0.5rem;
     padding: 1rem 0;
     width: 100%;
     white-space: nowrap;
