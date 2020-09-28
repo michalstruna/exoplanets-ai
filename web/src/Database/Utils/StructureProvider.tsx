@@ -167,7 +167,7 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                             { name: 'surface_temperature', unit: 'K', multi: 'properties' },
                             { name: 'distance', unit: 'ly', multi: 'properties' },
                             { name: 'luminosity', unit: '☉', multi: 'properties' },
-                            { name: 'transit_depth', format: (_, item) => item.light_curves[0] && <Curve data={item.light_curves[0]} color='#FAA' simple={true} />, title: <Colored color='#FAA'>{strings.properties.lightCurve}</Colored>, width: '20rem' },
+                            { name: 'transit_depth', format: (_, item) => item.light_curves[0] && <Curve data={item.light_curves[0]} simple={true} type={Curve.LC} />, title: <Colored color='#FAA'>{strings.properties.lightCurve}</Colored>, width: '20rem' },
                             { name: 'planets', format: (val, item) => item.planets.length },
                             { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
                             { name: 'absolute_magnitude', format: Numbers.format, multi: 'properties' },
@@ -193,7 +193,7 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                             { name: 'surface_temperature', unit: '°C', multi: 'properties' },
                             { name: 'semi_major_axis', unit: 'au', multi: 'properties' },
                             { name: 'orbital_period', format: val => Dates.formatDistance(strings, Dates.daysToMs(val), 0, Dates.Format.EXACT), multi: 'properties' },
-                            { name: 'transit_depth', format: (_, planet) => null/*<Curve data={planet.properties[0].transit!.flux} color='#AFA' simple={true} />*/, title: <Colored color='#AFA'>{strings.properties.transit}</Colored>, width: '20rem' },
+                            { name: 'transit_depth', format: (_, planet) => planet.properties[0]?.transit?.local_view && <Curve data={planet.properties[0].transit.local_view as any} simple={true} type={Curve.LV} />, title: <Colored color='#AFA'>{strings.properties.transit}</Colored>, width: '20rem' },
                             { name: 'life_conditions', format: val => strings.planets.lifeConditions[val], styleMap: lifeTypeStyle, multi: 'properties' },
                             { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
                             { name: 'orbital_velocity', unit: <Fraction top='km' bottom='s' />, multi: 'properties' },
@@ -224,7 +224,7 @@ export const provideStructure = (table: DbTable, strings: any): Structure => {
                             { name: 'luminosity', unit: '☉', multi: 'properties' },
                             { name: 'gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
                             { name: 'planets', format: (val, item) => item.planets.length },
-                            { name: 'transit_depth', format: (_, item) => item.light_curves[0] && <Curve data={item.light_curves[0]} color='#FAA' simple={true} />, title: <Colored color='#FAA'>{strings.properties.lightCurve}</Colored>, width: '20rem' },
+                            { name: 'transit_depth', format: (_, item) => item.light_curves[0] && <Curve data={item.light_curves[0]} simple={true} type={Curve.LC} />, title: <Colored color='#FAA'>{strings.properties.lightCurve}</Colored>, width: '20rem' },
                             { name: 'dataset', format: val => <IconText text={val} icon='/img/Database/Dataset/StarProperties.svg' />, width: 1.5, multi: 'properties' }
                         ], strings)
                     }

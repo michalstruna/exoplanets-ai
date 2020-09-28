@@ -84,37 +84,18 @@ const Table = Styled.table`
     }
 `
 
-const HTable = Styled.table`
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-collapse: collapse;
-    margin: 1rem 0;
-    table-layout: fixed;
+const HTable = Styled(Table)`
     width: 100%;
-    
-    td, th {
-        box-sizing: border-box;
-        padding: 0.75rem 1rem;
-        width: calc(100% / 6);
+`
+
+const Actions = Styled(HTable)`
+    td {
+        background-color: transparent !important;
+        text-align: left !important;
     }
     
-    th {
-        background-color: rgba(0, 0, 0, 0.2);
-    }
-    
-    tr {
-        &:nth-of-type(2n) {
-            background-color: rgba(0, 0, 0, 0.1);
-        
-            td:nth-of-type(2n + 1) {
-                background-color: rgba(0, 0, 0, 0.1);
-            }
-        }
-        
-        &:nth-of-type(2n + 1) {
-            td:nth-of-type(2n + 1) {
-                background-color: rgba(0, 0, 0, 0.1);
-            }
-        }
+    tr:nth-of-type(2n) {
+        background-color: rgba(0, 0, 0, 0.1);
     }
 `
 
@@ -177,13 +158,29 @@ const ListLc = Styled(ListSection)`
     }
 `
 
-const refMap = { 'Kepler': 1, 'Kepler2': 2, 'Kepler11': 3, 'Kepler 12': 4 }
-
 const SystemView = ({ ...props }: Props) => {
 
     const systemName = useRouter<any>().match.params.system
     const system = useSystem()
-    const strings = useStrings().system
+    const str = useStrings()
+    const strings = str.system
+    const properties = str.properties
+    const planets = str.planets
+
+    const refMap = React.useMemo(() => {
+        if (!system.payload) {
+            return {}
+        }
+
+        const result: Record<string, number> = {}
+
+        for (const i in system.payload.datasets) {
+            const dataset = system.payload.datasets[i]
+            result[dataset.name] = parseInt(i) + 1
+        }
+
+        return result
+    }, [system])
 
     return (
         <Async
@@ -235,7 +232,7 @@ const SystemView = ({ ...props }: Props) => {
                                 </Subsubtitle>
                                 <ListLc items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
                                     <CenteredHorizontal key={i} reverse={i % 2 > 0}>
-                                        <Curve data={lc} color='#FAA' width={390} height={200} />
+                                        <Curve data={lc} width={390} height={200} type={Curve.LC} />
                                         <Table>
                                             <tbody>
                                                 <tr>
@@ -265,8 +262,8 @@ const SystemView = ({ ...props }: Props) => {
                                     {strings.planets} ({system.payload.planets.length})
                                 </Subtitle>
                                 <ListSection items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
-                                    system.payload.planets.map((planet: PlanetData, i: number) => (
-                                            <>
+                                    system.payload.planets.map((planet: PlanetData, j: number) => (
+                                            <React.Fragment key={j}>
                                                 <CenteredHorizontal>
                                                     <ItemPreview.Planet item={planet} titleComponent={Subsubtitle} />
                                                     <Tags items={Value.Star.names(system.payload, name => ({ text: name }))} />
@@ -274,51 +271,49 @@ const SystemView = ({ ...props }: Props) => {
                                                 <HTable>
                                                     <tbody>
                                                     <tr>
-                                                        <th colSpan={2}>Hmota</th>
-                                                        <th colSpan={2}>Dráha</th>
-                                                        <th colSpan={2}>Ostatní</th>
+                                                        <th colSpan={2}>{strings.matter}</th>
+                                                        <th colSpan={2}>{strings.orbit}</th>
+                                                        <th colSpan={2}>{strings.other}</th>
                                                     </tr>
                                                     <tr>
-                                                        <td>Průměr</td>
-                                                        <td>12 756</td>
-                                                        <td>Perioda oběhu</td>
-                                                        <td>12 756</td>
-                                                        <td>Život</td>
-                                                        <td>12 756</td>
+                                                        <td>{properties.diameter}</td>
+                                                        <td>{Value.Planet.props(planet, 'diameter', { refMap, unit: <>d<sub>⊕</sub></> })}</td>
+                                                        <td>{properties.orbitalPeriod}</td>
+                                                        <td>{Value.Planet.props(planet, 'orbital_period', { refMap, unit: 'd' })}</td>
+                                                        <td>{properties.lifeConditions}</td>
+                                                        <td>{Value.Planet.props(planet, 'life_conditions', { refMap })}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Hmotnost</td>
-                                                        <td>12 756</td>
-                                                        <td>Velká poloosa</td>
-                                                        <td>12 756</td>
-                                                        <td>Teplota</td>
-                                                        <td>12 756</td>
+                                                        <td>{properties.mass}</td>
+                                                        <td>{Value.Planet.props(planet, 'mass', { refMap, unit: <>M<sub>⊕</sub></> })}</td>
+                                                        <td>{properties.semiMajorAxis}</td>
+                                                        <td>{Value.Planet.props(planet, 'semi_major_axis', { refMap, unit: <>M<sub>⊕</sub></> })}</td>
+                                                        <td>{properties.surfaceTemperature}</td>
+                                                        <td>{Value.Planet.props(planet, 'surface_temperature', { refMap, unit: 'K' })}</td>
+                                                    </tr>
+                                                    <tr> 
+                                                        <td>{properties.density}</td>
+                                                        <td>{Value.Planet.props(planet, 'density', { refMap, unit: 'd' })}</td>
+                                                        <td>{properties.orbitalVelocity}</td>
+                                                        <td>{Value.Planet.props(planet, 'orbital_velocity', { refMap, unit: 'd' })}</td>
+                                                        <td>{properties.status}</td>
+                                                        <td>{planets.statuses[planet.status]}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Hustota</td>
-                                                        <td>12 756</td>
-                                                        <td>Rychlost oběhu</td>
-                                                        <td>12 756</td>
-                                                        <td>Status</td>
-                                                        <td>12 756</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Gravitace</td>
-                                                        <td>12 756</td>
-                                                        <td>Excentricita</td>
-                                                        <td>12 756</td>
-                                                        <td>Hmotnost</td>
-                                                        <td>12 756</td>
+                                                        <td>{properties.surfaceGravity}</td>
+                                                        <td>{Value.Planet.props(planet, 'surface_gravity', { refMap })}</td>
+                                                        <td>{properties.eccentricity}</td>
+                                                        <td>{Value.Planet.props(planet, 'eccentricity', { refMap })}</td>
+                                                        <td>???</td>
+                                                        <td>???</td>
                                                     </tr>
                                                     </tbody>
                                                 </HTable>
                                                 <Horizontal>
-                                                    <Curve data={planet.properties[0].transit!.flux as any} color='#AFA'
-                                                               width={390} height={200} />
-                                                    <Curve data={planet.properties[0].transit!.flux as any} color='#AFA'
-                                                               width={390} height={200} />
+                                                    <Curve data={planet.properties[0].transit?.local_view as any} type={Curve.LV} width={390} height={200} />
+                                                    <Curve data={planet.properties[0].transit?.global_view as any} type={Curve.GV} width={390} height={200} />
                                                 </Horizontal>
-                                            </>
+                                            </React.Fragment>
                                         ))
                                 ))}  />
                             </MainLeft>
@@ -466,26 +461,28 @@ const SystemView = ({ ...props }: Props) => {
                         </Subsubtitle>
                         <DistanceVisualization systems={[
                             [
-                                { name: 'Slunce', distance: 0, size: 1392684 },
-                                { name: 'Merkur', distance: 58e6 },
-                                { name: 'Venuše', distance: 100e6 },
-                                { name: 'Země', distance: 150e6 },
-                                { name: 'Mars', distance: 228e6 },
-                                { name: 'Jupiter', distance: 778e6 },
-                                { name: 'Saturn', distance: 1433e6 },
-                                { name: 'Uran', distance: 2872e6 },
-                                { name: 'Neptun', distance: 4498e6 }
+                                { name: 'Slunce', distance: 0, size: 0.0093 },
+                                { name: 'Merkur', distance: 0.387 },
+                                { name: 'Venuše', distance: 0.668 },
+                                { name: 'Země', distance: 1 },
+                                { name: 'Mars', distance: 1.52 },
+                                { name: 'Jupiter', distance: 5.2 },
+                                { name: 'Saturn', distance: 9.58 },
+                                { name: 'Uran', distance: 19.198 },
+                                { name: 'Neptun', distance: 30.067 }
                             ],
                             [
-                                { name: 'Kepler-10', distance: 0, size: 162147 },
-                                ...system.payload.planets.map((planet: PlanetData) => ({
+                                { name: 'Kepler-10', distance: 0, size: 0.005 },
+                                { name: 'K1', distance: 0.01  },
+                                { name: 'K2', distance: 0.7  },
+                                /*...system.payload.planets.map((planet: PlanetData) => ({
                                     name: planet.properties[0].name,
                                     distance: Math.random() * 10e7
-                                }))
+                                }))*/
                             ]
                         ]} lifeZones={[
-                            { from: 90e6, to: 250e6 },
-                            { from: system.payload.properties[0] ? system.payload.properties[0].life_zone.min_radius * 149597870 : 0, to: system.payload.properties[0] ? system.payload.properties[0].life_zone.max_radius * 149597870 : 0 }
+                            { from: 0.6, to: 1.67 },
+                            { from: system.payload.properties[0] ? system.payload.properties[0].life_zone.min_radius : 0, to: system.payload.properties[0] ? system.payload.properties[0].life_zone.max_radius : 0 }
                         ]} />
                         <Subsubtitle>
                             Interaktivní model
@@ -493,16 +490,12 @@ const SystemView = ({ ...props }: Props) => {
                         <Subtitle>
                             Reference
                         </Subtitle>
-                        <References items={[
-                            ...system.payload.properties,
-                            ...(system.payload.light_curves || []),
-                            ...system.payload.planets
-                        ] as any} />
+                        <References items={system.payload.datasets} />
                         <Subtitle>
                             Aktivity
                         </Subtitle>
                         <History>
-                            <HTable>
+                            <Actions>
                                 <tbody>
                                 <tr>
                                     <th>Datum</th>
@@ -525,7 +518,7 @@ const SystemView = ({ ...props }: Props) => {
                                     </tr>
                                 ))}
                                 </tbody>
-                            </HTable>
+                            </Actions>
                         </History>
                     </Main>
                 </Root>

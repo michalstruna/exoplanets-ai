@@ -50,15 +50,27 @@ def run(task):
         transits = []
 
         for peak in peaks:
-            gv = lc_service.get_gv(lc, pd, peak)
-            lv = lc_service.get_lv(lc, pd, peak)
+            gv_norm = lc_service.get_gv(lc, pd, peak, norm=True)
+            lv_norm = lc_service.get_lv(lc, pd, peak, norm=True)
 
-            if lc_service.is_planet(gv, lv):
+            if lc_service.is_planet(gv_norm, lv_norm):
+                gv = lc_service.get_gv(lc, pd, peak)
+                lv = lc_service.get_lv(lc, pd, peak)
+
                 transits.append({
                     "period": pd.period[peak].value,
                     "depth": pd.depth[peak],
                     "duration": pd.duration[peak].value,
-                    "flux": list(lv.flux)
+                    "local_view": {
+                        "plot": plot.plot_lc(lv.time, lv.flux),
+                        "min_flux": round(np.min(lv.flux), 4),
+                        "max_flux": round(np.max(lv.flux), 4)
+                    },
+                    "global_view": {
+                        "plot": plot.plot_lc(gv.time, gv.flux),
+                        "min_flux": round(np.min(gv.flux), 4),
+                        "max_flux": round(np.max(gv.flux), 4)
+                    },
                 })
 
         short_lc = lc[lc.time - lc.time[0] < 100].remove_nans()

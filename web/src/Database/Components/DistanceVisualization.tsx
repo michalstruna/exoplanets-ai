@@ -37,6 +37,7 @@ const GridLine = Styled.div`
     text-indent: 0.5rem;
     top: 0;
     white-space: nowrap;
+    z-index: 1;
     
     &:after {
         ${size('1px', '100%')}
@@ -91,6 +92,7 @@ const Legend = Styled.div`
     right: 1rem;
     top: 50%;
     transform: translateY(-50%);
+    z-index: 10;
 `
 
 const LegendTitle = Styled.div`
@@ -126,7 +128,7 @@ const getMinDistance = (systems: Item[][]) => {
 }
 
 const getMaxDistance = (systems: Item[][]) => {
-    return Arrays.getNthExtreme((systems[1].length > 1 ? systems[1] : systems[0]).map(system => system.distance), Math.max, 2)
+    return Math.max(systems[0][1].distance, Arrays.getNthExtreme((systems[1].length > 1 ? systems[1] : systems[0]).map(system => system.distance), Math.max, 1))
 }
 
 const DistanceVisualization = ({ systems, lifeZones, ...props }: Props) => {
@@ -135,14 +137,19 @@ const DistanceVisualization = ({ systems, lifeZones, ...props }: Props) => {
 
     const minDistance = getMinDistance(systems)
     const maxDistance = getMaxDistance(systems)
-    const ratio = Math.min(50 / minDistance, window.screen.width * 0.67 / maxDistance)
-    const step = (maxDistance - minDistance) / 10
+
+    const minRatio = (window.screen.width - 240) * 0.05 / minDistance
+    const maxRatio = (window.screen.width - 240 - 200) / maxDistance
+    const ratio = Math.min(minRatio, maxRatio)
+    const step = minRatio > maxRatio ? maxDistance / 10 : minDistance * 2
+
+    console.log(minDistance, maxDistance, ratio, step)
 
     return (
         <Root {...props}>
             {new Array(15).fill(null).map((_, i) => (
                 <GridLine style={{ left: ratio * step * i }} key={i}>
-                    {Numbers.format(step * i / (0.5 * 149597870)) + ' au'}
+                    {Numbers.format(step * i / 0.5) + ' au'}
                 </GridLine>
             ))}
             <Legend>

@@ -6,7 +6,7 @@ import { Color, size } from '../../Style'
 interface Props extends React.ComponentPropsWithoutRef<'canvas'> {
     data: LightCurve
     simple?: boolean
-    color?: string
+    type: string
 }
 
 const Root = Styled.div`
@@ -88,7 +88,7 @@ const range = (min: number, max: number, count: number): number[] => {
     return result
 }
 
-const Curve = ({ data, simple, color, ...props }: Props) => {
+const Curve = ({ data, simple, type, ...props }: Props) => {
 
     return (
         <Root style={{ backgroundSize: '100% auto', height: '100%', width: '100%' }}>
@@ -103,14 +103,14 @@ const Curve = ({ data, simple, color, ...props }: Props) => {
                         {simple ? null : new Array(simple ? 4 : 6).fill(null).map((_, i) => <HLine key={i} />)}
                     </HGrid>
                     <VGrid>
-                        {simple ? null : new Array(simple ? 4 : 8).fill(null).map((_, i) => <VLine key={i} />)}
+                        {simple ? null : new Array(simple ? 4 : 10).fill(null).map((_, i) => <VLine key={i} />)}
                     </VGrid>
-                    <Image src={`http://localhost:5000/public/lc/${data.plot}`} />
+                    <Image src={`http://localhost:5000/public/${type}/${data.plot}`} />
                 </Plot>
                 {!simple && (
                     <XAxis>
-                        {range(data.min_time, data.max_time, simple ? 4 : 8).map((time, i) => (
-                            <Tick key={i}>{Math.round(time)}</Tick>
+                        {range(data.min_time ?? -0.5, data.max_time ?? 0.5, simple ? 4 : 10).map((time, i) => (
+                            <Tick key={i}>{Math.round(time * 10) / 10}</Tick>
                         ))}
                     </XAxis>
                 )}
@@ -118,6 +118,16 @@ const Curve = ({ data, simple, color, ...props }: Props) => {
         </Root>
     )
 
+}
+
+Curve.LV = 'lv'
+Curve.GV = 'gv'
+Curve.LC = 'lc'
+
+const colorMap = {
+    [Curve.LV]: '#FAA',
+    [Curve.LV]: '#AFA',
+    [Curve.GV]: '#AAF'
 }
 
 export default Curve

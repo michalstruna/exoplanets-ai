@@ -22,8 +22,26 @@ class StarService(Service):
 
         return [{"$sort": sort}]
 
+    def get_filter_by_name(self, name):
+        return {"$or": [{"properties.name": name}, {"light_curves.name": name}]}
+
     def get_by_name(self, name):
-        return self.dao.get({"$or": [{"properties.name": name}, {"light_curves.name": name}]})
+        return self.dao.get(self.get_filter_by_name(name))
+
+    def get_dataset_names(self, star):
+        result = set()
+
+        for props in star["properties"]:
+            result.add(props["dataset"])
+
+        for lc in star["light_curves"]:
+            result.add(lc["dataset"])
+
+        for planet in star["planets"]:
+            for props in planet["properties"]:
+                result.add(props["dataset"])
+
+        return list(result)
 
     def aggregate(self, operations, filter={}, limit=None, skip=None, sort=None, with_index=False):
         pipeline = [{"$unwind": "$planets"}, {"$match": filter}, *self.get_sort(sort), {"$limit": limit}, {"$skip": skip}]
@@ -60,7 +78,7 @@ class StarService(Service):
             star = star.to_mongo()  # TODO: Remove?
 
             operations.append(UpdateOne(
-                {"properties": {"$elemMatch": {"name": star["properties"][0]["name"]}}},
+                self.get_filter_by_name(star["properties"][0]["name"]),
                 {"$push": {"properties": {"$each": star["properties"]}}},
                 upsert=True
             ))

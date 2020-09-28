@@ -83,3 +83,6 @@ class DatasetService(Service):
             result[fields[key]["name"]] = key
 
         return result
+
+    def get_all_by_names(self, names):
+        return self.get_all({"name": {"$in": names}})

@@ -13,7 +13,7 @@ class Service(ABC):
     def get(self, filter):
         return self.dao.get(filter)
 
-    def get_all(self, filter=[], sort=[], limit=math.inf, offset=0):
+    def get_all(self, filter=[], sort=[], limit=10e6, offset=0):
         return self.aggregate(self.dao.pipeline, filter=filter, limit=limit, skip=offset, sort=sort, with_index=True)
 
     def get_count(self, filter={}, **kwargs):
