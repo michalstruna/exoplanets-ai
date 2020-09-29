@@ -34,7 +34,7 @@ class LightCurveService:
         return lc.stitch(corrector_func=lambda lc: lc.remove_outliers().flatten(window_length=401)).remove_outliers(20)
 
     def get_pd(self, lc):
-        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 150, 0.1))  # TODO: 0.001
+        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 150, 0.001))  # TODO: 0.001
         med = np.median(pd.power)
         return pd, self.get_peaks(pd.power, around=int(pd.power.shape[0] / 20), minimum=med)
 

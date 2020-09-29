@@ -62,12 +62,12 @@ def run(task):
                     "depth": pd.depth[peak],
                     "duration": pd.duration[peak].value,
                     "local_view": {
-                        "plot": plot.plot_lc(lv.time, lv.flux),
+                        "plot": plot.plot_lc(lv.time, lv.flux, size=15, alpha=0.7),
                         "min_flux": round(np.min(lv.flux), 4),
                         "max_flux": round(np.max(lv.flux), 4)
                     },
                     "global_view": {
-                        "plot": plot.plot_lc(gv.time, gv.flux),
+                        "plot": plot.plot_lc(gv.time, gv.flux, size=15, alpha=0.7),
                         "min_flux": round(np.min(gv.flux), 4),
                         "max_flux": round(np.max(gv.flux), 4)
                     },

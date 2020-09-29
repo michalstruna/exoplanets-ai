@@ -112,14 +112,14 @@ const Curve = ({ data, simple, type, title, ...props }: Props) => {
             )}
             <InnerRoot>
                 <YAxis style={simple ? undefined : { paddingBottom: '1rem' }}>
-                    {range(data.max_flux, data.min_flux, simple ? 4 : 6).map((flux, i) => (
+                    {range(data.max_flux, data.min_flux, simple ? 3 : 6).map((flux, i) => (
                         <Tick key={i}>{flux}</Tick>
                     ))}
                 </YAxis>
                 <Vertical>
                     <Plot>
                         <HGrid>
-                            {simple ? null : new Array(simple ? 4 : 6).fill(null).map((_, i) => <HLine key={i} />)}
+                            {simple ? null : new Array(simple ? 3 : 6).fill(null).map((_, i) => <HLine key={i} />)}
                         </HGrid>
                         <VGrid>
                             {simple ? null : new Array(simple ? 4 : 10).fill(null).map((_, i) => <VLine key={i} />)}
