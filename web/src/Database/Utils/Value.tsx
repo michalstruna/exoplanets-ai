@@ -10,7 +10,8 @@ type PropRenderer<TValue, TItem> = (prop: TValue, i: number, item: TItem) => Rea
 type PropsOptions = {
     refMap?: Record<string, number>
     unit?: React.ReactNode
-    format?: (val: any, ref: any) => React.ReactNode
+    format?: (val: any) => React.ReactNode
+    render?: (val: any, ref: React.ReactNode) => React.ReactNode
 }
 
 const propsGetter = <Item extends { properties: Values[] }, Values extends any>() => (star: Item, name: keyof Values, options?: PropsOptions): React.ReactNode | null => {
@@ -18,12 +19,11 @@ const propsGetter = <Item extends { properties: Values[] }, Values extends any>(
 
     for (const props of star.properties) {
         const refId = props.dataset
-        const rawValue = props[name] !== null && props[name] !== undefined ? (options?.format ? options.format(props[name], null) : props[name]) : null
+        const rawValue = props[name] !== null && props[name] !== undefined ? (options?.format ? options.format(props[name]) : props[name]) : null
         const value = options?.unit ? <>{Numbers.format(rawValue as number)}{options.unit === '°' ? '' : ' '}{options.unit}</> : rawValue
-        const json = rawValue !== null && rawValue !== undefined ? renderToString(value as any) : null
+        const json = rawValue !== null && rawValue !== undefined ? (value && value.$$typeof ? renderToString(value) : JSON.stringify(value)) : null
 
         if (json !== null) {
-
             if (!cache[json]) {
                 cache[json] = [value, []]
             }
@@ -32,7 +32,7 @@ const propsGetter = <Item extends { properties: Values[] }, Values extends any>(
         }
     }
 
-    return Object.entries(cache).map(([key, [value, refs]], i) => (
+    return Object.entries(cache).map(([key, [value, refs]], i) => options?.render ? options.render(value, <Ref refMap={options?.refMap} refs={refs} />) : (
         <div key={i}>
             {value} <Ref refMap={options?.refMap} refs={refs} />
         </div>

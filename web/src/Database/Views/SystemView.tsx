@@ -333,7 +333,7 @@ const SystemView = ({ ...props }: Props) => {
                                                 </tbody>
                                             </HTable>
                                                 {Value.Planet.props(planet, 'transit', {
-                                                    refMap, format: (val, ref) => (
+                                                    refMap, render: (val, ref) => (
                                                         <Horizontal>
                                                             <Curve
                                                                 data={val?.local_view as any}
