@@ -131,10 +131,16 @@ class SocketService(metaclass=patterns.Singleton):
         lc_plot = self.file_service.save_lc(task["solution"]["light_curve"]["plot"])
         task["solution"]["light_curve"]["plot"] = lc_plot
 
+        for transit in task["solution"]["transits"]:
+            lv_plot = self.file_service.save_lv(transit["local_view"]["plot"])
+            transit["local_view"]["plot"] = lv_plot
+            gv_plot = self.file_service.save_gv(transit["global_view"]["plot"])
+            transit["global_view"]["plot"] = gv_plot
+
         updated = {
             "inc__time": time.now() - task["meta"]["created"],
             "inc__processed": task["meta"]["size"],
-            #"pop__items": -1
+            "pop__items": -1
         }
         dataset = self.dataset_service.update(task["dataset_id"], updated)
         light_curve = task["solution"]["light_curve"]  # TODO: target_pixel

@@ -1,8 +1,11 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Dataset, RefItem, StarData } from '../types'
+import Url from 'url'
+
+import { Dataset } from '../types'
 import useRouter from 'use-react-router'
 import { Color } from '../../Style'
+import { Link } from '../../Routing'
 
 interface Props extends React.ComponentPropsWithoutRef<'ol'> {
     items: Dataset[]
@@ -26,6 +29,14 @@ const Root = Styled.ol`
     }
 `
 
+const RefLink = Styled(Link)`
+    font-size: 90%;
+    
+    &:not(:hover):not(:active) {
+        border-bottom: 1px solid ${Color.LIGHTEST};
+    }
+`
+
 const References = ({ items, ...props }: Props) => {
 
     const { location } = useRouter()
@@ -33,12 +44,16 @@ const References = ({ items, ...props }: Props) => {
 
     return (
         <Root {...props}>
-            {items.map((item, i) => (
-                <li key={i} data-active={refId === i + 1 || undefined} id={`ref${i + 1}`}>
-                    NASA. (2019). Kepler mission. [Data file]. Retrieved from
-                    https://exoplanetarchive.ipac.caltech.edu.
-                </li>
-            ))}
+            {items.map((item, i) => {
+                const dataUrl = Url.parse(item.items_getter || item.item_getter || '')
+                const url = dataUrl.protocol + '//' + dataUrl.host
+
+                return (
+                    <li key={i} data-active={refId === i + 1 || undefined} id={`ref${i + 1}`}>
+                        NASA. (2019). {item.name}. [{item.type} dataset]. Retrieved from <RefLink pathname={url}>{url}</RefLink>.
+                    </li>
+                )
+            })}
         </Root>
     )
 

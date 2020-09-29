@@ -34,7 +34,7 @@ class LightCurveService:
         return lc.stitch(corrector_func=lambda lc: lc.remove_outliers().flatten(window_length=401)).remove_outliers(20)
 
     def get_pd(self, lc):
-        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 150, 0.1))  # TODO: 0.001
+        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 150, 0.001))  # TODO: 0.001
         med = np.median(pd.power)
         return pd, self.get_peaks(pd.power, around=int(pd.power.shape[0] / 20), minimum=med)
 
@@ -52,17 +52,21 @@ class LightCurveService:
 
         return peaks
 
-    def get_gv(self, lc, pd, peak):
+    def get_gv(self, lc, pd, peak, norm=False):
         t0 = pd.transit_time[peak]
         period = pd.period[peak]
 
         folded = lc.fold(period, t0=t0)
 
-        gv = folded.bin(bins=2001, method='median').normalize() - 1
-        gv = (gv / np.abs(gv.flux.min())) * 2.0 + 1
+        gv = folded.bin(bins=2001, method='median')
+
+        if norm:
+            gv = gv.normalize() - 1
+            gv = (gv / np.abs(gv.flux.min())) * 2.0 + 1
+
         return gv
 
-    def get_lv(self, lc, pd, peak):
+    def get_lv(self, lc, pd, peak, norm=False):
         t0 = pd.transit_time[peak]
         period = pd.period[peak]
         duration = pd.duration[peak]
@@ -73,8 +77,11 @@ class LightCurveService:
         phase_mask = (folded.phase > -4 * fractional_duration) & (folded.phase < 4.0 * fractional_duration)
         lc_zoom = folded[phase_mask]
 
-        lv = lc_zoom.bin(bins=201, method='median').normalize() - 1
-        lv = (lv / np.abs(lv.flux.min())) * 2.0 + 1
+        lv = lc_zoom.bin(bins=201, method='median')
+
+        if norm:
+            lv = lv.normalize() - 1
+            lv = (lv / np.abs(lv.flux.min())) * 2.0 + 1
         return lv
 
     def is_planet(self, gv, lv):

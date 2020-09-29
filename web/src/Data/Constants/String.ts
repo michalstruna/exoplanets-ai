@@ -87,7 +87,8 @@ export default {
         orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
         lifeConditions: { [CS]: 'Život', [EN]: 'Life' },
         planet: { [CS]: 'Planeta', [EN]: 'Planet' },
-        status: 'Status'
+        status: 'Status',
+        eccentricity: { [CS]: 'Excentricita', [EN]: 'Eccentricity' }
     },
 
     units: {
@@ -188,7 +189,12 @@ export default {
         distances: { [CS]: 'Vzdálenosti', [EN]: 'Distances' },
         model: { [CS]: 'Interaktivní model', [EN]: 'Interactive model' },
         references: { [CS]: 'Reference', [EN]: 'References' },
-        activities: { [CS]: 'Aktivity', [EN]: 'Activities' }
+        activities: { [CS]: 'Aktivity', [EN]: 'Activities' },
+        matter: { [CS]: 'Hmota', [EN]: 'Matter' },
+        orbit: { [CS]: 'Dráha', [EN]: 'Orbit' },
+        other: { [CS]: 'Ostatní', [EN]: 'Other' },
+        localView: { [CS]: 'Lokální pohled', [EN]: 'Local view' },
+        globalView: { [CS]: 'Globální pohled', [EN]: 'Global view' }
     },
 
     stats: {

@@ -1,8 +1,10 @@
 from flask_restx import fields, Resource
 
 from constants.Database import SpectralClass, SpectralSubclass, LuminosityClass, LuminositySubclass
+from service.Dataset import DatasetService
 from service.Star import StarService
 from utils.http import Api
+from .datasets import dataset
 from .planets import planet
 
 
@@ -87,18 +89,26 @@ star = api.ns.model("Star", {
     "index": fields.Integer(min=1)
 })
 
+star_detail = api.ns.inherit("StarDetail", star, {
+    "datasets": fields.List(fields.Nested(dataset))
+})
+
 
 star_service = StarService()
+dataset_service = DatasetService()
 
 
 @api.ns.route("/name/<string:name>")
 class StarByName(Resource):
 
-    @api.ns.marshal_with(star, description="Sucessfully get star by name,")
+    @api.ns.marshal_with(star_detail, description="Sucessfully get star by name,")
     @api.ns.response(404, "Star with specified name was not found.")
     def get(self, name):
-        return star_service.get_by_name(name)
+        star = star_service.get_by_name(name)
+        datasets = star_service.get_dataset_names(star)
+        star["datasets"] = dataset_service.get_all_by_names(datasets)
 
+        return star
 
 @api.ns.route("/<string:starId>/merge/<string:targetId>")
 class MergePlanets(Resource):

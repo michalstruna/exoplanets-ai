@@ -170,11 +170,18 @@ class StarProperties(EmbeddedDocument):
     distance = FloatField(min_value=0)
 
 
+class View(EmbeddedDocument):
+    plot = StringField(required=True)
+    min_flux = FloatField(required=True)
+    max_flux = FloatField(required=True)
+
+
 class Transit(EmbeddedDocument):
     period = FloatField(min_value=0, required=True)
     duration = FloatField(min_value=0, required=True)
     depth = FloatField(min_value=0, max_value=1, required=True)
-    flux = ListField(FloatField())
+    local_view = EmbeddedDocumentField(View, required=True)
+    global_view = EmbeddedDocumentField(View, required=True)
 
 
 class PlanetProperties(EmbeddedDocument):

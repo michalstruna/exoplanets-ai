@@ -3,13 +3,20 @@ import Styled from 'styled-components'
 import { LightCurve } from '../../Database/types'
 import { Color, size } from '../../Style'
 
-interface Props extends React.ComponentPropsWithoutRef<'canvas'> {
+interface Props extends Omit<React.ComponentPropsWithoutRef<'canvas'>, 'title'> {
     data: LightCurve
     simple?: boolean
-    color?: string
+    type: string
+    title?: React.ReactNode
 }
 
 const Root = Styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
+const InnerRoot = Styled.div`
+    ${size()}
     display: flex;
     position: relative;
     user-select: none;
@@ -77,6 +84,12 @@ const VLine = Styled.div`
     background-color: ${Color.LIGHTEST};
 `
 
+const Title = Styled.p`
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-align: center;
+`
+
 const range = (min: number, max: number, count: number): number[] => {
     const step = Math.round((max - min) / (count - 1) * 10000) / 10000
     const result = []
@@ -88,36 +101,53 @@ const range = (min: number, max: number, count: number): number[] => {
     return result
 }
 
-const Curve = ({ data, simple, color, ...props }: Props) => {
+const Curve = ({ data, simple, type, title, ...props }: Props) => {
 
     return (
-        <Root style={{ backgroundSize: '100% auto', height: '100%', width: '100%' }}>
-            <YAxis style={simple ? undefined : { paddingBottom: '1rem' }}>
-                {range(data.max_flux, data.min_flux, simple ? 4 : 6).map((flux, i) => (
-                    <Tick key={i}>{flux}</Tick>
-                ))}
-            </YAxis>
-            <Vertical>
-                <Plot>
-                    <HGrid>
-                        {simple ? null : new Array(simple ? 4 : 6).fill(null).map((_, i) => <HLine key={i} />)}
-                    </HGrid>
-                    <VGrid>
-                        {simple ? null : new Array(simple ? 4 : 8).fill(null).map((_, i) => <VLine key={i} />)}
-                    </VGrid>
-                    <Image src={`http://localhost:5000/public/lc/${data.plot}`} />
-                </Plot>
-                {!simple && (
-                    <XAxis>
-                        {range(data.min_time, data.max_time, simple ? 4 : 8).map((time, i) => (
-                            <Tick key={i}>{Math.round(time)}</Tick>
-                        ))}
-                    </XAxis>
-                )}
-            </Vertical>
+        <Root>
+            {title && (
+                <Title>
+                    {title}
+                </Title>
+            )}
+            <InnerRoot>
+                <YAxis style={simple ? undefined : { paddingBottom: '1rem' }}>
+                    {range(data.max_flux, data.min_flux, simple ? 3 : 6).map((flux, i) => (
+                        <Tick key={i}>{flux}</Tick>
+                    ))}
+                </YAxis>
+                <Vertical>
+                    <Plot>
+                        <HGrid>
+                            {simple ? null : new Array(simple ? 3 : 6).fill(null).map((_, i) => <HLine key={i} />)}
+                        </HGrid>
+                        <VGrid>
+                            {simple ? null : new Array(simple ? 4 : 10).fill(null).map((_, i) => <VLine key={i} />)}
+                        </VGrid>
+                        <Image src={`http://localhost:5000/public/${type}/${data.plot}`} />
+                    </Plot>
+                    {!simple && (
+                        <XAxis>
+                            {range(data.min_time ?? -0.5, data.max_time ?? 0.5, simple ? 4 : 10).map((time, i) => (
+                                <Tick key={i}>{Math.round(time * 10) / 10}</Tick>
+                            ))}
+                        </XAxis>
+                    )}
+                </Vertical>
+            </InnerRoot>
         </Root>
     )
 
+}
+
+Curve.LV = 'lv'
+Curve.GV = 'gv'
+Curve.LC = 'lc'
+
+const colorMap = {
+    [Curve.LV]: '#FAA',
+    [Curve.LV]: '#AFA',
+    [Curve.GV]: '#AAF'
 }
 
 export default Curve

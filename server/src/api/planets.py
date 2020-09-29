@@ -18,11 +18,18 @@ def map_props(prop):
 
 api = Api("planets", description="Discovered planets.")
 
+view = api.ns.model("View", {
+    "plot": fields.String(required=True, description="Plotted view."),
+    "min_flux": fields.Float(required=True, description="Minimum flux in view."),
+    "max_flux": fields.Float(required=True, description="Maximum flux in view.")
+})
+
 transit = api.ns.model("Transit", {
     "period": fields.Float(required=True, min=0, description="Period of transit [days]."),
     "depth": fields.Float(required=True, min=0, max=1, description="Relative depth of transit from interval <0; 1>."),
     "duration": fields.Float(required=True, min=0, description="Duration of transit [days]."),
-    "flux": fields.List(fields.Float(description="Flux of folded light curve of parent star."))
+    "local_view": fields.Nested(view),
+    "global_view": fields.Nested(view)
 })
 
 planet_properties = api.ns.model("PlanetProperties", {
