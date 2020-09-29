@@ -192,7 +192,9 @@ export default {
         activities: { [CS]: 'Aktivity', [EN]: 'Activities' },
         matter: { [CS]: 'Hmota', [EN]: 'Matter' },
         orbit: { [CS]: 'Dráha', [EN]: 'Orbit' },
-        other: { [CS]: 'Ostatní', [EN]: 'Other' }
+        other: { [CS]: 'Ostatní', [EN]: 'Other' },
+        localView: { [CS]: 'Lokální pohled', [EN]: 'Local view' },
+        globalView: { [CS]: 'Globální pohled', [EN]: 'Global view' }
     },
 
     stats: {
