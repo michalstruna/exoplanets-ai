@@ -17,10 +17,10 @@ def create_app(config_name=None):
     if config_name is not None:
         app.config.from_pyfile(f"config/{config_name}.cfg")
 
-    db = connect(app.config["DATABASE"])
+    db = connect(app.config["DATABASE_NAME"], host=app.config["DATABASE_HOST"])
 
     if app.config["TESTING"]:
-        db.drop_database(app.config["DATABASE"])
+        db.drop_database(app.config["DATABASE_NAME"])
 
     api.init_app(app, doc="/api-docs")
     socketio = SocketIO(app, cors_allowed_origins="*")  # TODO: Allow only exoplanets-ai.

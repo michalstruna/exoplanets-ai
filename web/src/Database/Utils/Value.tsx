@@ -12,10 +12,11 @@ type PropsOptions = {
     unit?: React.ReactNode
     format?: (val: any) => React.ReactNode
     render?: (val: any, ref: React.ReactNode) => React.ReactNode
+    isEstimate?: (props: any) => boolean
 }
 
 const propsGetter = <Item extends { properties: Values[] }, Values extends any>() => (star: Item, name: keyof Values, options?: PropsOptions): React.ReactNode | null => {
-    const cache: Record<string, [any, (string | undefined)[]]> = {}
+    const cache: Record<string, [any, (string | undefined)[], React.ReactNode]> = {}
 
     for (const props of star.properties) {
         const refId = props.dataset
@@ -25,16 +26,20 @@ const propsGetter = <Item extends { properties: Values[] }, Values extends any>(
 
         if (json !== null) {
             if (!cache[json]) {
-                cache[json] = [value, []]
+                cache[json] = [value, [], '±']
             }
 
             cache[json][1].push(refId)
+
+            if (!options?.isEstimate?.(props)) {
+                cache[json][2] = null
+            }
         }
     }
 
-    return Object.entries(cache).map(([key, [value, refs]], i) => options?.render ? options.render(value, <Ref refMap={options?.refMap} refs={refs} />) : (
+    return Object.entries(cache).map(([key, [value, refs, prefix]], i) => options?.render ? options.render(value, <Ref refMap={options?.refMap} refs={refs} />) : (
         <div key={i}>
-            {value} <Ref refMap={options?.refMap} refs={refs} />
+            {prefix}{value} <Ref refMap={options?.refMap} refs={refs} />
         </div>
     ))
 }

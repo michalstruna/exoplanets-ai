@@ -59,3 +59,10 @@ class LuminositySubclass(Enum):
     A = "a"
     AB = "ab"
     B = "b"
+
+
+class LifeType(Enum):
+    IMPOSSIBLE = "impossible"
+    POSSIBLE = "possible"
+    UNKNOWN = "unknown"
+    PROMISING = "promising"

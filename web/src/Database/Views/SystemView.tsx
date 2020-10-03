@@ -1,5 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
+import { pascalCase } from 'pascal-case'
 
 import DetailContent from '../Components/DetailContent'
 import { Fraction, ListSection, MinorSectionTitle, PageTitle, SectionTitle, Tags } from '../../Layout'
@@ -153,9 +154,7 @@ const CenteredHorizontal = Styled(Horizontal)<HorizontalProps>`
 `
 
 const ListLc = Styled(ListSection)`
-    & > * {
-        margin-bottom: 2rem;
-    }
+
 `
 
 const SystemView = ({ ...props }: Props) => {
@@ -262,92 +261,100 @@ const SystemView = ({ ...props }: Props) => {
                                 <Subtitle>
                                     {strings.planets} ({system.payload.planets.length})
                                 </Subtitle>
-                                <ListSection items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
-                                    system.payload.planets.map((planet: PlanetData, j: number) => (
-                                        <React.Fragment key={j}>
-                                            <CenteredHorizontal>
-                                                <ItemPreview.Planet item={planet} titleComponent={Subsubtitle} />
-                                                <Tags
-                                                    items={Value.Star.names(system.payload, name => ({ text: name }))} />
-                                            </CenteredHorizontal>
-                                            <HTable>
-                                                <tbody>
-                                                <tr>
-                                                    <th colSpan={2}>{strings.matter}</th>
-                                                    <th colSpan={2}>{strings.orbit}</th>
-                                                    <th colSpan={2}>{strings.other}</th>
-                                                </tr>
-                                                <tr>
-                                                    <td>{properties.diameter}</td>
-                                                    <td>{Value.Planet.props(planet, 'diameter', {
-                                                        refMap,
-                                                        unit: <>d<sub>⊕</sub></>
-                                                    })}</td>
-                                                    <td>{properties.orbitalPeriod}</td>
-                                                    <td>{Value.Planet.props(planet, 'orbital_period', {
-                                                        refMap,
-                                                        unit: 'd'
-                                                    })}</td>
-                                                    <td>{properties.lifeConditions}</td>
-                                                    <td>{Value.Planet.props(planet, 'life_conditions', { refMap })}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{properties.mass}</td>
-                                                    <td>{Value.Planet.props(planet, 'mass', {
-                                                        refMap,
-                                                        unit: <>M<sub>⊕</sub></>
-                                                    })}</td>
-                                                    <td>{properties.semiMajorAxis}</td>
-                                                    <td>{Value.Planet.props(planet, 'semi_major_axis', {
-                                                        refMap,
-                                                        unit: <>M<sub>⊕</sub></>
-                                                    })}</td>
-                                                    <td>{properties.surfaceTemperature}</td>
-                                                    <td>{Value.Planet.props(planet, 'surface_temperature', {
-                                                        refMap,
-                                                        unit: 'K'
-                                                    })}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{properties.density}</td>
-                                                    <td>{Value.Planet.props(planet, 'density', {
-                                                        refMap,
-                                                        unit: 'd'
-                                                    })}</td>
-                                                    <td>{properties.orbitalVelocity}</td>
-                                                    <td>{Value.Planet.props(planet, 'orbital_velocity', {
-                                                        refMap,
-                                                        unit: 'd'
-                                                    })}</td>
-                                                    <td>{properties.status}</td>
-                                                    <td>{planets.statuses[planet.status]}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{properties.surfaceGravity}</td>
-                                                    <td>{Value.Planet.props(planet, 'surface_gravity', { refMap })}</td>
-                                                    <td>{properties.eccentricity}</td>
-                                                    <td>{Value.Planet.props(planet, 'eccentricity', { refMap })}</td>
-                                                    <td>???</td>
-                                                    <td>???</td>
-                                                </tr>
-                                                </tbody>
-                                            </HTable>
-                                                {Value.Planet.props(planet, 'transit', {
-                                                    refMap, render: (val, ref) => (
-                                                        <Horizontal>
-                                                            <Curve
-                                                                data={val?.local_view as any}
-                                                                type={Curve.LV} width={390} height={200}
-                                                                title={<>{strings.localView} {ref}</>} />
-                                                            <Curve
-                                                                data={val?.global_view as any}
-                                                                type={Curve.GV} width={390} height={200}
-                                                                title={<>{strings.globalView} {ref}</>} />
-                                                        </Horizontal>
-                                                    )
-                                                })}
-                                        </React.Fragment>
-                                    ))
+                                <ListSection items={system.payload.planets.map((planet: PlanetData, i: number) => (
+                                    <React.Fragment key={i}>
+                                        <CenteredHorizontal>
+                                            <ItemPreview.Planet item={planet} titleComponent={Subsubtitle} />
+                                            <Tags
+                                                items={Value.Star.names(system.payload, name => ({ text: name }))} />
+                                        </CenteredHorizontal>
+                                        <HTable>
+                                            <tbody>
+                                            <tr>
+                                                <th colSpan={2}>{strings.matter}</th>
+                                                <th colSpan={2}>{strings.orbit}</th>
+                                                <th colSpan={2}>{strings.other}</th>
+                                            </tr>
+                                            <tr>
+                                                <td>{properties.diameter}</td>
+                                                <td>{Value.Planet.props(planet, 'diameter', {
+                                                    refMap,
+                                                    unit: <>d<sub>⊕</sub></>
+                                                })}</td>
+                                                <td>{properties.orbitalPeriod}</td>
+                                                <td>{Value.Planet.props(planet, 'orbital_period', {
+                                                    refMap,
+                                                    unit: 'd'
+                                                })}</td>
+                                                <td>{properties.lifeConditions}</td>
+                                                <td>{Value.Planet.props(planet, 'life_conditions', { refMap })}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{properties.mass}</td>
+                                                <td>{Value.Planet.props(planet, 'mass', {
+                                                    refMap,
+                                                    unit: <>M<sub>⊕</sub></>,
+                                                    isEstimate: props => props.processed
+                                                })}</td>
+                                                <td>{properties.semiMajorAxis}</td>
+                                                <td>{Value.Planet.props(planet, 'semi_major_axis', {
+                                                    refMap,
+                                                    unit: 'au'
+                                                })}</td>
+                                                <td>{properties.surfaceTemperature}</td>
+                                                <td>{Value.Planet.props(planet, 'surface_temperature', {
+                                                    refMap,
+                                                    unit: '°C',
+                                                    isEstimate: props => props.processed
+                                                })}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{properties.density}</td>
+                                                <td>{Value.Planet.props(planet, 'density', {
+                                                    refMap,
+                                                    unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>} />,
+                                                    isEstimate: props => props.processed
+                                                })}</td>
+                                                <td>{properties.orbitalVelocity}</td>
+                                                <td>{Value.Planet.props(planet, 'orbital_velocity', {
+                                                    refMap,
+                                                    unit: <Fraction top='km' bottom='s' />
+                                                })}</td>
+                                                <td>{properties.status}</td>
+                                                <td>{planets.statuses[planet.status]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{properties.surfaceGravity}</td>
+                                                <td>{Value.Planet.props(planet, 'surface_gravity', {
+                                                    refMap,
+                                                    unit: <Fraction top='m' bottom={<>s<sup>2</sup></>} />,
+                                                    isEstimate: props => props.processed
+                                                })}</td>
+                                                <td>{properties.eccentricity}</td>
+                                                <td>{Value.Planet.props(planet, 'eccentricity', {
+                                                    refMap,
+                                                    format: Numbers.format
+                                                })}</td>
+                                                <td>???</td>
+                                                <td>???</td>
+                                            </tr>
+                                            </tbody>
+                                        </HTable>
+                                        {Value.Planet.props(planet, 'transit', {
+                                            refMap, render: (val, ref) => (
+                                                <Horizontal>
+                                                    <Curve
+                                                        data={val?.local_view as any}
+                                                        type={Curve.LV} width={390} height={200}
+                                                        title={<>{strings.localView} {ref}</>} />
+                                                    <Curve
+                                                        data={val?.global_view as any}
+                                                        type={Curve.GV} width={390} height={200}
+                                                        title={<>{strings.globalView} {ref}</>} />
+                                                </Horizontal>
+                                            )
+                                        })}
+                                    </React.Fragment>
                                 ))} />
                             </MainLeft>
 
@@ -505,8 +512,8 @@ const SystemView = ({ ...props }: Props) => {
                                 },
                                 ...system.payload.planets.map((planet: PlanetData) => ({
                                     name: planet.properties[0].name,
-                                    size: Math.random() * 10e4,
-                                    image: '/img/System/Size/Mercury.png'
+                                    size: (planet.properties[0]?.diameter || 0) * 12756,
+                                    image: `/img/Database/Planet/${pascalCase(planet.properties[0].type || 'unknown')}.png`
                                 }))
                             ]
                         ]} />
@@ -527,12 +534,10 @@ const SystemView = ({ ...props }: Props) => {
                             ],
                             [
                                 { name: 'Kepler-10', distance: 0, size: 0.005 },
-                                { name: 'K1', distance: 0.01 },
-                                { name: 'K2', distance: 0.7 }
-                                /*...system.payload.planets.map((planet: PlanetData) => ({
+                                ...system.payload.planets.map((planet: PlanetData) => ({
                                     name: planet.properties[0].name,
-                                    distance: Math.random() * 10e7
-                                }))*/
+                                    distance: planet.properties[0].semi_major_axis
+                                }))
                             ]
                         ]} lifeZones={[
                             { from: 0.6, to: 1.67 },

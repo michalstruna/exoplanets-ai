@@ -22,8 +22,8 @@ const Inner = Styled.div`
 `
 
 const Steps = Styled.main`
+    align-items: center;
     display: flex;
-    height: 13rem;
     flex: 1 0 3rem;
 `
 
@@ -36,7 +36,7 @@ const Block = Styled(Link)`
 
 const Transition = Styled.div`
     ${image('Controls/ArrowRight.svg')}
-    ${size('4rem', '100%')}
+    ${size('4rem', '5rem')}
     opacity: 0.2;
     transform: scaleX(0.5);
 `
