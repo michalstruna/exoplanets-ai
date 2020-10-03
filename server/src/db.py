@@ -195,7 +195,7 @@ class PlanetProperties(EmbeddedDocument):
     orbital_period = FloatField(min_value=0)
     surface_gravity = FloatField(min_value=0)
     surface_temperature = FloatField(min_value=0)
-    life_conditions = StringField()  # TODO: DB table LiveType?
+    life_conditions = StringField(enum=LifeType.values())  # TODO: DB table LiveType?
     transit = EmbeddedDocumentField(Transit)
     dataset = ReferenceField(Dataset, required=True)  # TODO: Surface gravity.
     processed = BooleanField()
