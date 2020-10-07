@@ -11,7 +11,8 @@ class DeviceService:
         system = platform.system()
 
         if "linux" in system.lower():
-            info = platform.linux_distribution()
+            import distro
+            info = distro.linux_distribution()
             return info[0] + " " + info[1]
         else:
             return system + " " + platform.release()
