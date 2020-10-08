@@ -73,28 +73,33 @@
 \section*{Úvod}
 \label{uvod}
 
-První potvrzená planeta mimo sluneční soustavu byla objevena již roku 1992, ale výzkum exoplanet se dostal do oblasti širokého zájmu až během posledního desetiletí. Stalo se tak především kvůli vesmírnému teleskopu Kepler, který má na svém kontě od roku 2009 přes 2~500 objevených exoplanet.
+V naší sluneční soustavě se nachází celkem 8 dosud objevených planet včetně Země. Mimo ni ale existují minimálně stovky miliard galaxií a~v~každé z~nich v~průměru stovky miliard hvězd. Z toho, co o~vzniku a~fungování hvězdných soustav víme je pravděpodobné, že většinu těchto hvězd bude obíhat jedna nebo více planet, tzv. extrasolárních planet nebo také exoplanet.~\cite{exoplanets}
 
-K~dnešnímu dni je známo celkem více jak 4 000 potvrzených exoplanet. Toto číslo se s~nejvyšší pravděpodobností bude rychle zvyšovat, protože roku 2018 byl vypuštěn nástupce Kepleru -- satelit TESS -- od něhož je očekáván objev 20~000 exoplanet.
+První potvrzená exoplaneta byla objevena již roku 1992, ale výzkum exoplanet se dostal do oblasti širokého zájmu až během posledního desetiletí. Stalo se tak především kvůli vesmírnému teleskopu Kepler, který má na svém kontě od roku 2009 přes 2~500 objevených exoplanet. [TODO]
 
-Planety u~jiných hvězd většinou nelze pozorovat přímo. Proto je nepřímými metodami zkoumáno jejich působení na své mateřské hvězdy, které už pozorovat lze. Výstupem z~takovýchto teleskopů jsou často stovky GiB nebo jednotky TiB fyzikálních a~statistických dat, jež je následně nutno zpracovat.
+K~dnešnímu dni je známo více jak 4 000 potvrzených exoplanet. Toto číslo se s~nejvyšší pravděpodobností bude rychle zvyšovat, protože roku 2018 byl vypuštěn nástupce Kepleru -- satelit TESS -- od něhož je očekáván objev 20~000 exoplanet. [TODO]
 
-Cílem této diplomové práce je vytvořit aplikaci umožňující uživatelům poskytovat výpočetní výkon svých počítačů pro analyzování právě těchto dat. Projekt bude sestávat z~klientského konzolového programu, webové aplikace a~serveru. Klientský program bude provádět potřebné distribuovatelné výpočty na počítači uživatele. Tento program bude možné ovládat z~rozhraní webové aplikace, jež bude zároveň poskytovat přehled o~všech aktivitách, uživatelích a datech. Rozdělování výpočetních úloh mezi uživatele a~ukládání dat do databáze bude řešit server.
+Planety u~jiných hvězd většinou nelze pozorovat přímo. Proto je nepřímými metodami zkoumáno jejich působení na své mateřské hvězdy, které už pozorovat lze. Výstupem z~takovýchto pozorování jsou často stovky GiB nebo jednotky TiB fyzikálních a~statistických dat, jež je následně nutno zpracovat.~\cite{exoplanets}
+
+Cílem této diplomové práce je vytvořit aplikaci umožňující uživatelům poskytovat výpočetní výkon svých počítačů pro analýzu právě těchto dat. Projekt sestává z~klientského programu, webové aplikace a~serveru. Klientský program provádí potřebné distribuovatelné výpočty na počítači uživatele. Tento program je možné ovládat z~rozhraní webové aplikace, jež zároveň poskytuje přehled o~všech aktivitách, uživatelích a datech. Rozdělování výpočetních úloh mezi klienty a~ukládání dat do databáze řeší server.
 
 Díky distribuovaným výpočtům se do výzkumu exoplanet bude moci bez vysokého úsilí, znalosti či technického vybavení zapojit i široká veřejnost. To může urychlit vývoj a zároveň zvýšit povědomí o~této vědní disciplíně.
 
 V~projektu jsou využity některé techniky spadající pod umělou inteligenci, v~důsledku čehož je zpracovávání dat zcela automatizované. Platí však, že umělá inteligence je v~současnosti stále intenzivně se rozvíjející oblastí, a~proto výsledky nemusí být natolik vypovídající ve srovnání s~tím, kdy by výzkum prováděli lidé manuálně, byť by to trvalo nesrovnatelně déle.
 
 \section{Exoplanety}
+
 \subsection{Důvody hledání}
 
-TODO: Většina hvězd má planetu.
+TODO
+
+\subsection{Typy exoplanet}
+
+TODO
 
 \subsection{Objevené exoplanety}
 
-TODO: Statistické údaje, nejdůležitější exoplanety.
-
-\subsection{Pojmenovávání exoplanet}
+TODO
 
 \section{Metody hledání exoplanet}
 
@@ -503,7 +508,7 @@ Datasety s~planetami nejsou pro běh aplikace taktéž nutné, protože vešker�
 \img[1]{Část datasetu s~vlastnostmi planet}{img/planet_properties.png}
 \footnotetext[1]{Dataset pochází ze stránek \url{https://exoplanetarchive.ipac.caltech.edu}.}
 
-Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nijak složitě zpracovávat, pouze uložit do databáze.
+Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nutno nijak složitě zpracovávat, pouze uložit do databáze.
 
 \tab{Údaje o~planetách ukládané do databáze}{
     \begin{tabular}{|l|l|l|l|}
@@ -597,7 +602,11 @@ Komponenta si sama spočítá velikost obrazovky a~nutný počet vykreslovaných
 
 \onlinesource{sunlight}{Reference Solar Spectral Irradiance: ASTM G-173}{nrel}{??.~?.~????}{27.~12.~2019}{https://rredc.nrel.gov/solar//spectra/am1.5/ASTMG173/ASTMG173.html}
 
-\onlinesource{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088/pdf}
+\onlinesource[MARCY, Geoffrey]{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal 481(2)}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088}
+
+\onlinesource[SHALLUE, Christopher, VANDERBURG, Andrew]{kepler80}{Identifying Exoplanets with Deep Learning: A Five-planet Resonant Chain around Kepler-80 and an Eighth Planet around Kepler-90}{The Astronomical Journal 155(2)}{30.~1.~2018}{8.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/aa9e09}
+
+\onlinesource[PERRYMAN, Michael]{exoplanets}{Extra-solar planets}{Reports on Progress in Physics 63(8)}{31.~5.~2000}{8.~10.~2020}{https://arxiv.org/abs/astro-ph/0005602}
 
 \end{thebibliography}
 
