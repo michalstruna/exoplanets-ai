@@ -77,7 +77,7 @@ V naší sluneční soustavě se nachází celkem 8 dosud objevených planet vč
 
 První potvrzená exoplaneta byla objevena již roku 1992, ale výzkum exoplanet se dostal do oblasti širokého zájmu až během posledního desetiletí. Stalo se tak především kvůli vesmírnému teleskopu Kepler, který má na svém kontě od roku 2009 přes 2~500 objevených exoplanet. [TODO]
 
-K~dnešnímu dni je známo více jak 4 000 potvrzených exoplanet. Toto číslo se s~nejvyšší pravděpodobností bude rychle zvyšovat, protože roku 2018 byl vypuštěn nástupce Kepleru -- satelit TESS -- od něhož je očekáván objev 20~000 exoplanet. [TODO]
+K~dnešnímu dni je známo více jak 4 000 potvrzených exoplanet. Toto číslo se s~nejvyšší pravděpodobností bude rychle zvyšovat, protože roku 2018 byl vypuštěn nástupce Kepleru -- satelit TESS -- od něhož je očekáván objev 20~000 exoplanet.~\cite{tess}
 
 Planety u~jiných hvězd většinou nelze pozorovat přímo. Proto je nepřímými metodami zkoumáno jejich působení na své mateřské hvězdy, které už pozorovat lze. Výstupem z~takovýchto pozorování jsou často stovky GiB nebo jednotky TiB fyzikálních a~statistických dat, jež je následně nutno zpracovat.~\cite{exoplanets}
 
@@ -120,14 +120,22 @@ Málo hmotné planety byly objevovány jak tranzitní metodou, tak i~metodou rad
 \clearpage
 \subsection{Tranzitní metoda}
 
-Někdy se planeta při obíhání dostane mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu hvězdy (obvykle ve zlomku procenta). Pokud je hvězda teleskopem sledována dlouhodobě, je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost planety v~blízkosti této hvězdy.
+Někdy se planeta při obíhání dostane mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu hvězdy (obvykle ve zlomku procenta). Pokud je hvězda teleskopem sledována dlouhodobě, je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost planety v~blízkosti této hvězdy.~\cite{exoplanets,transit}
 
 \img[1]{Přechod planety přes kotouč hvězdy}{img/transit.png}
 \drawgimp
 
-Tyto změny však nemusí být na první pohled viditelné, protože v~soustavě může být více planet, které svou hvězdu zastiňují různou měrou a~obíhají kolem ní s~různou periodou. Navíc i v situaci, kdy je ve změnách jasu hvězdy objevena periodická složka nemusí jít vždy o~obíhající planetu. Hvězda může být např. sama o~sobě proměnlivá nebo se může jednat o~dvojhvězdu, jejíž složky se vzájmně zastiňují.
+Tyto změny však nemusí být na první pohled viditelné, protože v~soustavě může být více planet, které svou hvězdu zastiňují různou měrou a~obíhají kolem ní s~různou periodou. Navíc i v situaci, kdy je ve změnách jasu hvězdy objevena periodická složka nemusí jít vždy o~obíhající planetu. Hvězda může být např. sama o~sobě proměnlivá nebo se může jednat o~dvojhvězdu, jejíž složky se vzájmně zastiňují.~\cite{kepler80}
 
-Tranzitní metoda vzbuzuje velký zájem především kvůli možnosti objevovat i~malé planety podobné Zemi~--~takové planety by mohly spíše splňovat podmínky pro život. Nevýhodou je, že pouze malé procento planet má dráhu v~rovině směrem k~pozorovateli na Zemi. Odhadem 97 \% \textbf{[TODO]} všech potenciálních planet nemůže být tranzitní metodou zachyceno.
+Tranzitní metoda vzbuzuje velký zájem především kvůli možnosti objevovat i~malé planety podobné Zemi~--~takové planety by mohly spíše splňovat podmínky pro život. Nevýhodou je, že většina exoplanet obíhá svou hvězdu v~takové rovině, v jaké pozorovatel na Zemi nemůže transit spatřit. Odhadem 99 \% všech potenciálních exoplanet podobných Zemi nemůže být tranzitní metodou nikdy zachyceno.~\cite{methods,transit}
+
+\formula{Pravděpodobnost zpozorování tranzitu planety přes hvězdu} {P = \frac{d_s}{a}}{
+\begin{tabular}{llll}
+	$d_s$ = průměr hvězdy & a = vzdálěnost exoplanety od hvězdy \
+\end{tabular}
+}
+
+%\img[1]{xxx}{http://hvezdy.astro.cz/obr/hvezdy/exoplanety/geometrie.jpg}
 
 \subsubsection{Target pixel file}
 
@@ -136,7 +144,7 @@ Prvním krokem v~analýze hvězdy tranzitní metodou je její fyzické pozorová
 TPF obsahuje část oblohy o velikosti několika pixelů, na které se v původní fotografii nacházela zkoumaná hvězda a~její okolí. Barva pixelů je určena jasem.
 
 \img[1]{Target pixel file hvězdy Kepler-10}{img/tpf.png}
-\footnotetext[1]{Vytvořeno autorem v~Jupyter Notebook z~dat Kepleru od NASA}
+\footnotetext[1]{Vytvořeno autorem, zdroj dat:~\cite{nasadata}}
 
 \subsubsection{Světelná křivka hvězdy}
 
@@ -169,7 +177,7 @@ Tyto fáze společně s~důležitými parametry tranzitu potřebnými pro dalš�
 
 \subsubsection{Vyřazení false positives}
 
-Většina periodických složek ve světelných křivkách hvězd jsou \emph{false positive}~--~patří jiným jevům, než je obíhající planeta. Tyto případy je třeba odfiltrovat, což byla až donedávna především manuální práce lidí -- vědců či dobrovolníků. Protože ale tranzit planety vykazuje specifický průběh popsaný v předchozí kapitole, je možné ho s~určitou úspěšností rozpoznat pomocí naučené umělé neuronové sítě automaticky.
+Většina periodických složek ve světelných křivkách hvězd jsou \emph{false positive}~--~patří jiným jevům, než je obíhající planeta. Tyto případy je třeba odfiltrovat, což byla až donedávna především manuální práce lidí -- vědců či dobrovolníků. Protože ale tranzit planety vykazuje specifický průběh popsaný v předchozí kapitole, je možné ho s~určitou úspěšností rozpoznat pomocí naučené umělé neuronové sítě automaticky.~\cite{kepler80}
 
 \begin{multicols}{2}
 \img[1]{Dvojhvězda KIC~8262223}{img/eclipsing_binary.png}
@@ -181,9 +189,7 @@ Většina periodických složek ve světelných křivkách hvězd jsou \emph{fal
 \img[1]{Kataklizmická proměnná hvězda KIC 9406652}{img/cataclysmic.png}
 \end{multicols}
 
-Je třeba aby vstupní data do neuronové sítě měla stejné rozměry i~formát. Vzhledem k~různorodosti světelných křivek je nutno provést několik kroků, abychom dosáhli standardizovaného formátu. Prvním krokem je složení časové řady do jedné periody, čímž dojde k~posílení viditelnosti transitu (pokud zde nějaký je), nebo naopak k~jeho vyrušení (pokud zde žádný není).
-
-\pagebreak % TODO: Remove.
+Je třeba aby vstupní data do neuronové sítě měla stejné rozměry i~formát. Vzhledem k~různorodosti světelných křivek je nutno provést několik kroků, abychom dosáhli standardizovaného formátu. Prvním krokem je složení časové řady do jedné periody, čímž dojde k~posílení viditelnosti transitu (pokud zde nějaký je), nebo naopak k~jeho vyrušení (pokud zde žádný není).~\cite{kepler80}
 
 \begin{multicols}{2}
 \img[1]{Světelná křivka Kepler-10}{img/full_light_curve.png}
@@ -193,8 +199,8 @@ Je třeba aby vstupní data do neuronové sítě měla stejné rozměry i~formá
 Na obrázku 12 je uprostřed slabě patrný transit. Má malou šířku, protože trvá pouze 0,25 dne, zatímco celá perioda je dlouhá 45,3 dne. Z~této složené časové řady se vytvoří dva pohledy, které budou vstupem do neuronové sítě:
 
 \begin{itemize}
-\item \textbf{Globální pohled} \emph{(obr. 13)} -- Šířka periody a~počet bodů v~časové řadě jsou fixní. Nevýhodou je, že u planet s~dlouhou periodou bude tranzit velice nepatrný, proto pouze globální pohled nestačí.
-\item \textbf{Lokální pohled} \emph{(obr. 14)} -- Šířka tranzitu a počet bodů v časové řadě jsou fixní. Nevýhodou je, že není viditelný celý průběh světelné křivky. Naproti tomu je ale zřetelný tranzit.
+\item \textbf{Globální pohled} \emph{(obr. 13)} -- Šířka periody a~počet bodů v~časové řadě jsou fixní. Nevýhodou je, že u planet s~dlouhou periodou bude tranzit velice nepatrný, proto pouze globální pohled nestačí.~\cite{kepler80}
+\item \textbf{Lokální pohled} \emph{(obr. 14)} -- Šířka tranzitu a počet bodů v časové řadě jsou fixní. Nevýhodou je, že není viditelný celý průběh světelné křivky. Naproti tomu je ale zřetelný tranzit.~\cite{kepler80}
 \end{itemize}
 
 \begin{multicols}{2}
@@ -203,11 +209,15 @@ Na obrázku 12 je uprostřed slabě patrný transit. Má malou šířku, protož
 \nasa
 \end{multicols}
 
-Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ sousedních bodů ($\alpha$ -- současný počet bodů, $\beta$ -- požadovaný počet bodů) jediným, který bude reprezentovat jejich medián. Pro potřeby neuronové sítě je nutno oba pohledy taktéž normalizovat tak, aby platilo $H~=~\left<1; -1\right>$. U~případů, které neuronová síť vyhodnotí jako planety, je možné pokračovat výpočtem dalších informací o~planetě.
+Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ sousedních bodů ($\alpha$ -- současný počet bodů, $\beta$ -- požadovaný počet bodů) jediným, který bude reprezentovat jejich medián. Pro potřeby neuronové sítě je nutno oba pohledy taktéž normalizovat tak, aby platilo $H~=~\left<1; -1\right>$. U~případů, které neuronová síť vyhodnotí jako planety, je možné pokračovat výpočtem dalších informací o~planetě.~\cite{kepler80}
+
+\subsubsection{Výpočet velké poloosy dráhy}
+
+
 
 \subsubsection{Výpočet poloměru planety}
 
-Ze světelné křivky a~poloměru hvězdy lze poloměr tranzitující planety vypočítat po vyjádření z~následující rovnice:
+Ze světelné křivky a~poloměru hvězdy lze poloměr tranzitující planety vypočítat po vyjádření z~následující rovnice~\cite{transit}:
 
 \formula{Poloměr planety z~tranzitní metody} {\frac{r^2}{R^2} = \frac{\Delta F}{F}}{
 \begin{tabular}{llll}
@@ -217,7 +227,7 @@ Ze světelné křivky a~poloměru hvězdy lze poloměr tranzitující planety vy
 
 \subsubsection{Výpočet hmotnosti planety}
 
-Hmotnost planety z tranzitní metody narozdíl od metody radiálních rychlostí nelze vypočítat. Avšak z~empirických pozorování je možné hmotnost planety odhadnout z následující rovnice, přičemž $a$ a $b$ jsou pro různé velikostní kategorie jiné.
+Hmotnost planety z tranzitní metody narozdíl od metody radiálních rychlostí nelze vypočítat. Avšak z~empirických pozorování je možné hmotnost planety odhadnout z následující rovnice, přičemž $a$ a $b$ jsou pro různé velikostní kategorie jiné. [TODO]
 
 \formula{Odhad hmotnosti planety z~tranzitní metody} {m = a * r^b}{
 \begin{tabular}{ll}
@@ -252,22 +262,22 @@ Pokud se zdroj elektromagnetického záření (hvězda) přibližuje vůči pozo
 \img[1]{Metoda radiálních vzdáleností}{img/radial_velocity.png}
 \drawgimp
 
-Zobecněním červeného posuvu je Dopplerův jev, který podobná pravidla vztahuje i~na jiné druhy vlnění (zvuk). Pokud se k~nám zdroj zvuku přibližuje (např. siréna na jedoucím autě), zvuk zpravidla vnímáme vyšším tónem, protože má menší vlnovou délku (vyšší frekvenci). Při vzdalování zdroje má zvuk větší vlnovou délku a je vnímán hlubším tónem. [TODO]
+Příčinou červeného/modrého posuvu je v~tomto případě Dopplerův jev, který lze uplatnit i pro jiné druhy vlnění, než to elektromagnetické~--~zvuk. Pokud se k~nám zdroj zvuku přibližuje (např. siréna na jedoucím autě), zvuk zpravidla vnímáme vyšším tónem, protože má menší vlnovou délku (vyšší frekvenci). Při vzdalování zdroje má zvuk větší vlnovou délku a je vnímán hlubším tónem.~\cite{radialvelocity}
 
 Periodicky se opakující změny ve vlnové délce záření hvězdy tak mohou být důsledkem existence tělesa v této soustavě.~\cite{methods}
 
 \subsubsection{Měření vlnové délky záření hvězdy}
 
-Hvězdy nevyzařují světlo pouze jedné jediné vlnové délky, nýbrž celé spektrum. Tento efekt lze vidět  u~duhy v~zemské atmosféře, kdy jsou jednotlivé složky slunečního světla odděleny. Záření z~hvězd se dokonce neomezuje pouze na viditelné světlo, ale pokrývá značnou část celého elektromagnetického spektra. Jak velká část záření přísluší jednotlivým vlnovým délkám lze měřit pomocí spektrometru.
+Hvězdy nevyzařují světlo pouze jedné jediné vlnové délky, nýbrž celé spektrum. Tento efekt lze vidět  u~duhy v~zemské atmosféře, kdy jsou jednotlivé složky slunečního světla odděleny. Záření z~hvězd se dokonce neomezuje pouze na viditelné světlo, ale pokrývá značnou část celého elektromagnetického spektra. Jak velká část záření přísluší jednotlivým vlnovým délkám lze měřit pomocí spektrometru.~\cite{radialvelocity, sunlight}
 
 \img[1]{Spektrum slunečního záření}{stats/sunlight_spectrum.png}
-\footnotetext[1]{Vytvořeno autorem za využití datasetu \cite{sunlight}.}
+\footnotetext[1]{Vytvořeno autorem, zdroj dat: \cite{sunlight}.}
 
-Změna vlnové délky záření se projevuje jako horizontální posun barevného spektra hvězdy. Nutno podotknout, že zemská atmosféra některé vlnové délky pohlcuje. Proto i~přesto, že Slunce má barvu spíše do zelena vidíme tuto hvězdu ze Země žlutě.
+Změna vlnové délky záření se projevuje jako horizontální posun barevného spektra hvězdy. Nutno podotknout, že zemská atmosféra některé vlnové délky pohlcuje. Proto i~přesto, že Slunce má barvu spíše do zelena vidíme tuto hvězdu ze Země žlutě. [TODO]
 
 \subsubsection{Výpočet radiální rychlosti hvězdy}
 
-Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek záření hvězdy může dojít k~vypočítání změn radiální rychlosti v~čase. Lze tak učinit dle vzorce~3. Platí, že radiální rychlost je kladná, pokud se zdroj od pozorovatele vzdaluje a~záporná pokud se přibližuje.
+Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek záření hvězdy může dojít k~vypočítání změn radiální rychlosti v~čase. Lze tak učinit dle vzorce~3. Platí, že radiální rychlost je kladná, pokud se zdroj od pozorovatele vzdaluje a~záporná pokud se přibližuje.~\cite{methods}
 
 \formula{Radiální rychlost na základě změny vlnové délky} {v = c * \frac{\Delta\lambda}{\lambda_0}}{
 \begin{tabular}{lll}
@@ -278,7 +288,7 @@ Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek
 Graf znázorňující radiální rychlost hvězdy 51~Pegasi může vypadat takto:
 
 \img[1]{Radiální rychlost hvězdy 51 Pegasi}{stats/51_pegasi_radial_velocity.pdf}
-\footnotetext[1]{Vytvořeno autorem za využití dat z~\cite{51pegasi}.}
+\footnotetext[1]{Vytvořeno autorem, zdroj dat: \cite{51pegasi}.}
 
 Na první pohled je patrná jedna periodická složka s periodou 4,23 dne a~amplitudou 56,04 $\frac{m}{s}$, která značí, že kolem této hvězdy obíhá jedna planeta. Pokud zde jsou přítomna i~jiná tělesa, důvodů, proč je metoda radiálních rychlostí neodhalila může být několik:
 
@@ -290,58 +300,49 @@ Na první pohled je patrná jedna periodická složka s periodou 4,23 dne a~ampl
 \item Těleso obíhá po dráze, jejíž rovina je kolmá k~přímce směrem~k pozorovateli (k Zemi). To vede k~tomu, že je hvězda vychylována takovým směrem, který nemá vliv na radiální rychlost hvězdy vůči Zemi.
 }
 
-V případě, kdy by kolem hvězdy obíhalo více planet by se průběh změn radiální rychlosti musel rozložit na jednotlivé složky stejně jako v~případě metody tranzitu v~grafu TODO.
+\subsubsection{Výpočet hmotnosti planety}
 
-\subsubsection{Výpočet údajů o~exoplanetě}
+Hlavní výhodou metody radiálních rychlostí oproti tranzitní metodě je možnost spočítat hmotnost exoplanety. Její přesnou hodnodu však lze odvodit pouze se znalostí sklony dráhy exoplanety vůči pozorovateli. V~opačném případě lze vypočítat pouze dolní mez hmotnosti planety, a~to zejména kvůli $M_p * sin(i)$ ve vzorci 5.~\cite{methods}
 
-Z~pozorování hvězdy metodou radiálních vzdáleností lze získat mnohé informace o~planetě, která tuto hvězdu obíhá.
-
-\items{
-\item Perioda oběhu hvězdy T = perioda změn radiální rychlosti hvězdy,
-
-\item Velká poloosa dráhy
-
-\item Excentricita dráhy
-
-\item Povrchová teplota planety
-
-\item Minimální hmotnost planety $M_p$ lze odvodit z rovnice:
-
-\formula[\cite{methods}]{Radiální rychlost}{\Delta v_{max} = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}}{
+\formula{Radiální rychlost}{\Delta v_{max} = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}}{
 \begin{tabular}{lll}
 	$\Delta v_{max}$ = amplituda změny rychlosti & $M_s$ = hmotnost hvězdy & $M_p$ = hmotnost planety \\
 	sin(i) = sklon dráhy vůči pozorovateli & e = excentricita dráhy & T = oběžná doba \\
 \end{tabular}
 }
 
-}
-
-Níže jsou uvedeny vlastnosti některých těles, na něž mohla být aplikována metoda radiálních vzdáleností. Ne všechna tělesa však byla touto metodou prvně objevena.
+V tabulce 2 jsou uvedeny příklady výpočtu hmotnosti některých planet.
 
 { % TODO
 \catcode`\-=12
-\tab{Příklady údajů těles po aplikování metody radiálních vzdáleností}{
+\tab[1]{Příklady výpočtu hmotnosti planet}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline	
 		\rowcolor{lightgray}
-		Těleso & Hvězda & $M_p$ [kg] & $M_s$ [kg] & sin(i) & e & T [r] & \textbf{$\Delta v_{max}$ [$\frac{m}{s}$]} \\	
+		Těleso & Hvězda & $\Delta v_{max}$ [$\frac{m}{s}$] & $M_p$ [kg] & sin(i) & e & T [r] & \textbf{$M_s$ [kg]} \\
+			
 		\hline	
-		Země & \multirow{3}{*}{Slunce} & $5,97 * 10^{24}$ & \multirow{3}{*}{$2 * 10^{30}$} & \multirow{5}{*}{1} & 0,017 & 1 & \textbf{0,089} \\
+		Země & \multirow{3}{*}{Slunce} & 0,089 & \multirow{3}{*}{$2 * 10^{30}$} & \multirow{5}{*}{1} & 0,017 & 1 & \textbf{$5,97 * 10^{24}$} \\
+		
 		\cline{1-1}\cline{3-3}\cline{6-8}
-		Jupiter & & $1,9 * 10^{27}$ & & & 0,048 & 11,86 & \textbf{12,4} \\
+		Jupiter & & 12,4 & & & 0,048 & 11,86 & \textbf{$1,9 * 10^{27}$} \\
+		
 		\cline{1-1}\cline{3-3}\cline{6-8}
 		\cline{1-1}\cline{3-3}\cline{6-8}
-		Pluto & & $1,3 * 10^{22}$ & & & 0,247 & 247,41 & \textbf{0,00003} \\
+		Pluto & & 0,00003 & & & 0,247 & 247,41 & \textbf{$1,3 * 10^{22}$} \\
+		
 		\cline{1-1}\cline{3-3}\cline{6-8}
 		\cline{1-4}\cline{6-8}
 
 
-		$\alpha$ Cen Bb & $\alpha$ Cen B & $6,75 * 10^{24}$ & $1,8 * 10^{30}$ & & 0 & 0,0089 & \textbf{0,51} \\	
+		$\alpha$ Cen Bb & $\alpha$ Cen B & 0,51 & $1,8 * 10^{30}$ & & 0 & 0,0089 & \textbf{$6,75 * 10^{24}$} \\	
 		\cline{1-4}\cline{6-8}
-		51 Pegasi b & 51 Pegasi & $0,88 * 10^{27}$ & $2,22 * 10^{30}$ & & 0,013 & 0,0116 & \textbf{55,9}  \\		
+		51 Pegasi b & 51 Pegasi & 55,9 & $2,22 * 10^{30}$ & & 0,013 & 0,0116 & \textbf{$0,88 * 10^{27}$}  \\		
 		\hline
 	\end{tabular}
 }
+
+\footnotetext[1]{Vytvořeno autorem, zdroj dat: \cite{radialvelocity, 51pegasi, methods, nasadata}.}
 
 \clearpage
 \subsection{Astrometrická metoda}
@@ -357,20 +358,6 @@ Pohyb hvězdy tak není přímočarý, ale vlnitý. Kolísání hvězdy je však
 
 Dá se však očekávat, že se zlepšující se technikou bude tato metoda úspěšnější.
 
-\tab{Ukázková tabulka}{
-	\begin{tabular}{|l|l|c|c|c|c|c|c|}
-		\hline	
-		Data -0& Data 1& Data 2 & Data 3 & Data 4 & Data 5 \\
-		\hline	
-		Data 0& Data 1& Data 2 & Data 3 & Data 4 & Data 5 \\
-		\hline	
-		Data 0& Data 1& Data 2 & Data 3 & Data 4 & Data 5 \\
-		\hline
-	\end{tabular}
-}
-
-\lstinputlisting[caption={Spuštění programu}]{codes/usage.txt}
-
 \subsection{Gravitační mikročočky}
 \subsection{Přímé zobrazení}
 \subsection{Pulsar timing}
@@ -380,6 +367,16 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 \subsection{Neuronová sít}
 
 \subsubsection{Konvoluční neuronová síť}
+
+\section{Existující řešení}
+
+\subsection{Planet Hunters}
+
+TODO
+
+\subsection{Astronet}
+
+TODO: \cite{kepler80}
 
 \section{Použité technologie}
 
@@ -423,7 +420,7 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 
 \begin{itemize}
 \item \textbf{api} -- Definice REST a~Socket API a~zpracování příchozích požadavků. To zahrnuje autentizaci a~autorizaci odesílatele a~následné provedení operace v~servisní vrstvě. 
-\item \textbf{config} -- Konfigurace serveru (např. připojení k~databázi). Základním konfiguračním souborem je \code{base.cfg}, který je použit automaticky. Bez nutnosti tento soubor měnit je možné vytvořit nový soubor (např. \code{test.cfg}) s~novou konfigurací a~pomocí argumentu při spuštění serveru nastavit, aby se použila tato konfigurace (\code{./src/main.py -{}-env test}). [TODO!!!]
+\item \textbf{config} -- Konfigurace serveru (např. připojení k~databázi). Základním konfiguračním souborem je \code{base.cfg}, který je použit automaticky. Bez nutnosti tento soubor měnit je možné vytvořit nový soubor (např. \code{test.cfg}) s~novou konfigurací a~pomocí argumentu při spuštění serveru nastavit, aby se použila tato konfigurace (\code{./src/main.py -{}-env test}). [TODO]
 \item \textbf{constants} -- Veškeré konstantní položky, ať už technického či fyzikálního typu.
 \item \textbf{service} -- Servisní vrstva obsahující logiku serveru a~manipulaci s~databází.
 \item \textbf{utils} -- Pomocné třídy uchovávající specifickou funkcionalitu.
@@ -439,7 +436,7 @@ Následně může dojit k~nadefinování koncových bodů rozhraní. Koncovým b
 
 \lstinputlisting[caption={Vytvoření koncového bodu v~REST API.}]{codes/rest_endpoint.txt}
 
-Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nesprávnosti vstupních parametrů je odeslána chybová odpověď a~díky anotacím je také automaticky generována dokumentace REST API v~nástroji Swagger~UI dostupná na adrese \url{exoplanets.now.sh/api-docs}. Ukázka dokumentace REST API je umístěna v~příloze [TODO!!!] na konci dokumentu.
+Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nesprávnosti vstupních parametrů je odeslána chybová odpověď a~díky anotacím je také automaticky generována dokumentace REST API v~nástroji Swagger~UI dostupná na adrese \url{exoplanets.now.sh/api-docs}. Ukázka dokumentace REST API je umístěna v~příloze [TODO] na konci dokumentu.
 
 \subsubsection{Socket.io API}
 
@@ -460,14 +457,14 @@ Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikac
 
 \subsection{Neuronová síť}
 
-
 \img[1]{Trénovací množina}{img/train_set.png}
+TODO: Odebrat osy a popisky z obrázku.
 
 \subsection{Databáze}
 
 \subsection{Datasety}
 
-Většina dat se do databáze nevkládá manuálně, jelikož je třeba pracovat se stovkami tisíc či miliony datových položkek. Namísto toho administrátor pouze definuje přístupový bod k~nějakému datasetu dostupnému přes webové rozhraní a~následně dojde k~automatickému zpracování datasetu a~všech položek v~něm. Některé typy datasetů jsou určeny k~jednorázovému uložení do databáze a~není nutno je nijak dál zpracovávat. Zpracování jiných je naopak výpočetně náročné a~připojené klientské aplikace postupně zpracovávají položku po položce. Jednotlivé typy datasetů jsou popsány níže.
+Většina dat se do databáze nevkládá manuálně, jelikož je třeba pracovat se stovkami tisíc či miliony datových položkek. Namísto toho administrátor pouze definuje přístupový bod k~nějakému datasetu dostupnému přes webové rozhraní a~následně dojde k~automatickému zpracování datasetu a~všech položek v~něm. Některé typy datasetů jsou určeny k~jednorázovému uložení do databáze a~není nutno je nijak dál zpracovávat. Zpracování jiných je naopak výpočetně náročné a~připojené klientské aplikace tak činí postupně položku po položce. Jednotlivé typy datasetů jsou popsány níže.
 
 U~všech typů datasetů je také vyřešena situace, kdy by se jedna a~ta samá položka (např. hvězda) nacházela ve dvou datasetech zároveň. V~takovém případě dojde k uložení obou hodnot a~uživatel v~aplikaci pak bude vidět údaje dané položky z~obou datasetů vedle sebe.
 
@@ -506,7 +503,7 @@ Aplikace je postavena flexibilně a~umožňuje libovolně namapovat sloupce z~da
 Datasety s~planetami nejsou pro běh aplikace taktéž nutné, protože veškeré informace o exoplanách jsou vypočítány z~jiných datasetů. Platí však, že čím více nezávislých zdrojů se na údajích o~exoplanetě shodne, tím spíše budou tyto údaje platné. Proto je umožněno ukládat do databáze i~datasety s~údaji o planetách -- mohou potvrdit nebo vyvrátit údaje vypočtené v~rámci aplikace.
 
 \img[1]{Část datasetu s~vlastnostmi planet}{img/planet_properties.png}
-\footnotetext[1]{Dataset pochází ze stránek \url{https://exoplanetarchive.ipac.caltech.edu}.}
+\footnotetext[1]{Zdoj: \url{https://exoplanetarchive.ipac.caltech.edu}.}
 
 Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nutno nijak složitě zpracovávat, pouze uložit do databáze.
 
@@ -527,7 +524,7 @@ Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nut
 Často se stává, že jedno a~to samé těleso je v~různých datasetech pod různým označením.
 
 {
-\tab{Pojmenování soustavy Kepler-10 v~různých katalozích TODO: Zdroj}{
+\tab[2]{Pojmenování soustavy Kepler-10 v~různých katalozích}{
 	\begin{tabular}{|l|l|l|l|}
 		\hline	
 		\rowcolor{lightgray}
@@ -551,7 +548,7 @@ Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nut
 		\hline
 	\end{tabular}
 }
-\footnotetext[2]{Zdroj katalogů: \url{http://simbad.u-strasbg.fr/simbad/sim-id?Ident=Kepler-10}.}
+\footnotetext[2]{Zdroj dat: \url{http://simbad.u-strasbg.fr/simbad/sim-id?Ident=Kepler-10}.}
 
 K~zamezení toho, aby byly tyto položky vedeny jako dvě různé soustavy je nutno aplikaci poskytnout informace o~používaných názvech jednotlivých objektů. Právě k~tomu slouží tento typ datasetů.
 
@@ -571,48 +568,41 @@ Na jediné stránce jsou shrnuty všechny známé informace o~systému. Kromě h
 
 \subsection{Autentizace}
 
-\section{Problémy řešené při implementaci}
-
-\subsection{Virtualizace vykreslovaného seznamu}
-
-Hvězdy i~detekované exoplanety jsou v aplikaci vykreslovány do tabulky. Z~praktických důvodů není tato tabulka rozdělena na stránky, mezi nimiž uživatel přepíná, ale je využita technika tzv. nekonečného scrollování (infinite scroll). Ta při načtení stránky zobrazí pouze několik prvních řádků a~teprve když uživatel doscrolluje dolů dojde k~načtení dalších několika řádků. Po dostatečně dlouhém scrollování tak může tabulka obsahovat velké množství řádků, jejichž vykreslování se negativně projeví na výkonu aplikace.
-
-Z~tohoto důvodu je nutné, aby tabulka vykreslovala pouze ty řádky, které jsou viditelné a~nevykreslovala ty, jenž jsou mimo obrazovku. To povede k vykreslení vždy pouze několika řádků (v~závislosti na výšce řádků a~obrazovky) i~v~případě, kdy by tabulka obsahovala tisíce záznamů.
-
-
-I~přesto, že pro JavaScript existují knihovny poskytující funkcionalitu virtualizovaného seznamu, žádná z~nich plně nevyhovuje potřebám aplikace, a~proto došklo k~vytvoření vlastní komponenty \code{VirtualizedList}.
-
-\lstinputlisting[caption={Přiklad použití vlastní komponenty implementující virtualizovaný seznam}]{codes/virtualized_list.txt}
-
-Komponenta si sama spočítá velikost obrazovky a~nutný počet vykreslovaných položek. Při scrollování dolů začne odebírat položky shora a~přidávat je dolů a~při scrollování nahoru naopak.
-
-\img[1]{Porovnání klasického a~virtualizovaného seznamu}{img/virtualized_list.png}
-
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
 
+TODO: Verifikace výsledků.
+
 \addcontentsline{toc}{section}{Použitá literatura}
 \begin{thebibliography}{99}	% parametr určuje nejširší položku
+
+\onlinesource[LOVIS, Christophe, FISCHER, Debra A]{radialvelocity}{Radial Velocity Techniques for Exoplanets}{University of Arizona Press}{2011}{25.~12.~2019}{https://www.researchgate.net/publication/253789798_Radial_Velocity_Techniques_for_Exoplanets}
+
+\onlinesource[MARCY, Geoffrey]{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal 481(2)}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088}
+
+\onlinesource[PERRYMAN, Michael]{exoplanets}{Extra-solar planets}{Reports on Progress in Physics 63(8)}{31.~5.~2000}{8.~10.~2020}{https://arxiv.org/abs/astro-ph/0005602}
+
+\onlinesource[SHALLUE, Christopher, VANDERBURG, Andrew]{kepler80}{Identifying Exoplanets with Deep Learning: A Five-planet Resonant Chain around Kepler-80 and an Eighth Planet around Kepler-90}{The Astronomical Journal 155(2)}{30.~1.~2018}{8.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/aa9e09}
 
 \onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
 
 \onlinesource{nasadata}{NASA Exoplanet Archive}{NASA Exoplanet Science Insititute}{12.~8.~2019}{25.~12.~2019}{https://exoplanetarchive.ipac.caltech.edu/docs/API_exoplanet_columns.html}
 
-\onlinesource[LOVIS, Christophe, FISCHER, Debra A]{radialvelocity}{Radial Velocity}{Yale Astronomy}{??.~?.~????}{25.~12.~2019}{http://exoplanets.astro.yale.edu/workshop/EPRV/Bibliography_files/Radial_Velocity.pdf}
+\onlinesource{sunlight}{Reference Solar Spectral Irradiance: ASTM G-173}{nrel}{??.~?.~????}{27.~12.~2019}{https://rredc.nrel.gov/solar/spectra/am1.5/ASTMG173/ASTMG173.html}
 
-\onlinesource{sunlight}{Reference Solar Spectral Irradiance: ASTM G-173}{nrel}{??.~?.~????}{27.~12.~2019}{https://rredc.nrel.gov/solar//spectra/am1.5/ASTMG173/ASTMG173.html}
 
-\onlinesource[MARCY, Geoffrey]{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal 481(2)}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088}
+\onlinesource{tess}{TESS Exoplanet Mission}{NASA}{24.~8.~2020}{8.~10.~2020}{https://www.nasa.gov/content/about-tess}
 
-\onlinesource[SHALLUE, Christopher, VANDERBURG, Andrew]{kepler80}{Identifying Exoplanets with Deep Learning: A Five-planet Resonant Chain around Kepler-80 and an Eighth Planet around Kepler-90}{The Astronomical Journal 155(2)}{30.~1.~2018}{8.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/aa9e09}
-
-\onlinesource[PERRYMAN, Michael]{exoplanets}{Extra-solar planets}{Reports on Progress in Physics 63(8)}{31.~5.~2000}{8.~10.~2020}{https://arxiv.org/abs/astro-ph/0005602}
+\onlinesource{transit}{Detection and characterization of extrasolar
+planets: the transit method}{???}{2005}{8.~10.~2020}{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.4155&rep=rep1&type=pdf}
 
 \end{thebibliography}
 
 Exoplanets data \url{http://exoplanets.org/detail/alpha_Cen_B_b}
 
 Wavelength \url{http://spiff.rit.edu/classes/phys240/lectures/expand/expand.html}
+
+TODO: Doplnit reference ze zadání diplomové práce.
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Seznam příloh}
 \section*{Seznam příloh}
