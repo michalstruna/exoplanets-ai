@@ -107,15 +107,15 @@ Exoplanety není téměř vůbec možné pozorovat přímo vizuálně, protože 
 
 Zdaleka nejvýznamnější je tranzitní metoda, kterou byla objevena většina exoplanet. Velké množství planet bylo objeveno taktéž metodou radiálních vzdáleností. Pomocí ní byly objevovány planety především blízko Země.
 
-\img[1]{Vlastnosti planet v závislosti na metodě objevení}{stats/count_by_method.pdf}
+\img[1]{Počty objevených exoplanet jednotlivými metodami}{stats/count_by_method.png}
 
-\dataplot
+\data{1}{nasadata}
 
-Málo hmotné planety byly objevovány jak tranzitní metodou, tak i~metodou radiálních rychlostí. Naproti tomu hmotné planety blízko své hvězdy byly objeveny především tranzitní metodou, kdežto hmotné planety daleko od své hvězdy metodou radiálních rychlostí. Nejvzdálenější planety od hvězdy byly pak objevovány metodou přímého zobrazení.
+Málo hmotné planety byly objevovány častěji tranzitní metodou, zatímco hmotnější planety spíše metodou radiálních rychlostí. Pro planety vzdálené od své mateřeské hvězdy se nejlépe osvědčila metoda přímého zobrazení.
 
 \img[1]{Závislost hmotnosti, periody oběhu a metody objevení planety}{stats/period_by_mass_by_method.pdf}
 
-\dataplot
+\data{1}{nasadata}
 
 \clearpage
 \subsection{Tranzitní metoda}
@@ -144,14 +144,14 @@ Prvním krokem v~analýze hvězdy tranzitní metodou je její fyzické pozorová
 TPF obsahuje část oblohy o velikosti několika pixelů, na které se v původní fotografii nacházela zkoumaná hvězda a~její okolí. Barva pixelů je určena jasem.
 
 \img[1]{Target pixel file hvězdy Kepler-10}{img/tpf.png}
-\footnotetext[1]{Vytvořeno autorem, zdroj dat:~\cite{nasadata}}
+\data{1}{nasadata}
 
 \subsubsection{Světelná křivka hvězdy}
 
 Po složení všech TPF do časové řady a~vypočítání jejich jasu dostaneme světelnou křivku. Na obrázku~5 je světelná křivka hvězdy Kepler-13 očištěná od dlouhodobého trendu, šumu a~extrémních hodnot. Křivka vykazuje velice výraznou periodickou složku s~periodou 1,763~dne. Ve většině případů ale vliv planety není takto výrazný a~detekovat planetu je obtížnější.
 
 \img[1]{Světelná křivka soustavy Kepler-13}{img/light_curve.png}
-\footnotetext[1]{Vytvořeno autorem.}
+\data{1}{nasadata}
 
 Každý tranzit má charakteristické fáze, které pomohou odlišit působení exoplanety od ostatních možných příčin, jako je např. proměnlivost hvězdy, dvojhvězda nebo pulzar.
 
@@ -188,6 +188,8 @@ Většina periodických složek ve světelných křivkách hvězd jsou \emph{fal
 \img[1]{Proměnná hvězda KIC~9832227}{img/variable_star.png}
 \img[1]{Kataklizmická proměnná hvězda KIC 9406652}{img/cataclysmic.png}
 \end{multicols}
+
+\data{1}{nasadata}
 
 Je třeba aby vstupní data do neuronové sítě měla stejné rozměry i~formát. Vzhledem k~různorodosti světelných křivek je nutno provést několik kroků, abychom dosáhli standardizovaného formátu. Prvním krokem je složení časové řady do jedné periody, čímž dojde k~posílení viditelnosti transitu (pokud zde nějaký je), nebo naopak k~jeho vyrušení (pokud zde žádný není).~\cite{kepler80}
 
@@ -251,6 +253,8 @@ Hmotnost planety z tranzitní metody narozdíl od metody radiálních rychlostí
 	\end{tabular}
 }
 
+TODO: Použít neuronovou síť pro odhad hmotnosti.~\cite{nnmass}
+
 
 \clearpage
 \subsection{Metoda radiálních rychlostí}
@@ -271,7 +275,7 @@ Periodicky se opakující změny ve vlnové délce záření hvězdy tak mohou b
 Hvězdy nevyzařují světlo pouze jedné jediné vlnové délky, nýbrž celé spektrum. Tento efekt lze vidět  u~duhy v~zemské atmosféře, kdy jsou jednotlivé složky slunečního světla odděleny. Záření z~hvězd se dokonce neomezuje pouze na viditelné světlo, ale pokrývá značnou část celého elektromagnetického spektra. Jak velká část záření přísluší jednotlivým vlnovým délkám lze měřit pomocí spektrometru.~\cite{radialvelocity, sunlight}
 
 \img[1]{Spektrum slunečního záření}{stats/sunlight_spectrum.png}
-\footnotetext[1]{Vytvořeno autorem, zdroj dat: \cite{sunlight}.}
+\data{1}{sunlight}
 
 Změna vlnové délky záření se projevuje jako horizontální posun barevného spektra hvězdy. Nutno podotknout, že zemská atmosféra některé vlnové délky pohlcuje. Proto i~přesto, že Slunce má barvu spíše do zelena vidíme tuto hvězdu ze Země žlutě. [TODO]
 
@@ -288,7 +292,7 @@ Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek
 Graf znázorňující radiální rychlost hvězdy 51~Pegasi může vypadat takto:
 
 \img[1]{Radiální rychlost hvězdy 51 Pegasi}{stats/51_pegasi_radial_velocity.pdf}
-\footnotetext[1]{Vytvořeno autorem, zdroj dat: \cite{51pegasi}.}
+\data{1}{51pegasi}
 
 Na první pohled je patrná jedna periodická složka s periodou 4,23 dne a~amplitudou 56,04 $\frac{m}{s}$, která značí, že kolem této hvězdy obíhá jedna planeta. Pokud zde jsou přítomna i~jiná tělesa, důvodů, proč je metoda radiálních rychlostí neodhalila může být několik:
 
@@ -342,7 +346,7 @@ V tabulce 2 jsou uvedeny příklady výpočtu hmotnosti některých planet.
 	\end{tabular}
 }
 
-\footnotetext[1]{Vytvořeno autorem, zdroj dat: \cite{radialvelocity, 51pegasi, methods, nasadata}.}
+\data{1}{radialvelocity, 51pegasi, methods, nasadata}
 
 \clearpage
 \subsection{Astrometrická metoda}
@@ -364,11 +368,38 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 
 \section{Umělá inteligence}
 
-\subsection{Neuronová sít}
+\subsection{Umělé neuronové sítě}
+
+\cite{nn}
+
+\subsubsection{Jednoduchý perceptron}
+
+\subsubsection{Vícevrstvý perceptron}
 
 \subsubsection{Konvoluční neuronová síť}
 
-\section{Existující řešení}
+\subsubsection{Další typy neuronových sítí}
+
+\subsection{Evoluční algoritmy}
+
+\subsubsection{Genetický algoritmus}
+
+\subsubsection{Další evoluční algoritmy}
+
+\subsection{Další oblasti AI}
+
+Pod umělou inteligenci spadají i~další oblasti. Ty však nejsou pro potřeby této práce důležité, a~proto budou zmíněny pouze okrajově:
+
+\begin{itemize}
+
+\item \textbf{Fuzzy systémy}~--~...
+
+\item \textbf{Expertní systémy}~--~...
+
+\end{itemize}
+
+
+\section{Projekty pro hledání exoplanet}
 
 \subsection{Planet Hunters}
 
@@ -576,6 +607,8 @@ TODO: Verifikace výsledků.
 \addcontentsline{toc}{section}{Použitá literatura}
 \begin{thebibliography}{99}	% parametr určuje nejširší položku
 
+\isbnsource[DOLEŽEL, Petr]{nn}{Úvod do umělých neuronových sítí}{Univerzita Pardubice, Fakulta elektrotechniky a~informatiky}{2016}{9.~10.~2020}{978-80-7560-022-6}
+
 \onlinesource[LOVIS, Christophe, FISCHER, Debra A]{radialvelocity}{Radial Velocity Techniques for Exoplanets}{University of Arizona Press}{2011}{25.~12.~2019}{https://www.researchgate.net/publication/253789798_Radial_Velocity_Techniques_for_Exoplanets}
 
 \onlinesource[MARCY, Geoffrey]{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal 481(2)}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088}
@@ -583,6 +616,8 @@ TODO: Verifikace výsledků.
 \onlinesource[PERRYMAN, Michael]{exoplanets}{Extra-solar planets}{Reports on Progress in Physics 63(8)}{31.~5.~2000}{8.~10.~2020}{https://arxiv.org/abs/astro-ph/0005602}
 
 \onlinesource[SHALLUE, Christopher, VANDERBURG, Andrew]{kepler80}{Identifying Exoplanets with Deep Learning: A Five-planet Resonant Chain around Kepler-80 and an Eighth Planet around Kepler-90}{The Astronomical Journal 155(2)}{30.~1.~2018}{8.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/aa9e09}
+
+\onlinesource[TASKER, Elizabeth, LANEUVILLE, Matthieu, GUTTENBERG, Nicholas]{nnmass}{Estimating Planetary Mass with Deep Learning}{The Astronomical Journal 159(2)}{7.~1.~2020}{9.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/ab5b9e}
 
 \onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
 

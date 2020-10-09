@@ -214,7 +214,7 @@
 \newcommand{\drawgimp}[1][1]{\footnotetext[#1]{Vytvořeno autorem v \url{https://www.draw.io} a GIMP.}}
 
 % Insert page note with reference to dataset.
-\newcommand{\dataplot}[1][1]{\footnotetext[#1]{Vytvořeno autorem za využití datasetu TODO: REF}}
+\newcommand{\data}[2]{\footnotetext[#1]{Vytvořeno autorem, zdroj dat:~\cite{#2}.}}
 
 
 % Render bibitem for online source.
@@ -236,6 +236,13 @@
 		\end{center}
 	\end{titlepage}
 	\stepcounter{page}
+}
+
+% Render bibitem for online source.
+% \isnbsource[Author]{id}{Article}{Page}{Date}{CitationDate}{ISBN}
+\newcommand{\isbnsource}[7][]{
+	\bibitem{#2}
+	#1\ifx&#1&\else. \fi #3. \textit{#4.} #5. [cit. #6]. ISBN~\mbox{#7}
 }
 
 \newcommand{\mainpage}{
