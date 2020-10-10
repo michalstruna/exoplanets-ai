@@ -1,5 +1,6 @@
 /docs/thesis*
 !/docs/thesis.tex
+!/docs/thesis.pdf
 
 build
 .idea
