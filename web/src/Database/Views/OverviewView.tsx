@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Color, Dimension, size } from '../../Style'
-import { TopLevelStats } from '../../Stats'
+import { GlobalStats } from '../../Stats'
 import { Table } from '../../Layout'
 import { UsersBlock } from '../../User'
 import PlanetsRank from '../Components/PlanetsRank'
@@ -84,11 +84,13 @@ const OverviewView = ({ ...props }: Props) => {
     return (
         <Root {...props}>
             <Left>
-                <TopLevelStats data={{
-                    discoveredPlanets: 16,
-                    exploredStars: 2793,
-                    computingTime: 5235.231465,
-                    volunteers: 123
+                <GlobalStats data={{
+                    planets: 16,
+                    volunteers: 123,
+                    hours: 5235.231465,
+                    stars: 2793,
+                    gib: 12.5,
+                    lcs: 3863
                 }} />
 
                 <br />
@@ -97,7 +99,9 @@ const OverviewView = ({ ...props }: Props) => {
                 Bar chart (count x planet size)
             </Left>
             <Center>
-                <Todo />
+                <Todo>
+
+                </Todo>
                 <OverviewUsersBlock />
             </Center>
             <Right>

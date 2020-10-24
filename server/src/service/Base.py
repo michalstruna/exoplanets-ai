@@ -1,5 +1,4 @@
 from abc import ABC
-import math
 
 
 class Service(ABC):
@@ -13,16 +12,15 @@ class Service(ABC):
     def get(self, filter):
         return self.dao.get(filter)
 
-    def get_all(self, filter=[], sort=[], limit=10e6, offset=0):
+    def get_all(self, filter=None, sort=None, limit=None, offset=None):
         return self.aggregate(self.dao.pipeline, filter=filter, limit=limit, skip=offset, sort=sort, with_index=True)
 
     def get_count(self, filter={}, **kwargs):
         return self.dao.get_count(self.dao.pipeline, filter=filter)
 
-    def aggregate(self, operations, filter={}, limit=None, skip=0, sort=None, with_index=False):
-        result = self.dao.aggregate(operations, filter, limit, skip, sort)
-
-        if with_index:
+    def aggregate(self, operations, filter=None, limit=None, skip=None, sort=None, with_index=False):
+        result = self.dao.aggregate(operations, filter, limit, skip, sort)  # TODO: init_filter.
+        if with_index and False:
             index = skip + 1 if skip is not None else 1
 
             for item in result:

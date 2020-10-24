@@ -198,27 +198,35 @@ export default {
     },
 
     stats: {
-        topLevelStats: {
-            units: {
-                computingTime: 'h'
-            },
-            discoveredPlanets: {
-                [CS]: 'Objevených planet',
-                [EN]: 'Discovered planets'
-            },
-            exploredStars: {
-                [CS]: 'Zpracovaných hvězd',
-                [EN]: 'Explored Stars'
-            },
-            computingTime: {
-                [CS]: 'Výpočetní čas',
-                [EN]: 'Computing time'
-            },
-            volunteers: {
-                [CS]: 'Registrovaných dobrovolníků',
-                [EN]: 'REgistered volunteers'
-            }
-        }
+        units: {
+            hours: 'h',
+            gibs: 'GiB'
+        },
+        planets: {
+            [CS]: 'Objevených planet',
+            [EN]: 'Discovered planets'
+        },
+        stars: {
+            [CS]: 'Zpracováno hvězd',
+            [EN]: 'Explored Stars'
+        },
+        hours: {
+            [CS]: 'Výpočetní čas',
+            [EN]: 'Computing time'
+        },
+        volunteers: {
+            [CS]: 'Dobrovolníků',
+            [EN]: 'Volunteers'
+        },
+        gibs: {
+            [CS]: 'Zpracováno dat',
+            [EN]: 'Processed data'
+        },
+        curves: {
+            [CS]: 'Zpracovano křivek',
+            [EN]: 'Processed curves'
+        },
+        lastWeek: { [CS]: 'poslední týden', [EN]: 'Last week' }
     },
 
     auth: {

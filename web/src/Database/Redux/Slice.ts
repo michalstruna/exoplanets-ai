@@ -2,6 +2,7 @@ import { Query } from '../../Routing'
 import { Redux,  FilterData, Sort, Segment, Cursor } from '../../Data'
 import { Requests } from '../../Async'
 import { Dataset, StarData, PlanetData } from '../types'
+import { AggregatedStats } from '../../Stats'
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
 
@@ -15,7 +16,8 @@ const slice = Redux.slice(
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),
         system: Redux.async<StarData>(),
-        usersRank: 0
+        usersRank: 0,
+        globalStats: Redux.async<AggregatedStats>()
     },
     ({ async, set }) => ({
         setFilter: set<FilterData>('filter', {
@@ -41,9 +43,10 @@ const slice = Redux.slice(
         getStars: async<Cursor, StarData[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
         getPlanets: async<Cursor, PlanetData[]>('planets', cursor => Requests.get('planets', undefined, cursor)),
         getDatasets: async<Cursor, Dataset[]>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
-        getSystem: async<string, StarData>('system', name => Requests.get(`stars/name/${name}`))
+        getSystem: async<string, StarData>('system', name => Requests.get(`stars/name/${name}`)),
+        getGlobalStats: async<void, AggregatedStats>('globalStats', name => Requests.get(`global_stats/aggregated`))
     })
 )
 
 export default slice.reducer
-export const { setFilter, setSort, setSegment, getStars, getDatasets, getPlanets, getSystem } = slice.actions
+export const { setFilter, setSort, setSegment, getStars, getDatasets, getPlanets, getSystem, getGlobalStats } = slice.actions

@@ -1,6 +1,5 @@
 from mongoengine import *
 from bson.objectid import ObjectId
-import math
 
 from constants.Database import *
 from utils import time
@@ -15,8 +14,8 @@ class Dao:
     def get_by_id(self, id):
         return self.get({"_id": Dao.id(id)})
 
-    def get_all(self, filter=[], sort=[], limit=math.inf, offset=0):
-        return self.aggregate(self.pipeline, filter=filter, limit=limit, offset=offset, sort=sort)
+    def get_all(self, init_filter=None, filter=None, sort=None, limit=None, offset=0, with_index=True):
+        return self.aggregate(self.pipeline, init_filter=init_filter, filter=filter, limit=limit, offset=offset, sort=sort, with_index=with_index)
 
     def get(self, filter):
         items = self.get_all(filter=filter, limit=1)
@@ -50,8 +49,11 @@ class Dao:
         if with_return:
             return self.get_by_id(id)  # TODO: Test.
 
-    def update(self, filter, item, with_return=True):
-        pass  # TODO
+    def update(self, filter, item, with_return=True, upsert=False):
+        self.collection.objects(**filter).update_one(**self.modified(item), upsert=upsert)
+
+        if with_return:
+            return self.get(filter)
 
     def update_all(self):
         pass  # TODO
@@ -65,8 +67,16 @@ class Dao:
     def delete_all(self):
         pass
 
-    def aggregate(self, operations, filter={}, limit=None, offset=0, sort=None, with_index=True):
-        pipeline = [*operations, {"$match": filter}]
+    def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True, init_filter=None):
+        pipeline = []
+
+        if init_filter:
+            pipeline.append({"$match": init_filter})
+
+        pipeline += operations
+
+        if filter:
+            pipeline.append({"$match": filter})
 
         if sort:
             pipeline.append({"$sort": sort})
@@ -82,7 +92,7 @@ class Dao:
                 {"$group": {"_id": 1, "items": {"$push": "$$ROOT"}}},
                 {"$unwind": {"path": "$items", "includeArrayIndex": "items.index"}},
                 {"$replaceRoot": {"newRoot": "$items"}},
-                {"$addFields": {"index": {"$add": ["$index", offset + 1]}}}
+                {"$addFields": {"index": {"$add": ["$index", (offset if offset else 0) + 1]}}}
             ]
 
         return list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
@@ -234,6 +244,33 @@ class Star(Document):
 
 star_dao = Dao(Star, [
     {"$addFields": {"datasets": {"$add": [{"$size": "$properties"}]}}}
+])
+
+
+class GlobalStatsItem(EmbeddedDocument):
+    planets = IntField(required=True, default=0)
+    volunteers = IntField(required=True, default=0)
+    hours = FloatField(required=True, default=0)
+    stars = IntField(required=True, default=0)
+    gibs = FloatField(required=True, default=0)
+    curves = IntField(required=True, default=0)
+
+
+class GlobalStats(Document):
+    date = StringField(required=True)
+    stats = EmbeddedDocumentField(GlobalStatsItem, required=True)
+
+
+global_stats_dao = Dao(GlobalStats, [
+    {"$group": {
+        "_id": 1,
+        "planets": {"$sum": "$stats.planets"},
+        "gibs": {"$sum": "$stats.gibs"},
+        "volunteers": {"$sum": "$stats.volunteers"},
+        "stars": {"$sum": "$stats.stars"},
+        "curves": {"$sum": "$stats.curves"},
+        "hours": {"$sum": "$stats.hours"}
+    }}
 ])
 
 

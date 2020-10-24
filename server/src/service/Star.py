@@ -83,9 +83,7 @@ class StarService(Service):
                 upsert=True
             ))
 
-        db.star_dao.collection._get_collection().bulk_write(operations, ordered=False)
-
-        return stars
+        return db.star_dao.collection._get_collection().bulk_write(operations, ordered=False)
 
     def complete_star(self, star, with_constellation=True):
         result = {**star}
