@@ -143,6 +143,7 @@ const Curve = ({ data, simple, type, title, ...props }: Props) => {
 Curve.LV = 'lv'
 Curve.GV = 'gv'
 Curve.LC = 'lc'
+Curve.STATS = 'stats'
 
 const colorMap = {
     [Curve.LV]: '#FAA',

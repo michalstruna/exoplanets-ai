@@ -23,3 +23,22 @@ export interface AggregatedStats {
     gibs: AggregatedStatsItem
     curves: AggregatedStatsItem
 }
+
+export interface PlotAxis {
+    min?: number
+    max?: number
+    log?: boolean
+    ticks?: (number | string)[]
+}
+
+export interface PlotStat {
+    x: PlotAxis
+    y: PlotAxis
+    image: string
+}
+
+export interface PlotStats {
+    smax_mass: PlotStat
+    type_count: PlotStat
+    star_type_count: PlotStat
+}

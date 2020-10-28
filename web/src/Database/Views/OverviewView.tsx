@@ -2,11 +2,11 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Color, Dimension, size } from '../../Style'
-import { GlobalStats } from '../../Stats'
-import { Table } from '../../Layout'
+import { Block, Table } from '../../Layout'
 import { UsersBlock } from '../../User'
 import PlanetsRank from '../Components/PlanetsRank'
 import Chat from '../../User/Components/Chat'
+import GlobalStatsPanel from '../Components/GlobalStatsPanel'
 
 interface Props {
 
@@ -16,24 +16,6 @@ const Root = Styled.div`
     ${size('100%', `calc(100vh - ${Dimension.NAV_HEIGHT})`)}
     background-color: ${Color.BACKGROUND};
     display: flex;
-`
-
-const Block = Styled.div`
-    background-color: ${Color.MEDIUM_DARK};
-    box-sizing: border-box;
-    padding: 1rem;
-`
-
-const Left = Styled(Block)`
-    ${size('40rem', '100%')}
-    
-    & > div {
-        margin-bottom: 0.5rem;
-        
-        &:last-of-type {
-            margin-bottom: 0;
-        }
-    }
 `
 
 const Center = Styled.div`
@@ -83,21 +65,7 @@ const OverviewView = ({ ...props }: Props) => {
 
     return (
         <Root {...props}>
-            <Left>
-                <GlobalStats data={{
-                    planets: 16,
-                    volunteers: 123,
-                    hours: 5235.231465,
-                    stars: 2793,
-                    gib: 12.5,
-                    lcs: 3863
-                }} />
-
-                <br />
-                Scatter chart (mass x period x method)
-                <br />
-                Bar chart (count x planet size)
-            </Left>
+            <GlobalStatsPanel />
             <Center>
                 <Todo>
 
