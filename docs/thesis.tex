@@ -612,7 +612,7 @@ Na obrázku 30 je ukázána aplikace operace Max-Pooling na vstup, který byl v�
 }
 \footnotetext[2]{Zdroj dat: \cite{keras}}
 
-Obdobně k~vrstvě Max-Pooling existuje např. i~Min-Pooling nebo Average-Pooling. Jejich fungování je stejné s~tím rozdílem, že na výstup předávají místo maximální hodnoty tu minimální nebo průměrnou. Jejich použití je opět závislé na typu řešeného problému (např. zda vstupní obrázek ma světlé pozadí a~tmavé popředí či naopak).~\cite{keras}
+Obdobně k~vrstvě Max-Pooling existuje např. i~Min-Pooling nebo Average-Pooling. Jejich fungování je stejné s~tím rozdílem, že na výstup předávají místo maximální hodnoty tu minimální, resp. průměrnou. Jejich použití je opět závislé na typu řešeného problému (např. zda vstupní obrázek ma světlé pozadí a~tmavé popředí či naopak).~\cite{keras}
 
 \subsubsection{Vrstva Flatten}
 
@@ -638,7 +638,7 @@ Pro snížení pravděpodobnosti, že se neuronová síť přetrénuje, je možn
 		\hline	
 	\end{tabular}
 }
-\footnotetext[2]{Zdroj dat: \cite{nn}} % TODO: Keras API.
+\footnotetext[2]{Zdroj dat: \cite{keras}}
 
 \subsection{Učení umělé neuronové sítě}
 
@@ -646,17 +646,35 @@ Vytvořená neuronová síť dle předchozích kapitol nebude umět řešit žá
 
 
 \begin{itemize}
-\item \textbf{S učitelem}~--~Síti je předložen vstup z~trénovací množiny a~ta pro tento vstup stanoví výstup, který je porovnán s~požadovaným výstupem. Na základě chyby mezi skutečným a~požadovaným výstupem pak síť za využití tzv. učícího algoritmu upraví váhy mezi neurony tak, aby se chyba minimalizovala. Tento postup je opakován pro všechny dvojice \textit{vstup $\Rightarrow$ výstup} v~trénovací množině~--~této iteraci se říká \textit{epocha}. Učení sestává z~jedné nebo více epoch a~může skončit:
-
-\begin{itemize}
-\item Po pevném počtu epoch,
-\item Po neurčitém počtu epoch, až chyba učení na klesne na určitou hodnotu.~\cite{nn}
-\end{itemize}
+\item \textbf{S učitelem}~--~Síti je předložen vstup z~trénovací množiny a~ta pro tento vstup stanoví odezvu (výstup), který je porovnán s~požadovaným výstupem. Na základě chyby mezi skutečným a~požadovaným výstupem pak síť za využití tzv. učícího algoritmu upraví váhy mezi neurony tak, aby se chyba minimalizovala.¨
 
 \item \textbf{Bez učitele}~--~Neuronová síť na základě schopnosti rozeznávat ve svých vstupech podobné vlastnosti a~podle těchto vlastností třídit vstupy dokáže řešit určité problémy i~bez znalosti požadovaných výstupů.~\cite{nn}
 \end{itemize}
 
 \subsubsection{Algoritmus zpětného šíření chyby}
+
+Algoritmus zpětného šíření chyby je učící algoritmus určený pro FFNN s~diferencovatelnými spojitými aktivačními funkcemi. Neuronové síti je předložen vzor, pro který síť stanoví odezvu. Chyba pro jeden vzor je definována dle vzorce 15.~\cite{nn}
+
+\formula[\cite{nn}]{Výpočet chyby pro jeden vzor u~algoritmu zpětného šíření chyby}{E = \sum_{i=1}^{Q}{(t_i - y_i)^2} = \sum_{i=1}^{Q}{e_i^2}\vspace{5pt}}{
+\begin{tabular}{ccc}
+	E = chyba jednoho vzoru & $y_i$ = Skutečná hodnota itého výstupu & $e_i$ = Chyba itého výstupu \\ Q = počet výstupů NN & $t_i$ = Očekávaná hodnota itého výstupu \\
+\end{tabular}
+}
+
+Následně je ke každé váze připočten přírustek $\Delta w_{ij}^k$:
+
+\formula[\cite{nn}]{Přírustek váhy u~algoritmu zpětného šíření chyby}{\Delta w_{ij}^k = \frac{\partial E}{\partial w_{ij}^k} \implies \Delta w_{ij}^k = \alpha \delta_j^ky_i^{k-1}\vspace{5pt}}{\begin{tabular}{cc}
+$w_{ij}^k$ = Váha spoje mezi i-tým a j-tým neuronem v k-té vrstvě & $\alpha$ = rychlost učení \\
+$\delta_j^k$ = lokální gradient aktualizované váhy & E = chyba jednoho vzoru \\
+$y^{k-1}_j$ = výstup j-tého neuronu v $k-1$. vrstvě
+\end{tabular}}
+
+Tento postup je opakován pro všechny vzory v~trénovací množině~--~této iteraci se říká \textit{epocha}. Učení sestává z~jedné nebo více epoch a~může skončit:
+
+\begin{itemize}
+\item Po pevném počtu epoch,
+\item Po neurčitém počtu epoch, až chyba učení na klesne na určitou hodnotu.~\cite{nn}
+\end{itemize}
 
 \section{Evoluční algoritmy}
 
