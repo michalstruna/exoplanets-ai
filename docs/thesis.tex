@@ -440,8 +440,6 @@ Formální neuron pak využívá lineární hodnotu tohoto operátoru, který je
 
 Prahem umělého neuronu $w_0$ se rozumí bariéra vstupu do neuronu z~vnějšího okolí (nikoliv z jiného neuronu). Vedle váhy je to další parametr, který se mění při procesu učení sítě.~\cite{nn}
 
-TODO
-
 \subsubsection{Agregační funkce}
 
 Protože neuron může mít více vstupů, ale vždy pouze jediný výstup, je třeba všechny vstupy nějakým způsobem sloučit do jedné hodnoty. Právě toho se snaží docílit agregační funkce neuronu. V~případě formálního neuronu se nejčastěji používá prostá suma součinů vstupů s~váhami. Výstupem agregační funkce je potenciál $y_a$.~\cite{nn}
@@ -646,7 +644,7 @@ Vytvořená neuronová síť dle předchozích kapitol nebude umět řešit žá
 
 
 \begin{itemize}
-\item \textbf{S učitelem}~--~Síti je předložen vstup z~trénovací množiny a~ta pro tento vstup stanoví odezvu (výstup), který je porovnán s~požadovaným výstupem. Na základě chyby mezi skutečným a~požadovaným výstupem pak síť za využití tzv. učícího algoritmu upraví váhy mezi neurony tak, aby se chyba minimalizovala.¨
+\item \textbf{S učitelem}~--~Síti je předložen vstup z~trénovací množiny a~ta pro tento vstup stanoví odezvu (výstup), který je porovnán s~požadovaným výstupem. Na základě chyby mezi skutečným a~požadovaným výstupem pak síť za využití tzv. učícího algoritmu upraví váhy mezi neurony tak, aby minimalizovala chybovou funkci.
 
 \item \textbf{Bez učitele}~--~Neuronová síť na základě schopnosti rozeznávat ve svých vstupech podobné vlastnosti a~podle těchto vlastností třídit vstupy dokáže řešit určité problémy i~bez znalosti požadovaných výstupů.~\cite{nn}
 \end{itemize}
@@ -661,7 +659,7 @@ Algoritmus zpětného šíření chyby je učící algoritmus určený pro FFNN 
 \end{tabular}
 }
 
-Následně je ke každé váze připočten přírustek $\Delta w_{ij}^k$:
+Následně je ke každé váze připočten přírustek $\Delta w_{ij}^k$ (při online učení~--~rychlejší) nebo se přírustek kumuluje a~přičte se až na konci epochy (při offline učení~--~stabilnější).~\cite{nn}
 
 \formula[\cite{nn}]{Přírustek váhy u~algoritmu zpětného šíření chyby}{\Delta w_{ij}^k = \frac{\partial E}{\partial w_{ij}^k} \implies \Delta w_{ij}^k = \alpha \delta_j^ky_i^{k-1}\vspace{5pt}}{\begin{tabular}{cc}
 $w_{ij}^k$ = Váha spoje mezi i-tým a j-tým neuronem v k-té vrstvě & $\alpha$ = rychlost učení \\
@@ -679,7 +677,7 @@ e_j\phi^k(y_{aj}^k), & \text{pro neurony ve výstupní vrstvě}
 }{\begin{tabular}{cc}
 $\delta_l^{k+1}$ = lokální gradient l-tého neuronu $k+1$. vrstvy & $e_j$ = chyba výstupu j-tého neuronu \\
 $y_{aj}^k$ = vstupní potenciál j-tého neuronu k-té vrstvy & $\phi^k$ = derivace aktivační funkce k-té vrstvy \\
-$w_{ij}^k$ = váha spojení i-tým a j-tým neuronem k-té vrstvy & 
+$w_{ij}^k$ = váha spoje mezi i-tým a j-tým neuronem k-té vrstvy & 
 \end{tabular}}
 
 Tento postup je opakován pro všechny vzory v~trénovací množině~--~této iteraci se říká \textit{epocha}. Učení sestává z~jedné nebo více epoch a~může skončit:
@@ -692,7 +690,9 @@ Tento postup je opakován pro všechny vzory v~trénovací množině~--~této it
 \img[1]{Příklad algoritmu zpětného šíření chyby}{img/backpropagation.png}
 \draw
 
-Počáteční hodnoty vah spojů mezi neurony mohou být nastaveny např. náhodně za použití rovnoměrného nebo normálního rozdělění s~nulovou střední hodnotou. Rychlost učení $\alpha$ určuje rychlost, s~jakou se váhy spojů mezi neurony upravují dle chyby při trénování. Obvykle nabývá hodnot jako 0,1, 0,01, 0,001, apod.
+Počáteční hodnoty vah spojů mezi neurony mohou být nastaveny např. náhodně za použití rovnoměrného nebo normálního rozdělění s~nulovou střední hodnotou. Rychlost učení $\alpha$ určuje rychlost, s~jakou se váhy spojů mezi neurony upravují dle chyby při trénování. Obvykle nabývá hodnot jako 0,1, 0,01, 0,001, apod.~\cite{nn}
+
+Čím vyšší rychlost učení je, tím rychleji bude síť natrénovaná, ale tím pravděpodobněji trénování skončí v~nějakém lokálním minimu chybové funkce a~nebude dosaženo tak dobrého výsledku.~\cite{convnn}
 
 \section{Evoluční algoritmy}
 
