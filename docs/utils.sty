@@ -6,6 +6,7 @@
 \selectlanguage{czech} % Default language.
 \usepackage{float}
 \usepackage{enumitem}
+\usepackage{tabularx}
 
 % Layout.
 \usepackage[top=25mm, left=35mm, total={160mm,247mm}, includehead=false, includefoot=false]{geometry}	
@@ -66,6 +67,7 @@
 % Table setup.
 \AtBeginEnvironment{tabular}{\footnotesize}
 \AtBeginEnvironment{longtable}{\footnotesize}
+\AtBeginEnvironment{tabularx}{\footnotesize}
 \renewcommand*\l@figure{\@dottedtocline{1}{0em}{2.3em}}\let\l@table\l@figure	% Default 1.5em 2.3em.
 
 

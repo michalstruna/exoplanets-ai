@@ -63,7 +63,10 @@
 \shortlist
 
 \begin{description}[font=\mdseries,leftmargin=6em,labelwidth=!,]
+\item[CNN]      Convolutional neural network
 \item[csv]      Comma-separated values
+\item[FC]       Fully-connected layer
+\item[FFNN]     Feed-forward neural network
 \item[fits]     Flexible image transport system
 \item[ly]		Light year
 \item[au]		Astronomical unit
@@ -223,40 +226,31 @@ Velkou poloosu dráhy planety lze vypočítat, pokud známe hmotnost hvězdy a p
 
 Ze světelné křivky a~poloměru hvězdy lze vypočítat poloměr tranzitující planety po vyjádření z~následující rovnice~\cite{transit,transitprops}:
 
-\formula{Poloměr planety z~tranzitní metody} {\frac{r^2}{R^2} = \frac{\Delta F}{F}}{
+\formula{Výpočet poloměru planety} {\frac{r^2}{R^2} = \frac{\Delta F}{F}}{
 \begin{tabular}{llll}
 	r = poloměr planety & R = poloměr hvězdy & F = jas hvězdy & $\Delta F$ = změna jasu \
 \end{tabular}
 }
 
-Za předpokladu, že excentricita dráhy planety je rovna 0 (dráha je kružnice), může být vypočítána i~průměrná rychlost oběhu
+Dále je možno odhadnout i~průměrnou rychlost pohybu planety po oběžné dráze. Skutečná průměrná rychlost však může být jiná, protože se nepočítá s excentricitou dráhy~\cite{transitprops}:
 
-Hmotnost planety z tranzitní metody narozdíl od metody radiálních rychlostí nelze vypočítat. Avšak z~empirických pozorování je možné hmotnost planety odhadnout z následující rovnice, přičemž $a$ a $b$ jsou pro různé velikostní kategorie jiné. [TODO]
-
-\formula{Odhad hmotnosti planety z~tranzitní metody} {m = a * r^b}{
-\begin{tabular}{ll}
-	m = hmotnost planety [hmotnost Země] & r = poloměr planety [poloměr Země] \
+\formula{Odhad průměrné rychlosti oběhu planety}{v \approx \frac{2\pi a}{T}}{
+\begin{tabular}{lll}
+    v = rychlost oběhu planety & a = velká poloosa dráhy planety & T = perioda oběhu planety
 \end{tabular}
 }
 
-{
-\tab{Odhad hmotnosti planety z~trantizní metody}{
-	\begin{tabular}{|l|l|}
-		\hline	
-		\rowcolor{lightgray}
-		Poloměr [poloměr Země] & Odhad hmotnosti \\	
-		\hline	
-		< 6 & $m = 0.9515 * r^{3.1}$  \\
-		\hline	
-		6-10 & $m = 1.7013 * r^{2.0383}$  \\
-		\hline	
-		10 > & $m = 0.6631 * r^{2.4191}$  \\
-		\hline	
-	\end{tabular}
+Další z~důležitých charakteristik orbity je inklinace (sklon), která nám řekne, jaký úhel svírají roviny pozorovatele a~oběhu exoplanety. Bohužel lze zjistit minimální úhel sklonu dráhy a~nikoliv jeho přesnou hodnotu. Inkinace se bude zpravidla blížit 90°.~\cite{transitprops}
+
+\formula{Výpočet inklinace dráhy}{\cos{i} \leq \frac{R + r}{a}}{
+\begin{tabular}{llll}
+    i = inklinace & R = poloměr hvězdy & r = poloměr planety & a = velká poloosa dráhy planety
+\end{tabular}
 }
 
-% TODO: Použít neuronovou síť pro odhad hmotnosti.~\cite{nnmass}
+\subsubsection{Výpočet hmotnosti planety}
 
+Hmotnost planety z~tranzitní metody nelze vypočítat. Avšak z~empirických dat je možné ji odhadnout na základě kombinace jiných veličin pomocí umělé neuronové sítě. TODO.~\cite{nnmass}
 
 \clearpage
 \subsection{Metoda radiálních rychlostí}
@@ -371,36 +365,303 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 
 \section{Umělá inteligence}
 
-\subsection{Umělé neuronové sítě}
+\section{Umělé neuronové sítě}
 
-\cite{nn}
-
-\subsubsection{Jednoduchý perceptron}
-
-\subsubsection{Vícevrstvý perceptron}
-
-\subsubsection{Konvoluční neuronová síť}
-
-\subsubsection{Další typy neuronových sítí}
-
-\subsection{Evoluční algoritmy}
-
-\subsubsection{Genetický algoritmus}
-
-\subsubsection{Další evoluční algoritmy}
-
-\subsection{Další oblasti AI}
-
-Pod umělou inteligenci spadají i~další oblasti. Ty však nejsou pro potřeby této práce důležité, a~proto budou zmíněny pouze okrajově:
+Jednou z~oblastí patřících do oboru umělé inteligence jsou umělé neuronové sítě, jež se inspirovaly biologickými neuronovými sítěmi. Jejich použití je vhodné na problémy, u~kterých neexistuje přesný matematický popis řešení nebo sice existuje, ale jeho realizace by byla příliš složitá. Hlavními oblastmi, kde se neuronové sítě využívají, jsou např.~\cite{nn}:
 
 \begin{itemize}
+\item \textbf{Predikce} (předpověď počasí,  vývoj cen akcií na burze, ...),
 
-\item \textbf{Fuzzy systémy}~--~...
+\item \textbf{Rozpoznávání vzorů} (rozpoznávání ručně psaného textu, detekce tranzitu planety ve světelné křivce hvězdy, ...),
 
-\item \textbf{Expertní systémy}~--~...
+\item \textbf{Analýza nebo transformace signálů} (odstranění šumu ze signálu, komprese, převod psaného textu na mluvený signál, ...),
+
+\item \textbf{Řízení v~dynamicky se měnících podmínkách} (autopilot, ...).
 
 \end{itemize}
 
+\subsection{Neuron}
+
+Základním stavebním prvkem umělé neuronové sítě je umělý neuron, který reprezentuje zjednodušenou biologickou nervovou buňku. Nejpoužívanějším typem umělého neuronu je tzv. formální neuron. Ten se skládá z~následujících částí:
+
+{
+\tab[1]{Komponenty formálního neuronu}{
+	\begin{tabularx}{\textwidth}{|X|X|X|X|}
+		\hline	
+		\rowcolor{lightgray}
+		Komponenta & Popis & Příklad \\	
+		\hline	
+		Vstupy $x_{1...R}$ & Jeden nebo více vstupů. & [0.23, 0.58, -0.15]  \\
+		\hline	
+		Váhy spojení (vstupu) $w_{1...R}$ & Každý vstup má svou váhu. & [0.01, 0.56, 0.12] \\
+		\hline	
+		Práh neuronu $w_0$ & Přičte se ke vstupu do aktivační funkce. & 0.17 \\
+		\hline	
+		Agregační funkce $\sum$ & Vstupy a váhy transformuje na jednu hodnotu -- potenciál $y_a$. & $y_a = w_0 + \sum_{n=1}^{R}{x_iw_i}$ \\
+		\hline		
+		Aktivační funkce & Převede hodnotu vstupního potenciálu $y_a$ na výstup neuronu $y $. & $y = y_a$\newline $y = \tanh{y_a}$ \\
+		\hline
+	\end{tabularx}
+}
+\footnotetext[1]{Zdroj dat: \cite{nn}}
+
+Jednotlivé neurony se umisťují do vrstev a~vrstvy pak tvoří neuronovou síť. Způsob zapojení neuronů, počet neuronů, počet vrstev a~stejně tak volba agregační a~aktivační funkce závisí na typu problému, pro který má být neuronová síť použita.
+
+\img[1]{Model formálního neuronu}{img/neuron.png}
+\footnotetext[1]{Převzato z \cite{nn}.}
+
+\subsubsection{Vstupy neuronu}
+
+Každý neuron může mít jeden nebo více vstupů. Tyto vstupy jsou nejčastěji číselného charakteru a~mohou být dvojího druhu:
+
+\begin{itemize}
+\item Výstup jiného neuronu,
+\item Vstup z~vnějšího prostředí (např. od uživatele).
+\end{itemize}
+
+Všechny vstupy neuronu můžeme reprezentovat vektorem $X = [{x_1, x_2, ..., x_R}]$. Hodnoty v~$X$~pak mohou být v:
+
+\begin{itemize}
+\item \textbf{Kvantitativní} formě, kdy vstup vyjadřuje \textit{ano} nebo \textit{ne} a~nabývá tak binárních hodnot (např. 0 nebo 1),
+\item \textbf{Kvalitativní} formě, kdy vstup vyjadřuje konkrétní hodnotu nějaké veličiny, často normalizované na interval $[0; 1]$ nebo $[-1; 1]$.
+\end{itemize}
+
+\subsubsection{Váhy spojení}
+
+Každý vstup neuronu $x_i$ je ohodnocen číselnou vahou $w_i$. Čím vyšší váha vstupu je, tím citlivěji bude výstup neuronu reagovat, pokud se daný vstup změní (tím „důležitější“ vstup bude). Váhy jsou z~počátku většinou pouze náhodné hodnoty a~teprv během procesu učení neuronové sítě dochází k~jejich úpravě tak, aby síť byla schopna řešit předložený problém co nejlépe. Vztah vstupu a~jeho váhy se obecně označuje operátorem konfluence.~\cite{nn}
+
+\formula{Obecný vztah vstupu neuronu a~jeho váhy}{z_i = x_i \oplus w_i}
+
+Formální neuron pak využívá lineární hodnotu tohoto operátoru, který je tak možné nahradit prostým součinem.~\cite{nn}
+
+\formula{Lineární vztah vstupu neuronu a~jeho váhy}{z_i = x_iw_i}
+
+\subsubsection{Práh neuronu}
+
+Prahem umělého neuronu $w_0$ se rozumí bariéra vstupu do neuronu z~vnějšího okolí (nikoliv z jiného neuronu). Vedle váhy je to další parametr, který se mění při procesu učení sítě.~\cite{nn}
+
+TODO
+
+\subsubsection{Agregační funkce}
+
+Protože neuron může mít více vstupů, ale vždy pouze jediný výstup, je třeba všechny vstupy nějakým způsobem sloučit do jedné hodnoty. Právě toho se snaží docílit agregační funkce neuronu. V~případě formálního neuronu se nejčastěji používá prostá suma součinů vstupů s~váhami. Výstupem agregační funkce je potenciál $y_a$.~\cite{nn}
+
+\formula{Agregační funkce neuronu}{y_a = \sum_{i=0}^{R}{z_i} = \sum_{i=0}^{R}{w_i \oplus x_i} = \sum_{i=0}^{R}{w_ix_i}}
+
+\subsubsection{Aktivační funkce}
+
+Ještě než je potenciál $y_a$ přiveden na výstup neuronu, je na něj aplikována aktivační funkce. Tato funkce je závislá na typu řešeného problému a~stejně tak i~na poloze neuronu v~síti. Je běžné, že pro výstupní neurony se považívají jiné aktivační funkce, než pro neurony ve skrytých vrstvách. Funkce mohou být lineární, nelineární, spojité i~diskrétní.~\cite{nn}
+
+\formula{Hyperbolicko-tangenciální aktivační funkce}{y = \tanh{y_a}}
+
+\formula{Sigmoidální aktivační funkce}{y = \frac{e^x}{1 + e^x}}
+
+\formula{Gaussova aktivační funkce}{y = e^{-y_a^2}}
+
+\img[1]{Příklady aktivačních funkcí neuronu}{img/act_fun.png}
+\footnotetext[1]{Převzato z:~\cite{nn}.}
+
+\vspace{-20pt}
+
+\subsection{Typy neuronových sítí}
+
+V~této kapitole budou zmíněny některé typy neuronových sítí. Uvedený výčet však v~žádném případě není kompletní. Vedle zmíněných typů existují např. rekurentní neuronové sítě nebo samoorganizující se neuronové sítě.
+
+\vspace{-10pt}
+
+\subsubsection{Jednoduchý perceptron}
+
+Jednoduchý perceptron je neuronová síť tvořená jediným neuronem. Jedná se o~neuronovou síť s~lineárně váženou agregační funkcí, učením s~učitelem a~skalárním výstupem nabývajícím binárních (1, 0) nebo bipolárních (1, -1) hodnot.~\cite{nn}
+
+\vspace{-10pt}
+
+\img[1]{Lineárně separovatelná (vlevo) a neseparovatelná (vpravo) úloha}{img/linear_separability.png}
+
+Tento typ neuronové sítě lze použít pouze pro řešení úloh, které jsou lineárně separovatelné. Pro složitější úlohy je třeba využít vícevrstvý perceptron.~\cite{nn}
+
+\subsubsection{Dopředná vícevrstvá umělá neuronová síť}
+
+Dopředná vícevrstvá umělá neuronová síť (dále jen FFNN, někdy také vícevrstvý perceptron) je díky své univerzálnosti jedním z~nejpoužívanějších typů sítě. Skládá se z~neuronů, které jsou umístěny do jednotlivých vrstev. Existuje zde minimálně vrstva vstupní a~vrstva výstupní. Dle povahy řešeného problému zde ale může být i~libovolný počet dalších, tzv. skrytých vrstev.~\cite{nn}
+
+\img[1]{Zapojení neuronů}{img/nncon.png}
+\draw
+
+Spojení existují pouze mezi neurony sousedních vrstev. Ani neurony stejné vrstvy, ani neurony nesousedících vrstev nemohou být přímo propojeny. Orientace těchto spojů je navíc směrem pouze od vstupů k~výstupu sítě (proto dopředná)~--~výstupy neuronů v~předešlé vrstvě jsou vstupem do všech neuronů v~následující vrstvě.~\cite{nn}
+
+\img[1]{Architektura dopředné vícevrstvé umělé neuronové sítě}{img/ffnn.png}
+
+Pro vytváření architektury neuronové sítě neexistuje analytický postup, který by vedl k~nejefektivnějšímu návrhu. Při řešení úlohy je třeba buď inspirovat se již nějakou existující neuronovou sítí, s jejíž pomocí někdo podobný problém řešil v~minulosti, nebo postupovat experimentálně a~„zkoušet“, jaká architektura povede k~nejmenší chybě. V~tomto případě je možno postupovat dvěma způsoby. Buď začneme s~triviální sítí, do které postupně budeme přidávat nové neurony a~vrstvy, až dokud bude úspěšnost sítě při řešení úkolu stoupat, nebo naopak začneme s~komplexní neuronovou sítí, ze které budeme neurony a~vrstvy postupně odebírat.~\cite{nn}
+
+\subsubsection{Konvoluční neuronová síť}
+
+Zpracování vícedimenzionálních dat o~velkých rozměrech by s~použitím klasické FFNN bylo velice problematické. Uvažujme např. rozpoznávání psaných číslic z~obrázku. Číslice se v~obrázku může nacházet na různých místech, může být různě velká, natočená či barevná a~také způsob psaní se u~každého člověka může lišit.
+
+\img[1]{Ručně psané číslice 9.}{img/handwritten.png}
+\footnotetext[1]{Převzato z:~MNIST dataset.}
+
+Pro člověka je jednoduché rozpoznat, že všechny útvary na obrázku 25 jsou číslice 9 i~přesto, že každá vypadá jinak. Sestrojit algoritmus, který by to dokázal také, už ale triviální úkol rozhodně není. Obecně, získáváním informací z~obrázku se zabývá obor počítačového vidění.~\cite{convnn}
+
+Zásadní myšlenkou počítačového vidění je nesnažit se rozpoznávat celý objekt, ale nejdříve extrahovat fragmenty (vlastnosti), ze kterých se daný objekt skládá. U~číslice 9~by těmito vlastnostmi mohly být např. elipsa a~z~ní vycházející křivka či úsečka. K~extrakci vlastností z~obrázku lze přistupovat dvěma způsoby založenými na:
+
+\begin{itemize}
+\item Manuálním inženýrství (např. histogram orientovaných gradientů),
+\item Strojovém učení (např. konvoluční neuronová síť).~\cite{convnn}
+\end{itemize}
+
+\img[2]{Vztah mezi počítačovým viděním, strojovým učením a~konvoluční sítí}{img/vision.png}
+\draw
+
+My se zde budeme zabývat pouze konvoluční neuronovou sítí (CNN). Tu můžeme chápat jako klasickou FFNN, jejíž vstupy jsou ovšem nejdříve modifikovány tak, aby z~nich byly vyextrahovány výše zmíněné vlastnosti. Tato extrakce je prováděna pomocí konvoluční vrstvy, jejíž způsob fungování je detailněji popsán v~kapitole 4.3.2.
+
+Dále je třeba brát v~úvahu velikost obrázku. Full HD obrázek (1~920~*~1~080) se skládá z~více jak 2~milionů pixelů. V~případě RGB obrázku se množství informací zvýší až na 6~milionů (3~složky pro každý pixel). Posílat takové množství hodnot do FFNN, která se skládá z~plně prokojených vrstev, kde jsou neurony v sousedních vrstvách propojeny způsobem „každý z~každým“, by bylo problematické. Z~tohoto důvodu existuje tzv. pooling vrstva popsaná v~kapitole 4.3.3, která umožňuje zmenšit velikost vstupu a~přitom zachovat vzory charakteristické pro vstup.
+
+\img[1]{Příklad konvoluční sítě pro ropoznávání ručně psaných číslic}{img/cnn.png}
+\drawgimp
+
+Nutno podotknout, že použití CNN se neomezuje pouze na dvourozměrné obrázky. Stejně vhodné jsou i~na rozpoznávání vzorů v~1D útvarech (např. světelná křivka hvězdy nebo jiné druhy časových řad) nebo i~ve vícerozměrných strukturách.~\cite{convnn}
+
+\subsection{Typy vrstev neuronových sítí}
+
+\subsubsection{Plně propojená vrstva}
+
+Plně propojená vrstva (FC, Fully connected nebo Dense layer) je vrstva, pro jejíž každý neuron platí, že na jeho vstup jsou přivedeny výstupy všech neuronů v~předchozí vrstvě. Neurony sousedních vrstev FC jsou tak mezi sebou propojeny stylem „každý s~každým“.
+
+{
+\tab[1]{Parametry plně propojené vrstvy}{
+	\begin{tabular}{|p{0.2\textwidth}|p{0.4\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Parametr & Popis \\	
+		\hline	
+		Počet neuronů & Je určen složitostí a~typem řešeného problému a~určuje velikost výstupu vrstvy.  \\
+		\hline
+	\end{tabular}
+}
+\footnotetext[1]{Zdroj dat: \cite{nn}} % TODO: Keras API.
+
+Počet neuronů se volí dle řešeného problému. Pokud bude počet neuronů příliš nízký, neuronová síť nemusí mít kapacitu pro to, aby byla schopna se naučit řešit daný problém. Pokud bude počet neuronů příliš vysoký, síť se až příliš dobře naučí řešit problém na trénovací množině a~nebude schopna generalizace (snadno se tzv. přetrénuje).
+
+\subsubsection{Konvoluční vrstva}
+
+Konvoluční vrstva sestává z~filtrů, které jsou aplikovány na vstup a~provádí operaci „konvoluce“. Filtrem můžeme chápat vzor, jenž je vyhledáván ve vstupu a~který zastupuje nějakou vlastnost vstupního objektu (např. obrázku).
+
+\vspace{-10pt}
+\img[2]{Postupné posouvání konvolučního filtru přes vstup}{img/stride.png}
+\draw[2]
+
+
+Pro výřez ze vstupu a~filtr v~konvoluční vrstvě se hodnoty na stejných pozicích ve výřezu i~filtru vynásobí a~tyto součiny se následně sečtou.
+
+\formula{Provádění konvoluce pro výřez vstupu a~filtr}{y = \sum_{i=1}^{sy}{\sum_{j=1}^{sx}{v_{ij}f_{ij}}}}{
+\begin{tabular}{cccc}
+	y = výstup & $sx, sy$ = horizontální/vertikální velikost filtru & v = výřez vstupu & f = filtr\\
+\end{tabular}
+}
+
+Výřez se postupně posouvá (\textit{stride}) v~rámci vstupu a~pro každou kombinaci výřezu a~daného filtru se výsledek uloží do výstupní struktury na odpovídající místo vzhledem ke vstupu. Výsledkem je tak struktura (\textit{feature map}) stejně velká nebo menší, než vstup~--~v~závislosti na vyplnění/oříznutí okrajů (\textit{padding}).
+
+\vspace{-10pt}
+\img[1]{Příklad aplikace konvolučního filtru na vstup}{img/convfilter.png}
+\draw
+
+Na obrázku 29 je znázorněno rozpoznávání diagonály. Ve výstupu jsou v~oblastech, kde jsou ve vstupu diagonály (v~pravém horním i~dolním rohu), vyšší čiselné hodnoty než tam, kde ve vstupu diagonály nejsou. Celý tento postup se opakuje pro všechny filtry, jimiž konvoluční vrstva disponuje. Výstupem vrstvy je tak jedna nebo více \textit{feature maps}.~\cite{convnn}
+
+{
+\tab[2]{Parametry konvoluční vrstvy}{
+	\begin{tabular}{|p{0.25\textwidth}|p{0.6\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Parametr & Popis \\	
+		\hline	
+		Počet filtrů & Čím více filtrů, tím více vlastností ve vstupu lze vyhledávat. \\
+		\hline	
+		Velikost filtrů (kernel) & Čím větší filtr, tím složitější vzory lze ve vstupu vyhledávat. Filtr může mít v~každém svém rozměru jinou velikost (v případě 2D to nemusí být čtverec, ale i~obdélník). \\
+		\hline
+		Posun filtrů (stride) & Posunutí filtru v~každé fázi konvoluce. \\
+		\hline
+		Okraj (padding) & Způsob zpracování okrajů vstupu, které se ve výstupu buď useknou, nebo vyplní nějakou hodnotou. \\
+		\hline
+	\end{tabular}
+}
+
+\footnotetext[2]{Zdroj dat:~\cite{keras}}
+
+\subsubsection{Vrstva Max-Pooling}
+
+Vrstva Max-Pooling si klade za cíl zmenšit velikost vstupu a~zároveň zachovat co nejvíce důležitých informací, které se v~něm nachází. Podobně jako v~konvoluční vrstvě i~zde se posouvá okno o~určité velikosti (kernel) o~určitý počet polí (stride). Na výstup se však dostane maximální hodnota, která je v~aktuálním výřezu vstupu.~\cite{convnn,keras}
+
+\img[1]{Příklad operace Max-Pooling}{img/max_pooling}
+\draw
+
+Na obrázku 30 je ukázána aplikace operace Max-Pooling na vstup, který byl výstupem v~minulé kapitole~--~\textit{feature map} ukazující umístění diagonál v~původním obrázku. Jak je vidět, velikost struktury se zmenšila na čtvrtinu, a~přesto v~ní zůstaly všechny důležité informace. V~pravém dolním i~horním rohu máme stále vysoké číselné hodnoty indikující přítomnost diagonály.
+
+{
+\tab[2]{Parametry vrstvy Max-Pooling}{
+	\begin{tabular}{|p{0.25\textwidth}|p{0.5\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Parametr & Popis \\	
+		\hline	
+		Velikost okna (kernel) & Velikost okna, ze kterého se vybírá maximum.  \\
+		\hline	
+		Stride okna (stride) & Posunutí okna v~každé fázi operace Max-Pooling. \\
+		\hline
+		Okraj (padding) & Způsob zpracování okrajů vstupu, které se ve výstupu buď useknou nebo vyplní nějakou hodnotou. \\
+		\hline
+	\end{tabular}
+}
+\footnotetext[2]{Zdroj dat: \cite{keras}}
+
+Obdobně k~vrstvě Max-Pooling existuje např. i~Min-Pooling nebo Average-Pooling. Jejich fungování je stejné s~tím rozdílem, že na výstup předávají místo maximální hodnoty tu minimální nebo průměrnou. Jejich použití je opět závislé na typu řešeného problému (např. zda vstupní obrázek ma světlé pozadí a~tmavé popředí či naopak).~\cite{keras}
+
+\subsubsection{Vrstva Flatten}
+
+Konvoluční vrstvy umí pracovat s~vícerozměrnými vstupy, vrstvy typu FC však očekávají pouze jednorozměrný vektor vstupních hodnot. Protože např. v~konvolučních sítích je třeba oba typy vrstev kombinovat, je nutné nějakým způsobem převést n-rozměrnou strukturu na vektor. Právě k~tomu slouží vrstva Flatten.~\cite{keras}
+
+\img[1]{Příklad fungování vrsty Flatten}{img/flatten.png}
+\drawgimp
+
+\subsubsection{Vrstva Dropout}
+
+Pro snížení pravděpodobnosti, že se neuronová síť přetrénuje, je možné využít vrstvu Dropout. Ta při procesu trénování zahazuje vstupy (na výstup místo nich posílá hodnotu 0). Tím v~trénovací množině vniká náhodný šum, což způsobí, že síť nebude trénovat pouze na stále stejných vstupech, ale trénovací množina bude vždy nepatrně odlišná~--~různorodější.~\cite{keras}
+
+\img[1]{Příklad fungování vrstvy Dropout}{img/dropout.png}
+
+{
+\tab[2]{Parametry vrstvy Dropout}{
+	\begin{tabular}{|p{0.15\textwidth}|p{0.3\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Parametr & Popis \\	
+		\hline	
+		Rate & Frekvence zahazování vstupů. \\
+		\hline	
+	\end{tabular}
+}
+\footnotetext[2]{Zdroj dat: \cite{nn}} % TODO: Keras API.
+
+\subsection{Učení neuronové sítě}
+
+Po zapojení neuronů je třeba neuronovou síť naučit řešit daný problém. Učení může být dvojího druhu:
+
+\begin{itemize}
+\item \textbf{S učitelem}~--~Neuronové síti je předložen vstup z~tzv. trénovací množiny a~ta pro tento vstup vyvodí výstup, který je porovnán s~požadovaným výstupem. Na základě chyby mezi skutečným a~požadovaným výstupem pak síť za využití tzv. učícího algoritmu upraví váhy mezi neurony tak, aby se chyba minimalizovala. Tento postup je opakován pro všechny dvojice \textit{vstup $\Rightarrow$ výstup} v~trénovací množině~--~této iteraci se říká \textit{epocha}. Učení sestává z~jedné nebo více epoch a~může skončit:
+
+\begin{itemize}
+\item Po pevném počtu epoch,
+\item Po neurčitém počtu epoch, až chyba učení na klesne na určitou hodnotu.~\cite{nn}
+\end{itemize}
+
+\item \textbf{Bez učitele}~--~Neuronová síť na základě schopnosti rozeznávat ve svých vstupech podobné vlastnosti a~podle těchto vlastností třídit vstupy dokáže řešit určité problémy i~bez znalosti požadovaných výstupů.~\cite{nn}
+\end{itemize}
+
+\subsubsection{Algoritmus zpětného šíření chyby}
+
+\section{Evoluční algoritmy}
+
+\subsubsection{Genetický algoritmus}
+
+\subsubsection{Algoritmus diferenciální evoluce}
 
 \section{Projekty pro hledání exoplanet}
 
@@ -614,6 +875,8 @@ TODO: Verifikace výsledků.
 
 \isbnsource[DOLEŽEL, Petr]{nn}{Úvod do umělých neuronových sítí}{Univerzita Pardubice, Fakulta elektrotechniky a~informatiky}{2016}{9.~10.~2020}{978-80-7560-022-6}
 
+\isbnsource[KHAN, Salman]{convnn}{A Guide to Convolutional Neural Networks for Computer Vision}{Morgan \& Claypool}{2018}{26.~10.~2020}{781681730226}
+
 \onlinesource[LOVIS, Christophe, FISCHER, Debra A]{radialvelocity}{Radial Velocity Techniques for Exoplanets}{University of Arizona Press}{2011}{25.~12.~2019}{https://www.researchgate.net/publication/253789798_Radial_Velocity_Techniques_for_Exoplanets}
 
 \onlinesource[MARCY, Geoffrey]{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal 481(2)}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088}
@@ -626,7 +889,7 @@ TODO: Verifikace výsledků.
 
 \onlinesource[SHALLUE, Christopher, VANDERBURG, Andrew]{kepler80}{Identifying Exoplanets with Deep Learning: A Five-planet Resonant Chain around Kepler-80 and an Eighth Planet around Kepler-90}{The Astronomical Journal 155(2)}{30.~1.~2018}{8.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/aa9e09}
 
-\onlinesource[TASKER, Elizabeth, LANEUVILLE, Matthieu, GUTTENBERG, Nicholas]{nnmass}{Estimating Planetary Mass with Deep Learning}{The Astronomical Journal 159(2)}{7.~1.~2020}{9.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/ab5b9e}
+\onlinesource[TASKER, Elizabeth, LANEUVILLE, Matthieu, GUTTENBERG, Nicholas]{nnmass}{Estimating Planetary Mass with Deep Learning}{The Astronomical Journal 159(2)}{25.~11.~2019}{9.~10.~2020}{https://arxiv.org/abs/1911.11035}
 
 \onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
 
@@ -635,6 +898,8 @@ TODO: Verifikace výsledků.
 \onlinesource{sunlight}{Reference Solar Spectral Irradiance: ASTM G-173}{nrel}{??.~?.~????}{27.~12.~2019}{https://rredc.nrel.gov/solar/spectra/am1.5/ASTMG173/ASTMG173.html}
 
 \onlinesource{tess}{TESS Exoplanet Mission}{NASA}{24.~8.~2020}{8.~10.~2020}{https://www.nasa.gov/content/about-tess}
+
+\onlinesource{keras}{Keras API reference}{Keras}{2020}{29.~10.~2020}{https://keras.io/api}
 
 \end{thebibliography}
 
@@ -650,7 +915,7 @@ TODO: Doplnit reference ze zadání diplomové práce.
 \noindent Příloha~A~~~~Architektura neuronové sítě \dotfill \pageref{priloha_a}
 
 \section*{Příloha~A -- Architektura neuron. sítě}\label{priloha_a}
-\includegraphics[width=\linewidth]{img/cnn.png}
+\includegraphics[width=\linewidth]{img/lc_cnn.png}
 
 \section*{Příloha~B -- Architektura databáze}\label{priloha_b}
 \includegraphics[width=\linewidth]{img/db.png}
