@@ -240,7 +240,7 @@ Dále je možno odhadnout i~průměrnou rychlost pohybu planety po oběžné dr�
 \end{tabular}
 }
 
-Další z~důležitých charakteristik orbity je inklinace (sklon), která nám řekne, jaký úhel svírají roviny pozorovatele a~oběhu exoplanety. Bohužel lze zjistit minimální úhel sklonu dráhy a~nikoliv jeho přesnou hodnotu. Inkinace se bude zpravidla blížit 90°.~\cite{transitprops}
+Další z~důležitých charakteristik orbity je inklinace (sklon), která nám řekne, jaký úhel svírají roviny pozorovatele a~oběhu exoplanety. Bohužel lze zjistit minimální úhel sklonu dráhy a~nikoliv jeho přesnou hodnotu. Inkinace se bude zpravidla blížit 90$^{\circ}$.~\cite{transitprops}
 
 \formula{Výpočet inklinace dráhy}{\cos{i} \leq \frac{R + r}{a}}{
 \begin{tabular}{llll}
@@ -412,7 +412,7 @@ Jednotlivé neurony se umisťují do vrstev a~vrstvy pak tvoří neuronovou sí�
 
 \subsubsection{Vstupy neuronu}
 
-Každý neuron může mít jeden nebo více vstupů. Tyto vstupy jsou nejčastěji číselného charakteru a~mohou být dvojího druhu:
+Každý neuron může mít jeden nebo více vstupů. I~když vstupy nemusí být nutně číselné, my to v~této práci budeme předpokládat. Vstupy mohou být dvojího vstupu:
 
 \begin{itemize}
 \item Výstup jiného neuronu,
@@ -558,7 +558,7 @@ Pro výřez ze vstupu a~filtr v~konvoluční vrstvě se hodnoty na stejných poz
 \end{tabular}
 }
 
-Výřez se postupně posouvá (\textit{stride}) v~rámci vstupu a~pro každou kombinaci výřezu a~daného filtru se výsledek uloží do výstupní struktury na odpovídající místo vzhledem ke vstupu. Výsledkem je tak struktura (\textit{feature map}) stejně velká nebo menší, než vstup~--~v~závislosti na vyplnění/oříznutí okrajů (\textit{padding}).
+Výřez se postupně posouvá (\textit{stride}) v~rámci vstupu a~pro každou kombinaci výřezu a~daného filtru se výsledek uloží do výstupního tenzoru na odpovídající místo vzhledem ke vstupu. Výsledkem je tak tenzor (\textit{feature map}) stejně velký nebo menší, než vstup~--~v~závislosti na vyplnění/oříznutí okrajů (\textit{padding}).
 
 \vspace{-10pt}
 \img[1]{Příklad aplikace konvolučního filtru na vstup}{img/convfilter.png}
@@ -616,7 +616,7 @@ Obdobně k~vrstvě Max-Pooling existuje např. i~Min-Pooling nebo Average-Poolin
 
 \subsubsection{Vrstva Flatten}
 
-Konvoluční vrstvy umí pracovat s~vícerozměrnými vstupy, vrstvy typu FC však očekávají pouze jednorozměrný vektor vstupních hodnot. Protože např. v~konvolučních sítích je třeba oba typy vrstev kombinovat, je nutné nějakým způsobem převést n-rozměrnou strukturu na vektor. Právě k~tomu slouží vrstva Flatten.~\cite{keras}
+Konvoluční vrstvy umí pracovat s~vícerozměrnými vstupy, vrstvy typu FC však očekávají pouze jednorozměrný vektor vstupních hodnot. Protože např. v~konvolučních sítích je třeba oba typy vrstev kombinovat, je nutné nějakým způsobem převést n-rozměrný tenzor na vektor. Právě k~tomu slouží vrstva Flatten.~\cite{keras}
 
 \img[1]{Příklad fungování vrsty Flatten}{img/flatten.png}
 \drawgimp
@@ -640,12 +640,13 @@ Pro snížení pravděpodobnosti, že se neuronová síť přetrénuje, je možn
 }
 \footnotetext[2]{Zdroj dat: \cite{nn}} % TODO: Keras API.
 
-\subsection{Učení neuronové sítě}
+\subsection{Učení umělé neuronové sítě}
 
-Po zapojení neuronů je třeba neuronovou síť naučit řešit daný problém. Učení může být dvojího druhu:
+Vytvořená neuronová síť dle předchozích kapitol nebude umět řešit žádný problém~--~je to pouze množina neuronů a~dalších parametrů poskládaných k~sobě. Je potřeba ji daný problém nejdříve naučit řešit. Učení je proces, při kterém síť upravuje nastavitelné parametry (např. váhy vstupů neuronů) za účelem zvýšení úspěšnosti řešení předkládané úlohy. Učení může být:
+
 
 \begin{itemize}
-\item \textbf{S učitelem}~--~Neuronové síti je předložen vstup z~tzv. trénovací množiny a~ta pro tento vstup vyvodí výstup, který je porovnán s~požadovaným výstupem. Na základě chyby mezi skutečným a~požadovaným výstupem pak síť za využití tzv. učícího algoritmu upraví váhy mezi neurony tak, aby se chyba minimalizovala. Tento postup je opakován pro všechny dvojice \textit{vstup $\Rightarrow$ výstup} v~trénovací množině~--~této iteraci se říká \textit{epocha}. Učení sestává z~jedné nebo více epoch a~může skončit:
+\item \textbf{S učitelem}~--~Síti je předložen vstup z~trénovací množiny a~ta pro tento vstup stanoví výstup, který je porovnán s~požadovaným výstupem. Na základě chyby mezi skutečným a~požadovaným výstupem pak síť za využití tzv. učícího algoritmu upraví váhy mezi neurony tak, aby se chyba minimalizovala. Tento postup je opakován pro všechny dvojice \textit{vstup $\Rightarrow$ výstup} v~trénovací množině~--~této iteraci se říká \textit{epocha}. Učení sestává z~jedné nebo více epoch a~může skončit:
 
 \begin{itemize}
 \item Po pevném počtu epoch,
