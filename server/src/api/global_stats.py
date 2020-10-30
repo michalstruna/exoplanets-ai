@@ -14,11 +14,6 @@ global_stats_item = api.ns.model("GlobalStatsItem", {
     "curves": fields.Integer(required=True, min=0, default=0, description="Count of processed curves."),
 })
 
-global_stats = api.ns.model("GlobalStats", {
-    "date": fields.String(required=True, description="Day of stats [DD-MM-YYYY]."),
-    "stats": fields.Nested(global_stats_item)
-})
-
 stat_int_item = api.ns.model("StatIntItem", {
     "value": fields.Integer(required=True, min=0, default=0, description="Value of statistic."),
     "diff": fields.Integer(required=True, default=0, description="Change of statistic."),
@@ -38,6 +33,30 @@ global_stats_aggregated = api.ns.model("GlobalStatsAggregatedItem", {
     "curves": fields.Nested(stat_int_item, required=True)
 })
 
+axis = api.ns.model("ChartAxis", {
+    "min": fields.Float(description="Min value in graph along this axis."),
+    "max": fields.Float(description="Max value in graph along this axis."),
+    "log": fields.Boolean(description="Axis has log scale."),
+    "ticks": fields.List(fields.String)
+})
+
+color_axis = api.ns.model("ChartColorAxis", {
+
+})
+
+chart = api.ns.model("Chart", {
+    "x": fields.Nested(axis, required=True),
+    "y": fields.Nested(axis, required=True),
+    "colors": fields.Raw(description="Map color => label."),
+    "image": fields.String(required="Server path of plotted image.")
+})
+
+plots_stats = api.ns.model("PlotsStats", {
+    "smax_mass": fields.Nested(chart, required=True),
+    "type_count": fields.Nested(chart, required=True),
+    "star_type_count": fields.Nested(chart, required=True)
+})
+
 @api.ns.route("/aggregated")
 class AggregatedGlobalStats(Resource):
 
@@ -46,11 +65,33 @@ class AggregatedGlobalStats(Resource):
         return global_stat_service.get_aggregated()
 
 
+@api.ns.route("/plots")
+class PlotStats(Resource):
+
+    @api.ns.marshal_with(plots_stats, description="Get plot stats.")
+    def get(self):
+        return {
+            "smax_mass": {
+                "x": {"min": 10e-3, "max": 10e4, "log": True},
+                "y": {"min": 10e-2, "max": 10e5, "log": True},
+                "image": "SmaxMass.png"
+            },
+            "type_count": {
+                "x": {"ticks": ["mercury", "earth", "superearth", "neptune", "jupiter"]},
+                "y": {"min": 0, "max": 762},
+                "image": "TypeCount.png"
+            },
+            "star_type_count": {
+                "image": "StarTypeCount.png"
+            }
+        }
+
+
 global_stat_service = GlobalStatsService()
 
 api.init(
-    full_model=global_stats,
-    new_model=global_stats,
+    full_model=global_stats_aggregated,
+    new_model=global_stats_aggregated,
     service=global_stat_service,
     model_name="GlobalStats",
     resource_type=Api.CUSTOM_RESOURCE

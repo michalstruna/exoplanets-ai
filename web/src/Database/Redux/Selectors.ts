@@ -32,3 +32,4 @@ export const useItems = (table: DbTable) => useSelector(({ database }: any) => {
 export const useSystem = () => useSelector((state: any) => state.database.system)
 
 export const useGlobalStats = () => useSelector((state: any) => state.database.globalStats)
+export const usePlotStats = () => useSelector((state: any) => state.database.plotStats)

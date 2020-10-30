@@ -2,6 +2,7 @@ from flask import request
 from flask_socketio import join_room, leave_room
 
 from constants.Database import PlanetStatus
+from service.Stats import GlobalStatsService
 from utils import time, patterns
 from constants.Discovery import ProcessState
 from service.Dataset import DatasetService
@@ -22,6 +23,7 @@ class SocketService(metaclass=patterns.Singleton):
         self.planet_service = PlanetService()
         self.tasks = {}
         self.file_service = FileService()
+        self.stats_service = GlobalStatsService()
 
         @sio.on("client_connect")
         def client_connect(client):
@@ -126,7 +128,7 @@ class SocketService(metaclass=patterns.Singleton):
 
     def finish_task(self, task):
         """
-        Finish task by client.
+        Finish task by client.  # TODO: Another task types?
         """
         lc_plot = self.file_service.save_lc(task["solution"]["light_curve"]["plot"])
         task["solution"]["light_curve"]["plot"] = lc_plot
@@ -137,24 +139,37 @@ class SocketService(metaclass=patterns.Singleton):
             gv_plot = self.file_service.save_gv(transit["global_view"]["plot"])
             transit["global_view"]["plot"] = gv_plot
 
-        updated = {
-            "inc__time": time.now() - task["meta"]["created"],
-            "inc__processed": task["meta"]["size"],
-            #"pop__items": -1
-        }
+        ms = time.now() - task["meta"]["created"]
+
+        updated = {"inc__time": ms, "inc__processed": task["meta"]["size"]} #, "pop__items": -1 }
         dataset = self.dataset_service.update(task["dataset_id"], updated)
         light_curve = task["solution"]["light_curve"]  # TODO: target_pixel
+
+        stars = 0
+        planets = 0
 
         try:
             star = self.star_service.get_by_name(task["item"])
             star = self.star_service.update(star["_id"], {"push__light_curves": light_curve})
         except:
             star = self.star_service.add({"light_curves": [light_curve]})
+            stars += 1
 
         for transit in task["solution"]["transits"]:
             properties = self.planet_service.complete_planet(star, {"name": "KIC a", "transit": transit, "dataset": dataset["name"], "processed": True})
             planet = {"properties": [properties], "status": PlanetStatus.CANDIDATE.value}
             planet = self.planet_service.add(star["_id"], planet)
+
+            if not planet["properties"]:
+                planets += 1
+
+        self.stats_service.add(
+            curves=1,
+            bytes=task["meta"]["size"],
+            ms=ms,
+            planets=planets,
+            stars=stars
+        )
 
     def _add_user(self, user_id):
         if user_id not in self.users:

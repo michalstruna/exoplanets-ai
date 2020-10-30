@@ -1,7 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { ExtendedStats } from '../types'
 import { useStrings } from '../../Data'
 import { Numbers } from '../../Native'
 import { Color } from '../../Style'
@@ -9,7 +8,7 @@ import { useGlobalStats, getGlobalStats } from '../../Database'
 import { Async } from '../../Async'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    data: ExtendedStats
+
 }
 
 const Root = Styled.div`
@@ -64,7 +63,7 @@ const Diff = Styled.div`
     font-weight: bold;
 `
 
-const GlobalStats = ({ data, ...props }: Props) => {
+const GlobalStats = ({ ...props }: Props) => {
 
     const strings = useStrings().stats
     const globalStats = useGlobalStats()
