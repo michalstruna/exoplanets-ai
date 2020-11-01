@@ -365,9 +365,21 @@ Dá se však očekávat, že se zlepšující se technikou bude tato metoda úsp
 
 \section{Umělá inteligence}
 
+\subsection{Umělé neuronové sítě}
+
+\subsection{Evoluční algoritmy}
+
+\subsubsection{Genetický algoritmus}
+
+\subsubsection{Algoritmus diferenciální evoluce}
+
+\subsection{Fuzzy systémy}
+
+\subsection{Expertní systémy}
+
 \section{Umělé neuronové sítě}
 
-Jednou z~oblastí patřících do oboru umělé inteligence jsou umělé neuronové sítě, jež se inspirovaly biologickými neuronovými sítěmi. Jejich použití je vhodné na problémy, u~kterých neexistuje přesný matematický popis řešení nebo sice existuje, ale jeho realizace by byla příliš složitá. Hlavními oblastmi, kde se neuronové sítě využívají, jsou např.~\cite{nn}:
+Jednou z~oblastí patřících do oboru umělé inteligence jsou umělé neuronové sítě, jež se inspirovaly biologickými neuronovými sítěmi. Jejich použití je vhodné na problémy, u~kterých neexistuje přesný matematický popis řešení nebo sice existuje, ale jeho realizace by byla příliš složitá. Hlavními oblastmi, kde se neuronové sítě využívají, jsou např.:
 
 \begin{itemize}
 \item \textbf{Predikce} (předpověď počasí,  vývoj cen akcií na burze, ...),
@@ -376,7 +388,7 @@ Jednou z~oblastí patřících do oboru umělé inteligence jsou umělé neurono
 
 \item \textbf{Analýza nebo transformace signálů} (odstranění šumu ze signálu, komprese, převod psaného textu na mluvený signál, ...),
 
-\item \textbf{Řízení v~dynamicky se měnících podmínkách} (autopilot, ...).
+\item \textbf{Řízení v~dynamicky se měnících podmínkách} (autopilot, ...).~\cite{nn}
 
 \end{itemize}
 
@@ -393,7 +405,7 @@ Základním stavebním prvkem umělé neuronové sítě je umělý neuron, kter�
 		\hline	
 		Vstupy $x_{1...R}$ & Jeden nebo více vstupů. & [0.23, 0.58, -0.15]  \\
 		\hline	
-		Váhy spojení (vstupu) $w_{1...R}$ & Každý vstup má svou váhu. & [0.01, 0.56, 0.12] \\
+		Váhy spojení (vstupů) $w_{1...R}$ & Každý vstup má svou váhu. & [0.01, 0.56, 0.12] \\
 		\hline	
 		Práh neuronu $w_0$ & Přičte se ke vstupu do aktivační funkce. & 0.17 \\
 		\hline	
@@ -403,16 +415,16 @@ Základním stavebním prvkem umělé neuronové sítě je umělý neuron, kter�
 		\hline
 	\end{tabularx}
 }
-\footnotetext[1]{Zdroj dat: \cite{nn}}
+\footnotetext[1]{Zdroj: \cite{nn}}
 
 Jednotlivé neurony se umisťují do vrstev a~vrstvy pak tvoří neuronovou síť. Způsob zapojení neuronů, počet neuronů, počet vrstev a~stejně tak volba agregační a~aktivační funkce závisí na typu problému, pro který má být neuronová síť použita.
 
 \img[1]{Model formálního neuronu}{img/neuron.png}
-\footnotetext[1]{Převzato z \cite{nn}.}
+\footnotetext[1]{Převzato z: \cite{nn}.}
 
 \subsubsection{Vstupy neuronu}
 
-Každý neuron může mít jeden nebo více vstupů. I~když vstupy nemusí být nutně číselné, my to v~této práci budeme předpokládat. Vstupy mohou být dvojího vstupu:
+Každý neuron může mít jeden nebo více vstupů. I~když vstupy nemusí být nutně číselné, my to v~této práci budeme předpokládat. Vstupy mohou být dvojího druhu:
 
 \begin{itemize}
 \item Výstup jiného neuronu,
@@ -444,11 +456,11 @@ Prahem umělého neuronu $w_0$ se rozumí bariéra vstupu do neuronu z~vnější
 
 Protože neuron může mít více vstupů, ale vždy pouze jediný výstup, je třeba všechny vstupy nějakým způsobem sloučit do jedné hodnoty. Právě toho se snaží docílit agregační funkce neuronu. V~případě formálního neuronu se nejčastěji používá prostá suma součinů vstupů s~váhami. Výstupem agregační funkce je potenciál $y_a$.~\cite{nn}
 
-\formula{Agregační funkce neuronu}{y_a = \sum_{i=0}^{R}{z_i} = \sum_{i=0}^{R}{w_i \oplus x_i} = \sum_{i=0}^{R}{w_ix_i}}
+\formula{Agregační funkce neuronu}{y_a = \sum_{i=0}^{R}{z_i} = \sum_{i=0}^{R}{w_i \oplus x_i} = \sum_{i=0}^{R}{w_ix_i}\vspace{5pt}}
 
 \subsubsection{Aktivační funkce}
 
-Ještě než je potenciál $y_a$ přiveden na výstup neuronu, je na něj aplikována aktivační funkce. Tato funkce je závislá na typu řešeného problému a~stejně tak i~na poloze neuronu v~síti. Je běžné, že pro výstupní neurony se považívají jiné aktivační funkce, než pro neurony ve skrytých vrstvách. Funkce mohou být lineární, nelineární, spojité i~diskrétní.~\cite{nn}
+Ještě než je potenciál $y_a$ přiveden na výstup neuronu, je na něj aplikována aktivační funkce. Tato funkce je závislá na typu řešeného problému a~stejně tak i~na poloze neuronu v~síti. Je běžné, že pro výstupní neurony se pouažívají jiné aktivační funkce, než pro neurony ve skrytých vrstvách. Funkce mohou být lineární, nelineární, spojité i~diskrétní.~\cite{nn}
 
 \formula{Hyperbolicko-tangenciální aktivační funkce}{y = \tanh{y_a}}
 
@@ -484,7 +496,7 @@ Dopředná vícevrstvá umělá neuronová síť (dále jen FFNN, někdy také v
 \img[1]{Zapojení neuronů}{img/nncon.png}
 \draw
 
-Spojení existují pouze mezi neurony sousedních vrstev. Ani neurony stejné vrstvy, ani neurony nesousedících vrstev nemohou být přímo propojeny. Orientace těchto spojů je navíc směrem pouze od vstupů k~výstupu sítě (proto dopředná)~--~výstupy neuronů v~předešlé vrstvě jsou vstupem do všech neuronů v~následující vrstvě.~\cite{nn}
+Spojení existují pouze mezi neurony sousedních vrstev. Ani neurony stejné vrstvy, ani neurony nesousedících vrstev nejsou přímo propojeny. Orientace těchto spojů je navíc směrem pouze od vstupů k~výstupu sítě (proto dopředná)~--~výstupy neuronů v~předešlé vrstvě jsou vstupem do všech neuronů v~následující vrstvě.~\cite{nn}
 
 \img[1]{Architektura dopředné vícevrstvé umělé neuronové sítě}{img/ffnn.png}
 
@@ -507,11 +519,11 @@ Zásadní myšlenkou počítačového vidění je nesnažit se rozpoznávat cel�
 \end{itemize}
 
 \img[2]{Vztah mezi počítačovým viděním, strojovým učením a~konvoluční sítí}{img/vision.png}
-\draw
+\draw[2]
 
 My se zde budeme zabývat pouze konvoluční neuronovou sítí (CNN). Tu můžeme chápat jako klasickou FFNN, jejíž vstupy jsou ovšem nejdříve modifikovány tak, aby z~nich byly vyextrahovány výše zmíněné vlastnosti. Tato extrakce je prováděna pomocí konvoluční vrstvy, jejíž způsob fungování je detailněji popsán v~kapitole 4.3.2.
 
-Dále je třeba brát v~úvahu velikost obrázku. Full HD obrázek (1~920~*~1~080) se skládá z~více jak 2~milionů pixelů. V~případě RGB obrázku se množství informací zvýší až na 6~milionů (3~složky pro každý pixel). Posílat takové množství hodnot do FFNN, která se skládá z~plně prokojených vrstev, kde jsou neurony v sousedních vrstvách propojeny způsobem „každý z~každým“, by bylo problematické. Z~tohoto důvodu existuje tzv. pooling vrstva popsaná v~kapitole 4.3.3, která umožňuje zmenšit velikost vstupu a~přitom zachovat vzory charakteristické pro vstup.
+Dále je třeba brát v~úvahu velikost obrázku. Full HD obrázek (1~920~*~1~080) se skládá z~více jak 2~milionů pixelů. V~případě RGB obrázku se množství informací zvýší až na 6~milionů (3~složky pro každý pixel). Posílat takové množství hodnot do FFNN, která se skládá z~plně propojených vrstev, kde jsou neurony v sousedních vrstvách propojeny způsobem „každý z~každým“, by bylo problematické. Z~tohoto důvodu existuje tzv. pooling vrstva popsaná v~kapitole 4.3.3, která umožňuje zmenšit velikost vstupu a~přitom zachovat vzory charakteristické pro vstup.
 
 \img[1]{Příklad konvoluční sítě pro ropoznávání ručně psaných číslic}{img/cnn.png}
 \drawgimp
@@ -535,7 +547,7 @@ Plně propojená vrstva (FC, Fully connected nebo Dense layer) je vrstva, pro je
 		\hline
 	\end{tabular}
 }
-\footnotetext[1]{Zdroj dat: \cite{nn}} % TODO: Keras API.
+\footnotetext[1]{Zdroj: \cite{keras}}
 
 Počet neuronů se volí dle řešeného problému. Pokud bude počet neuronů příliš nízký, neuronová síť nemusí mít kapacitu pro to, aby byla schopna se naučit řešit daný problém. Pokud bude počet neuronů příliš vysoký, síť se až příliš dobře naučí řešit problém na trénovací množině a~nebude schopna generalizace (snadno se tzv. přetrénuje).
 
@@ -550,8 +562,8 @@ Konvoluční vrstva sestává z~filtrů, které jsou aplikovány na vstup a~prov
 
 Pro výřez ze vstupu a~filtr v~konvoluční vrstvě se hodnoty na stejných pozicích ve výřezu i~filtru vynásobí a~tyto součiny se následně sečtou.
 
-\formula{Provádění konvoluce pro výřez vstupu a~filtr}{y = \sum_{i=1}^{sy}{\sum_{j=1}^{sx}{v_{ij}f_{ij}}}}{
-\begin{tabular}{cccc}
+\formula{Provádění konvoluce pro výřez vstupu a~filtr}{y = \sum_{i=1}^{sy}{\sum_{j=1}^{sx}{v_{ij}f_{ij}}}\vspace{5pt}}{
+\begin{tabular}{c|c|c|c}
 	y = výstup & $sx, sy$ = horizontální/vertikální velikost filtru & v = výřez vstupu & f = filtr\\
 \end{tabular}
 }
@@ -561,6 +573,8 @@ Výřez se postupně posouvá (\textit{stride}) v~rámci vstupu a~pro každou ko
 \vspace{-10pt}
 \img[1]{Příklad aplikace konvolučního filtru na vstup}{img/convfilter.png}
 \draw
+
+\vspace{-5pt}
 
 Na obrázku 29 je znázorněno rozpoznávání diagonály. Ve výstupu jsou v~oblastech, kde jsou ve vstupu diagonály (v~pravém horním i~dolním rohu), vyšší čiselné hodnoty než tam, kde ve vstupu diagonály nejsou. Celý tento postup se opakuje pro všechny filtry, jimiž konvoluční vrstva disponuje. Výstupem vrstvy je tak jedna nebo více \textit{feature maps}.~\cite{convnn}
 
@@ -581,8 +595,8 @@ Na obrázku 29 je znázorněno rozpoznávání diagonály. Ve výstupu jsou v~ob
 		\hline
 	\end{tabular}
 }
+\footnotetext[2]{Zdroj:~\cite{keras}}
 
-\footnotetext[2]{Zdroj dat:~\cite{keras}}
 
 \subsubsection{Vrstva Max-Pooling}
 
@@ -608,7 +622,7 @@ Na obrázku 30 je ukázána aplikace operace Max-Pooling na vstup, který byl v�
 		\hline
 	\end{tabular}
 }
-\footnotetext[2]{Zdroj dat: \cite{keras}}
+\footnotetext[2]{Zdroj: \cite{keras}}
 
 Obdobně k~vrstvě Max-Pooling existuje např. i~Min-Pooling nebo Average-Pooling. Jejich fungování je stejné s~tím rozdílem, že na výstup předávají místo maximální hodnoty tu minimální, resp. průměrnou. Jejich použití je opět závislé na typu řešeného problému (např. zda vstupní obrázek ma světlé pozadí a~tmavé popředí či naopak).~\cite{keras}
 
@@ -636,7 +650,7 @@ Pro snížení pravděpodobnosti, že se neuronová síť přetrénuje, je možn
 		\hline	
 	\end{tabular}
 }
-\footnotetext[2]{Zdroj dat: \cite{keras}}
+\footnotetext[2]{Zdroj: \cite{keras}}
 
 \subsection{Učení umělé neuronové sítě}
 
@@ -653,15 +667,15 @@ Vytvořená neuronová síť dle předchozích kapitol nebude umět řešit žá
 
 Algoritmus zpětného šíření chyby je učící algoritmus určený pro FFNN s~diferencovatelnými spojitými aktivačními funkcemi. Neuronové síti je předložen vzor, pro který síť stanoví odezvu. Chyba pro jeden vzor je definována dle vzorce 15.~\cite{nn}
 
-\formula[\cite{nn}]{Výpočet chyby pro jeden vzor u~algoritmu zpětného šíření chyby}{E = \sum_{i=1}^{Q}{(t_i - y_i)^2} = \sum_{i=1}^{Q}{e_i^2}\vspace{5pt}}{
-\begin{tabular}{ccc}
+\formula{Výpočet chyby pro jeden vzor u~algoritmu zpětného šíření chyby}{E = \sum_{i=1}^{Q}{(t_i - y_i)^2} = \sum_{i=1}^{Q}{e_i^2}\vspace{5pt}}{
+\begin{tabular}{c|c|c}
 	E = chyba jednoho vzoru & $y_i$ = Skutečná hodnota itého výstupu & $e_i$ = Chyba itého výstupu \\ Q = počet výstupů NN & $t_i$ = Očekávaná hodnota itého výstupu \\
 \end{tabular}
 }
 
 Následně je ke každé váze připočten přírustek $\Delta w_{ij}^k$ (při online učení~--~rychlejší) nebo se přírustek kumuluje a~přičte se až na konci epochy (při offline učení~--~stabilnější).~\cite{nn}
 
-\formula[\cite{nn}]{Přírustek váhy u~algoritmu zpětného šíření chyby}{\Delta w_{ij}^k = \frac{\partial E}{\partial w_{ij}^k} \implies \Delta w_{ij}^k = \alpha \delta_j^ky_i^{k-1}\vspace{5pt}}{\begin{tabular}{cc}
+\formula{Přírustek váhy u~algoritmu zpětného šíření chyby}{\Delta w_{ij}^k = \frac{\partial E}{\partial w_{ij}^k} \implies \Delta w_{ij}^k = \alpha \delta_j^ky_i^{k-1}\vspace{5pt}}{\begin{tabular}{c|c}
 $w_{ij}^k$ = Váha spoje mezi i-tým a j-tým neuronem v k-té vrstvě & $\alpha$ = rychlost učení \\
 $\delta_j^k$ = lokální gradient neuronu aktualizované váhy & E = chyba jednoho vzoru \\
 $y^{k-1}_j$ = výstup j-tého neuronu v $k-1$. vrstvě
@@ -669,12 +683,12 @@ $y^{k-1}_j$ = výstup j-tého neuronu v $k-1$. vrstvě
 
 Přičemž lokální gradient neuronu je vypočítán dle vzorce 17.
 
-\formula[\cite{nn}]{Výpočet lokálního gradientu neuronu}{
+\formula{Výpočet lokálního gradientu neuronu}{
 \delta_j^k = \begin{cases}
 \phi^k(y_{aj}^k)\displaystyle\sum_l{\delta_l^{k+1}w_{jl}^{k+1}}, & \text{pro neurony ve skrytých vrstvách} \\
 e_j\phi^k(y_{aj}^k), & \text{pro neurony ve výstupní vrstvě}
 \end{cases}\vspace{5pt}
-}{\begin{tabular}{cc}
+}{\begin{tabular}{c|c}
 $\delta_l^{k+1}$ = lokální gradient l-tého neuronu $k+1$. vrstvy & $e_j$ = chyba výstupu j-tého neuronu \\
 $y_{aj}^k$ = vstupní potenciál j-tého neuronu k-té vrstvy & $\phi^k$ = derivace aktivační funkce k-té vrstvy \\
 $w_{ij}^k$ = váha spoje mezi i-tým a j-tým neuronem k-té vrstvy & 
@@ -693,12 +707,6 @@ Tento postup je opakován pro všechny vzory v~trénovací množině~--~této it
 Počáteční hodnoty vah spojů mezi neurony mohou být nastaveny např. náhodně za použití rovnoměrného nebo normálního rozdělění s~nulovou střední hodnotou. Rychlost učení $\alpha$ určuje rychlost, s~jakou se váhy spojů mezi neurony upravují dle chyby při trénování. Obvykle nabývá hodnot jako 0,1, 0,01, 0,001, apod.~\cite{nn}
 
 Čím vyšší rychlost učení je, tím rychleji bude síť natrénovaná, ale tím pravděpodobněji trénování skončí v~nějakém lokálním minimu chybové funkce a~nebude dosaženo tak dobrého výsledku.~\cite{convnn}
-
-\section{Evoluční algoritmy}
-
-\subsubsection{Genetický algoritmus}
-
-\subsubsection{Algoritmus diferenciální evoluce}
 
 \section{Projekty pro hledání exoplanet}
 
