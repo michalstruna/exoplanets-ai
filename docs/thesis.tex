@@ -78,7 +78,7 @@
 
 V naší sluneční soustavě se nachází celkem 8 dosud objevených planet včetně Země. Mimo ni ale v~pozorovatelném vesmíru existují odhadem stovky miliard galaxií a~v~každé z~nich v~průměru stovky miliard hvězd. Z toho, co o~vzniku a~fungování hvězdných soustav víme je pravděpodobné, že většinu těchto hvězd bude obíhat jedna nebo více planet, tzv. extrasolárních planet nebo také exoplanet.~\cite{exoplanets}
 
-První potvrzená exoplaneta byla objevena již roku 1992, ale výzkum exoplanet se dostal do oblasti širokého zájmu až během posledního desetiletí. Stalo se tak především kvůli vesmírnému teleskopu Kepler, který má na svém kontě od roku 2009 přes 2~500 objevených exoplanet. [TODO]
+První potvrzená exoplaneta byla objevena již roku 1992, ale výzkum exoplanet se dostal do oblasti širokého zájmu až během posledního desetiletí. Stalo se tak především kvůli vesmírnému teleskopu Kepler, který má na svém kontě od roku 2009 přes 2~500 objevených exoplanet.~\cite{kepler80,nasadata}
 
 K~dnešnímu dni je známo více jak 4 000 potvrzených exoplanet. Toto číslo se s~nejvyšší pravděpodobností bude rychle zvyšovat, protože roku 2018 byl vypuštěn nástupce Kepleru -- satelit TESS -- od něhož je očekáván objev 20~000 exoplanet.~\cite{tess}
 
@@ -90,35 +90,27 @@ Díky distribuovaným výpočtům se do výzkumu exoplanet bude moci bez vysoké
 
 V~projektu jsou využity některé techniky spadající pod umělou inteligenci, v~důsledku čehož je zpracovávání dat zcela automatizované. Platí však, že umělá inteligence je v~současnosti stále intenzivně se rozvíjející oblastí, a~proto výsledky nemusí být natolik vypovídající ve srovnání s~tím, kdy by výzkum prováděli lidé manuálně, byť by to trvalo nesrovnatelně déle.
 
-\section{Exoplanety}
+\section{Hledání exoplanet}
 
-\subsection{Důvody hledání}
+Pouhým zkoumáním planet v~naší sluneční soustavě se omezujeme na velice specifické podmínky existující v~okolí našeho Slunce. Pro hlubší pochopení fungování planetárních systémů je nutné rozšířit oblast zájmu i~na planety v~okolí jiných hvězd~--~tzv. exoplanety. Můžeme se tak přiblížit odpovědím na otázky jako „Jak vzácné jsou podmínky pro život ve vesmíru?“ nebo „Jak vznikla a~jak se vyvíjela naše planeta?“~\cite{exoplanets}
 
-TODO
+Na začátku 90. let minulého století byla objevena první exoplaneta v~okolí pulsaru a~v roce 1995 první exoplaneta v~okolí hvězdy podobné Slunci. Od té doby frekvence objevů planet v~průměru neustále stoupá.~\cite{exoplanets,nasadata}
 
-\subsection{Typy exoplanet}
+\img[1]{Četnost objevů exoplanet v~jednotlivých letech}{stats/count_by_year.png}
+\data{1}{nasadata}
 
-TODO
+Cestovat k~jiným hvězdám a~posílat sondy k~exoplanetám je však naprosto mimo možnosti naší současné technologie. Dokonce i~přímé pozorování exoplanet teleskopem je kvůli enormním vzdálenostem od Země ve většině případů nemožné. Téměř veškeré pozorování se tak provádí skrze nepřímé metody. Ty využívají skutečnosti, že i~když není možné spatřit exoplanetu samotnou, je možné detekovat její působení na své okolí (např. na mateřskou hvězdu, která už viditelná je).
 
-\subsection{Objevené exoplanety}
-
-TODO
-
-\section{Metody hledání exoplanet}
-
-Exoplanety není téměř vůbec možné pozorovat přímo vizuálně, protože neemitují žádné světlo a~nachází se ve velkých vzdálenostech od Země. Lze ovšem pozorovat jejich působení na blízké hvězdy nebo jiné viditelné útvary. K~tomuto účelu se používá několik metod popsaných v této kapitole.
-
-Zdaleka nejvýznamnější je tranzitní metoda, kterou byla objevena většina exoplanet. Velké množství planet bylo objeveno taktéž metodou radiálních vzdáleností. Pomocí ní byly objevovány planety především blízko Země.~\cite{nasadata}
+Jednotlivé metody budou popsány v~následujících podkapitolách. Zdaleka nejvýznamnější je tranzitní metoda, kterou byla objevena většina exoplanet. Velké množství planet bylo objeveno taktéž metodou radiálních vzdáleností.~\cite{nasadata}
 
 \img[1]{Počty objevených exoplanet jednotlivými metodami}{stats/count_by_method.png}
-
 \data{1}{nasadata}
 
-Málo hmotné planety byly objevovány častěji tranzitní metodou, zatímco hmotnější planety spíše metodou radiálních rychlostí. Pro planety vzdálené od své mateřské hvězdy se nejlépe osvědčila metoda přímého zobrazení.~\cite{nasadata}
+Dá se říct, že každá metoda je vhodnější pro objevování různých typů planet. Málo hmotné planety byly objevovány častěji tranzitní metodou, zatímco hmotnější planety spíše metodou radiálních rychlostí. Pro planety vzdálené od své mateřské hvězdy se nejlépe osvědčila metoda přímého zobrazení.~\cite{nasadata}
 
-\img[1]{Závislost hmotnosti, periody oběhu a metody objevení planety}{stats/period_by_mass_by_method.pdf}
+\img[1]{Známé exoplanety dle jejich vlastností a metody objevení}{stats/period_by_mass_by_method.pdf}
 
-\data{1}{nasadata}
+
 
 \clearpage
 \subsection{Tranzitní metoda}
@@ -304,7 +296,7 @@ Na první pohled je patrná jedna periodická složka s periodou 4,23 dne a~ampl
 
 Hlavní výhodou metody radiálních rychlostí oproti tranzitní metodě je možnost spočítat hmotnost exoplanety. Její přesnou hodnodu však lze odvodit pouze se znalostí sklony dráhy exoplanety vůči pozorovateli. V~opačném případě lze vypočítat pouze dolní mez hmotnosti planety, a~to zejména kvůli $M_p * sin(i)$ ve vzorci 5.~\cite{methods}
 
-\formula{Radiální rychlost}{\Delta v_{max} = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}}{
+\formula{Radiální rychlost}{\Delta v_{max} = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}\vspace{5pt}}{
 \begin{tabular}{lll}
 	$\Delta v_{max}$ = amplituda změny rychlosti & $M_s$ = hmotnost hvězdy & $M_p$ = hmotnost planety \\
 	sin(i) = sklon dráhy vůči pozorovateli & e = excentricita dráhy & T = oběžná doba \\
