@@ -5,6 +5,7 @@ import { Curve, GlobalStats, ImagePlot } from '../../Stats'
 import { Block } from '../../Layout'
 import { useGlobalStats, usePlotStats, getGlobalStats, getPlotStats } from '..'
 import { Async } from '../../Async'
+import { useStrings } from '../../Data'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -37,8 +38,9 @@ const GlobalStatsPanel = ({ ...props }: Props) => {
 
     const globalStats = useGlobalStats()
     const plotStats = usePlotStats()
+    const strings = useStrings()
 
-    const { type_count, star_type_count, smax_mass } = plotStats.payload || {}
+    const { type_count, smax_mass, distance_count } = plotStats.payload || {}
 
     return (
         <Root {...props}>
@@ -51,8 +53,8 @@ const GlobalStatsPanel = ({ ...props }: Props) => {
                             <ImagePlot data={smax_mass} x={{ label: 'Velká poloosa [au]'}} y={{ label: 'Hmotnost [Mo]' }} />
                         </div>
                         <Horizontal>
-                            <ImagePlot data={type_count} y={{ nTicks: 5, format: ImagePlot.INT_TICK }} x={{ nTicks: type_count.x.ticks.length + 1 }} />
-                            <ImagePlot data={type_count} y={{ nTicks: 5, format: ImagePlot.INT_TICK }} />
+                            <ImagePlot data={type_count} y={{ nTicks: 5, format: ImagePlot.INT_TICK }} x={{ label: 'Typ planety', nTicks: type_count.x.ticks.length + 1, format: v => strings.planets.types[v] }} />
+                            <ImagePlot data={distance_count} y={{ nTicks: 5, format: ImagePlot.INT_TICK }} x={{ label: 'Vzdálenost od Země [ly]', nTicks: type_count.x.ticks.length + 1 }} />
                         </Horizontal>
                         <div>
                             <Curve data={{

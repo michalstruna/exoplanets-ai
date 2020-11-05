@@ -54,7 +54,8 @@ chart = api.ns.model("Chart", {
 plots_stats = api.ns.model("PlotsStats", {
     "smax_mass": fields.Nested(chart, required=True),
     "type_count": fields.Nested(chart, required=True),
-    "star_type_count": fields.Nested(chart, required=True)
+    "star_type_count": fields.Nested(chart, required=True),
+    "distance_count": fields.Nested(chart, required=True)
 })
 
 @api.ns.route("/aggregated")
@@ -79,10 +80,15 @@ class PlotStats(Resource):
             "type_count": {
                 "x": {"ticks": ["mercury", "earth", "superearth", "neptune", "jupiter"]},
                 "y": {"min": 0, "max": 762},
-                "image": "TypeCount.png"
+                "image": "TypeCount.svg"
             },
             "star_type_count": {
                 "image": "StarTypeCount.png"
+            },
+            "distance_count": {
+                "x": {"ticks": ["< 50", "50-200", "200-500", "500-2k", "> 2k"]},
+                "y": {"min": 0, "max": 1659},
+                "image": "DistanceCount.svg"
             }
         }
 

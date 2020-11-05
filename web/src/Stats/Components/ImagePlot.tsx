@@ -27,7 +27,6 @@ const Root = Styled.div`
 
 const InnerRoot = Styled.div`
     ${size()}
-    align-items: stretch;
     display: flex;
     position: relative;
     user-select: none;
@@ -37,6 +36,7 @@ const InnerRoot = Styled.div`
 
 const Image = Styled.img`
     pointer-events: none;
+    position: relative;
     width: 100%;
 `
 
@@ -48,6 +48,7 @@ const Vertical = Styled.div`
 `
 
 const Plot = Styled.div`
+    flex-direction: column;
     position: relative;
 `
 
@@ -59,6 +60,7 @@ const AxisLabel = Styled.p`
     font-size: 80%;
     font-weight: bold;
     text-align: center;
+    white-space: nowrap;
 `
 
 const VerticalAxisLabel = Styled.div`
@@ -78,14 +80,14 @@ interface YAxisProps {
 }
 
 const YAxis = Styled.div<YAxisProps>`
+    flex: 1 1 0;
     padding-right: 0.5rem;
     text-align: right;
     width: ${props => props.wide ? 3 : 2}rem;
     
     ${Ticks} {
         box-sizing: border-box;
-        height: calc(100% - 1.2rem);
-        padding-bottom: 1.5rem;
+        height: 100%;
     }
     
     ${AxisLabel} {
@@ -103,16 +105,28 @@ const XAxis = Styled.div`
     
     ${Ticks} {
         flex-direction: row;
-    } 
+        text-align: center;
+    }
     
     ${Tick} {
-        width: 1.5rem;
+        flex: 1 1 0;
     }
     
     ${AxisLabel} {
         flex: 1 1 0;
         margin-top: 0.3rem;
         width: 100%;
+    }
+`
+
+const TinyVertical = Styled(Vertical)`
+    display: inline-flex;
+    flex: none;
+    
+    ${XAxis} {
+        overflow: hidden;
+        visibility: hidden;
+        width: 1px;
     }
 `
 
@@ -141,12 +155,6 @@ const VLine = Styled.div`
     background-color: ${Color.LIGHTEST};
 `
 
-const Title = Styled.p`
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    text-align: center;
-`
-
 const range = (min: number, max: number, count: number, log: boolean = false): number[] => {
     const result = []
 
@@ -171,6 +179,7 @@ const range = (min: number, max: number, count: number, log: boolean = false): n
     return result
 }
 
+
 const ImagePlot = ({ data, x, y, ...props }: Props) => {
 
     const xTicks = data.x.ticks || range(data.x.min!, data.x.max!, x?.nTicks ?? 8, data.x.log)
@@ -183,45 +192,51 @@ const ImagePlot = ({ data, x, y, ...props }: Props) => {
 
         return ticks.map((value, i) => (
             <Tick key={i}>
-                {formatter(isLog ? Numbers.toExponential(value as number) : Numbers.format(value as number))}
+                {typeof value === 'number' ? formatter(isLog ? Numbers.toExponential(value) : Numbers.format(value)) : formatter(value)}
             </Tick>
         ))
     }
 
+    const xAxis = x?.show !== false && (
+        <XAxis>
+            <Ticks>
+                {renderTicks(xTicks, x?.format)}
+            </Ticks>
+            {x?.label && <AxisLabel>{x.label}</AxisLabel>}
+        </XAxis>
+    )
+
     return (
         <Root>
             <InnerRoot>
-                {y?.show !== false && (
-                    <YAxis wide={!!y?.label}>
-                        {y?.label && <VerticalAxisLabel><AxisLabel>{y.label}</AxisLabel></VerticalAxisLabel>}
-                        <Ticks>
-                            {renderTicks(yTicks, y?.format)}
-                        </Ticks>
-                    </YAxis>
-                )}
+                <TinyVertical>
+                    {y?.show !== false && (
+                        <YAxis wide={!!y?.label}>
+                            {y?.label && <VerticalAxisLabel><AxisLabel>{y.label}</AxisLabel></VerticalAxisLabel>}
+                            <Ticks>
+                                {renderTicks(yTicks, y?.format)}
+                            </Ticks>
+                        </YAxis>
+                    )}
+                    {xAxis}
+                </TinyVertical>
                 <Vertical>
                     <Plot>
-                        {y?.show !== false && (
-                            <HGrid>
-                                {new Array(yTicks.length).fill(null).map((_, i) => <HLine key={i} />)}
-                            </HGrid>
-                        )}
                         {x?.show !== false && (
                             <VGrid>
                                 {new Array(xTicks.length).fill(null).map((_, i) => <VLine key={i} />)}
                             </VGrid>
                         )}
+                        {y?.show !== false && (
+                            <HGrid>
+                                {new Array(yTicks.length).fill(null).map((_, i) => <HLine key={i} />)}
+                            </HGrid>
+                        )}
                         <Image src={`http://localhost:5000/public/stats/${data.image}`} />
                     </Plot>
-                    {x?.show !== false && (
-                        <XAxis>
-                            <Ticks>
-                                {renderTicks(xTicks)}
-                            </Ticks>
-                            {x?.label && <AxisLabel>{x.label}</AxisLabel>}
-                        </XAxis>
-                    )}
+                    {xAxis}
                 </Vertical>
+
             </InnerRoot>
         </Root>
     )

@@ -28,9 +28,9 @@ const Content = Styled.div`
 `
 
 const links = [
-    { icon: 'Universe/RealTime/Volunteers.svg', text: 'Dobrovolníci' },
+    { icon: 'Database/RealTime/Volunteers.svg', text: 'Dobrovolníci' },
     { icon: 'Controls/Active.svg', text: 'Online (451)' },
-    { icon: 'Universe/RealTime/Discussion.svg', text: 'Diskuse (2)' }
+    { icon: 'Database/RealTime/Discussion.svg', text: 'Diskuse (2)' }
 ]
 
 const tabs = [() => <UsersRank />, () => <OnlineUsers />, () => <div />]

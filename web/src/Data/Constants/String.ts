@@ -165,11 +165,11 @@ export default {
             [LifeType.PROMISING]: { [CS]: 'Slibný', [EN]: 'Promising' }
         },
         types: {
-            [PlanetType.MERCURY]: { [CS]: 'Typ Merkur', [EN]: 'Mercury-like' },
-            [PlanetType.EARTH]: { [CS]: 'Typ Země', [EN]: 'Earth-like' },
+            [PlanetType.MERCURY]: { [CS]: 'Merkur', [EN]: 'Mercury' },
+            [PlanetType.EARTH]: { [CS]: 'Země', [EN]: 'Earth' },
             [PlanetType.SUPEREARTH]: { [CS]: 'Superzemě', [EN]: 'Superearth' },
-            [PlanetType.NEPTUNE]: { [CS]: 'Typ Neptun', [EN]: 'Neptune-like' },
-            [PlanetType.JUPITER]: { [CS]: 'Typ Jupiter', [EN]: 'Jupiter-like' }
+            [PlanetType.NEPTUNE]: { [CS]: 'Neptun', [EN]: 'Neptune' },
+            [PlanetType.JUPITER]: { [CS]: 'Jupiter', [EN]: 'Jupiter' }
         },
         statuses: {
             [PlanetStatus.CANDIDATE]: { [CS]: 'Kandidát', [EN]: 'Candidate' },
