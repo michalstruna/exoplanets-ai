@@ -126,7 +126,7 @@ Tranzitní metoda vzbuzuje velký zájem především kvůli možnosti objevovat
 
 \formula{Pravděpodobnost zpozorování tranzitu planety přes hvězdu} {P = \frac{d_s}{a}}{
 \begin{tabular}{llll}
-	$d_s$ = průměr hvězdy & a = vzdálěnost exoplanety od hvězdy \
+	$d_s$ = průměr hvězdy & a = vzdálenost exoplanety od hvězdy \
 \end{tabular}
 }
 
@@ -148,27 +148,50 @@ Po složení všech TPF do časové řady a~vypočítání jejich jasu dostaneme
 \img[1]{Světelná křivka soustavy Kepler-13}{img/light_curve.png}
 \data{1}{nasadata}
 
-Každý tranzit má charakteristické fáze, které pomohou odlišit působení exoplanety od ostatních možných příčin, jako je např. proměnlivost hvězdy, dvojhvězda nebo pulzar.
+Na obrázku 6 jsou čisly označeny jednotlivé fáze dále popsané v~tabulce 1:
 
+{
+\tab{Fáze oběhu tranzitující exoplanety}{
+	\begin{tabular}{|ll|l|}
+		\hline	
+		\rowcolor{lightgray}
+		 & Fáze & Co vidí pozorovatel na Zemi \\	
+		\hline	
+		1 & Planeta je za hvězdou (sekundární zákryt). & Hvězda \\
+		\hline	
+		2 & Planeta je vedle hvězdy. & Hvězda $+$ osvětlená část planety \\
+		\hline
+		3 & Planeta je vedle hvězdy. & Hvězda $+$ neosvětelná část planety \\
+		\hline
+		4 & Planeta je před hvězdou (tranzit). & Hvězda $-$ planeta \\
+		\hline
+	\end{tabular}
+}
 
-\img[1]{Detail světelné křivky soustavy Kepler-13}{img/light_curve_detail.png}
+Dále jsou na stejném obrázku písmeny označeny důležité veličiny:
 
-\begin{enumerate}
-\item Planeta je schovaná za hvězdou, hvězda je vidět se svým základním jasem.
-\item Planeta je vedle hvězdy, jas hvězdy je posilněn o~světlo odražené od planety.
-\item Planeta je vedle hvězdy, ale její viditelná část není osvětlena. Hvězda je vidět se svým základním jasem.
-\item Planeta je před hvězdou, jas hvězdy je snížen v~důsledku zakrytí části kotouče.
-\end{enumerate}
+{\catcode`\-=12\tab{Veličiny tranzitu} {
+\begin{tabular}{|ll|l|}
+    \hline
+    \rowcolor{lightgray}
+     & Veličina & Popis \\
+     \hline
+     A & Perioda & Perioda tranzitu udává periodu oběhu planety kolem hvězdy. \\
+     \hline
+     B & Hloubka & Čím větší je hloubka tranzitu, tím je planeta vůči hvězdě větší. \\
+     \hline
+     C & Trvání & Čím je trvání delší, tím delší trajektorii přes hvězdu planeta má. \\ 
+     \hline
+     D & Trvání minima & \multirow{2}{*}{Závisí na úhlu mezi rovinou oběhu planety vůči pozorovateli} \\
+     \cline{1-2}
+     E & Trvání nástupu & \\
+     \hline
+\end{tabular}
+}}
 
-Tyto fáze společně s~důležitými parametry tranzitu potřebnými pro další výpočty jsou vyznačeny na obrázku~6:
+TODO: Transit types image.
 
-\begin{enumerate}[label=\Alph*.]
-\item Perioda -- čím větší perioda, tím delší planetární rok a větší velká poloosa dráhy,
-\item Hloubka -- čím větší hloubka, tím je planeta vůči hvězdě větší,
-\item Trvání -- čím je trvání kratší, tím menší trajektorii přes hvězdu planeta má,
-\item Délka nástupu -- čím prudší a~kratší je nástup, tím menší je úhel mezi rovinou orbity exoplanety a~přímkou od hvězdy k~pozorovateli,
-\item Délka minima -- čím větší délka minima v~porovnání s~délkou transitu, tím je úhel mezi rovinou orbity exoplanety a~přímkou od hvězdy k~pozorovateli menší.
-\end{enumerate}
+\newpage
 
 \subsubsection{Vyřazení false positives}
 
@@ -184,14 +207,15 @@ Většina periodických složek ve světelných křivkách hvězd jsou \emph{fal
 \img[1]{Kataklizmická proměnná hvězda KIC 9406652}{img/cataclysmic.png}
 \end{multicols}
 
-\data{1}{nasadata}
-
 Je třeba aby vstupní data do neuronové sítě měla stejné rozměry i~formát. Vzhledem k~různorodosti světelných křivek je nutno provést několik kroků, abychom dosáhli standardizovaného formátu. Prvním krokem je složení časové řady do jedné periody, čímž dojde k~posílení viditelnosti transitu (pokud zde nějaký je), nebo naopak k~jeho vyrušení (pokud zde žádný není).~\cite{kepler80}
 
 \begin{multicols}{2}
 \img[1]{Světelná křivka Kepler-10}{img/full_light_curve.png}
 \img[1]{Složená světelná křivka}{img/folded.png}
 \end{multicols}
+
+\vspace{\fill}
+\data{1}{nasadata}
 
 Na obrázku 12 je uprostřed slabě patrný transit. Má malou šířku, protože trvá pouze 0,25 dne, zatímco celá perioda je dlouhá 45,3 dne. Z~této složené časové řady se vytvoří dva pohledy, které budou vstupem do neuronové sítě:
 
