@@ -405,9 +405,38 @@ Pohyb hvězdy tak není přímočarý, ale vlnitý. Kolísání hvězdy je však
 Dá se však očekávat, že se zlepšující se technikou bude tato metoda úspěšnější.
 
 \subsection{Gravitační mikročočky}
+
+Světlo má obvykle tendenci se pohybovat prázdným prostorem po přímé trajektorii. Avšak dle obecné teorie relativity, hmotná tělesa zakřivují časoprostor kolem sebe. V~blízkosti takových těles tak tuto přímou trajektorii vnímáme jako zakřivenou.~\cite{methods}
+
+V~případě, kdy se nějaké hmotné těleso (např. galaxie nebo černá díra) nachází mezi pozorovatelem a~zdrojem světla (např. jinou galaxií), mluvíme o~tzv. gravitační čočce~--~zdroj světla bude vidět vícekrát na různých místech, nebo bude naopak zdeformovaný.~\cite{methods}
+
+\img[1]{Princip gravitační čočky}{img/lens.png}
+
+\footnotetext[1]{Vytvořeno autorem, fotografie gravitační čočky převzata od NASA (\url{https://apod.nasa.gov/apod/image/1112/lensshoe_hubble_3235.jpg}), oříznuto a~zdeformováno}
+
+Pokud je čočkujícím tělesem pouze hvězda, jedná se o~gravitační mikročočku. V~tomto případě dochází často ke splynutí čočky a~skrytého tělesa do jednoho útvaru se zvýšeným jasem. A~zde nachází uplatnění metoda pro hledání exoplanet. Za předpokladu, že čočkujícím tělesem je hvězda s~obíhající exoplanetou, budeme pozorovat pozvolné zvyšování jasu způsobené hvězdou a~zároveň v~nějakém krátkém časovém intervalu strmý nárůst jasu způsobený exoplanetou.~\cite{methods}
+
+\img[1]{Ilustrace gravitační mikročočky OGLE 2003-BLG-235}{img/lens_plot.png}
+\data{1}{nasadata}
+
+
 \subsection{Přímé zobrazení}
-\subsection{Transit timing}
-\subsection{Pulsar timing}
+\subsection{Časování transitů}
+
+TODO \cite{ttv}
+
+\subsection{Časování pulsarů}
+
+Pulsary jsou rychle rotující neutronové hvězdy~--~pozůstatky po zhrouceném jádře hmotných hvězd. Během procesu hroucení hvězda zmenšuje svůj poloměr a~pro zachování momentu hybnosti zvyšuje svou rotační rychlost.~\cite{methods}
+
+Vedle toho, pulsar podél své magnetické osy emituje silný elektromagnetický paprsek. V~případě, kdy je magnetická osa pulsaru natočena k~Zemi (paprsek směřuje k~Zemi), můžeme zpozorovat náhlý nárůst jasu hvězdy. Tyto pulzy je pak možné sledovat ve velice pravidelných intervalech (často řádově jednotky milisekund až sekund).~\cite{methods}
+
+Pokud je v~těchto pulzech zpozorována nepravidelnost, může to znamenat, že pulsar mění svou vzdálenost od Země. Jinými slovy, stejně jako v~případě metody radiálních rychlostí, pulsar společně s~dalším tělesem (např. planetou) obíhá kolem společného těžiště.~\cite{methods}
+
+Nutno podotknout, že nás nezajímá rychlost pulzaru tak, jako u metody radiálních rychlostí. Nepravidelnosti pulzů jsou způsobeny pouze polohou pulsaru, nikoliv jeho rychlostí. Pulzy (elektromagnetické záření) se ve vakuu pohybují vždy konstantní rychlostí bez ohledu na rychlost pulzaru samotného (rychlosti se nesčítají).
+
+\img[1]{Ilustrace pulsaru s obíhající planetou}{img/pulsar_timing.png}
+\drawgimp
 
 \section{Umělá inteligence}
 
@@ -961,6 +990,8 @@ TODO: Verifikace výsledků.
 
 \addcontentsline{toc}{section}{Použitá literatura}
 \begin{thebibliography}{99}	% parametr určuje nejširší položku
+
+\onlinesource[CARPINTERO D. D. MELITA M. D]{ttv}{An alternative stable solution for the Kepler-419 system, obtained with the use of a genetic algorithm}{Astronomy \& Astrophysics 620(A88)}{2018}{22.~11.~2020}{https://arxiv.org/abs/1810.06769}
 
 \onlinesource[DATTIO, Anne]{k2superearth}{Identifying Exoplanets with Deep Learning. II. Two New Super-Earths Uncovered by a Neural Network in K2 Data}{The Astronomical Journal 157(5)}{9.~4.~2019}{23.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/ab0e12}
 
