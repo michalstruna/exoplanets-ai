@@ -445,7 +445,7 @@ Situaci můžeme chápat jako problém n těles, případně ji zjednodušit na 
 \begin{itemize}
 \item Hvězda,
 \item Tranzitující planeta,
-\item Planeta způsobující nepravidelnosti,
+\item Planeta způsobující nepravidelnosti.
 \end{itemize}
 
 Nechť $p = \{a, e, i, \Omega, \omega, M, m\}$ je uspořádaná množina obsahující elementy dráhy exoplanety (velkou poloosu, excentricitu, inklinaci, délku vzestupného úhlu, argument šířky pericentra, střední anomálii) a~hmotnost exoplanety. Vzhledem k~tranzitující planetě budeme tuto množinu označovat jako $p_t$ a~vzhledem k~planetě způsobující nepravidelnosti jako $p_p$. Další důležitou veličinou je hmotnost hvězdy $M_s$. Z~těchto údajů jsme schopni spočítat časy tranzitů $t_{com}$ tranzitující planety. Jestliže máme k~dispozici i~skutečné naměřené časy tranzitů s~nepravidelnostmi $t_{obs}$, můžeme problém řešit jako hledání maxima funkce $F[t_{com}(p_t, p_p, M_s), t_{obs}]$ definované jako~\cite{ttv}:
@@ -458,11 +458,16 @@ Kvůli velkému množství vícerozměrných parametrů je nutné pro tento prob
 
 \subsubsection{Aplikace genetického algoritmu}
 
-Jedince definujeme jako $x = \{p_t, p_p, M_s\}$, přičemž první generaci $n$ jedinců vygenerujeme náhodně. Fitness funkci určující kvalitu jedinců ponecháme jako $F$ (vzorec 9). S~využitím rovnic znamých z~problému 3 těles:
+Jedince definujeme jako $x = \{p_t, p_p, M_s\}$, přičemž první generaci $K$ jedinců vygenerujeme náhodně. Fitness funkci určující kvalitu jedinců ponecháme jako $F$ (vzorec 9). S~využitím rovnic znamých z~problému 3 těles:
 
-\formula{Rovnice problému 3 těles}{\ddot{r}_i = -Gm_j\frac{r_j-r_i}{|r_j-r_i|^3} - Gm_k\frac{r_k - r_i}{|r_k - r_i|^3}\vspace{5pt}}{}
+\formula{Rovnice problému 3 těles}{\ddot{r}_i = -Gm_j\frac{r_j-r_i}{|r_j-r_i|^3} - Gm_k\frac{r_k - r_i}{|r_k - r_i|^3}\vspace{5pt}}{
+\begin{tabular}{l|l|l}
+    $r_i$ = polohový vektor i-tého tělesa & $m_i$ = hmotnost i-tého tělesa & $G$ = gravitační konstanta \\
+    $i$ = aktuální těleso & $j, k$ = další 2 tělesa &
+\end{tabular}
+}
 
-Jsme schopni pomocí fitness funkce vypočítat kvalitu každého z~jedinců v~populaci.
+Kde $r_i = (x_i, y_i, z_i)$, jsme schopni pomocí fitness funkce vypočítat kvalitu každého z~jedinců v~populaci. Následně náhodně, avšak v~souladu s~přirozeným výběrem s~přihlédnutím na fitness vybereme dvojici jedinců, na něž bude aplikována operace křížení.
 
 \section{Umělá inteligence}
 
