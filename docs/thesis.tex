@@ -454,7 +454,7 @@ Nechť $p = \{a, e, i, \Omega, \omega, M, m\}$ je uspořádaná množina obsahuj
 
 Jinými slovy, hledáme, jaké parametry planet a~hvězdy povedou k~nejmenšímu rozdílu mezi napozorovanými a~vypočítanými časy tranzitů planety. Čím vyšší je výsledek této funkce, tím přesnější řešení jsme nalezli. Optimální řešení by znamenalo, že jsme zvolili $p_t$, $p_p$ a~$M_s$ naprosto shodné s~realitou a~platilo by, že $F\to\infty$.
 
-Kvůli velkému množství vícerozměrných parametrů je nutné pro tento problém použít stochastický optimalizační algoritmus, jenž sice nezajistí přesné analytické řešení, avšak i~přesto umožní nalézt řešení velice blízké tomu optimálnímu. Jedním z~takových algoritmů je genetický algoritmus blíže popsaný v~kapitole 2.2.1.~\cite{ttv}
+Kvůli velkému množství vícerozměrných parametrů je nutné pro tento problém použít stochastický optimalizační algoritmus, jenž sice nezajistí přesné analytické řešení, avšak i~přesto umožní nalézt řešení velice blízké tomu optimálnímu. Jedním z~takových algoritmů je genetický algoritmus blíže popsaný v~kapitole 3.1.1.~\cite{ttv}
 
 \subsubsection{Aplikace genetického algoritmu}
 
@@ -467,21 +467,12 @@ Jedince definujeme jako $x = \{p_t, p_p, M_s\}$, přičemž první generaci $K$ 
 \end{tabular}
 }
 
-Kde $r_i = (x_i, y_i, z_i)$, jsme schopni pomocí fitness funkce vypočítat kvalitu každého z~jedinců v~populaci. Následně náhodně, avšak v~souladu s~přirozeným výběrem s~přihlédnutím na fitness vybereme dvojici jedinců, na něž bude aplikována operace křížení.
+Kde $r_i = (x_i, y_i, z_i)$, jsme schopni pomocí fitness funkce vypočítat kvalitu každého z~jedinců v~populaci. Následně náhodně, avšak v~souladu s~přirozeným výběrem s~přihlédnutím na fitness vybereme dvojici jedinců, na něž bude aplikována operace křížení, jejímž výsledkem budou 2 potomci.~\cite{ttv}
 
-\section{Umělá inteligence}
+Tímto způsobem pokračujeme dále, abychom získali populaci potomků, kteří také mohou mít nenulovou pravděpodobnost mutace. Z~populace rodičů a~potomků vhodně vybereme $K$ jedinců, kteří se stanou 2.~generací. Běh algoritmu bude pokračovat dokud nejlepší jedinec poslední generace nebude představovat dostatečně dobré řešení TTV.
 
-\subsection{Umělé neuronové sítě}
-
-\subsection{Evoluční algoritmy}
-
-\subsubsection{Genetický algoritmus}
-
-\subsubsection{Algoritmus diferenciální evoluce}
-
-\subsection{Fuzzy systémy}
-
-\subsection{Expertní systémy}
+\img[1]{Princip časování tranzitů}{img/illustration_ttv.pdf}
+\drawgimp
 
 \section{Umělé neuronové sítě}
 
@@ -813,6 +804,18 @@ Tento postup je opakován pro všechny vzory v~trénovací množině~--~této it
 Počáteční hodnoty vah spojů mezi neurony mohou být nastaveny např. náhodně za použití rovnoměrného nebo normálního rozdělění s~nulovou střední hodnotou. Rychlost učení $\alpha$ určuje rychlost, s~jakou se váhy spojů mezi neurony upravují dle chyby při trénování. Obvykle nabývá hodnot jako 0,1, 0,01, 0,001, apod.~\cite{nn}
 
 Čím vyšší rychlost učení je, tím rychleji bude síť natrénovaná, ale tím pravděpodobněji trénování skončí v~nějakém lokálním minimu chybové funkce a~nebude dosaženo tak dobrého výsledku.~\cite{convnn}
+
+\section{Další oblasti umělé inteligence}
+
+\subsection{Evoluční algoritmy}
+
+\subsubsection{Genetický algoritmus}
+
+\subsubsection{Algoritmus diferenciální evoluce}
+
+\subsection{Fuzzy systémy}
+
+\subsection{Expertní systémy}
 
 \section{Projekty pro hledání exoplanet}
 
