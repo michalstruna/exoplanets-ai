@@ -1,0 +1,6 @@
+import lightkurve as lk
+from astropy import units as u
+
+tpf = lk.search_targetpixelfile("Kepler-10", quarter=4).download()
+lc = tpf.to_lightcurve(aperture_mask=tpf.pipeline_mask).flatten()
+lc.fold(period=0.837 * u.day).plot()

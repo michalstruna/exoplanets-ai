@@ -454,7 +454,7 @@ Nechť $p = \{a, e, i, \Omega, \omega, M, m\}$ je uspořádaná množina obsahuj
 
 Jinými slovy, hledáme, jaké parametry planet a~hvězdy povedou k~nejmenšímu rozdílu mezi napozorovanými a~vypočítanými časy tranzitů planety. Čím vyšší je výsledek této funkce, tím přesnější řešení jsme nalezli. Optimální řešení by znamenalo, že jsme zvolili $p_t$, $p_p$ a~$M_s$ naprosto shodné s~realitou a~platilo by, že $F\to\infty$.
 
-Kvůli velkému množství vícerozměrných parametrů je nutné pro tento problém použít stochastický optimalizační algoritmus, jenž sice nezajistí přesné analytické řešení, avšak i~přesto umožní nalézt řešení velice blízké tomu optimálnímu. Jedním z~takových algoritmů je genetický algoritmus blíže popsaný v~kapitole 3.1.1.~\cite{ttv}
+Kvůli velkému množství vícerozměrných parametrů je nutné pro tento problém použít stochastický optimalizační algoritmus, jenž sice nezajistí přesné analytické řešení, avšak i~přesto umožní nalézt řešení velice blízké tomu optimálnímu. Jedním z~takových algoritmů je genetický algoritmus blíže popsaný v~kapitole 3.1.~\cite{ttv}
 
 \subsubsection{Aplikace genetického algoritmu}
 
@@ -599,12 +599,19 @@ Spojení existují pouze mezi neurony sousedních vrstev. Ani neurony stejné vr
 
 Pro vytváření architektury neuronové sítě neexistuje analytický postup, který by vedl k~nejefektivnějšímu návrhu. Při řešení úlohy je třeba buď inspirovat se již nějakou existující neuronovou sítí, s jejíž pomocí někdo podobný problém řešil v~minulosti, nebo postupovat experimentálně a~„zkoušet“, jaká architektura povede k~nejmenší chybě. V~tomto případě je možno postupovat dvěma způsoby. Buď začneme s~triviální sítí, do které postupně budeme přidávat nové neurony a~vrstvy, až dokud bude úspěšnost sítě při řešení úkolu stoupat, nebo naopak začneme s~komplexní neuronovou sítí, ze které budeme neurony a~vrstvy postupně odebírat.~\cite{nn}
 
+\vspace{-5pt}
+
 \subsubsection{Konvoluční neuronová síť}
+
+
+\vspace{-5pt}
 
 Zpracování vícedimenzionálních dat o~velkých rozměrech by s~použitím klasické FFNN bylo velice problematické. Uvažujme např. rozpoznávání psaných číslic z~obrázku. Číslice se v~obrázku může nacházet na různých místech, může být různě velká, natočená či barevná a~také způsob psaní se u~každého člověka může lišit.
 
 \img[1]{Ručně psané číslice 9.}{img/handwritten.png}
 \footnotetext[1]{Převzato z:~MNIST dataset.}
+
+\vspace{-10pt}
 
 Pro člověka je jednoduché rozpoznat, že všechny útvary na obrázku 25 jsou číslice 9 i~přesto, že každá vypadá jinak. Sestrojit algoritmus, který by to dokázal také, už ale triviální úkol rozhodně není. Obecně, získáváním informací z~obrázku se zabývá obor počítačového vidění.~\cite{convnn}
 
@@ -807,15 +814,52 @@ Počáteční hodnoty vah spojů mezi neurony mohou být nastaveny např. náhod
 
 \section{Další oblasti umělé inteligence}
 
-\subsection{Evoluční algoritmy}
+Umělá inteligence (UI nebo AI) je podstatně rozsáhlejší obor a~neobsahuje pouze umělé neuronové sítě. Další podoblasti však nejsou natolik důležité v~kontextu této práce, a~proto zde budou popsány pouze okrajově. Ačkoliv se definice v~různých zdrojích různí, AI lze popsat jako odvětví informatiky zabývající se automatizací inteligentního chování strojů.~\cite{ai} Lze ji rozdělit na 2 základní kategorie:
 
-\subsubsection{Genetický algoritmus}
+\begin{itemize}
+\item \textbf{Silná umělá inteligence}~--~hypotetická obecná inteligence stroje umožňující řešit jakýkoliv problém, který dokáže řešit člověk. Takový koncept však dosud reálně neexistuje, a proto zde nebude dále rozebírán.
+\item \textbf{Slabá umělá inteligence}~--~skupina algoritmů, technik a~postupů umožňujících řešit nějaký konkrétní a~specifický problém neřešitelný nebo těžko řešitelný běžnými analytickými metodami, avšak často lehce řešitelný člověkem samotným.
 
-\subsubsection{Algoritmus diferenciální evoluce}
+\end{itemize}
 
-\subsection{Fuzzy systémy}
+Přičemž slabou umělou inteligenci lze dále dělit např. na:
 
-\subsection{Expertní systémy}
+\begin{itemize}
+\item \textbf{Strojové učení}~--~část AI umožňující strojům učit se z~dat a~modifikovat tak své chování bez zásahu člověka.
+
+\begin{itemize}
+
+\item \textbf{Hluboké učení}~--~specifická část strojového učení spolehájící se na vícevrstvou interpretaci řešeného problému. Umožňuje hlubší pochopení dané problematiky a~více se tak blíží fungování lidského mozku.
+
+\item \textbf{Umělé neuronové sítě}~--~výpočetní modely vycházející z~biologických neuronových sítí. Existují jednoduché nebo i~vícevrstvé sítě, dále dopředné, rekurentní, konvoluční, samorooganizační nebo třeba modulární. Některé z těchto typů sítí byly detailněji popsány v~kapitole 2.
+
+\end{itemize}
+
+\item \textbf{Evoluční výpočty}~-~podoblast AI napodobující biologické procesy. Často se jedná o~metaheuristické optimalizační techniky, které kromě povahy řešeného problému nepotřebují žádné další informace a řešení (byť ne vždy optimální) najdou samy.
+
+\begin{itemize}
+\item \textbf{Evoluční algoritmy}~--~snaží o~napodobení evoluce a~vychází z pravidla přežití nejsilnějšího. Často se zde vyskytují pojmy jako generace, přirozený výběr, dědíčnost nebo křížení. Spadá sem např. genetický algoritmus nebo algoritmus diferenciální evoluce.
+
+\item \textbf{Inteligence hejna}~--~simulace sociální inteligence v~nějaké množině převážně jednoduchých a~decentralizovaných jedinců. Patří sem např. optimalizace hejnem částic vycházející z~chování hejna ptáků nebo optimalizace mravenčí kolonií, jež se inspirovala mravenci a~jejich komunikací pomocí feromonů.
+
+\end{itemize}
+
+\item \textbf{Expertní systémy}~--~systémy řešící nenumerické problémy umožňující poskytovat expertní rady a~doporučení v~konkrétních situacích. K~tomu využívají bázi znalostí, v~níž mají uloženy všechny známé informace o~problému.
+
+\item \textbf{Fuzzy systémy}~--~systémy založené na fuzzy logice. Ta narozdíl od té výrokové nepracuje s~binárními hodnotami (pravda, nepravda), ale pravdivost tvrzení lze vyjádřit jakoukoliv hodnotou z~intervalu $\left<0; 1\right>$. Fuzzy (mlhavá, nejasná) není exaktní a~jednoznačná a~více se tak blíží té lidské.
+
+\end{itemize}
+
+\img[1]{Rozdělení umělé inteligence}{img/ai.pdf}
+\draw
+
+\subsection{Genetický algoritmus}
+
+\subsubsection{Selekce}
+
+\subsubsection{Křížení}
+
+\subsubsection{Mutace}
 
 \section{Projekty pro hledání exoplanet}
 
@@ -831,30 +875,51 @@ TODO: \cite{kepler80}
 
 \subsection{TypeScript}
 
+TypeScript (\url{https://www.typescriptlang.org/docs}) je open-source nádstavba JavaScriptu poskytující prvky objektového programování~--~např. třídy a~statické typování. Validní JS je zároveň validním TS, a~proto lze oba jazyky libovolně kombinovat.
+
 \subsubsection{React}
 
-\subsubsection{Styled Components}
+React (\url{https://reactjs.org/docs}) je javascriptová knihovna pro vytváření UI. S~využitím syntaxe JSX umožňuje zapisovat javascriptový kód deklarativně v~podobě HTML tagů. Veškeré změny stavu aplikace jsou tak automaticky vykresleny.
 
-\subsubsection{NPM}
+\lstinputlisting[caption={Ukázka práce s~knihovnou React}]{codes/react.txt}
+
+\subsubsection{Styled components}
+
+Styled components (\url{https://styled-components.com/docs}) je knihovna umožňující psaní CSS kódu přímo k~definici React komponenty.
+
+\lstinputlisting[caption={Ukázka práce s~knihovnou Styled components}]{codes/sc.txt}
 
 \subsection{Python}
 
+Python (\url{https://www.python.org/doc}) je interpretovaný, dynamicky typovaný skriptovací a~programovací jazyk. Podporuje procedurální, objektové a částečně i~funkcionální paradigma. Existují různé implementace, např. CPython (v~C) nebo JPython (v~Javě). Nabízí vysoké pohodlí pro programátora, ovšem na úkor výkonu. Umožňuje však napsat kritické části v~nižším jazyku (např. v~C) a~tento kód pak připojit k~programu jako klasický modul v~Pythonu.
+
 \subsubsection{Flask}
+
+Flask (\url{https://flask.palletsprojects.com}) je webový open-source microframework napsaný v~jazyce Python. Mikroframework poukazuje na minimalistické jádro, které lze rozšiřovat velkým počtem tzv. extensions.
+
+\lstinputlisting[caption={Ukázka práce s~microframeworkem Flask}]{codes/flask.txt}
 
 \subsubsection{Astropy}
 
+Astropy (\url{https://docs.astropy.org}) je kolekce open-source balíčků napsaných v~jazycích C a~Python. Primárním účelem této kolekce (knihovny) je poskytovat klíčové funkce a~nástroje potřebné pro vytvářeního astronomického nebo astrofyzikálního software.
+
+\lstinputlisting[caption={Ukázka práce s~knihovnou Astropy}]{codes/astropy.txt}
+
 \subsubsection{LightKurve}
 
-\subsubsection{TensorFlow}
+LightKurve (\url{https://docs.lightkurve.org}) je dalším z~open-source balíčků pro programy v jazyce Python. Jedná se o~nádstavbu nad Astropy specializovanou pro práci se světelnými křivkami a~TPF z~misí Kepler a~TESS.
 
-\subsubsection{Pip}
+\lstinputlisting[caption={Ukázka práce s~knihovnou LightKurve}]{codes/lk.txt}
+
+\subsubsection{Keras}
+
+Keras (\url{https://keras.io/api}) je vysokoúrovňová nádstavba nad TensorFlow pro práci s~umělými neuronovými sítěmi. Poskytuje jednoduché API a~možnost rozšiřitelnosti.
+
+\lstinputlisting[caption={Tvorba neuronové sítě v~Keras}]{codes/keras.txt}
 
 \subsection{MongoDB}
 
 \subsection{Socket.io}
-
-\subsection{Git}
-
 
 \section{Návrh~a~vývoj aplikace}
 
@@ -1030,6 +1095,9 @@ TODO: Verifikace výsledků.
 \onlinesource[DATTIO, Anne]{k2superearth}{Identifying Exoplanets with Deep Learning. II. Two New Super-Earths Uncovered by a Neural Network in K2 Data}{The Astronomical Journal 157(5)}{9.~4.~2019}{23.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/ab0e12}
 
 \isbnsource[DOLEŽEL, Petr]{nn}{Úvod do umělých neuronových sítí}{Univerzita Pardubice, Fakulta elektrotechniky a~informatiky}{2016}{9.~10.~2020}{978-80-7560-022-6}
+
+% TODO
+\onlinesource[VRAHATIS, Michael]{ai}{Computational Approaches to Artificial Intelligence: Theory, Methods and Applications.}{Springer}{2019}{28.~11.~2020}{https://www.researchgate.net/publication/334023205_Computational_Approaches_to_Artificial_Intelligence_Theory_Methods_and_Applications}
 
 \isbnsource[KHAN, Salman]{convnn}{A Guide to Convolutional Neural Networks for Computer Vision}{Morgan \& Claypool}{2018}{26.~10.~2020}{781681730226}
 
