@@ -70,6 +70,8 @@
 \item[FFNN]     Feed-forward neural network
 \item[fits]     Flexible image transport system
 \item[ly]		Light year
+\item[ODM]      Object-document mapper
+\item[pc]       Parsec
 \item[TTV]		Transit timing variation
 \end{description}
 
@@ -412,7 +414,7 @@ Světlo má obvykle tendenci se pohybovat prázdným prostorem po přímé traje
 
 {\setstretch{0.8}\footnotetext[2]{Vytvořeno autorem, fotografie gravitační čočky převzata od NASA (\url{https://apod.nasa.gov/apod/image/1112/lensshoe_hubble_3235.jpg}), oříznuto a~zdeformováno}}
 
-V~případě, kdy se nějaké hmotné těleso (např. galaxie) nachází mezi pozorovatelem a~zdrojem světla (např. jinou galaxií), mluvíme o~tzv. gravitační čočce~--~zdroj světla bude vidět vícekrát na různých místech, nebo bude naopak zdeformovaný.~\cite{methods}
+V~případě, kdy se nějaké hmotné těleso (např. galaxie) nachází mezi pozorovatelem a~zdrojem světla (např. jinou galaxií), mluvíme o~tzv. gravitační čočce~--~zdroj světla bude vidět vícekrát na různých místech, nebo bude naopak zdeformován.~\cite{methods}
 
 \img[1]{Ilustrace gravitační mikročočky OGLE 2003-BLG-235}{img/lens_plot.png}
 \data{1}{nasadata}
@@ -855,11 +857,56 @@ Přičemž slabou umělou inteligenci lze dále dělit např. na:
 
 \subsection{Genetický algoritmus}
 
+Genetický algoritmus (GA) je metaheuristický postup inspirovaný evolučními pravidly, která můžeme vidět v~přírodě kolem nás. Obvykle se používá pro řešení optimalizačních problémů, pro něž neexistuje alternativní použitelný analytický postup.
+
+Jako příklad lze uvést Problém obchodního cestujícího (Traveling salesman problem~--~TSP) patřící mezi NP-těžké úlohy: \textit{„Existuje n měst propojených přímými cestami. Úkolem je navštívit všechna tato města, vrátit se do města počátečního a~přitom urazit co nejkratší vzdálenost.“} Se vzrůstajícím $n$~začne počet možných cest rychle narůstat a~hledat z~nich tu nejkratší exaktními postupy nebo dokonce hrubou silou se tak stane časově neúnosným.
+
+\lstinputlisting[caption={Pseudokód genetického algoritmu}]{codes/ga.txt}
+
+\subsubsection{Inicializace}
+
+Základem tohoto algoritmu je populace jedinců. Každý jedinec v~populaci představuje svým genotypem potenciální řešení problému (ať už dobré nebo špatné). V~případě TSP pro 8 měst může být jedinec reprezentován např. jako sekvence měst, která budou postupně navštívena. Jedinec $x = \{2, 4, 6, 8, 1, 3, 5, 7\}$ tedy nejdříve navštíví města označená sudými čísly a~teprv poté města označená lichými čísly.
+
+\img[1]{Někteří z~vygenerovaných jedinců GA pro TSP}{img/tsp_init.pdf}
+\draw
+
+Na počátku běhu algoritmu dojde k~náhodnému vygenerování K~jedinců~--~ti budou tvořit populaci první generace. Počet jedinců K~v populaci volíme na základě složitosti řešeného problému. Čím vyšší je K, tím déle bude zpravidla běh algoritmu trvat, avšak tím slabilnější bude a~tím spíše najde lepší řešení.
+
+Přestože každý z~jedinců představuje potenciální řešení problému, nejspíše žádné z~nich nebude dostatečně dobré, protože všechna byla pouze vygenerována náhodně. Na obrázku 41 jsou 3~z~vygenerovaných jedinců, kteří v~řešeném TSP urazí 13,1~km, 12,6~km a~12,5~km, což je pro daný počet měst poměrně hodně.
+
+
 \subsubsection{Selekce}
+
+Přirozený výběr je založen na skutečnosti, že úspěšnější (silnější) jedinci mají vyšší pravděpodobnost předat své geny a~rozmnožit se. Abychom tento koncept mohli napodobit i~v~genetickém algoritmu, potřebujeme definovat funkci $F$, která dokáže posoudit kvalitu jedince~--~tzv. fitness.
+
+Podoba této funkce je silně závislá na řešeném problému. V~případě TSP jí může být např. převrácená hodnota délky cesty, kterou jedinec urazí. Čím kratší cesta, tím vyšší fitness jedince a~tím vyšší pravděpodobnost na předání genů do další generace.
 
 \subsubsection{Křížení}
 
+Poté, co jsme vybrali jedince k~předání genů (rodiče) může proběhnout jejich zkřížení. To spočívá v~prostém zkombinování genů obou rodičů. Způsob tohoto kombinování opět závisí na typu řešeného problému. Je třeba zajistit, aby výsledkem křížení byl vždy platný jedinec, popř. neplatné jedince dodatečně opravit.
+
+\img[1]{Příklad křížení jedinců GA pro TSP}{img/crossover.pdf}
+\draw
+
+Na obrázku 42 je uveden příklad křížení jedinců při řešení TSP. První způsob křížení vytvoří potomka tak, že první polovinu genů vezme z~prvního rodiče a~druhou polovinů genů z~druhého rodiče. Tímto způsobem však může vzniknout jedinec, který některá města navštíví vícekrát a~některá ani jednou. Ten však nepředstavuje platné řešení problému, protože TSP vyžaduje, aby všechna města byla navštívena.
+
+Druhý ze způsobů křížení vezme polovinu genů z~prvního rodiče a~k~nim připojí chybějící geny z~druhého rodiče. Tímto způsobem tak vznikne vždy platný potomek.
+
+Křížení je opakováno dokud není vytvořeno K~potomků tvořících další generaci.
+
 \subsubsection{Mutace}
+
+Nyní, když máme další generaci jedinců, je vhodné zajistit vyšší rozmanitost populace. Toho lze docílit tak, že každý jedinec má určitou pravděpodobnost, že zmutuje~--~dojde k~náhodné modifikaci jeho genů.
+
+\img[1]{Příklad mutace jedince GA pro TSP}{img/mutate.pdf}
+
+Výše pravděpodobnosti opět závisí na řešeném problému. Obvykle se však volí v~řádu jednotek procent. Pravděpodobnost může být také proměnlivá, např. v~závislosti podobnosti rodičů~--~čím podobnější rodiče, tím vyšší pravděpodobnost mutace.
+
+Protože mutace je náhodná změna, dá se očekávat, že ve většině případů povede ke zhoršení kvality jedince. Není však vyloučené, že se kvalita jedince i~zvýší. Když se tak stane, takový jedinec bude mít vyšší pravděpodobnost na předání svých genů, čímž dojde i~ke zvýšení průměrné kvality celé populace.
+
+
+\img[1]{Hledání řešení TSP pomocí GA}{img/tsp_final.pdf}
+\draw
 
 \section{Projekty pro hledání exoplanet}
 
@@ -917,9 +964,29 @@ Keras (\url{https://keras.io/api}) je vysokoúrovňová nádstavba nad TensorFlo
 
 \lstinputlisting[caption={Tvorba neuronové sítě v~Keras}]{codes/keras.txt}
 
+\subsubsection{MongoEngine}
+
+MongoEngine (\url{http://docs.mongoengine.org}) je objektově-dokumentové mapování (ODM) mezi jazykem Python a~databázi MongoDB. Poskytuje jednoduché deklarativní API a~umožňuje definovat databázová schémata včetně jejich validace.
+\clearpage
+\lstinputlisting[caption={Definice schématu v~MongoEngine}]{codes/mongoengine.txt}
+
+
+\vspace{-10pt}
+
 \subsection{MongoDB}
 
+MongoDB (\url{https://docs.mongodb.com}) je multiplatformní dokumentová NoSQL databáze. Ve verzi zdarma přes cloudovou službu MongoDB Atlas poskytuje kapacitu 512~MB. Kromě jednoduchých CRUD operací nabízí i~robustní Aggregation Framework pro složitější dotazy a~stejně tak podporuje přístup k~datům přes paradigma map-reduce.
+
+\lstinputlisting[caption={Ukázka Aggregation Frameworku z~MongoDB}]{codes/mongodb.txt}
+
+\vspace{-10pt}
+
 \subsection{Socket.io}
+
+Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klienty a~serverem. Implementace existují v~různých jazycích včetně JavaScriptu (\url{https://socket.io/docs/v3}) a~Pythonu (\url{https://python-socketio.readthedocs.io}).
+
+\lstinputlisting[caption={Ukázka komunikace pomocí socket.io.}]{codes/socket.txt}
+
 
 \section{Návrh~a~vývoj aplikace}
 
@@ -955,8 +1022,6 @@ Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nes
 \subsubsection{Socket.io API}
 
 Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní HTTP poskytuje také rozhraní Socket.io.
-
-\lstinputlisting[caption={Ukázka komunikace pomocí socket.io.}]{codes/socket.txt}
 
 \subsection{Webová aplikace}
 
