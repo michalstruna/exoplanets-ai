@@ -29,6 +29,7 @@ export interface PlotAxis {
     max?: number
     log?: boolean
     ticks?: (number | string)[]
+    vals?: number[]
 }
 
 export interface PlotStat {
@@ -40,5 +41,6 @@ export interface PlotStat {
 export interface PlotStats {
     smax_mass: PlotStat
     type_count: PlotStat
-    star_type_count: PlotStat
+    distance_count: PlotStat
+    progress: PlotStats
 }

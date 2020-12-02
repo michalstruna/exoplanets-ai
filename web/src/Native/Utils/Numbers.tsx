@@ -50,5 +50,9 @@ export const formatDeg = (degrees: number): string => {
     return fill0(deg) + '° ' + fill0(minutes) + '\' ' + format(seconds) + '\'\''
 }
 
+export const formatPercentage = (percentage: number, space: boolean = true): string => (
+    format(percentage) + (space ? ' ' : '') + '%'
+)
+
 // TODO: Unit tests.
 // TODO: Write docs.

@@ -268,6 +268,14 @@ export default {
                 }
             ]
         },
+        stats: {
+            join: {
+                [CS]: 'Zapojte se do hledání',
+                [EN]: 'Join the search'
+            },
+            remains: { [CS]: 'Zbývá zpracovat', [EN]: 'Remains' },
+            data: { [CS]: 'dat', [EN]: 'data' }
+        },
         process: {
             state: {
                 [ProcessState.ACTIVE]: { [CS]: 'Aktivní', [EN]: 'Active' },

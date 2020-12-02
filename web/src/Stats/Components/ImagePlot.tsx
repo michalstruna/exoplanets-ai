@@ -14,15 +14,17 @@ interface Axis {
     format?: TickFormatter
 }
 
-interface Props extends Omit<React.ComponentPropsWithoutRef<'canvas'>, 'title'> {
+interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'title'> {
     data: PlotStat
     x?: Axis
     y?: Axis
+    overlay?: React.ReactNode
 }
 
 const Root = Styled.div`
     display: flex;
     flex-direction: column;
+    position: relative;
 `
 
 const InnerRoot = Styled.div`
@@ -155,6 +157,18 @@ const VLine = Styled.div`
     background-color: ${Color.LIGHTEST};
 `
 
+const Overlay = Styled.div`
+    ${size()}
+    align-items: center;
+    display: flex;
+    font-size: 140%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+`
+
 const range = (min: number, max: number, count: number, log: boolean = false): number[] => {
     const result = []
 
@@ -180,7 +194,7 @@ const range = (min: number, max: number, count: number, log: boolean = false): n
 }
 
 
-const ImagePlot = ({ data, x, y, ...props }: Props) => {
+const ImagePlot = ({ data, x, y, overlay, ...props }: Props) => {
 
     const xTicks = data.x.ticks || range(data.x.min!, data.x.max!, x?.nTicks ?? 8, data.x.log)
     const yTicks = data.y.ticks || range(data.y.max!, data.y.min!, y?.nTicks ?? 6, data.y.log)
@@ -207,7 +221,7 @@ const ImagePlot = ({ data, x, y, ...props }: Props) => {
     )
 
     return (
-        <Root>
+        <Root {...props}>
             <InnerRoot>
                 <TinyVertical>
                     {y?.show !== false && (
@@ -236,8 +250,12 @@ const ImagePlot = ({ data, x, y, ...props }: Props) => {
                     </Plot>
                     {xAxis}
                 </Vertical>
-
             </InnerRoot>
+            {overlay && (
+                <Overlay>
+                    {overlay}
+                </Overlay>
+            )}
         </Root>
     )
 

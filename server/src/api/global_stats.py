@@ -37,7 +37,8 @@ axis = api.ns.model("ChartAxis", {
     "min": fields.Float(description="Min value in graph along this axis."),
     "max": fields.Float(description="Max value in graph along this axis."),
     "log": fields.Boolean(description="Axis has log scale."),
-    "ticks": fields.List(fields.String)
+    "ticks": fields.List(fields.String),
+    "vals": fields.List(fields.Float)
 })
 
 color_axis = api.ns.model("ChartColorAxis", {
@@ -55,7 +56,8 @@ plots_stats = api.ns.model("PlotsStats", {
     "smax_mass": fields.Nested(chart, required=True),
     "type_count": fields.Nested(chart, required=True),
     "star_type_count": fields.Nested(chart, required=True),
-    "distance_count": fields.Nested(chart, required=True)
+    "distance_count": fields.Nested(chart, required=True),
+    "progress": fields.Nested(chart, required=True)
 })
 
 @api.ns.route("/aggregated")
@@ -82,13 +84,14 @@ class PlotStats(Resource):
                 "y": {"min": 0, "max": 762},
                 "image": "TypeCount.svg"
             },
-            "star_type_count": {
-                "image": "StarTypeCount.png"
-            },
             "distance_count": {
                 "x": {"ticks": ["< 50", "50-200", "200-500", "500-2k", "> 2k"]},
                 "y": {"min": 0, "max": 1659},
                 "image": "DistanceCount.svg"
+            },
+            "progress": {
+                "y": {"vals": [18.194567, 82.456]},
+                "image": "Progress.svg"
             }
         }
 

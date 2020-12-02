@@ -65,8 +65,10 @@ const ItemContent = Styled.div`
 `
 
 const OuterArrow = Styled.div`
+    align-items: center;
     background-image: linear-gradient(to right, transparent, ${Color.MEDIUM_DARK} 40%);
     height: 100%;
+    display: flex;
     position: absolute;
     right: 0;
     top: 0;
@@ -79,8 +81,6 @@ const Arrow = Styled(Link)`
     ${image('Controls/ArrowRight.svg')}
     position: absolute;
     right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
     transform-origin: right center;
     transition: transform ${Duration.MEDIUM};
 `
@@ -114,5 +114,10 @@ const ToggleLine = ({ items, ...props }: Props) => {
     )
 
 }
+
+ToggleLine.Item = Item
+ToggleLine.ItemHeader = ItemHeader
+ToggleLine.ItemContent = ItemContent
+ToggleLine.Arrow = Arrow
 
 export default ToggleLine
