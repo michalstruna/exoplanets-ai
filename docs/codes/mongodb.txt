@@ -1,0 +1,6 @@
+db.planets.aggregate([
+    { $match: { name: { $regex: "^Kepler-[0-9]+[a-z]$" } } },
+    { $group: { _id: "$_id",
+        meanMass: { $avg: { $multiply: ["$density", "$volume"] } }
+    } }
+])

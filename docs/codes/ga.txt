@@ -1,0 +1,11 @@
+1. Define K (population size), I (number of generations), M (mutation probability) a F (fitness function).
+2. Generate K random individuals (first generation).
+3. Apply F to all individuals in first generation.
+4. Repeat from 1 to I:
+  4.1. Repeat from 1 to K:
+    4.1.1. Select two random parents x1, x2 from current generation.
+           Higher fitness means higher probability of selection.
+    4.1.2. Cross these parents, child is created.
+    4.1.3. With probability M, mutate this child.
+    4.1.4. Apply F to this child.
+  4.2. Set all children as population of next generation.

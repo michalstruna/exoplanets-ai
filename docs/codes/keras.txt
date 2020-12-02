@@ -1,0 +1,10 @@
+model = Sequential([
+    Conv2D(16, kernel_size=(3, 3), input_shape(64, 64)),
+    MaxPooling2D(),
+    Flatten(),
+    Dense(64, activation=tf.nn.relu),
+    Dropout(0.3),
+    Dense(2, activation=tf.nn.softmax)
+])
+
+model.compile(optimizer=tf.keras.optimizers.RMSprop(), loss=MSE())

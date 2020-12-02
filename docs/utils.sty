@@ -6,6 +6,7 @@
 \selectlanguage{czech} % Default language.
 \usepackage{float}
 \usepackage{enumitem}
+\usepackage{tabularx}
 
 % Layout.
 \usepackage[top=25mm, left=35mm, total={160mm,247mm}, includehead=false, includefoot=false]{geometry}	
@@ -36,7 +37,7 @@
 \def\section{\clearpage\nopagesection}	% redefinice pomocí \clearpage
 
 \usepackage{multicol}
-\usepackage{graphicx}
+\usepackage{graphicx,wrapfig}
 \usepackage{longtable}
 \usepackage{etoolbox}
 \usepackage{caption,setspace}
@@ -66,6 +67,7 @@
 % Table setup.
 \AtBeginEnvironment{tabular}{\footnotesize}
 \AtBeginEnvironment{longtable}{\footnotesize}
+\AtBeginEnvironment{tabularx}{\footnotesize}
 \renewcommand*\l@figure{\@dottedtocline{1}{0em}{2.3em}}\let\l@table\l@figure	% Default 1.5em 2.3em.
 
 
@@ -165,22 +167,32 @@
 		\begin{center}
 			\includegraphics[width=\columnwidth]{#3}
 		\end{center}
-		\vspace{-5pt}
 		\caption[#2]{#2\ifx&#1&\else~\footnotemark[#1]\fi}
-		\vspace{-15pt}
+		\vspace{-5pt}
 	\end{figure}
 }
+
+\newcommand{\wrapimg}[5][]{    
+	\begin{wrapfigure}[#5]{#4}{0.45\textwidth}
+		\vspace{-10pt}
+		\centering\includegraphics[width=0.45\textwidth]{#3}
+		\vspace{-25pt}
+		\caption[#2]{#2\ifx&#1&\else~\footnotemark[#1]\fi}
+	\end{wrapfigure}
+}
+
+\setlength\intextsep{10pt}
 
 \newcommand{\tab}[3][]{
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.5}
-	\begin{table}[ht]
+	\begin{table}[!ht]
 		\begin{center}
 			#3
 		\end{center}
 		\vspace{-5pt}
 		\caption[#2]{#2\ifx&#1&\else~\footnotemark[#1]\fi}
-		\vspace{-15pt}
+		\vspace{-10pt}
 	\end{table}
 }
 
@@ -191,16 +203,15 @@
 % Math mode.
 \newcommand{\formula}[4][]{
 	\begin{eq}[!ht]
-		\vspace{-5pt}
 		\begin{equation}
 			 #3
 		\end{equation}
 		\vspace{-20pt}
 		\caption[#2]{#2\ifx&#1&\else~#1\fi}
 		\begin{center}
-		{#4}
+		{\setstretch{0.8}#4}
 		\end{center}
-		\vspace{-15pt}
+		\vspace{-10pt}
 	\end{eq}
 }
 
@@ -375,3 +386,6 @@
 	\end{itemize}
 	\vspace{7pt}
 }
+
+\usepackage[hang]{footmisc}
+\setlength\footnotemargin{8pt}

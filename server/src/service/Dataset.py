@@ -6,6 +6,7 @@ from .Star import StarService
 from constants.Database import DatasetType
 from utils import time
 import db
+from .Stats import GlobalStatsService
 
 
 class DatasetService(Service):
@@ -13,6 +14,7 @@ class DatasetService(Service):
     def __init__(self):
         super().__init__(db.dataset_dao)
         self.star_service = StarService()
+        self.stats_service = GlobalStatsService()
 
     def add(self, dataset):
         start = time.now()
@@ -29,7 +31,13 @@ class DatasetService(Service):
             result = self.dao.add(dataset)
             items["dataset"] = result["name"]
             stars = self.star_service.complete_stars(items.to_dict("records"))
-            self.star_service.upsert_all_by_name(stars)
+            tmp = self.star_service.upsert_all_by_name(stars)
+
+            self.stats_service.add(
+                ms=time.now() - start,
+                bytes=dataset["processed"],
+                stars=tmp.upserted_count
+            )
         else:
             result = self.dao.add(dataset)
 

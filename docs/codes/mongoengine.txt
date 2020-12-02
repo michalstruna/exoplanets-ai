@@ -1,0 +1,5 @@
+class Article(Document):
+    title = StringField(required=True)
+    content = StringField(required=True, min_length=50)
+    tags = ListField(EmbeddedDocumentField(Tag))
+    author = ReferenceField(User)

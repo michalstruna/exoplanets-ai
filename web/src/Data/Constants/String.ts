@@ -165,11 +165,11 @@ export default {
             [LifeType.PROMISING]: { [CS]: 'Slibný', [EN]: 'Promising' }
         },
         types: {
-            [PlanetType.MERCURY]: { [CS]: 'Typ Merkur', [EN]: 'Mercury-like' },
-            [PlanetType.EARTH]: { [CS]: 'Typ Země', [EN]: 'Earth-like' },
+            [PlanetType.MERCURY]: { [CS]: 'Merkur', [EN]: 'Mercury' },
+            [PlanetType.EARTH]: { [CS]: 'Země', [EN]: 'Earth' },
             [PlanetType.SUPEREARTH]: { [CS]: 'Superzemě', [EN]: 'Superearth' },
-            [PlanetType.NEPTUNE]: { [CS]: 'Typ Neptun', [EN]: 'Neptune-like' },
-            [PlanetType.JUPITER]: { [CS]: 'Typ Jupiter', [EN]: 'Jupiter-like' }
+            [PlanetType.NEPTUNE]: { [CS]: 'Neptun', [EN]: 'Neptune' },
+            [PlanetType.JUPITER]: { [CS]: 'Jupiter', [EN]: 'Jupiter' }
         },
         statuses: {
             [PlanetStatus.CANDIDATE]: { [CS]: 'Kandidát', [EN]: 'Candidate' },
@@ -198,27 +198,35 @@ export default {
     },
 
     stats: {
-        topLevelStats: {
-            units: {
-                computingTime: 'h'
-            },
-            discoveredPlanets: {
-                [CS]: 'Objevených planet',
-                [EN]: 'Discovered planets'
-            },
-            exploredStars: {
-                [CS]: 'Zpracovaných hvězd',
-                [EN]: 'Explored Stars'
-            },
-            computingTime: {
-                [CS]: 'Výpočetní čas',
-                [EN]: 'Computing time'
-            },
-            volunteers: {
-                [CS]: 'Registrovaných dobrovolníků',
-                [EN]: 'REgistered volunteers'
-            }
-        }
+        units: {
+            hours: 'h',
+            gibs: 'GiB'
+        },
+        planets: {
+            [CS]: 'Objevených planet',
+            [EN]: 'Discovered planets'
+        },
+        stars: {
+            [CS]: 'Zpracováno hvězd',
+            [EN]: 'Explored Stars'
+        },
+        hours: {
+            [CS]: 'Výpočetní čas',
+            [EN]: 'Computing time'
+        },
+        volunteers: {
+            [CS]: 'Dobrovolníků',
+            [EN]: 'Volunteers'
+        },
+        gibs: {
+            [CS]: 'Zpracováno dat',
+            [EN]: 'Processed data'
+        },
+        curves: {
+            [CS]: 'Zpracovano křivek',
+            [EN]: 'Processed curves'
+        },
+        lastWeek: { [CS]: 'poslední týden', [EN]: 'Last week' }
     },
 
     auth: {
@@ -259,6 +267,14 @@ export default {
                     title: 'Nechte počítač, ať hledá exoplanety'
                 }
             ]
+        },
+        stats: {
+            join: {
+                [CS]: 'Zapojte se do hledání',
+                [EN]: 'Join the search'
+            },
+            remains: { [CS]: 'Zbývá zpracovat', [EN]: 'Remains' },
+            data: { [CS]: 'dat', [EN]: 'data' }
         },
         process: {
             state: {

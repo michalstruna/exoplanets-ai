@@ -31,20 +31,15 @@ def connected():
 @sio.event
 def run(task):
     print("=== RUN ===")
-    print(task)
-    task["meta"]["size"] = 147521
     time.sleep(1000)
 
     if task["type"] == TaskType.TARGET_PIXEL.value:
         log(LogType.DOWNLOAD_TP, name=task["item"])
         lc_service = LightCurveService()
-        print("=== Before download tps.")
         tps = lc_service.download_tps(task["item"])
         task["meta"]["size"] = lc_service.get_tps_size(tps)
-        print("=== Before to_lc.")
         lc = lc_service.tps_to_lc(tps)
 
-        print("=== Before pd.")
         pd, peaks = lc_service.get_pd(lc)
 
         transits = []

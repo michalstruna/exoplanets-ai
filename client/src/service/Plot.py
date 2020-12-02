@@ -7,6 +7,13 @@ matplotlib.use("Agg")
 
 class PlotService:
 
+    DEFAULT_SIZE = (8, 4.5)
+    LC_SIZE = (9, 3)
+    MINI = (8, 1)
+
+
+    def scatter(self, x, y, alpha=0.5, size=10, ratio=DEFAULT_SIZE):
+
     def plot_lc(self, time, flux, alpha=0.5, size=10):
         buf = io.BytesIO()
 

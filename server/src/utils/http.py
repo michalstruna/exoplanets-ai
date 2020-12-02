@@ -97,7 +97,7 @@ class Request:
         parser = RequestParser()
         parser.add_argument("limit", type=int, default=100, help="Max count of returned items.")
         parser.add_argument("offset", type=int, default=0, help="Skip first n items.")
-        parser.add_argument("filter", type=str, action="append", default=[], help="Filter result by comma separated strings property,relation,value. Relation could be one of eq, cont, gt, gte, lt, lte, stars or ends. Nested property should be separated by dot. Example: 'article.name,contains,Abc'.")
+        parser.add_argument("filter", type=str, action="append", default=[], help="Filter result by comma separated strings property,relation,value. Relation could be one of eq, cont, gt, gte, lt, lte, stars or ends. Nested property should be separated by dot. Example: 'article.name,cont,Abc'.")
         parser.add_argument("sort", type=str, action="append", default=[], help="Sort items by comma separated pairs property,order where order is asc or desc.")
 
         return parser
@@ -185,16 +185,33 @@ class Api:
 
     _endpoint_uid = 0
 
+    UNSECURED_RESOURCE = {
+        "get_all": {"include": True, "secure": False},
+        "get": {"include": True, "secure": False},
+        "add": {"include": True, "secure": False},
+        "update": {"include": True, "secure": False},
+        "delete": {"include": True, "secure": False}
+    }
+
+    CUSTOM_RESOURCE = {
+        "get_all": {"include": False, "secure": False},
+        "get": {"include": False, "secure": False},
+        "add": {"include": False, "secure": False},
+        "update": {"include": False, "secure": False},
+        "delete": {"include": False, "secure": False}
+    }
+
     def __init__(self, name, description=None):
         self.ns = Namespace(name, description=description)
         self.service, self.full_model, self.new_model, self.model_name, self.map_sort = None, None, None, None, None
 
-    def init(self, full_model=None, new_model=None, service=None, model_name=None, map_props=None):
+    def init(self, full_model=None, new_model=None, service=None, model_name=None, map_props=None, resource_type=UNSECURED_RESOURCE):
         self.service = service
         self.full_model = full_model
         self.new_model = new_model
         self.model_name = model_name
         self.map_props = map_props
+        self.resource_type = resource_type
 
         self.all_resources()
         self.single_resource()
@@ -206,44 +223,63 @@ class Api:
         return self.ns.inherit(name, parent, model)
 
     def all_resources(self, path=""):
-        @self.ns.marshal_with(Response.page_model(self.ns, self.full_model), description=f"Successfully get {self.model_name}s.")
-        @self.ns.response(400, "Invalid query parameters.")
-        @self.ns.expect(Request.cursor_parser())
-        def get(_self):
-            return Response.page(self.service, self.map_props)
+        methods = {}
 
-        @self.ns.marshal_with(self.full_model, code=201, description=f"{self.model_name} was successfully created.")
-        @self.ns.response(400, f"{self.model_name} is invalid.")
-        @self.ns.response(409, f"{self.model_name} is duplicate.")
-        @self.ns.expect(self.new_model)
-        def post(_self):
-            return Response.post(lambda: self.service.add(request.get_json()))
+        if self.resource_type["get_all"]["include"]:
+            @self.ns.marshal_with(Response.page_model(self.ns, self.full_model), description=f"Successfully get {self.model_name}s.")
+            @self.ns.response(400, "Invalid query parameters.")
+            @self.ns.expect(Request.cursor_parser())
+            def get(_self):
+                return Response.page(self.service, self.map_props)
 
-        Endpoint = type(str(Api._endpoint_uid), (Resource,), {"get": get, "post": post})
+            methods["get"] = get
+
+        if self.resource_type["add"]["include"]:
+            @self.ns.marshal_with(self.full_model, code=201, description=f"{self.model_name} was successfully created.")
+            @self.ns.response(400, f"{self.model_name} is invalid.")
+            @self.ns.response(409, f"{self.model_name} is duplicate.")
+            @self.ns.expect(self.new_model)
+            def post(_self):
+                return Response.post(lambda: self.service.add(request.get_json()))
+
+            methods["post"] = post
+
+        Endpoint = type(str(Api._endpoint_uid), (Resource,), methods)
         Api._endpoint_uid += 1
         self.ns.add_resource(Endpoint, path)
 
     def single_resource(self, path="/<string:id>"):
-        @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
-        @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
-        @self.ns.expect(fields.String)
-        def get(_self, id):
-            return Response.get(lambda: self.service.get(id))
+        methods = {}
 
-        @self.ns.marshal_with(None, code=204, description=f"{self.model_name} was successfully deleted.")
-        @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
-        @self.ns.expect(fields.String)
-        def delete(_self, id):
-            return Response.delete(lambda: self.service.delete(id))
+        if self.resource_type["get"]["include"]:
+            @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
+            @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
+            @self.ns.expect(fields.String)
+            def get(_self, id):
+                return Response.get(lambda: self.service.get(id))
 
-        @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
-        @self.ns.response(400, f"{self.model_name} is invalid.")
-        @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
-        @self.ns.response(409, f"{self.model_name} is duplicate.")
-        @self.ns.expect(fields.String)
-        def put(_self, id):
-            return Response.put(lambda: self.service.update(id, request.get_json()))
+            methods["get"] = get
 
-        Endpoint = type(str(Api._endpoint_uid), (Resource,), {"get": get, "delete": delete, "put": put})
+        if self.resource_type["delete"]["include"]:
+            @self.ns.marshal_with(None, code=204, description=f"{self.model_name} was successfully deleted.")
+            @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
+            @self.ns.expect(fields.String)
+            def delete(_self, id):
+                return Response.delete(lambda: self.service.delete(id))
+
+            methods["delete"] = delete
+
+        if self.resource_type["update"]["include"]:
+            @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
+            @self.ns.response(400, f"{self.model_name} is invalid.")
+            @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
+            @self.ns.response(409, f"{self.model_name} is duplicate.")
+            @self.ns.expect(fields.String)
+            def put(_self, id):
+                return Response.put(lambda: self.service.update(id, request.get_json()))
+
+            methods["put"] = put
+
+        Endpoint = type(str(Api._endpoint_uid), (Resource,), methods)
         Api._endpoint_uid += 1
         self.ns.add_resource(Endpoint, path)

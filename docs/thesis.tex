@@ -16,7 +16,7 @@
 \expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks%  save the current one
   \do\-}
 
-
+%
 % ÚDAJE O PRÁCI
 \def\jmenoFakulty{Fakulta elektrotechniky a informatiky}
 \def\jmenoAutora{Michal Struna}
@@ -63,10 +63,16 @@
 \shortlist
 
 \begin{description}[font=\mdseries,leftmargin=6em,labelwidth=!,]
+\item[au]		Astronomical unit
+\item[CNN]      Convolutional neural network
 \item[csv]      Comma-separated values
+\item[FC]       Fully-connected layer
+\item[FFNN]     Feed-forward neural network
 \item[fits]     Flexible image transport system
 \item[ly]		Light year
-\item[au]		Astronomical unit
+\item[ODM]      Object-document mapper
+\item[pc]       Parsec
+\item[TTV]		Transit timing variation
 \end{description}
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Úvod}
@@ -75,52 +81,74 @@
 
 V naší sluneční soustavě se nachází celkem 8 dosud objevených planet včetně Země. Mimo ni ale v~pozorovatelném vesmíru existují odhadem stovky miliard galaxií a~v~každé z~nich v~průměru stovky miliard hvězd. Z toho, co o~vzniku a~fungování hvězdných soustav víme je pravděpodobné, že většinu těchto hvězd bude obíhat jedna nebo více planet, tzv. extrasolárních planet nebo také exoplanet.~\cite{exoplanets}
 
-První potvrzená exoplaneta byla objevena již roku 1992, ale výzkum exoplanet se dostal do oblasti širokého zájmu až během posledního desetiletí. Stalo se tak především kvůli vesmírnému teleskopu Kepler, který má na svém kontě od roku 2009 přes 2~500 objevených exoplanet. [TODO]
+První potvrzená exoplaneta byla objevena již roku 1992, ale výzkum exoplanet se dostal do oblasti širokého zájmu až během posledního desetiletí. Stalo se tak především kvůli vesmírnému teleskopu Kepler, který má na svém kontě od roku 2009 přes 2~500 objevených exoplanet.~\cite{kepler80,nasadata}
 
 K~dnešnímu dni je známo více jak 4 000 potvrzených exoplanet. Toto číslo se s~nejvyšší pravděpodobností bude rychle zvyšovat, protože roku 2018 byl vypuštěn nástupce Kepleru -- satelit TESS -- od něhož je očekáván objev 20~000 exoplanet.~\cite{tess}
 
 Planety u~jiných hvězd většinou nelze pozorovat přímo. Proto je nepřímými metodami zkoumáno jejich působení na své mateřské hvězdy, které už pozorovat lze. Výstupem z~takovýchto pozorování jsou často stovky GiB fyzikálních a~statistických dat, jež je následně nutno zpracovat.~\cite{exoplanets}
 
-Cílem této diplomové práce je vytvořit aplikaci umožňující uživatelům poskytovat výpočetní výkon svých počítačů pro analýzu právě těchto dat. Projekt sestává z~klientského programu, webové aplikace a~serveru. Klientský program provádí potřebné distribuovatelné výpočty na počítači uživatele. Tento program je možné ovládat z~rozhraní webové aplikace, jež zároveň poskytuje přehled o~všech aktivitách, uživatelích a datech. Rozdělování výpočetních úloh mezi klienty a~ukládání dat do databáze řeší server.
+Cílem této diplomové práce je vytvořit aplikaci umožňující uživatelům poskytovat výpočetní výkon svých počítačů pro analýzu právě těchto dat. Projekt sestává z~klientského programu, webové aplikace a~serveru. Klientský program provádí potřebné distribuovatelné výpočty na počítači uživatele. Tento program je možné ovládat z~rozhraní webové aplikace, jež zároveň poskytuje přehled o~všech aktivitách, uživatelích a datech. Rozdělování výpočetních úloh mezi klienty a~ukládání dat do databáze pak řeší server.
 
 Díky distribuovaným výpočtům se do výzkumu exoplanet bude moci bez vysokého úsilí, znalosti či technického vybavení zapojit i široká veřejnost. To může urychlit vývoj a zároveň zvýšit povědomí o~této vědní disciplíně.
 
 V~projektu jsou využity některé techniky spadající pod umělou inteligenci, v~důsledku čehož je zpracovávání dat zcela automatizované. Platí však, že umělá inteligence je v~současnosti stále intenzivně se rozvíjející oblastí, a~proto výsledky nemusí být natolik vypovídající ve srovnání s~tím, kdy by výzkum prováděli lidé manuálně, byť by to trvalo nesrovnatelně déle.
 
-\section{Exoplanety}
+\section{Hledání exoplanet}
 
-\subsection{Důvody hledání}
+Pouhým zkoumáním planet v~naší sluneční soustavě se omezujeme na velice specifické podmínky existující v~okolí našeho Slunce. Pro hlubší pochopení fungování planetárních systémů je nutné rozšířit oblast zájmu i~na planety v~okolí jiných hvězd~--~tzv. exoplanety. Můžeme se tak přiblížit odpovědím na otázky jako „Jak vzácné jsou podmínky pro život ve vesmíru?“ nebo „Jak vznikla a~jak se vyvíjela naše planeta?“~\cite{exoplanets}
 
-TODO
+Na počátku 90. let minulého století byla objevena první exoplaneta v~okolí pulsaru a~v~roce 1995 první exoplaneta v~okolí hvězdy podobné Slunci. Od té doby frekvence objevů planet v~průměru neustále stoupá.~\cite{exoplanets,nasadata}
 
-\subsection{Typy exoplanet}
+\img[1]{Četnost objevů exoplanet v~jednotlivých letech}{stats/count_by_year.png}
+\data{1}{nasadata}
 
-TODO
+Cestovat k~jiným hvězdám a~posílat sondy k~exoplanetám je však naprosto mimo možnosti naší současné technologie. Dokonce i~přímé pozorování exoplanet teleskopem je ve většině případů nemožné. Téměř veškerá pozorování se tak provádí skrze nepřímé metody. Ty využívají skutečnosti, že i~když není možné spatřit exoplanetu samotnou, je možné detekovat její působení na své okolí (např. na mateřskou hvězdu).
 
-\subsection{Objevené exoplanety}
-
-TODO
-
-\section{Metody hledání exoplanet}
-
-Exoplanety není téměř vůbec možné pozorovat přímo vizuálně, protože neemitují žádné světlo a~nachází se ve velkých vzdálenostech od Země. Lze ovšem pozorovat jejich působení na blízké hvězdy nebo jiné útvary, jež jsou pro nás viditelné. K~tomuto účelu se používá několik metod popsaných v této kapitole.
-
-Zdaleka nejvýznamnější je tranzitní metoda, kterou byla objevena většina exoplanet. Velké množství planet bylo objeveno taktéž metodou radiálních vzdáleností. Pomocí ní byly objevovány planety především blízko Země.
+Jednotlivé metody budou popsány v~následujících podkapitolách. Zdaleka nejvýznamnější je tranzitní metoda, kterou byla objevena většina exoplanet. Velké množství planet bylo objeveno taktéž metodou radiálních rychlostí.~\cite{nasadata}
 
 \img[1]{Počty objevených exoplanet jednotlivými metodami}{stats/count_by_method.png}
+\data{1}{nasadata}
+
+Dá se říci, že každá metoda je vhodnější pro objevování různých typů planet. Málo hmotné planety byly objevovány častěji tranzitní metodou, zatímco hmotnější planety spíše metodou radiálních rychlostí. Pro planety vzdálené od své mateřské hvězdy se nejlépe osvědčila metoda přímého zobrazení.~\cite{nasadata}
+
+\img[1]{Známé exoplanety dle jejich vlastností a metody objevení}{stats/period_by_mass_by_method.pdf}
+
+\newpage
+
+Na základě známých charakteristik můžeme jednotlivé planety zařadit do jedné z~následujících kategorií:
+
+{
+\tab[1]{Známé typy exoplanet}{
+	\begin{tabular}{|p{0.2\textwidth}|p{0.57\textwidth}|p{0.15\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Typ & Popis & V~naší soustavě \\	
+		\hline	
+		Podobná Merkuru & Malé kamenné planety. Vzhledem k~zanedbatelnému působení těchto planet na okolí je velice těžké je detekovat. & Merkur, Mars \\
+		\hline	
+		Exo-Země & Kamenné planety velikostně podobné Zemi. V~žádném případě se nejedná o~planety s~garantovanými podmínkami pro život. Přesto však ze všech typů planet představují nejvyšší šanci na naleznutí těchto podmínek. & Země, Venuše \\
+		\hline
+		Podobná Neptunu & Planety, jejichž atmosféra je tvořena převážně vodíkem a~heliem  s~jádrem z těžkých kovů. Velikostně podobné Neptunu. & Neptun, Uran \\
+		\hline
+		Plynný obr & Velké plynné planety podobně velké nebo i~větší než Jupiter. & Jupiter, Saturn \\
+		\hline
+		Superzemě & Planety větší než Země, ale menší než Neptun. Dosahují až 10násobku hmotnosti Země. Může se jednat jak o~kamenné planety, tak o~vodní či ledové světy nebo i~plynné útvary. Ty se označují jako sub-Neptun nebo mini-Neptun. & \textit{Neexistuje} \\
+		\hline
+		Horký Jupiter & Zvláštní typ plynných obrů, které narozdíl od těch v~naší soustavě obíhají v~těsné blízkosti své hvězdy. Jsou rozpálené na tisíce K a~mohou významně působit na svou hvězdu. Díky tomu jsou první objevené exoplanety právě horké Jupitery. & \textit{Neexistuje} \\
+		\hline
+	\end{tabular}
+}
 
 \data{1}{nasadata}
 
-Málo hmotné planety byly objevovány častěji tranzitní metodou, zatímco hmotnější planety spíše metodou radiálních rychlostí. Pro planety vzdálené od své mateřeské hvězdy se nejlépe osvědčila metoda přímého zobrazení.
+Nejvíce objevených exoplanet spadá do kategorie plynných obrů, které kvůli vysoké hmotnosti i~velikosti značně ovlivňují svou hvězdu. Detekovat působení malých kamenných planet je náročnější, a~proto je těchto exoplanet objeveno naopak nejméně.
 
-\img[1]{Závislost hmotnosti, periody oběhu a metody objevení planety}{stats/period_by_mass_by_method.pdf}
-
-\data{1}{nasadata}
+\img[1]{Počty objevených exoplanet dle jejich typu}{stats/count_by_type.png}
 
 \clearpage
 \subsection{Tranzitní metoda}
 
-Někdy se planeta při obíhání dostane mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu hvězdy (obvykle ve zlomku procenta). Pokud je hvězda teleskopem sledována dlouhodobě, je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost planety v~blízkosti této hvězdy.~\cite{exoplanets,transit}
+Někdy se planeta při obíhání dostane mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu hvězdy (obvykle ve zlomku procenta). Při dlouhodobém pozorování je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost planety v~blízkosti této hvězdy.~\cite{exoplanets,transit}
 
 \img[1]{Přechod planety přes kotouč hvězdy}{img/transit.png}
 \drawgimp
@@ -131,7 +159,7 @@ Tranzitní metoda vzbuzuje velký zájem především kvůli možnosti objevovat
 
 \formula{Pravděpodobnost zpozorování tranzitu planety přes hvězdu} {P = \frac{d_s}{a}}{
 \begin{tabular}{llll}
-	$d_s$ = průměr hvězdy & a = vzdálěnost exoplanety od hvězdy \
+	$d_s$ = průměr hvězdy & a = vzdálenost exoplanety od hvězdy \
 \end{tabular}
 }
 
@@ -153,27 +181,50 @@ Po složení všech TPF do časové řady a~vypočítání jejich jasu dostaneme
 \img[1]{Světelná křivka soustavy Kepler-13}{img/light_curve.png}
 \data{1}{nasadata}
 
-Každý tranzit má charakteristické fáze, které pomohou odlišit působení exoplanety od ostatních možných příčin, jako je např. proměnlivost hvězdy, dvojhvězda nebo pulzar.
+Na obrázku 6 jsou čisly označeny jednotlivé fáze dále popsané v~tabulce 2:
 
+{
+\tab{Fáze oběhu tranzitující exoplanety}{
+	\begin{tabular}{|ll|l|}
+		\hline	
+		\rowcolor{lightgray}
+		 & Fáze & Co vidí pozorovatel na Zemi \\	
+		\hline	
+		1 & Planeta je za hvězdou (sekundární zákryt). & Hvězda \\
+		\hline	
+		2 & Planeta je vedle hvězdy. & Hvězda $+$ osvětlená část planety \\
+		\hline
+		3 & Planeta je vedle hvězdy. & Hvězda $+$ neosvětelná část planety \\
+		\hline
+		4 & Planeta je před hvězdou (tranzit). & Hvězda $-$ planeta \\
+		\hline
+	\end{tabular}
+}
 
-\img[1]{Detail světelné křivky soustavy Kepler-13}{img/light_curve_detail.png}
+Dále jsou na stejném obrázku písmeny označeny důležité veličiny:
 
-\begin{enumerate}
-\item Planeta je schovaná za hvězdou, hvězda je vidět se svým základním jasem.
-\item Planeta je vedle hvězdy, jas hvězdy je posilněn o~světlo odražené od planety.
-\item Planeta je vedle hvězdy, ale její viditelná část není osvětlena. Hvězda je vidět se svým základním jasem.
-\item Planeta je před hvězdou, jas hvězdy je snížen v~důsledku zakrytí části kotouče.
-\end{enumerate}
+{\catcode`\-=12\tab{Veličiny tranzitu} {
+\begin{tabular}{|ll|l|}
+    \hline
+    \rowcolor{lightgray}
+     & Veličina & Popis \\
+     \hline
+     A & Perioda & Perioda tranzitu udává periodu oběhu planety kolem hvězdy. \\
+     \hline
+     B & Hloubka & Čím větší je hloubka tranzitu, tím je planeta vůči hvězdě větší. \\
+     \hline
+     C & Trvání & Čím je trvání delší, tím delší trajektorii přes hvězdu planeta má. \\ 
+     \hline
+     D & Trvání minima & \multirow{2}{*}{Závisí na úhlu mezi rovinou oběhu planety vůči pozorovateli} \\
+     \cline{1-2}
+     E & Trvání nástupu & \\
+     \hline
+\end{tabular}
+}}
 
-Tyto fáze společně s~důležitými parametry tranzitu potřebnými pro další výpočty jsou vyznačeny na obrázku~6:
+TODO: Transit types image.
 
-\begin{enumerate}[label=\Alph*.]
-\item Perioda -- čím větší perioda, tím delší planetární rok a větší velká poloosa dráhy,
-\item Hloubka -- čím větší hloubka, tím je planeta vůči hvězdě větší,
-\item Trvání -- čím je trvání kratší, tím menší trajektorii přes hvězdu planeta má,
-\item Délka nástupu -- čím prudší a~kratší je nástup, tím menší je úhel mezi rovinou orbity exoplanety a~přímkou od hvězdy k~pozorovateli,
-\item Délka minima -- čím větší délka minima v~porovnání s~délkou transitu, tím je úhel mezi rovinou orbity exoplanety a~přímkou od hvězdy k~pozorovateli menší.
-\end{enumerate}
+\newpage
 
 \subsubsection{Vyřazení false positives}
 
@@ -189,14 +240,15 @@ Většina periodických složek ve světelných křivkách hvězd jsou \emph{fal
 \img[1]{Kataklizmická proměnná hvězda KIC 9406652}{img/cataclysmic.png}
 \end{multicols}
 
-\data{1}{nasadata}
-
 Je třeba aby vstupní data do neuronové sítě měla stejné rozměry i~formát. Vzhledem k~různorodosti světelných křivek je nutno provést několik kroků, abychom dosáhli standardizovaného formátu. Prvním krokem je složení časové řady do jedné periody, čímž dojde k~posílení viditelnosti transitu (pokud zde nějaký je), nebo naopak k~jeho vyrušení (pokud zde žádný není).~\cite{kepler80}
 
 \begin{multicols}{2}
 \img[1]{Světelná křivka Kepler-10}{img/full_light_curve.png}
 \img[1]{Složená světelná křivka}{img/folded.png}
 \end{multicols}
+
+\vspace{\fill}
+\data{1}{nasadata}
 
 Na obrázku 12 je uprostřed slabě patrný transit. Má malou šířku, protože trvá pouze 0,25 dne, zatímco celá perioda je dlouhá 45,3 dne. Z~této složené časové řady se vytvoří dva pohledy, které budou vstupem do neuronové sítě:
 
@@ -213,75 +265,57 @@ Na obrázku 12 je uprostřed slabě patrný transit. Má malou šířku, protož
 
 Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ sousedních bodů ($\alpha$ -- současný počet bodů, $\beta$ -- požadovaný počet bodů) jediným, který bude reprezentovat jejich medián. Pro potřeby neuronové sítě je nutno oba pohledy taktéž normalizovat tak, aby platilo $H~=~\left<1; -1\right>$. U~případů, které neuronová síť vyhodnotí jako planety, je možné pokračovat výpočtem dalších informací o~planetě.~\cite{kepler80}
 
-\subsubsection{Výpočet velké poloosy dráhy}
+\subsubsection{Výpočet vlastností planety}
 
+Velkou poloosu dráhy planety lze vypočítat, pokud známe hmotnost hvězdy a periodu oběhu z~třetího Keplerova zákona.~\cite{transitprops}
 
+\formula{Výpočet velké poloosy dráhy planety}{a = \sqrt[3]{\frac{GMP^2}{4\pi^2}}}{
+\begin{tabular}{llll}a = velká poloosa & G = gravitační konstanta & M = hmotnost hvězdy & P = perioda oběhu planety\end{tabular}
+}
 
-\subsubsection{Výpočet poloměru planety}
+Ze světelné křivky a~poloměru hvězdy lze vypočítat poloměr tranzitující planety po vyjádření z~následující rovnice~\cite{transit,transitprops}:
 
-Ze světelné křivky a~poloměru hvězdy lze poloměr tranzitující planety vypočítat po vyjádření z~následující rovnice~\cite{transit}:
-
-\formula{Poloměr planety z~tranzitní metody} {\frac{r^2}{R^2} = \frac{\Delta F}{F}}{
+\formula{Výpočet poloměru planety} {\frac{r^2}{R^2} = \frac{\Delta F}{F}}{
 \begin{tabular}{llll}
 	r = poloměr planety & R = poloměr hvězdy & F = jas hvězdy & $\Delta F$ = změna jasu \
 \end{tabular}
 }
 
-\subsubsection{Výpočet hmotnosti planety}
+Dále je možno odhadnout i~průměrnou rychlost pohybu planety po oběžné dráze. Skutečná průměrná rychlost však může být jiná, protože se nepočítá s excentricitou dráhy~\cite{transitprops}:
 
-Hmotnost planety z tranzitní metody narozdíl od metody radiálních rychlostí nelze vypočítat. Avšak z~empirických pozorování je možné hmotnost planety odhadnout z následující rovnice, přičemž $a$ a $b$ jsou pro různé velikostní kategorie jiné. [TODO]
-
-\formula{Odhad hmotnosti planety z~tranzitní metody} {m = a * r^b}{
-\begin{tabular}{ll}
-	m = hmotnost planety [hmotnost Země] & r = poloměr planety [poloměr Země] \
+\formula{Odhad průměrné rychlosti oběhu planety}{v \approx \frac{2\pi a}{T}}{
+\begin{tabular}{lll}
+    v = rychlost oběhu planety & a = velká poloosa dráhy planety & T = perioda oběhu planety
 \end{tabular}
 }
 
-{
-\tab{Odhad hmotnosti planety z~trantizní metody}{
-	\begin{tabular}{|l|l|}
-		\hline	
-		\rowcolor{lightgray}
-		Poloměr [poloměr Země] & Odhad hmotnosti \\	
-		\hline	
-		< 6 & $m = 0.9515 * r^{3.1}$  \\
-		\hline	
-		6-10 & $m = 1.7013 * r^{2.0383}$  \\
-		\hline	
-		10 > & $m = 0.6631 * r^{2.4191}$  \\
-		\hline	
-	\end{tabular}
+Další z~důležitých charakteristik orbity je inklinace (sklon), která nám řekne, jaký úhel svírají roviny pozorovatele a~oběhu exoplanety. Bohužel lze zjistit minimální úhel sklonu dráhy a~nikoliv jeho přesnou hodnotu. Inkinace se bude zpravidla blížit 90$^{\circ}$.~\cite{transitprops}
+
+\formula{Výpočet inklinace dráhy}{\cos{i} \leq \frac{R + r}{a}}{
+\begin{tabular}{llll}
+    i = inklinace & R = poloměr hvězdy & r = poloměr planety & a = velká poloosa dráhy planety
+\end{tabular}
 }
 
-TODO: Použít neuronovou síť pro odhad hmotnosti.~\cite{nnmass}
+\subsubsection{Výpočet hmotnosti planety}
 
+Hmotnost planety z~tranzitní metody nelze vypočítat. Avšak z~empirických dat je možné ji odhadnout na základě kombinace jiných veličin pomocí umělé neuronové sítě. TODO.~\cite{nnmass}
 
 \clearpage
 \subsection{Metoda radiálních rychlostí}
 
-Stejně jako hvězda ovlivňuje obíhající planetu, tak i~planeta gravitačně ovlivňuje svou hvězdu a~obě tělesa obíhají kolem společného těžiště. Tento pohyb se může projevit jako opakované přibližování a~vzdálování hvězdy vůči pozorovateli na Zemi. Právě pojem radiální rychlost označuje rychlost pohybu ve směru přímky k~pozorovateli.~\cite{methods}
+Stejně jako hvězda ovlivňuje obíhající planetu, tak i~planeta gravitačně ovlivňuje svou hvězdu a~obě tělesa obíhají kolem společného těžiště. Tento pohyb se může projevit jako opakované přibližování a~vzdálování hvězdy vůči pozorovateli na Zemi. Právě pojem radiální rychlost označuje rychlost pohybu ve směru k~pozorovateli.~\cite{methods}
 
 Pokud se zdroj elektromagnetického záření (hvězda) přibližuje vůči pozorovateli, záření má menší vlnovou délku a~jeví se více do modra, protože právě modrá (a~fialová) barva má z~viditelného spektra nejmenší vlnovou délku. Obdobná situace nastává při vzdálování se zdroje vlnění od pozorovatele. Vlnová délka se zvětšuje a~barva jde do červena. Tomuto efektu se říká červený (resp. modrý) posuv.~\cite{methods}
 
 \img[1]{Metoda radiálních vzdáleností}{img/radial_velocity.png}
 \drawgimp
 
-Příčinou červeného/modrého posuvu je v~tomto případě Dopplerův jev, který lze uplatnit i pro jiné druhy vlnění, než to elektromagnetické~--~zvuk. Pokud se k~nám zdroj zvuku přibližuje (např. siréna na jedoucím autě), zvuk zpravidla vnímáme vyšším tónem, protože má menší vlnovou délku (vyšší frekvenci). Při vzdalování zdroje má zvuk větší vlnovou délku a je vnímán hlubším tónem.~\cite{radialvelocity}
-
-Periodicky se opakující změny ve vlnové délce záření hvězdy tak mohou být důsledkem existence tělesa v této soustavě.~\cite{methods}
-
-\subsubsection{Měření vlnové délky záření hvězdy}
-
-Hvězdy nevyzařují světlo pouze jedné jediné vlnové délky, nýbrž celé spektrum. Tento efekt lze vidět  u~duhy v~zemské atmosféře, kdy jsou jednotlivé složky slunečního světla odděleny. Záření z~hvězd se dokonce neomezuje pouze na viditelné světlo, ale pokrývá značnou část celého elektromagnetického spektra. Jak velká část záření přísluší jednotlivým vlnovým délkám lze měřit pomocí spektrometru.~\cite{radialvelocity, sunlight}
-
-\img[1]{Spektrum slunečního záření}{stats/sunlight_spectrum.png}
-\data{1}{sunlight}
-
-Změna vlnové délky záření se projevuje jako horizontální posun barevného spektra hvězdy. Nutno podotknout, že zemská atmosféra některé vlnové délky pohlcuje. Proto i~přesto, že Slunce má barvu spíše do zelena vidíme tuto hvězdu ze Země žlutě. [TODO]
+Příčinou červeného/modrého posuvu je v~tomto případě Dopplerův jev, který lze uplatnit i pro jiné druhy vlnění, než to elektromagnetické~--~zvuk. Pokud se k~nám zdroj zvuku přibližuje (např. siréna na jedoucím autě), zvuk zpravidla vnímáme vyšším tónem, protože má menší vlnovou délku (vyšší frekvenci). Při vzdalování zdroje má zvuk větší vlnovou délku a je vnímán hlubším tónem.~\cite{radialvelocity} Periodicky se opakující změny ve vlnové délce záření hvězdy tak mohou být důsledkem existence tělesa v této soustavě.~\cite{methods}
 
 \subsubsection{Výpočet radiální rychlosti hvězdy}
 
-Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek záření hvězdy může dojít k~vypočítání změn radiální rychlosti v~čase. Lze tak učinit dle vzorce~3. Platí, že radiální rychlost je kladná, pokud se zdroj od pozorovatele vzdaluje a~záporná pokud se přibližuje.~\cite{methods}
+Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek záření hvězdy může dojít k~vypočítání radiální rychlosti v~čase. Platí, že radiální rychlost je kladná, pokud se zdroj od pozorovatele vzdaluje a~záporná pokud se přibližuje.~\cite{methods}
 
 \formula{Radiální rychlost na základě změny vlnové délky} {v = c * \frac{\Delta\lambda}{\lambda_0}}{
 \begin{tabular}{lll}
@@ -291,31 +325,25 @@ Poté, co teleskop sesbírá dostatečně velkou časovou řadu vlnových délek
 
 Graf znázorňující radiální rychlost hvězdy 51~Pegasi může vypadat takto:
 
-\img[1]{Radiální rychlost hvězdy 51 Pegasi}{stats/51_pegasi_radial_velocity.pdf}
+\img[1]{Radiální rychlost hvězdy 51 Pegasi v čase}{img/51_pegasi_radial_velocity.png}
 \data{1}{51pegasi}
 
-Na první pohled je patrná jedna periodická složka s periodou 4,23 dne a~amplitudou 56,04 $\frac{m}{s}$, která značí, že kolem této hvězdy obíhá jedna planeta. Pokud zde jsou přítomna i~jiná tělesa, důvodů, proč je metoda radiálních rychlostí neodhalila může být několik:
+Na první pohled je patrná jedna periodická složka s periodou 4,23 dne a~amplitudou 66,67 $\frac{m}{s}$, která značí, že kolem této hvězdy obíhá jedna planeta. Aby metoda radiálních rychlostí fungovala, musí být exoplaneta vůči své hvězdě dostatečně hmotná a~také nesmí obíhat po rovině, která je kolmá k~přímce směrem k~pozorovateli.
 
-\items{
-\item Hmotnost tělesa je vůči hmotnosti hvězdy zanedbatelná,
-
-\item Perioda oběhu tělesa je příliš velká (desítky let a~více), a~proto se ji nepodařilo zachytit na tak krátkém časovém úseku,
-
-\item Těleso obíhá po dráze, jejíž rovina je kolmá k~přímce směrem~k pozorovateli (k Zemi). To vede k~tomu, že je hvězda vychylována takovým směrem, který nemá vliv na radiální rychlost hvězdy vůči Zemi.
-}
+\vspace{-10pt}
 
 \subsubsection{Výpočet hmotnosti planety}
 
-Hlavní výhodou metody radiálních rychlostí oproti tranzitní metodě je možnost spočítat hmotnost exoplanety. Její přesnou hodnodu však lze odvodit pouze se znalostí sklony dráhy exoplanety vůči pozorovateli. V~opačném případě lze vypočítat pouze dolní mez hmotnosti planety, a~to zejména kvůli $M_p * sin(i)$ ve vzorci 5.~\cite{methods}
+Hlavní výhodou metody radiálních rychlostí oproti tranzitní metodě je možnost spočítat hmotnost exoplanety. Její přesnou hodnodu však lze odvodit pouze se znalostí sklony dráhy exoplanety vůči pozorovateli. V~opačném případě lze vypočítat pouze dolní mez hmotnosti planety, a~to zejména kvůli $M_p * sin(i)$ ve vzorci 7.~\cite{methods}
 
-\formula{Radiální rychlost}{\Delta v_{max} = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}}{
-\begin{tabular}{lll}
+\formula{Radiální rychlost}{\Delta v_{max} = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}\vspace{5pt}}{
+\begin{tabular}{l|l|l}
 	$\Delta v_{max}$ = amplituda změny rychlosti & $M_s$ = hmotnost hvězdy & $M_p$ = hmotnost planety \\
 	sin(i) = sklon dráhy vůči pozorovateli & e = excentricita dráhy & T = oběžná doba \\
 \end{tabular}
 }
 
-V tabulce 2 jsou uvedeny příklady výpočtu hmotnosti některých planet.
+\clearpage
 
 { % TODO
 \catcode`\-=12
@@ -348,56 +376,537 @@ V tabulce 2 jsou uvedeny příklady výpočtu hmotnosti některých planet.
 
 \data{1}{radialvelocity, 51pegasi, methods, nasadata}
 
-\clearpage
+\vspace{-10pt}
+
 \subsection{Astrometrická metoda}
 
-Astrometrická metoda využívá stejné vlastnosti vzájemného působení těles jako metoda radiálních rychlostí. Namísto zkoumání vlnové délky záření se však zaměřuje na polohu hvězdy. Hvězda, kolem níž obíhá dostatečně hmotné těleso, se bude v~důsledku působení tělesa nepatrně vychylovat ze své pozice~--~bude obíhat kolem těžiště soustavy.~\cite{methods}
+\wrapimg[1]{Obíhání hvězdy a~planety kolem společného těžiště}{img/astrometry.pdf}{r}{11}
 
-\img[1]{Astrometrická metoda}{img/astrometry.png}
+Astrometrická metoda využívá stejné vlastnosti vzájemného působení těles jako metoda radiálních rychlostí. Namísto zkoumání vlnové délky záření se však zaměřuje na polohu hvězdy. Hvězda, kolem níž obíhá dostatečně hmotné těleso, se bude v~důsledku jeho působení nepatrně vychylovat ze své pozice.~\cite{methods}
 
-Pohyb hvězdy tak není přímočarý, ale vlnitý. Kolísání hvězdy je však pro pozorovatele na Zemi často pouze v~řádu stovek úhlových mikrovteřin až jednotek milivteřin.~\cite{methods} Z~tohoto důvodu byla astrometrickou metodou dosud objevena pouze jediná exoplaneta.~\cite{nasadata}
+Pohyb hvězdy tak není přímočarý, ale vlnitý. Kolísání hvězdy je však pro pozorovatele na Zemi často pouze v~řádu stovek úhlových mikrovteřin.~\cite{methods} Z~tohoto důvodu byla astrometrickou metodou dosud objevena pouze jediná exoplaneta. Dá se však očekávat, že se zlepšující se technikou bude tato metoda úspěšnější.~\cite{nasadata}
 
-\img[1]{Kolísání hvězdy Gliese~876~s~planetou}{img/astrometry_trajectory.png}
+\img[2]{Kolísání hvězdy Gliese~876~s~planetou}{img/astrometry_trajectory.png}
+\drawgimp[2]
+
+\subsection{Přímé zobrazení}
+
+\wrapimg[1]{Hvězda GQ Lupi s~přímo pozorovanou exoplanetou}{img/imaging.jpg}{r}{11}
+\footnotetext[1]{Převzato z:~\cite{methods}.}
+
+Přímé pozorování planety v~okolí hvězd je velice náročnou technikou, protože záření, které hvězda emituje je mnohonásobně silnější, než záření, které planeta odráží. Např. u~Země a~Slunce je tento poměr řádově $10^{-9}$.~\cite{methods}
+
+Největším problémem je zpravidla vliv atmosféry~--~chvění obrazu v~důsledku vzájemného působení teplého a~studeného vzduchu. Tento vliv je nutno potlačit, a~to buď použitím adaptivní optiky, nebo pozorováním z~vesmíru.~\cite{methods}
+
+\formula{Poměr zářivého výkonu hvězdy a~planety}{\frac{L_p}{L_s} = \alpha\left(\frac{R_p}{a}\right)^2}{
+\begin{tabular}{l|l}
+    $\alpha$ = odrazivost povrchu planety (albedo) & $R_p$ = poloměr planety \\
+    a = velká poloosa oběžné dráhy planety &
+\end{tabular}
+}
+
+\vspace{-10pt}
+\subsection{Gravitační mikročočky}
+
+Světlo má obvykle tendenci se pohybovat prázdným prostorem po přímé trajektorii. Avšak dle obecné teorie relativity, hmotná tělesa zakřivují časoprostor kolem sebe. V~blízkosti takových těles tak tuto přímou trajektorii vnímáme jako zakřivenou.~\cite{methods}
+
+\img[2]{Princip gravitační čočky}{img/lens.png}
+
+{\setstretch{0.8}\footnotetext[2]{Vytvořeno autorem, fotografie gravitační čočky převzata od NASA (\url{https://apod.nasa.gov/apod/image/1112/lensshoe_hubble_3235.jpg}), oříznuto a~zdeformováno}}
+
+V~případě, kdy se nějaké hmotné těleso (např. galaxie) nachází mezi pozorovatelem a~zdrojem světla (např. jinou galaxií), mluvíme o~tzv. gravitační čočce~--~zdroj světla bude vidět vícekrát na různých místech, nebo bude naopak zdeformován.~\cite{methods}
+
+\img[1]{Ilustrace gravitační mikročočky OGLE 2003-BLG-235}{img/lens_plot.png}
+\data{1}{nasadata}
+
+Pokud je čočkujícím tělesem pouze hvězda, jedná se o~gravitační mikročočku. V~tomto případě dochází často ke splynutí čočky a~skrytého tělesa do jednoho útvaru se zvýšeným jasem. A~zde nachází uplatnění metoda pro hledání exoplanet. Za předpokladu, že čočkujícím tělesem je hvězda s~obíhající exoplanetou, budeme pozorovat pozvolné zvyšování jasu způsobené hvězdou a~zároveň v~nějakém krátkém časovém intervalu strmý nárůst jasu způsobený exoplanetou.~\cite{methods}
+
+\subsection{Časování pulsarů}
+
+Pulsary jsou rychle rotující neutronové hvězdy~--~pozůstatky po zhrouceném jádře hmotných hvězd. Během procesu hroucení hvězda zmenšuje svůj poloměr a~pro zachování momentu hybnosti zvyšuje svou rotační rychlost.~\cite{methods}
+
+Vedle toho, pulsar podél své magnetické osy emituje silný elektromagnetický paprsek. V~případě, kdy je magnetická osa pulsaru natočena k~Zemi (paprsek směřuje k~Zemi), můžeme zpozorovat náhlý nárůst jasu hvězdy. Tyto pulzy je pak možné sledovat ve velice pravidelných intervalech (často řádově jednotky milisekund až sekund).~\cite{methods}
+
+Pokud je v~těchto pulzech zpozorována nepravidelnost, může to znamenat, že pulsar mění svou vzdálenost od Země. Jinými slovy, stejně jako v~případě metody radiálních rychlostí, pulsar společně s~dalším tělesem (např. planetou) obíhá kolem společného těžiště.~\cite{methods}
+
+Nutno podotknout, že nás nezajímá rychlost pulzaru tak, jako u metody radiálních rychlostí. Nepravidelnosti pulzů jsou způsobeny pouze polohou pulsaru, nikoliv jeho rychlostí. Pulzy (elektromagnetické záření) se ve vakuu pohybují vždy konstantní rychlostí bez ohledu na rychlost pulzaru samotného (rychlosti se nesčítají).
+
+\img[1]{Ilustrace pulsaru s obíhající planetou}{img/pulsar_timing.png}
 \drawgimp
 
-Dá se však očekávat, že se zlepšující se technikou bude tato metoda úspěšnější.
+\clearpage
+\subsection{Časování tranzitů}
 
-\subsection{Gravitační mikročočky}
-\subsection{Přímé zobrazení}
-\subsection{Pulsar timing}
+\wrapimg[1]{Nepravidelnosti v~tranzitech planety Kepler-46b}{img/ttv.png}{r}{16}
+\data{1}{nasadata}
 
-\section{Umělá inteligence}
+V~kapitole 1.1 byla popsána tranzitní metoda zkoumajíc pravidelné poklesy v~jasu hvězdy. Někdy ale tyto poklesy nemusí být zcela pravidelné a~v~jejich periodách mohou být mírné odchylky (TTV~--~transit time variation). Ty mohou být způsobeny další exoplanetou v~systému, která může nebo nemusí sama tranzitovat přes hvězdu, přesto však stále gravitačně ovlivňuje zbytek soustavy.~\cite{ttv}
 
-\subsection{Umělé neuronové sítě}
-
-\cite{nn}
-
-\subsubsection{Jednoduchý perceptron}
-
-\subsubsection{Vícevrstvý perceptron}
-
-\subsubsection{Konvoluční neuronová síť}
-
-\subsubsection{Další typy neuronových sítí}
-
-\subsection{Evoluční algoritmy}
-
-\subsubsection{Genetický algoritmus}
-
-\subsubsection{Další evoluční algoritmy}
-
-\subsection{Další oblasti AI}
-
-Pod umělou inteligenci spadají i~další oblasti. Ty však nejsou pro potřeby této práce důležité, a~proto budou zmíněny pouze okrajově:
+Situaci můžeme chápat jako problém n těles, případně ji zjednodušit na problém 3 těles za předpokladu, že v~soustavě jsou pouze 3~nezanedbatelně hmotná tělesa:
 
 \begin{itemize}
+\item Hvězda,
+\item Tranzitující planeta,
+\item Planeta způsobující nepravidelnosti.
+\end{itemize}
 
-\item \textbf{Fuzzy systémy}~--~...
+Nechť $p = \{a, e, i, \Omega, \omega, M, m\}$ je uspořádaná množina obsahující elementy dráhy exoplanety (velkou poloosu, excentricitu, inklinaci, délku vzestupného úhlu, argument šířky pericentra, střední anomálii) a~hmotnost exoplanety. Vzhledem k~tranzitující planetě budeme tuto množinu označovat jako $p_t$ a~vzhledem k~planetě způsobující nepravidelnosti jako $p_p$. Další důležitou veličinou je hmotnost hvězdy $M_s$. Z~těchto údajů jsme schopni spočítat časy tranzitů $t_{com}$ tranzitující planety. Jestliže máme k~dispozici i~skutečné naměřené časy tranzitů s~nepravidelnostmi $t_{obs}$, můžeme problém řešit jako hledání maxima funkce $F[t_{com}(p_t, p_p, M_s), t_{obs}]$ definované jako~\cite{ttv}:
 
-\item \textbf{Expertní systémy}~--~...
+\formula{Funkce vyjadřující přesnost modelu vůči realitě při počítání TTV}{F = \left[\sum_{i = 1}^N(t_{obs, i} - t_{com, i})^2\right]^{-1}\vspace{5pt}}{}
+
+Jinými slovy, hledáme, jaké parametry planet a~hvězdy povedou k~nejmenšímu rozdílu mezi napozorovanými a~vypočítanými časy tranzitů planety. Čím vyšší je výsledek této funkce, tím přesnější řešení jsme nalezli. Optimální řešení by znamenalo, že jsme zvolili $p_t$, $p_p$ a~$M_s$ naprosto shodné s~realitou a~platilo by, že $F\to\infty$.
+
+Kvůli velkému množství vícerozměrných parametrů je nutné pro tento problém použít stochastický optimalizační algoritmus, jenž sice nezajistí přesné analytické řešení, avšak i~přesto umožní nalézt řešení velice blízké tomu optimálnímu. Jedním z~takových algoritmů je genetický algoritmus blíže popsaný v~kapitole 3.1.~\cite{ttv}
+
+\subsubsection{Aplikace genetického algoritmu}
+
+Jedince definujeme jako $x = \{p_t, p_p, M_s\}$, přičemž první generaci $K$ jedinců vygenerujeme náhodně. Fitness funkci určující kvalitu jedinců ponecháme jako $F$ (vzorec 9). S~využitím rovnic znamých z~problému 3 těles:
+
+\formula{Rovnice problému 3 těles}{\ddot{r}_i = -Gm_j\frac{r_j-r_i}{|r_j-r_i|^3} - Gm_k\frac{r_k - r_i}{|r_k - r_i|^3}\vspace{5pt}}{
+\begin{tabular}{l|l|l}
+    $r_i$ = polohový vektor i-tého tělesa & $m_i$ = hmotnost i-tého tělesa & $G$ = gravitační konstanta \\
+    $i$ = aktuální těleso & $j, k$ = další 2 tělesa &
+\end{tabular}
+}
+
+Kde $r_i = (x_i, y_i, z_i)$, jsme schopni pomocí fitness funkce vypočítat kvalitu každého z~jedinců v~populaci. Následně náhodně, avšak v~souladu s~přirozeným výběrem s~přihlédnutím na fitness vybereme dvojici jedinců, na něž bude aplikována operace křížení, jejímž výsledkem budou 2 potomci.~\cite{ttv}
+
+Tímto způsobem pokračujeme dále, abychom získali populaci potomků, kteří také mohou mít nenulovou pravděpodobnost mutace. Z~populace rodičů a~potomků vhodně vybereme $K$ jedinců, kteří se stanou 2.~generací. Běh algoritmu bude pokračovat dokud nejlepší jedinec poslední generace nebude představovat dostatečně dobré řešení TTV.
+
+\img[1]{Princip časování tranzitů}{img/illustration_ttv.pdf}
+\drawgimp
+
+\section{Umělé neuronové sítě}
+
+Jednou z~oblastí patřících do oboru umělé inteligence jsou umělé neuronové sítě, jež se inspirovaly biologickými neuronovými sítěmi. Jejich použití je vhodné na problémy, u~kterých neexistuje přesný matematický popis řešení nebo sice existuje, ale jeho realizace by byla příliš složitá. Hlavními oblastmi, kde se neuronové sítě využívají, jsou např.:
+
+\begin{itemize}
+\item \textbf{Predikce} (předpověď počasí,  vývoj cen akcií na burze, ...),
+
+\item \textbf{Rozpoznávání vzorů} (rozpoznávání ručně psaného textu, detekce tranzitu planety ve světelné křivce hvězdy, ...),
+
+\item \textbf{Analýza nebo transformace signálů} (odstranění šumu ze signálu, komprese, převod psaného textu na mluvený signál, ...),
+
+\item \textbf{Řízení v~dynamicky se měnících podmínkách} (autopilot, ...).~\cite{nn}
 
 \end{itemize}
 
+\subsection{Neuron}
+
+Základním stavebním prvkem umělé neuronové sítě je umělý neuron, který reprezentuje zjednodušenou biologickou nervovou buňku. Nejpoužívanějším typem umělého neuronu je tzv. formální neuron. Ten se skládá z~následujících částí:
+
+{
+\tab[1]{Komponenty formálního neuronu}{
+	\begin{tabularx}{\textwidth}{|X|X|X|X|}
+		\hline	
+		\rowcolor{lightgray}
+		Komponenta & Popis & Příklad \\	
+		\hline	
+		Vstupy $x_{1...R}$ & Jeden nebo více vstupů. & [0.23, 0.58, -0.15]  \\
+		\hline	
+		Váhy spojení (vstupů) $w_{1...R}$ & Každý vstup má svou váhu. & [0.01, 0.56, 0.12] \\
+		\hline	
+		Práh neuronu $w_0$ & Přičte se ke vstupu do aktivační funkce. & 0.17 \\
+		\hline	
+		Agregační funkce $\sum$ & Vstupy a váhy transformuje na jednu hodnotu -- potenciál $y_a$. & $y_a = w_0 + \sum_{n=1}^{R}{x_iw_i}$ \\
+		\hline		
+		Aktivační funkce & Převede hodnotu vstupního potenciálu $y_a$ na výstup neuronu $y $. & $y = y_a$\newline $y = \tanh{y_a}$ \\
+		\hline
+	\end{tabularx}
+}
+\footnotetext[1]{Zdroj: \cite{nn}}
+
+Jednotlivé neurony se umisťují do vrstev a~vrstvy pak tvoří neuronovou síť. Způsob zapojení neuronů, počet neuronů, počet vrstev a~stejně tak volba agregační a~aktivační funkce závisí na typu problému, pro který má být neuronová síť použita.
+
+\img[1]{Model formálního neuronu}{img/neuron.png}
+\footnotetext[1]{Převzato z: \cite{nn}.}
+
+\subsubsection{Vstupy neuronu}
+
+Každý neuron může mít jeden nebo více vstupů. I~když vstupy nemusí být nutně číselné, my to v~této práci budeme předpokládat. Vstupy mohou být dvojího druhu:
+
+\begin{itemize}
+\item Výstup jiného neuronu,
+\item Vstup z~vnějšího prostředí (např. od uživatele).
+\end{itemize}
+
+Všechny vstupy neuronu můžeme reprezentovat vektorem $X = [{x_1, x_2, ..., x_R}]$. Hodnoty v~$X$~pak mohou být v:
+
+\begin{itemize}
+\item \textbf{Kvantitativní} formě, kdy vstup vyjadřuje \textit{ano} nebo \textit{ne} a~nabývá tak binárních hodnot (např. 0 nebo 1),
+\item \textbf{Kvalitativní} formě, kdy vstup vyjadřuje konkrétní hodnotu nějaké veličiny, často normalizované na interval $[0; 1]$ nebo $[-1; 1]$.
+\end{itemize}
+
+\subsubsection{Váhy spojení}
+
+Každý vstup neuronu $x_i$ je ohodnocen číselnou vahou $w_i$. Čím vyšší váha vstupu je, tím citlivěji bude výstup neuronu reagovat, pokud se daný vstup změní (tím „důležitější“ vstup bude). Váhy jsou z~počátku většinou pouze náhodné hodnoty a~teprv během procesu učení neuronové sítě dochází k~jejich úpravě tak, aby síť byla schopna řešit předložený problém co nejlépe. Vztah vstupu a~jeho váhy se obecně označuje operátorem konfluence.~\cite{nn}
+
+\formula{Obecný vztah vstupu neuronu a~jeho váhy}{z_i = x_i \oplus w_i}
+
+Formální neuron pak využívá lineární hodnotu tohoto operátoru, který je tak možné nahradit prostým součinem.~\cite{nn}
+
+\formula{Lineární vztah vstupu neuronu a~jeho váhy}{z_i = x_iw_i}
+
+\subsubsection{Práh neuronu}
+
+Prahem umělého neuronu $w_0$ se rozumí bariéra vstupu do neuronu z~vnějšího okolí (nikoliv z jiného neuronu). Vedle váhy je to další parametr, který se mění při procesu učení sítě.~\cite{nn}
+
+\subsubsection{Agregační funkce}
+
+Protože neuron může mít více vstupů, ale vždy pouze jediný výstup, je třeba všechny vstupy nějakým způsobem sloučit do jedné hodnoty. Právě toho se snaží docílit agregační funkce neuronu. V~případě formálního neuronu se nejčastěji používá prostá suma součinů vstupů s~váhami. Výstupem agregační funkce je potenciál $y_a$.~\cite{nn}
+
+\formula{Agregační funkce neuronu}{y_a = \sum_{i=0}^{R}{z_i} = \sum_{i=0}^{R}{w_i \oplus x_i} = \sum_{i=0}^{R}{w_ix_i}\vspace{5pt}}
+
+\subsubsection{Aktivační funkce}
+
+Ještě než je potenciál $y_a$ přiveden na výstup neuronu, je na něj aplikována aktivační funkce. Tato funkce je závislá na typu řešeného problému a~stejně tak i~na poloze neuronu v~síti. Je běžné, že pro výstupní neurony se pouažívají jiné aktivační funkce, než pro neurony ve skrytých vrstvách. Funkce mohou být lineární, nelineární, spojité i~diskrétní.~\cite{nn}
+
+\formula{Hyperbolicko-tangenciální aktivační funkce}{y = \tanh{y_a}}
+
+\formula{Sigmoidální aktivační funkce}{y = \frac{e^x}{1 + e^x}}
+
+\formula{Gaussova aktivační funkce}{y = e^{-y_a^2}}
+
+\img[1]{Příklady aktivačních funkcí neuronu}{img/act_fun.png}
+\footnotetext[1]{Převzato z:~\cite{nn}.}
+
+\vspace{-20pt}
+
+\subsection{Typy neuronových sítí}
+
+V~této kapitole budou zmíněny některé typy neuronových sítí. Uvedený výčet však v~žádném případě není kompletní. Vedle zmíněných typů existují např. rekurentní neuronové sítě nebo samoorganizující se neuronové sítě.
+
+\vspace{-10pt}
+
+\subsubsection{Jednoduchý perceptron}
+
+Jednoduchý perceptron je neuronová síť tvořená jediným neuronem. Jedná se o~neuronovou síť s~lineárně váženou agregační funkcí, učením s~učitelem a~skalárním výstupem nabývajícím binárních (1, 0) nebo bipolárních (1, -1) hodnot.~\cite{nn}
+
+\vspace{-10pt}
+
+\img[1]{Lineárně separovatelná (vlevo) a neseparovatelná (vpravo) úloha}{img/linear_separability.png}
+
+Tento typ neuronové sítě lze použít pouze pro řešení úloh, které jsou lineárně separovatelné. Pro složitější úlohy je třeba využít vícevrstvý perceptron.~\cite{nn}
+
+\subsubsection{Dopředná vícevrstvá umělá neuronová síť}
+
+Dopředná vícevrstvá umělá neuronová síť (dále jen FFNN, někdy také vícevrstvý perceptron) je díky své univerzálnosti jedním z~nejpoužívanějších typů sítě. Skládá se z~neuronů, které jsou umístěny do jednotlivých vrstev. Existuje zde minimálně vrstva vstupní a~vrstva výstupní. Dle povahy řešeného problému zde ale může být i~libovolný počet dalších, tzv. skrytých vrstev.~\cite{nn}
+
+\img[1]{Zapojení neuronů}{img/nncon.png}
+\draw
+
+Spojení existují pouze mezi neurony sousedních vrstev. Ani neurony stejné vrstvy, ani neurony nesousedících vrstev nejsou přímo propojeny. Orientace těchto spojů je navíc směrem pouze od vstupů k~výstupu sítě (proto dopředná)~--~výstupy neuronů v~předešlé vrstvě jsou vstupem do všech neuronů v~následující vrstvě.~\cite{nn}
+
+\img[1]{Architektura dopředné vícevrstvé umělé neuronové sítě}{img/ffnn.png}
+
+Pro vytváření architektury neuronové sítě neexistuje analytický postup, který by vedl k~nejefektivnějšímu návrhu. Při řešení úlohy je třeba buď inspirovat se již nějakou existující neuronovou sítí, s jejíž pomocí někdo podobný problém řešil v~minulosti, nebo postupovat experimentálně a~„zkoušet“, jaká architektura povede k~nejmenší chybě. V~tomto případě je možno postupovat dvěma způsoby. Buď začneme s~triviální sítí, do které postupně budeme přidávat nové neurony a~vrstvy, až dokud bude úspěšnost sítě při řešení úkolu stoupat, nebo naopak začneme s~komplexní neuronovou sítí, ze které budeme neurony a~vrstvy postupně odebírat.~\cite{nn}
+
+\vspace{-5pt}
+
+\subsubsection{Konvoluční neuronová síť}
+
+
+\vspace{-5pt}
+
+Zpracování vícedimenzionálních dat o~velkých rozměrech by s~použitím klasické FFNN bylo velice problematické. Uvažujme např. rozpoznávání psaných číslic z~obrázku. Číslice se v~obrázku může nacházet na různých místech, může být různě velká, natočená či barevná a~také způsob psaní se u~každého člověka může lišit.
+
+\img[1]{Ručně psané číslice 9.}{img/handwritten.png}
+\footnotetext[1]{Převzato z:~MNIST dataset.}
+
+\vspace{-10pt}
+
+Pro člověka je jednoduché rozpoznat, že všechny útvary na obrázku 25 jsou číslice 9 i~přesto, že každá vypadá jinak. Sestrojit algoritmus, který by to dokázal také, už ale triviální úkol rozhodně není. Obecně, získáváním informací z~obrázku se zabývá obor počítačového vidění.~\cite{convnn}
+
+Zásadní myšlenkou počítačového vidění je nesnažit se rozpoznávat celý objekt, ale nejdříve extrahovat fragmenty (vlastnosti), ze kterých se daný objekt skládá. U~číslice 9~by těmito vlastnostmi mohly být např. elipsa a~z~ní vycházející křivka či úsečka. K~extrakci vlastností z~obrázku lze přistupovat dvěma způsoby založenými na:
+
+\begin{itemize}
+\item Manuálním inženýrství (např. histogram orientovaných gradientů),
+\item Strojovém učení (např. konvoluční neuronová síť).~\cite{convnn}
+\end{itemize}
+
+\img[2]{Vztah mezi počítačovým viděním, strojovým učením a~konvoluční sítí}{img/vision.png}
+\draw[2]
+
+My se zde budeme zabývat pouze konvoluční neuronovou sítí (CNN). Tu můžeme chápat jako klasickou FFNN, jejíž vstupy jsou ovšem nejdříve modifikovány tak, aby z~nich byly vyextrahovány výše zmíněné vlastnosti. Tato extrakce je prováděna pomocí konvoluční vrstvy, jejíž způsob fungování je detailněji popsán v~kapitole 4.3.2.
+
+Dále je třeba brát v~úvahu velikost obrázku. Full HD obrázek (1~920~*~1~080) se skládá z~více jak 2~milionů pixelů. V~případě RGB obrázku se množství informací zvýší až na 6~milionů (3~složky pro každý pixel). Posílat takové množství hodnot do FFNN, která se skládá z~plně propojených vrstev, kde jsou neurony v sousedních vrstvách propojeny způsobem „každý z~každým“, by bylo problematické. Z~tohoto důvodu existuje tzv. pooling vrstva popsaná v~kapitole 4.3.3, která umožňuje zmenšit velikost vstupu a~přitom zachovat vzory charakteristické pro vstup.
+
+\img[1]{Příklad konvoluční sítě pro ropoznávání ručně psaných číslic}{img/cnn.png}
+\drawgimp
+
+Nutno podotknout, že použití CNN se neomezuje pouze na dvourozměrné obrázky. Stejně vhodné jsou i~na rozpoznávání vzorů v~1D útvarech (např. světelná křivka hvězdy nebo jiné druhy časových řad) nebo i~ve vícerozměrných strukturách.~\cite{convnn}
+
+\subsection{Typy vrstev neuronových sítí}
+
+\subsubsection{Plně propojená vrstva}
+
+Plně propojená vrstva (FC, Fully connected nebo Dense layer) je vrstva, pro jejíž každý neuron platí, že na jeho vstup jsou přivedeny výstupy všech neuronů v~předchozí vrstvě. Neurony sousedních vrstev FC jsou tak mezi sebou propojeny stylem „každý s~každým“.
+
+{
+\tab[1]{Parametry plně propojené vrstvy}{
+	\begin{tabular}{|p{0.2\textwidth}|p{0.4\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Parametr & Popis \\	
+		\hline	
+		Počet neuronů & Je určen složitostí a~typem řešeného problému a~určuje velikost výstupu vrstvy.  \\
+		\hline
+	\end{tabular}
+}
+\footnotetext[1]{Zdroj: \cite{keras}}
+
+Počet neuronů se volí dle řešeného problému. Pokud bude počet neuronů příliš nízký, neuronová síť nemusí mít kapacitu pro to, aby byla schopna se naučit řešit daný problém. Pokud bude počet neuronů příliš vysoký, síť se až příliš dobře naučí řešit problém na trénovací množině a~nebude schopna generalizace (snadno se tzv. přetrénuje).
+
+\subsubsection{Konvoluční vrstva}
+
+Konvoluční vrstva sestává z~filtrů, které jsou aplikovány na vstup a~provádí operaci „konvoluce“. Filtrem můžeme chápat vzor, jenž je vyhledáván ve vstupu a~který zastupuje nějakou vlastnost vstupního objektu (např. obrázku).
+
+\vspace{-10pt}
+\img[2]{Postupné posouvání konvolučního filtru přes vstup}{img/stride.png}
+\draw[2]
+
+
+Pro výřez ze vstupu a~filtr v~konvoluční vrstvě se hodnoty na stejných pozicích ve výřezu i~filtru vynásobí a~tyto součiny se následně sečtou.
+
+\formula{Provádění konvoluce pro výřez vstupu a~filtr}{y = \sum_{i=1}^{sy}{\sum_{j=1}^{sx}{v_{ij}f_{ij}}}\vspace{5pt}}{
+\begin{tabular}{c|c|c|c}
+	y = výstup & $sx, sy$ = horizontální/vertikální velikost filtru & v = výřez vstupu & f = filtr\\
+\end{tabular}
+}
+
+Výřez se postupně posouvá (\textit{stride}) v~rámci vstupu a~pro každou kombinaci výřezu a~daného filtru se výsledek uloží do výstupního tenzoru na odpovídající místo vzhledem ke vstupu. Výsledkem je tak tenzor (\textit{feature map}) stejně velký nebo menší, než vstup~--~v~závislosti na vyplnění/oříznutí okrajů (\textit{padding}).
+
+\vspace{-10pt}
+\img[1]{Příklad aplikace konvolučního filtru na vstup}{img/convfilter.png}
+\draw
+
+\vspace{-5pt}
+
+Na obrázku 29 je znázorněno rozpoznávání diagonály. Ve výstupu jsou v~oblastech, kde jsou ve vstupu diagonály (v~pravém horním i~dolním rohu), vyšší čiselné hodnoty než tam, kde ve vstupu diagonály nejsou. Celý tento postup se opakuje pro všechny filtry, jimiž konvoluční vrstva disponuje. Výstupem vrstvy je tak jedna nebo více \textit{feature maps}.~\cite{convnn}
+
+{
+\tab[2]{Parametry konvoluční vrstvy}{
+	\begin{tabular}{|p{0.25\textwidth}|p{0.6\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Parametr & Popis \\	
+		\hline	
+		Počet filtrů & Čím více filtrů, tím více vlastností ve vstupu lze vyhledávat. \\
+		\hline	
+		Velikost filtrů (kernel) & Čím větší filtr, tím složitější vzory lze ve vstupu vyhledávat. Filtr může mít v~každém svém rozměru jinou velikost (v případě 2D to nemusí být čtverec, ale i~obdélník). \\
+		\hline
+		Posun filtrů (stride) & Posunutí filtru v~každé fázi konvoluce. \\
+		\hline
+		Okraj (padding) & Způsob zpracování okrajů vstupu, které se ve výstupu buď useknou, nebo vyplní nějakou hodnotou. \\
+		\hline
+	\end{tabular}
+}
+\footnotetext[2]{Zdroj:~\cite{keras}}
+
+
+\subsubsection{Vrstva Max-Pooling}
+
+Vrstva Max-Pooling si klade za cíl zmenšit velikost vstupu a~zároveň zachovat co nejvíce důležitých informací, které se v~něm nachází. Podobně jako v~konvoluční vrstvě i~zde se posouvá okno o~určité velikosti (kernel) o~určitý počet polí (stride). Na výstup se však dostane maximální hodnota, která je v~aktuálním výřezu vstupu.~\cite{convnn,keras}
+
+\img[1]{Příklad operace Max-Pooling}{img/max_pooling}
+\draw
+
+Na obrázku 30 je ukázána aplikace operace Max-Pooling na vstup, který byl výstupem v~minulé kapitole~--~\textit{feature map} ukazující umístění diagonál v~původním obrázku. Jak je vidět, velikost struktury se zmenšila na čtvrtinu, a~přesto v~ní zůstaly všechny důležité informace. V~pravém dolním i~horním rohu máme stále vysoké číselné hodnoty indikující přítomnost diagonály.
+
+{
+\tab[2]{Parametry vrstvy Max-Pooling}{
+	\begin{tabular}{|p{0.25\textwidth}|p{0.5\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Parametr & Popis \\	
+		\hline	
+		Velikost okna (kernel) & Velikost okna, ze kterého se vybírá maximum.  \\
+		\hline	
+		Stride okna (stride) & Posunutí okna v~každé fázi operace Max-Pooling. \\
+		\hline
+		Okraj (padding) & Způsob zpracování okrajů vstupu, které se ve výstupu buď useknou nebo vyplní nějakou hodnotou. \\
+		\hline
+	\end{tabular}
+}
+\footnotetext[2]{Zdroj: \cite{keras}}
+
+Obdobně k~vrstvě Max-Pooling existuje např. i~Min-Pooling nebo Average-Pooling. Jejich fungování je stejné s~tím rozdílem, že na výstup předávají místo maximální hodnoty tu minimální, resp. průměrnou. Jejich použití je opět závislé na typu řešeného problému (např. zda vstupní obrázek ma světlé pozadí a~tmavé popředí či naopak).~\cite{keras}
+
+\subsubsection{Vrstva Flatten}
+
+Konvoluční vrstvy umí pracovat s~vícerozměrnými vstupy, vrstvy typu FC však očekávají pouze jednorozměrný vektor vstupních hodnot. Protože např. v~konvolučních sítích je třeba oba typy vrstev kombinovat, je nutné nějakým způsobem převést n-rozměrný tenzor na vektor. Právě k~tomu slouží vrstva Flatten.~\cite{keras}
+
+\img[1]{Příklad fungování vrsty Flatten}{img/flatten.png}
+\drawgimp
+
+\subsubsection{Vrstva Dropout}
+
+Pro snížení pravděpodobnosti, že se neuronová síť přetrénuje, je možné využít vrstvu Dropout. Ta při procesu trénování zahazuje vstupy (na výstup místo nich posílá hodnotu 0). Tím v~trénovací množině vniká náhodný šum, což způsobí, že síť nebude trénovat pouze na stále stejných vstupech, ale trénovací množina bude vždy nepatrně odlišná~--~různorodější.~\cite{keras}
+
+\img[1]{Příklad fungování vrstvy Dropout}{img/dropout.png}
+
+{
+\tab[2]{Parametry vrstvy Dropout}{
+	\begin{tabular}{|p{0.15\textwidth}|p{0.3\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Parametr & Popis \\	
+		\hline	
+		Rate & Frekvence zahazování vstupů. \\
+		\hline	
+	\end{tabular}
+}
+\footnotetext[2]{Zdroj: \cite{keras}}
+
+\subsection{Učení umělé neuronové sítě}
+
+Vytvořená neuronová síť dle předchozích kapitol nebude umět řešit žádný problém~--~je to pouze množina neuronů a~dalších parametrů poskládaných k~sobě. Je potřeba ji daný problém nejdříve naučit řešit. Učení je proces, při kterém síť upravuje nastavitelné parametry (např. váhy vstupů neuronů) za účelem zvýšení úspěšnosti řešení předkládané úlohy. Učení může být:
+
+
+\begin{itemize}
+\item \textbf{S učitelem}~--~Síti je předložen vstup z~trénovací množiny a~ta pro tento vstup stanoví odezvu (výstup), který je porovnán s~požadovaným výstupem. Na základě chyby mezi skutečným a~požadovaným výstupem pak síť za využití tzv. učícího algoritmu upraví váhy mezi neurony tak, aby minimalizovala chybovou funkci.
+
+\item \textbf{Bez učitele}~--~Neuronová síť na základě schopnosti rozeznávat ve svých vstupech podobné vlastnosti a~podle těchto vlastností třídit vstupy dokáže řešit určité problémy i~bez znalosti požadovaných výstupů.~\cite{nn}
+\end{itemize}
+
+\subsubsection{Algoritmus zpětného šíření chyby}
+
+Algoritmus zpětného šíření chyby je učící algoritmus určený pro FFNN s~diferencovatelnými spojitými aktivačními funkcemi. Neuronové síti je předložen vzor, pro který síť stanoví odezvu. Chyba pro jeden vzor je definována dle vzorce 15.~\cite{nn}
+
+\formula{Výpočet chyby pro jeden vzor u~algoritmu zpětného šíření chyby}{E = \sum_{i=1}^{Q}{(t_i - y_i)^2} = \sum_{i=1}^{Q}{e_i^2}\vspace{5pt}}{
+\begin{tabular}{c|c|c}
+	E = chyba jednoho vzoru & $y_i$ = Skutečná hodnota i-tého výstupu & $e_i$ = Chyba i-tého výstupu \\ Q = počet výstupů NN & $t_i$ = Očekávaná hodnota i-tého výstupu \\
+\end{tabular}
+}
+
+Následně je ke každé váze připočten přírustek $\Delta w_{ij}^k$ (při online učení~--~rychlejší) nebo se přírustek kumuluje a~přičte se až na konci epochy (při offline učení~--~stabilnější).~\cite{nn}
+
+\formula{Přírustek váhy u~algoritmu zpětného šíření chyby}{\Delta w_{ij}^k = \frac{\partial E}{\partial w_{ij}^k} \implies \Delta w_{ij}^k = \alpha \delta_j^ky_i^{k-1}\vspace{5pt}}{\begin{tabular}{c|c}
+$w_{ij}^k$ = Váha spoje mezi i-tým a j-tým neuronem v k-té vrstvě & $\alpha$ = rychlost učení \\
+$\delta_j^k$ = lokální gradient neuronu aktualizované váhy & E = chyba jednoho vzoru \\
+$y^{k-1}_j$ = výstup j-tého neuronu v $k-1$. vrstvě
+\end{tabular}}
+
+Přičemž lokální gradient neuronu je vypočítán dle vzorce 17.
+
+\formula{Výpočet lokálního gradientu neuronu}{
+\delta_j^k = \begin{cases}
+\phi^k(y_{aj}^k)\displaystyle\sum_l{\delta_l^{k+1}w_{jl}^{k+1}}, & \text{pro neurony ve skrytých vrstvách} \\
+e_j\phi^k(y_{aj}^k), & \text{pro neurony ve výstupní vrstvě}
+\end{cases}\vspace{5pt}
+}{\begin{tabular}{c|c}
+$\delta_l^{k+1}$ = lokální gradient l-tého neuronu $k+1$. vrstvy & $e_j$ = chyba výstupu j-tého neuronu \\
+$y_{aj}^k$ = vstupní potenciál j-tého neuronu k-té vrstvy & $\phi^k$ = derivace aktivační funkce k-té vrstvy \\
+$w_{ij}^k$ = váha spoje mezi i-tým a j-tým neuronem k-té vrstvy & 
+\end{tabular}}
+
+Tento postup je opakován pro všechny vzory v~trénovací množině~--~této iteraci se říká \textit{epocha}. Učení sestává z~jedné nebo více epoch a~může skončit:
+
+\begin{itemize}
+\item Po pevném počtu epoch,
+\item Po neurčitém počtu epoch, až chyba učení na klesne na určitou hodnotu.~\cite{nn}
+\end{itemize}
+
+\img[1]{Příklad algoritmu zpětného šíření chyby}{img/backpropagation.png}
+\draw
+
+Počáteční hodnoty vah spojů mezi neurony mohou být nastaveny např. náhodně za použití rovnoměrného nebo normálního rozdělění s~nulovou střední hodnotou. Rychlost učení $\alpha$ určuje rychlost, s~jakou se váhy spojů mezi neurony upravují dle chyby při trénování. Obvykle nabývá hodnot jako 0,1, 0,01, 0,001, apod.~\cite{nn}
+
+Čím vyšší rychlost učení je, tím rychleji bude síť natrénovaná, ale tím pravděpodobněji trénování skončí v~nějakém lokálním minimu chybové funkce a~nebude dosaženo tak dobrého výsledku.~\cite{convnn}
+
+\section{Další oblasti umělé inteligence}
+
+Umělá inteligence (UI nebo AI) je podstatně rozsáhlejší obor a~neobsahuje pouze umělé neuronové sítě. Další podoblasti však nejsou natolik důležité v~kontextu této práce, a~proto zde budou popsány pouze okrajově. Ačkoliv se definice v~různých zdrojích různí, AI lze popsat jako odvětví informatiky zabývající se automatizací inteligentního chování strojů.~\cite{ai} Lze ji rozdělit na 2 základní kategorie:
+
+\begin{itemize}
+\item \textbf{Silná umělá inteligence}~--~hypotetická obecná inteligence stroje umožňující řešit jakýkoliv problém, který dokáže řešit člověk. Takový koncept však dosud reálně neexistuje, a proto zde nebude dále rozebírán.
+\item \textbf{Slabá umělá inteligence}~--~skupina algoritmů, technik a~postupů umožňujících řešit nějaký konkrétní a~specifický problém neřešitelný nebo těžko řešitelný běžnými analytickými metodami, avšak často lehce řešitelný člověkem samotným.
+
+\end{itemize}
+
+Přičemž slabou umělou inteligenci lze dále dělit např. na:
+
+\begin{itemize}
+\item \textbf{Strojové učení}~--~část AI umožňující strojům učit se z~dat a~modifikovat tak své chování bez zásahu člověka.
+
+\begin{itemize}
+
+\item \textbf{Hluboké učení}~--~specifická část strojového učení spolehájící se na vícevrstvou interpretaci řešeného problému. Umožňuje hlubší pochopení dané problematiky a~více se tak blíží fungování lidského mozku.
+
+\item \textbf{Umělé neuronové sítě}~--~výpočetní modely vycházející z~biologických neuronových sítí. Existují jednoduché nebo i~vícevrstvé sítě, dále dopředné, rekurentní, konvoluční, samorooganizační nebo třeba modulární. Některé z těchto typů sítí byly detailněji popsány v~kapitole 2.
+
+\end{itemize}
+
+\item \textbf{Evoluční výpočty}~-~podoblast AI napodobující biologické procesy. Často se jedná o~metaheuristické optimalizační techniky, které kromě povahy řešeného problému nepotřebují žádné další informace a řešení (byť ne vždy optimální) najdou samy.
+
+\begin{itemize}
+\item \textbf{Evoluční algoritmy}~--~snaží o~napodobení evoluce a~vychází z pravidla přežití nejsilnějšího. Často se zde vyskytují pojmy jako generace, přirozený výběr, dědíčnost nebo křížení. Spadá sem např. genetický algoritmus nebo algoritmus diferenciální evoluce.
+
+\item \textbf{Inteligence hejna}~--~simulace sociální inteligence v~nějaké množině převážně jednoduchých a~decentralizovaných jedinců. Patří sem např. optimalizace hejnem částic vycházející z~chování hejna ptáků nebo optimalizace mravenčí kolonií, jež se inspirovala mravenci a~jejich komunikací pomocí feromonů.
+
+\end{itemize}
+
+\item \textbf{Expertní systémy}~--~systémy řešící nenumerické problémy umožňující poskytovat expertní rady a~doporučení v~konkrétních situacích. K~tomu využívají bázi znalostí, v~níž mají uloženy všechny známé informace o~problému.
+
+\item \textbf{Fuzzy systémy}~--~systémy založené na fuzzy logice. Ta narozdíl od té výrokové nepracuje s~binárními hodnotami (pravda, nepravda), ale pravdivost tvrzení lze vyjádřit jakoukoliv hodnotou z~intervalu $\left<0; 1\right>$. Fuzzy (mlhavá, nejasná) není exaktní a~jednoznačná a~více se tak blíží té lidské.
+
+\end{itemize}
+
+\img[1]{Rozdělení umělé inteligence}{img/ai.pdf}
+\draw
+
+\subsection{Genetický algoritmus}
+
+Genetický algoritmus (GA) je metaheuristický postup inspirovaný evolučními pravidly, která můžeme vidět v~přírodě kolem nás. Obvykle se používá pro řešení optimalizačních problémů, pro něž neexistuje alternativní použitelný analytický postup.
+
+Jako příklad lze uvést Problém obchodního cestujícího (Traveling salesman problem~--~TSP) patřící mezi NP-těžké úlohy: \textit{„Existuje n měst propojených přímými cestami. Úkolem je navštívit všechna tato města, vrátit se do města počátečního a~přitom urazit co nejkratší vzdálenost.“} Se vzrůstajícím $n$~začne počet možných cest rychle narůstat a~hledat z~nich tu nejkratší exaktními postupy nebo dokonce hrubou silou se tak stane časově neúnosným.
+
+\lstinputlisting[caption={Pseudokód genetického algoritmu}]{codes/ga.txt}
+
+\subsubsection{Inicializace}
+
+Základem tohoto algoritmu je populace jedinců. Každý jedinec v~populaci představuje svým genotypem potenciální řešení problému (ať už dobré nebo špatné). V~případě TSP pro 8 měst může být jedinec reprezentován např. jako sekvence měst, která budou postupně navštívena. Jedinec $x = \{2, 4, 6, 8, 1, 3, 5, 7\}$ tedy nejdříve navštíví města označená sudými čísly a~teprv poté města označená lichými čísly.
+
+\img[1]{Někteří z~vygenerovaných jedinců GA pro TSP}{img/tsp_init.pdf}
+\draw
+
+Na počátku běhu algoritmu dojde k~náhodnému vygenerování K~jedinců~--~ti budou tvořit populaci první generace. Počet jedinců K~v populaci volíme na základě složitosti řešeného problému. Čím vyšší je K, tím déle bude zpravidla běh algoritmu trvat, avšak tím slabilnější bude a~tím spíše najde lepší řešení.
+
+Přestože každý z~jedinců představuje potenciální řešení problému, nejspíše žádné z~nich nebude dostatečně dobré, protože všechna byla pouze vygenerována náhodně. Na obrázku 41 jsou 3~z~vygenerovaných jedinců, kteří v~řešeném TSP urazí 13,1~km, 12,6~km a~12,5~km, což je pro daný počet měst poměrně hodně.
+
+
+\subsubsection{Selekce}
+
+Přirozený výběr je založen na skutečnosti, že úspěšnější (silnější) jedinci mají vyšší pravděpodobnost předat své geny a~rozmnožit se. Abychom tento koncept mohli napodobit i~v~genetickém algoritmu, potřebujeme definovat funkci $F$, která dokáže posoudit kvalitu jedince~--~tzv. fitness.
+
+Podoba této funkce je silně závislá na řešeném problému. V~případě TSP jí může být např. převrácená hodnota délky cesty, kterou jedinec urazí. Čím kratší cesta, tím vyšší fitness jedince a~tím vyšší pravděpodobnost na předání genů do další generace.
+
+\subsubsection{Křížení}
+
+Poté, co jsme vybrali jedince k~předání genů (rodiče) může proběhnout jejich zkřížení. To spočívá v~prostém zkombinování genů obou rodičů. Způsob tohoto kombinování opět závisí na typu řešeného problému. Je třeba zajistit, aby výsledkem křížení byl vždy platný jedinec, popř. neplatné jedince dodatečně opravit.
+
+\img[1]{Příklad křížení jedinců GA pro TSP}{img/crossover.pdf}
+\draw
+
+Na obrázku 42 je uveden příklad křížení jedinců při řešení TSP. První způsob křížení vytvoří potomka tak, že první polovinu genů vezme z~prvního rodiče a~druhou polovinů genů z~druhého rodiče. Tímto způsobem však může vzniknout jedinec, který některá města navštíví vícekrát a~některá ani jednou. Ten však nepředstavuje platné řešení problému, protože TSP vyžaduje, aby všechna města byla navštívena.
+
+Druhý ze způsobů křížení vezme polovinu genů z~prvního rodiče a~k~nim připojí chybějící geny z~druhého rodiče. Tímto způsobem tak vznikne vždy platný potomek.
+
+Křížení je opakováno dokud není vytvořeno K~potomků tvořících další generaci.
+
+\subsubsection{Mutace}
+
+Nyní, když máme další generaci jedinců, je vhodné zajistit vyšší rozmanitost populace. Toho lze docílit tak, že každý jedinec má určitou pravděpodobnost, že zmutuje~--~dojde k~náhodné modifikaci jeho genů.
+
+\img[1]{Příklad mutace jedince GA pro TSP}{img/mutate.pdf}
+
+Výše pravděpodobnosti opět závisí na řešeném problému. Obvykle se však volí v~řádu jednotek procent. Pravděpodobnost může být také proměnlivá, např. v~závislosti na podobnosti rodičů~--~čím podobnější rodiče, tím vyšší pravděpodobnost mutace.
+
+Protože mutace je náhodná změna, dá se očekávat, že ve většině případů povede ke zhoršení kvality jedince. Není však vyloučené, že se kvalita jedince i~zvýší. Když se tak stane, takový jedinec bude mít vyšší pravděpodobnost na předání svých genů, čímž dojde i~ke zvýšení průměrné kvality celé populace.
+
+
+\img[1]{Hledání řešení TSP pomocí GA}{img/tsp_final.pdf}
+\draw
 
 \section{Projekty pro hledání exoplanet}
 
@@ -413,29 +922,70 @@ TODO: \cite{kepler80}
 
 \subsection{TypeScript}
 
+TypeScript (\url{https://www.typescriptlang.org/docs}) je open-source nádstavba JavaScriptu poskytující prvky objektového programování~--~např. třídy a~statické typování. Validní JS je zároveň validním TS, a~proto lze oba jazyky libovolně kombinovat.
+
 \subsubsection{React}
 
-\subsubsection{Styled Components}
+React (\url{https://reactjs.org/docs}) je javascriptová knihovna pro vytváření UI. S~využitím syntaxe JSX umožňuje zapisovat javascriptový kód deklarativně v~podobě HTML tagů. Veškeré změny stavu aplikace jsou tak automaticky vykresleny.
 
-\subsubsection{NPM}
+\lstinputlisting[caption={Ukázka práce s~knihovnou React}]{codes/react.txt}
+
+\subsubsection{Styled components}
+
+Styled components (\url{https://styled-components.com/docs}) je knihovna umožňující psaní CSS kódu přímo k~definici React komponenty.
+
+\lstinputlisting[caption={Ukázka práce s~knihovnou Styled components}]{codes/sc.txt}
 
 \subsection{Python}
 
+Python (\url{https://www.python.org/doc}) je interpretovaný, dynamicky typovaný skriptovací a~programovací jazyk. Podporuje procedurální, objektové a částečně i~funkcionální paradigma. Existují různé implementace, např. CPython (v~C) nebo JPython (v~Javě). Nabízí vysoké pohodlí pro programátora, ovšem na úkor výkonu. Umožňuje však napsat kritické části v~nižším jazyku (např. v~C) a~tento kód pak připojit k~programu jako klasický modul v~Pythonu.
+
 \subsubsection{Flask}
+
+Flask (\url{https://flask.palletsprojects.com}) je webový open-source microframework napsaný v~jazyce Python. Mikroframework poukazuje na minimalistické jádro, které lze rozšiřovat velkým počtem tzv. extensions.
+
+\lstinputlisting[caption={Ukázka práce s~microframeworkem Flask}]{codes/flask.txt}
 
 \subsubsection{Astropy}
 
+Astropy (\url{https://docs.astropy.org}) je kolekce open-source balíčků napsaných v~jazycích C a~Python. Primárním účelem této kolekce (knihovny) je poskytovat klíčové funkce a~nástroje potřebné pro vytvářeního astronomického nebo astrofyzikálního software.
+
+\lstinputlisting[caption={Ukázka práce s~knihovnou Astropy}]{codes/astropy.txt}
+
 \subsubsection{LightKurve}
 
-\subsubsection{TensorFlow}
+LightKurve (\url{https://docs.lightkurve.org}) je dalším z~open-source balíčků pro programy v jazyce Python. Jedná se o~nádstavbu nad Astropy specializovanou pro práci se světelnými křivkami a~TPF z~misí Kepler a~TESS.
 
-\subsubsection{Pip}
+\lstinputlisting[caption={Ukázka práce s~knihovnou LightKurve}]{codes/lk.txt}
+
+\subsubsection{Keras}
+
+Keras (\url{https://keras.io/api}) je vysokoúrovňová nádstavba nad TensorFlow pro práci s~umělými neuronovými sítěmi. Poskytuje jednoduché API a~možnost rozšiřitelnosti.
+
+\lstinputlisting[caption={Tvorba neuronové sítě v~Keras}]{codes/keras.txt}
+
+\subsubsection{MongoEngine}
+
+MongoEngine (\url{http://docs.mongoengine.org}) je objektově-dokumentové mapování (ODM) mezi jazykem Python a~databázi MongoDB. Poskytuje jednoduché deklarativní API a~umožňuje definovat databázová schémata včetně jejich validace.
+\clearpage
+\lstinputlisting[caption={Definice schématu v~MongoEngine}]{codes/mongoengine.txt}
+
+
+\vspace{-10pt}
 
 \subsection{MongoDB}
 
+MongoDB (\url{https://docs.mongodb.com}) je multiplatformní dokumentová NoSQL databáze. Ve verzi zdarma přes cloudovou službu MongoDB Atlas poskytuje kapacitu 512~MB. Kromě jednoduchých CRUD operací nabízí i~robustní Aggregation Framework pro složitější dotazy a~stejně tak podporuje přístup k~datům přes paradigma map-reduce.
+
+\lstinputlisting[caption={Ukázka Aggregation Frameworku z~MongoDB}]{codes/mongodb.txt}
+
+\vspace{-10pt}
+
 \subsection{Socket.io}
 
-\subsection{Git}
+Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klienty a~serverem. Implementace existují v~různých jazycích včetně JavaScriptu (\url{https://socket.io/docs/v3}) a~Pythonu (\url{https://python-socketio.readthedocs.io}).
+
+\lstinputlisting[caption={Ukázka komunikace pomocí socket.io.}]{codes/socket.txt}
 
 
 \section{Návrh~a~vývoj aplikace}
@@ -472,8 +1022,6 @@ Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nes
 \subsubsection{Socket.io API}
 
 Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní HTTP poskytuje také rozhraní Socket.io.
-
-\lstinputlisting[caption={Ukázka komunikace pomocí socket.io.}]{codes/socket.txt}
 
 \subsection{Webová aplikace}
 
@@ -607,17 +1155,30 @@ TODO: Verifikace výsledků.
 \addcontentsline{toc}{section}{Použitá literatura}
 \begin{thebibliography}{99}	% parametr určuje nejširší položku
 
+\onlinesource[CARPINTERO D. D. MELITA M. D]{ttv}{An alternative stable solution for the Kepler-419 system, obtained with the use of a genetic algorithm}{Astronomy \& Astrophysics 620(A88)}{2018}{22.~11.~2020}{https://arxiv.org/abs/1810.06769}
+
+\onlinesource[DATTIO, Anne]{k2superearth}{Identifying Exoplanets with Deep Learning. II. Two New Super-Earths Uncovered by a Neural Network in K2 Data}{The Astronomical Journal 157(5)}{9.~4.~2019}{23.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/ab0e12}
+
 \isbnsource[DOLEŽEL, Petr]{nn}{Úvod do umělých neuronových sítí}{Univerzita Pardubice, Fakulta elektrotechniky a~informatiky}{2016}{9.~10.~2020}{978-80-7560-022-6}
+
+% TODO
+\onlinesource[VRAHATIS, Michael]{ai}{Computational Approaches to Artificial Intelligence: Theory, Methods and Applications.}{Springer}{2019}{28.~11.~2020}{https://www.researchgate.net/publication/334023205_Computational_Approaches_to_Artificial_Intelligence_Theory_Methods_and_Applications}
+
+\isbnsource[KHAN, Salman]{convnn}{A Guide to Convolutional Neural Networks for Computer Vision}{Morgan \& Claypool}{2018}{26.~10.~2020}{781681730226}
 
 \onlinesource[LOVIS, Christophe, FISCHER, Debra A]{radialvelocity}{Radial Velocity Techniques for Exoplanets}{University of Arizona Press}{2011}{25.~12.~2019}{https://www.researchgate.net/publication/253789798_Radial_Velocity_Techniques_for_Exoplanets}
 
 \onlinesource[MARCY, Geoffrey]{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal 481(2)}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088}
 
+\onlinesource[MOUTOU, Claire, PONT, Frédéric]{transit}{Detection and characterization of extrasolar planets: the transit method}{Strasbourg: Observatoire astronomique de Strasbourg et Société Française d'Astronomie et d'Astrophysique}{2006}{8.~10.~2020}{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.4155&rep=rep1&type=pdf}
+
+\onlinesource[OGBUEFI, Kalvin]{transitprops}{Photometry Analysis of Exoplanets WASP-80b~\&~HD 189733b}{Baylor University}{2013}{23.~10.~2020}{https://www.baylor.edu/content/services/document.php/208057.pdf}
+
 \onlinesource[PERRYMAN, Michael]{exoplanets}{Extra-solar planets}{Reports on Progress in Physics 63(8)}{31.~5.~2000}{8.~10.~2020}{https://arxiv.org/abs/astro-ph/0005602}
 
 \onlinesource[SHALLUE, Christopher, VANDERBURG, Andrew]{kepler80}{Identifying Exoplanets with Deep Learning: A Five-planet Resonant Chain around Kepler-80 and an Eighth Planet around Kepler-90}{The Astronomical Journal 155(2)}{30.~1.~2018}{8.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/aa9e09}
 
-\onlinesource[TASKER, Elizabeth, LANEUVILLE, Matthieu, GUTTENBERG, Nicholas]{nnmass}{Estimating Planetary Mass with Deep Learning}{The Astronomical Journal 159(2)}{7.~1.~2020}{9.~10.~2020}{https://iopscience.iop.org/article/10.3847/1538-3881/ab5b9e}
+\onlinesource[TASKER, Elizabeth, LANEUVILLE, Matthieu, GUTTENBERG, Nicholas]{nnmass}{Estimating Planetary Mass with Deep Learning}{The Astronomical Journal 159(2)}{25.~11.~2019}{9.~10.~2020}{https://arxiv.org/abs/1911.11035}
 
 \onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
 
@@ -625,11 +1186,9 @@ TODO: Verifikace výsledků.
 
 \onlinesource{sunlight}{Reference Solar Spectral Irradiance: ASTM G-173}{nrel}{??.~?.~????}{27.~12.~2019}{https://rredc.nrel.gov/solar/spectra/am1.5/ASTMG173/ASTMG173.html}
 
-
 \onlinesource{tess}{TESS Exoplanet Mission}{NASA}{24.~8.~2020}{8.~10.~2020}{https://www.nasa.gov/content/about-tess}
 
-\onlinesource{transit}{Detection and characterization of extrasolar
-planets: the transit method}{???}{2005}{8.~10.~2020}{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.4155&rep=rep1&type=pdf}
+\onlinesource{keras}{Keras API reference}{Keras}{2020}{29.~10.~2020}{https://keras.io/api}
 
 \end{thebibliography}
 
@@ -645,6 +1204,9 @@ TODO: Doplnit reference ze zadání diplomové práce.
 \noindent Příloha~A~~~~Architektura neuronové sítě \dotfill \pageref{priloha_a}
 
 \section*{Příloha~A -- Architektura neuron. sítě}\label{priloha_a}
-\includegraphics[width=\linewidth]{img/cnn.png}
+\includegraphics[width=\linewidth]{img/lc_cnn.png}
+
+\section*{Příloha~B -- Architektura databáze}\label{priloha_b}
+\includegraphics[width=\linewidth]{img/db.png}
 
 \end{document}
