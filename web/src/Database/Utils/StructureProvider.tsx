@@ -121,7 +121,7 @@ export const provideFilterColumns = (table: DbTable, strings: any): [string, str
                 ['created', strings.properties.published, Date],
                 ['modified', strings.properties.modified, Date],
                 ['priority', strings.properties.priority, Object.values(DatasetPriority).filter(value => typeof value === 'number').map(value => ({ text: strings.datasets.priorities[value], value }))], // TODO: DatasetPriority enum.
-                ['url', strings.properties.url, Number]
+                ['url', strings.properties.url, String]
             ]
     }
 

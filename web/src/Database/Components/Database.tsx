@@ -3,13 +3,14 @@ import Styled from 'styled-components'
 
 import { useActions, useStrings, Sort } from '../../Data'
 import { useDrag, useElement } from '../../Native'
-import { ZIndex } from '../../Style'
-import { HierarchicalTable } from '../../Layout'
+import { image, size, ZIndex } from '../../Style'
+import { HierarchicalTable, PrimaryButton } from '../../Layout'
 import { setSort, useCursor, useItems, useTable } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'
 import { provideStructure } from '../Utils/StructureProvider'
 import TableItemDetail from './TableItemDetail'
+import Tooltip from '../../Layout/Components/Tooltip'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -117,6 +118,19 @@ const Table = Styled(HierarchicalTable)`
     }
 `
 
+const Add = Styled.div`
+    bottom: 2rem;
+    position: fixed;
+    right: 2rem;
+`
+
+const AddButton = Styled(PrimaryButton)`
+    ${image('Controls/Add.svg', '40%')}
+    ${size('3rem')}
+`
+
+const addSetCoords = () => ({ x: window.innerWidth - 50, y: window.innerHeight - 70 })
+
 const Database = ({ ...props }: Props) => {
 
     let { filter, segment, sort } = useCursor()
@@ -153,6 +167,13 @@ const Database = ({ ...props }: Props) => {
                         success={() => body}
                         active={() => sort.column === undefined || sort.columnName} />
                 )} />
+                <Add>
+                    <Tooltip render={() => (
+                        null
+                    )} setCoords={addSetCoords}>
+                        <AddButton onClick={() => null} />
+                    </Tooltip>
+                </Add>
         </Root>
     )
 

@@ -13,6 +13,7 @@ class PlotService:
 
 
     def scatter(self, x, y, alpha=0.5, size=10, ratio=DEFAULT_SIZE):
+        pass
 
     def plot_lc(self, time, flux, alpha=0.5, size=10):
         buf = io.BytesIO()

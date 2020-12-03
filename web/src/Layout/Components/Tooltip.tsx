@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import Styled, { css } from 'styled-components'
 import { Color, Duration, ZIndex, zoomIn } from '../../Style'
 import { useTooltip, setTooltip } from '..'
@@ -7,6 +7,7 @@ import { useEvent } from '../../Native'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     render: () => React.ReactNode
+    setCoords?: (event: React.MouseEvent<HTMLDivElement>) => ({ x: number, y: number })
 }
 
 interface AreaProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -18,19 +19,19 @@ interface AreaRootProps {
 }
 
 const Root = Styled.div`
-
+    height: 100%;
 `
 
 const TransformationWrapper = Styled.div<AreaRootProps>`
     pointer-events: none;
     position: fixed;
+    z-index: ${ZIndex.TOOLTIP};
 `
 
 const AreaRoot = Styled.div<AreaRootProps>`
     background-color: #444;
     box-shadow: 0 0 0.5rem ${Color.DARK};
     cursor: auto;
-    overflow: hidden;
     position: relative;    
     transform: scale(0);
     transition: transform ${Duration.MEDIUM};
@@ -46,7 +47,14 @@ const AreaRoot = Styled.div<AreaRootProps>`
     }
 `
 
-const Tooltip = ({ render, ...props }: Props) => {
+const Arrow = Styled.div`
+    border: 0.5rem solid transparent;
+    position: absolute;
+    pointer-events: none;
+    width: 0;
+`
+
+const Tooltip = ({ setCoords, render, ...props }: Props) => {
 
     const id = React.useMemo(() => new Date().getTime() + Math.random().toString(), [])
     const actions = useActions({ setTooltip })
@@ -56,7 +64,7 @@ const Tooltip = ({ render, ...props }: Props) => {
         props.onClick?.(event)
 
         if (!Tooltip.Area.instances[id]) {
-            Tooltip.Area.instances[id] = { coords: { x: event.pageX, y: event.pageY }, render }
+            Tooltip.Area.instances[id] = { coords: setCoords!(event), render }
         } else {
             setTimeout(() => {
                 Tooltip.Area.instances[id] = null
@@ -77,25 +85,32 @@ const TooltipArea = ({ ...props }: AreaProps) => {
     const actions = useActions({ setTooltip })
     const tooltip = useTooltip()
 
-    const getPosition = (id: string) => {
+    const getPosition = (id: string): [CSSProperties?, CSSProperties?] => {
         const instance = TooltipArea.instances[id]
 
         if (!instance) {
-            return undefined
+            return [undefined, undefined]
         }
 
         const withXShift = instance.coords.x > window.innerWidth - 400 // TODO: Calculate width.
-        const withYShift = instance.coords.y > window.innerHeight - 250 // TODO: Calculate height.
+        const withYShift = instance.coords.y > window.innerHeight - 290 // TODO: Calculate height.
 
         const transform = []
-        transform.push(withXShift ? 'translateX(-100%) translateX(-0.5rem)' : 'translateX(0.5rem)')
-        withYShift && transform.push('translateY(-100%)')
+        transform.push(withXShift ? 'translateX(-100%) translateX(2rem)' : 'translateX(-2rem)')
+        transform.push(withYShift ? 'translateY(-100%) translateY(-1.5rem)' : 'translateY(1.5rem)')
 
-        return {
-            transform: transform.join(' '),
-            left: instance.coords.x + 'px',
-            top: instance.coords.y + 'px'
-        }
+        return [
+            {
+                transform: transform.join(' '),
+                left: instance.coords.x + 'px',
+                top: instance.coords.y + 'px'
+            },
+            {
+                [withYShift ? 'top' : 'bottom']: '100%',
+                [withYShift ? 'border-top-color' : 'border-bottom-color']: '#444',
+                [withXShift ? 'right' : 'left']: '2rem'
+            }
+        ]
     }
 
     const getScale = (id: string) => {
@@ -107,7 +122,7 @@ const TooltipArea = ({ ...props }: AreaProps) => {
         }
 
         const withXShift = instance.coords.x > window.innerWidth - 400 // TODO: Calculate width.
-        const withYShift = instance.coords.y > window.innerHeight - 250 // TODO: Calculate height.
+        const withYShift = instance.coords.y > window.innerHeight - 290 // TODO: Calculate height.
 
         return {
             transform: `scale(${+isActive})`,
@@ -123,21 +138,28 @@ const TooltipArea = ({ ...props }: AreaProps) => {
 
     return (
         <>
-            {Object.entries(TooltipArea.instances).map(([id, instance], i: number) => instance && (
-                <TransformationWrapper
-                    key={i}
-                    style={getPosition(id)}
-                    isVisible={id === tooltip.toString()}>
-                    <AreaRoot
-                        {...props}
+            {Object.entries(TooltipArea.instances).map(([id, instance], i: number) => {
+                if (!instance) return null
+
+                const [rootPos, arrowPos] = getPosition(id)
+
+                return (
+                    <TransformationWrapper
                         key={i}
-                        style={getScale(id)}
-                        isVisible={id === tooltip.toString()}
-                        onClick={e => e.stopPropagation()}>
-                        {instance.render()}
-                    </AreaRoot>
-                </TransformationWrapper>
-            ))}
+                        style={rootPos}
+                        isVisible={id === tooltip.toString()}>
+                        <AreaRoot
+                            {...props}
+                            key={i}
+                            style={getScale(id)}
+                            isVisible={id === tooltip.toString()}
+                            onClick={e => e.stopPropagation()}>
+                            <Arrow style={arrowPos} />
+                            {instance.render()}
+                        </AreaRoot>
+                    </TransformationWrapper>
+                )
+            })}
         </>
     )
 
@@ -146,5 +168,9 @@ const TooltipArea = ({ ...props }: AreaProps) => {
 TooltipArea.instances = {} as Record<string, any>
 
 Tooltip.Area = TooltipArea
+
+Tooltip.defaultProps = {
+    setCoords: (e: React.MouseEvent<HTMLDivElement>) => ({ x: e.pageX, y: e.pageY })
+}
 
 export default Tooltip
