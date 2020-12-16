@@ -994,7 +994,7 @@ Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klie
 
 \subsection{Server}
 
-Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~jeho adresářová struktura se dělí na následující moduly:
+Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~jeho struktura se dělí na následující moduly:
 
 \img[1]{Architektura serveru}{img/server.png}
 \draw
@@ -1013,21 +1013,35 @@ K~vytvoření rozhraní je nejdříve třeba nadefinovat příslušné struktury
 
 \lstinputlisting[caption={Vytvoření modelů v~REST API.}]{codes/api_model.txt}
 
-Následně může dojit k~nadefinování koncových bodů rozhraní. Koncovým bodem jsou metody jakékoliv třídy, jež je potomkem \code{Resource}, přičemž názvy metod třídy odpovídají názvům metod HTTP.
-
-\lstinputlisting[caption={Vytvoření koncového bodu v~REST API.}]{codes/rest_endpoint.txt}
+Následně může dojít k~nadefinování koncových bodů rozhraní. Koncovým bodem jsou metody jakékoliv třídy, jež je potomkem \code{Resource}, přičemž názvy metod třídy odpovídají názvům metod HTTP.
 
 Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nesprávnosti vstupních parametrů je odeslána chybová odpověď a~díky anotacím je také automaticky generována dokumentace REST API v~nástroji Swagger~UI dostupná na adrese \url{exoplanets.now.sh/api-docs}. Ukázka dokumentace REST API je umístěna v~příloze [TODO] na konci dokumentu.
 
-\subsubsection{Socket.io API}
+\lstinputlisting[caption={Vytvoření koncového bodu v~REST API.}]{codes/rest_endpoint.txt}
 
-Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní HTTP poskytuje také rozhraní Socket.io.
+\vspace{-10pt}
+
+\subsubsection{Socket.IO API}
+
+Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní HTTP poskytuje také rozhraní Socket.IO.
 
 \subsection{Webová aplikace}
+
+Webová aplikace zprostředkovává interakci s~uživatelem. Je napsána v~jazyce \textit{TypeScript}, pro tvorbu UI je využita knihovna \textit{React} a~pro stylování elementů na stránce knihovna \textit{Styled components}. Zdrojový kód je logicky rozdělen do následujících vrstev a~modulů:
 
 \img[1]{Architektura webové aplikace}{img/web_app.png}
 \draw
 
+Moduly z~vyšších vrstev mohou komunikovat pouze s~moduly ze stejné nebo z~nižších vrstev. Tím je zabráněno kruhovým závislostem.
+
+\img[1]{Princip architektury Redux}{img/redux.png}
+\draw
+
+Ke správě dat je využita architektura a~knihovna Redux ukládající celý stav aplikace v~centralizovaném uložišti (store). Měnit stav tohoto uložiště může pouze funkce \textit{dispatch} jejímž argumentem je akce. Akce je prostý objekt obsahující povinnou položku \textit{type} a~libovolné další položky. Pro pohodlnější práci se často umisťuje akce do funkce zvané \textit{action creator}, která tuto akci vrací.
+
+Funkce \textit{dispatch} následně zjistí aktuální stav aplikace a~společně s~akcí v argumentudra zavolá funkci \textit{reducer}. Ten na základě aktuálního stavu a~akce vrátí stav nový. V~poslední řadě dojde k aktualizaci všech komponent, které jsou napojené na právě změněnou část stavu aplikace.
+
+\lstinputlisting[caption={Ukázka použití knihovny Redux.}]{codes/redux.txt}
 
 \subsection{Klientská aplikace}
 
@@ -1041,6 +1055,10 @@ TODO: Odebrat osy a popisky z obrázku.
 
 \subsection{Databáze}
 
+K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~níž se na straně serveru přistupuje skrze ODM \textit{MongoEngine}.
+
+\lstinputlisting[caption={Připojení k databázi.}]{codes/db_conn.txt}
+
 \subsection{Datasety}
 
 Většina dat se do databáze nevkládá manuálně, jelikož je třeba pracovat se stovkami tisíc či miliony datových položkek. Namísto toho administrátor pouze definuje přístupový bod k~nějakému datasetu dostupnému přes webové rozhraní a~následně dojde k~automatickému zpracování datasetu a~všech položek v~něm. Některé typy datasetů jsou určeny k~jednorázovému uložení do databáze a~není nutno je nijak dál zpracovávat. Zpracování jiných je naopak výpočetně náročné a~připojené klientské aplikace tak činí postupně položku po položce. Jednotlivé typy datasetů jsou popsány níže.
@@ -1050,8 +1068,6 @@ U~všech typů datasetů je také vyřešena situace, kdy by se jedna a~ta samá
 \subsubsection{Target pixel files}
 
 \subsubsection{Světelné křivky hvězd}
-
-\subsubsection{Radiální rychlosti hvězd}
 
 \subsubsection{Hvězdy}
 
@@ -1082,7 +1098,7 @@ Aplikace je postavena flexibilně a~umožňuje libovolně namapovat sloupce z~da
 Datasety s~planetami nejsou pro běh aplikace taktéž nutné, protože veškeré informace o exoplanách jsou vypočítány z~jiných datasetů. Platí však, že čím více nezávislých zdrojů se na údajích o~exoplanetě shodne, tím spíše budou tyto údaje platné. Proto je umožněno ukládat do databáze i~datasety s~údaji o planetách -- mohou potvrdit nebo vyvrátit údaje vypočtené v~rámci aplikace.
 
 \img[1]{Část datasetu s~vlastnostmi planet}{img/planet_properties.png}
-\footnotetext[1]{Zdoj: \url{https://exoplanetarchive.ipac.caltech.edu}.}
+\footnotetext[1]{Zdroj: \url{https://exoplanetarchive.ipac.caltech.edu}.}
 
 Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nutno nijak složitě zpracovávat, pouze uložit do databáze.
 
@@ -1135,17 +1151,57 @@ K~zamezení toho, aby byly tyto položky vedeny jako dvě různé soustavy je nu
 
 \subsection{Přehled}
 
+Domovská stránka nabízí přehled globálních statistik aplikace jako např. počet objevených exoplanet, registrovaných dobrovolníků nebo množství zpracovaných dat. Dále se zde nachází žebříčky exoplanet dle různých kritérií (nejbližší exoplanety, exoplanety nejpodobnější Zemi, ...) a~stejně tak i žebříčky dobrovolníků (dle výpočetního času, počtu objevených planet, ...).
+
+\img[1]{Stránka Přehled}{img/overview_page.png}
+
 \subsection{Databáze}
+
+Všechna veřejně dostupná data (hvězdy, exoplanety, datasety, ...) lze procházet na této stránce. Samozřejmostí je stránkování, řazení dle libovolného údaje i~filtrování dle libovolného údaje nebo relace (rovná se, je menší, obsahuje, ...). Administrátoři mají navíc možnost některé položky přidávat, upravovat či mazat.
+
+\img[1]{Stránka Databáze}{img/db_page.png}
 
 \subsection{Detail systému}
 
-Na jediné stránce jsou shrnuty všechny známé informace o~systému. Kromě hodnot veličin hvězdy a~případných planet jsou zde zaznamenána všechna pozorování, vizuální porovnání velikostí a~vzdáleností oproti sluneční soustavě, seznam referencí a~v~neposlední řadě také interaktivní 3D model systému.
+Tato stránka shrnuje shrnuty všechny známé informace o~vybraném systému. Kromě hodnot veličin hvězdy a~případných planet jsou zde zaznamenána všechna pozorování, vizuální porovnání velikostí a~vzdáleností oproti sluneční soustavě, seznam referencí a~v~neposlední řadě také interaktivní 3D model systému.
+
+\img[1]{Stránka Detail systému}{img/system_page.png}
 
 \subsection{Objevování}
 
-\subsection{Nápověda}
+\vspace{-10pt}
+
+Uživatelé si zde mohou stáhnout klientskou aplikaci a~zapojit se do hledání exoplanet. Vedle toho je zde i výpis všech aktuálně připojených počítačů uživatele včetně některých informací jako např. operační systém, doba běhu nebo kompletní log (jaké položky z~jakých datasetů byly zpracovány, kolik planet bylo objeveno, ...).
+
+\img[1]{Stránka Objevování}{img/discovery_page.png}
+
+\vspace{-20pt}
 
 \subsection{Autentizace}
+
+\wrapimg{Přihlašovací formulář}{img/auth.png}{r}{11}
+
+Komponenty řešící autentizaci uživatele nevyžadují samostatnou stránku, ale jsou kdykoliv dostupné v~pravém horním rohu aplikace, kde je lze kliknutím na tlačítko rozbalit. Vždy jsou viditelné pouze ty komponenty, které daná uživatelská role vyžaduje. Jejich kompletní výčet je uveden v~tabulce 13.
+
+\clearpage
+
+{
+\tab[2]{Autentizační komponenty}{
+	\begin{tabular}{|p{0.3\textwidth}|p{0.15\textwidth}|p{0.5\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Komponenta & Role & Popis \\	
+		\hline	
+		Přihlašovací formulář & Nepřihlášený & Umožňuje uživateli přihlásit se do aplikace. Nabízí možnost autentizace přes email a~heslo nebo i~přes Facebook či Google. \\
+		\hline
+		Registrační formulář & Nepřihlášený & Slouží pro registraci nových uživatelů. Opět umožňuje reistraci přes email a~heslo nebo přes externí služby. \\
+		\hline
+		Formulář pro zapomenuté heslo & Nepřihlášený & Uživatelé si mohou na svůj email poslat odkaz pro nastavení nového hesla. \\
+		\hline
+		Uživatelský panel & Přihlášený & Informace o~aktuálně přihlášeném uživateli včetně tlačítka pro odhlášení. \\
+		\hline
+	\end{tabular}
+}
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
