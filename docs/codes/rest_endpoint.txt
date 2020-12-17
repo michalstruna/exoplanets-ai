@@ -1,6 +1,5 @@
 @api.route("/login")
 class Login(Resource):
-
     @api.response(HttpStatus.OK, user)
     @api.response(HttpStatus.BAD_REQUEST, "Invalid credentials.")
     @api.expect(credentials)

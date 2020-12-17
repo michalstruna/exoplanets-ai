@@ -1,0 +1,6 @@
+db = connect(
+    app.config["DB_NAME"],
+    host=app.config["DB_HOST"],
+    username=app.config["DB_USER"],
+    password=app.config["DB_PASSWORD"]
+)

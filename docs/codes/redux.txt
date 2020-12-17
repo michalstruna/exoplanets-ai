@@ -1,0 +1,11 @@
+const defaultState = { counter: 0 } // State
+
+const reducer = (state = defaultState, action) => { // Reducer
+    switch (action.type) {
+        case 'INCREMENT': return state.counter + action.value
+    }
+}
+
+const store = Redux.createStore(reducer) // Store
+const increment = value => ({ type: 'INCREMENT', value }) // Action
+store.dispatch(increment(7)) // Dispatch
