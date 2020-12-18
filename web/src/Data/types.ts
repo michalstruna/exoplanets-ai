@@ -40,3 +40,5 @@ export type Cursor = {
     sort: Sort
     segment: Segment
 }
+
+export type Strings = any

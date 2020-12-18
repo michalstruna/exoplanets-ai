@@ -34,7 +34,7 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
     const actions = useActions({ addDataset })
     const globalStrings = useStrings()
     const strings = globalStrings.datasets
-    const form = useForm<DatasetNew>({ defaultValues })
+    const form = useForm<DatasetNew>({ defaultValues: dataset ?? defaultValues })
     const values = form.watch()
 
     const handleSubmit = async (values: DatasetNew, form: FormContextValues<DatasetNew>) => {
@@ -54,7 +54,7 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
         <Root {...props}>
             <Form onSubmit={handleSubmit} form={form}>
                 <ControlTitle>
-                    {strings.new}
+                    {dataset ? strings.edit : strings.new}
                 </ControlTitle>
                 <FormGroup title={strings.data}>
                     <Field

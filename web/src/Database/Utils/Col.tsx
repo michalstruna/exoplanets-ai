@@ -3,6 +3,8 @@ import { camelCase, pascalCase } from 'change-case'
 
 import { Numbers } from '../../Native'
 import ItemControls from '../Components/ItemControls'
+import { Strings } from '../../Data'
+import { Column } from '../../Layout'
 
 interface ColOptions<TVal, TItem> {
     name?: string
@@ -16,6 +18,13 @@ interface ColOptions<TVal, TItem> {
     styleMap?: Record<string | number, any>
 }
 
+interface ColOptionsList<TItem> {
+    strings: Strings
+    indexColumnName?: string
+    renderEditForm?: (item: TItem) => React.ReactNode
+    onRemove?: (item: TItem) => void
+}
+
 export const MultiValue = ({ items, property, formatter = val => val }: { items: any[], property: string, formatter?: (val: any, i: any, item: any) => any }) => items ? (
     <div>
         {items.filter(item => !!item[property]).map((item, i) => <div
@@ -23,10 +32,17 @@ export const MultiValue = ({ items, property, formatter = val => val }: { items:
     </div>
 ) : null
 
-export const list = <T extends any>(cols: ColOptions<any, T>[], strings: any): any => {
+/**
+ * Get list of table columns from list of column options.
+ * @param cols List of column options.
+ * @param options Options for columns list. There should be strings and also optionally index and control columns.
+ */
+export const list = <T extends any>(cols: ColOptions<any, T>[], options: ColOptionsList<T>): Column<T, React.ReactNode>[] => {
 
-    // =========================================================================
-    const col = <T extends any>({ format, multi, name, title, styleMap, icon, headerIcon, unit, ...props }: ColOptions<any, T>) => {
+    /**
+     * Get column from column options.
+     */
+    const col = ({ format, multi, name, title, styleMap, icon, headerIcon, unit, ...props }: ColOptions<any, T>) => {
         let formatter = unit ? ((val: number) => <>{Numbers.format(val)} {unit}</>) : format ? format : (val: T) => val
 
         if (styleMap) {
@@ -40,7 +56,8 @@ export const list = <T extends any>(cols: ColOptions<any, T>[], strings: any): a
         }
 
         return {
-            title: title || strings.properties[camelCase(name || '')], name,
+            name,
+            title: title || options.strings[camelCase(name || '')],
             accessor: multi ? (item: any) => <MultiValue items={item[multi]} property={name!} formatter={formatter} /> : (item: any, i: number) => formatter(item[name!], item, i),
             headerIcon: headerIcon !== false && name ? `/img/Database/Table/${pascalCase(name)}.svg` : undefined,
             icon: icon && name ? `/img/Database/Table/${pascalCase(name)}.svg` : undefined,
@@ -50,13 +67,18 @@ export const list = <T extends any>(cols: ColOptions<any, T>[], strings: any): a
 
     const result = [...cols]
 
-    if (true) {
-        //result.unshift({ title: '#', format: (val: T, item: any, i: number) => i + 1, width: '3rem' })
-        result.unshift({ name: 'index', width: '3rem', title: '#', headerIcon: false })
+    if (options.indexColumnName) {
+        result.unshift({ name: options.indexColumnName, width: '3rem', title: '#', headerIcon: false })
     }
 
-    if (true) {
-        result.push({ title: '', format: (val, item, i) => <ItemControls onEdit={() => null} onRemove={() => null} />, width: 1.5 })
+    if (options.renderEditForm || options.onRemove) {
+        //const renderEditForm = options.renderEditForm ? (() => options.renderEditForm(item)) : undefined
+        result.push({ title: '', format: (val, item, i) => (
+            <ItemControls
+                key={i}
+                renderEditForm={options.renderEditForm ? (() => options.renderEditForm!(item)) : undefined}
+                onRemove={options.onRemove ? (() => options.onRemove!(item)) : undefined} />
+        ), width: 1.5 })
     }
 
     return result.map(col)

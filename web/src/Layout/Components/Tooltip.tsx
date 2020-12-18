@@ -62,6 +62,7 @@ const Tooltip = ({ id: _id, setCoords, render, ...props }: Props) => {
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.stopPropagation()
+        event.persist()
         props.onClick?.(event)
 
         if (!Tooltip.Area.instances[id]) {
