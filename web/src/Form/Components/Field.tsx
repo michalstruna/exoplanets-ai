@@ -75,8 +75,8 @@ const Label = Styled.p<LabelProps>`
 
 const Field = ({ label, name, type, required, invalid, validator, placeholder, options, ...props }: Props) => {
 
-    const [value, setValue] = React.useState<string>('')
-    const { register, errors } = useFormContext()
+    const { register, errors, getValues } = useFormContext()
+    const [value, setValue] = React.useState<string>(getValues(name) || '')
 
     const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setValue(event.target.value)
