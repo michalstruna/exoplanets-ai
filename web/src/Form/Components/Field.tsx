@@ -47,6 +47,10 @@ const Input = Styled.input`
     outline: none;
 `
 
+const Select = Styled.select`
+    ${size('100%', '2.3rem')}
+`
+
 const Text = Styled.section`
     ${size('100%', '2rem', true)}
     box-sizing: border-box;
@@ -89,13 +93,13 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
         switch (type) {
             case FieldType.SELECT:
                 return (
-                    <select {...props as any} onChange={handleChange} ref={register(registerOptions)} name={name}>
+                    <Select {...props as any} onChange={handleChange} ref={register(registerOptions)} name={name}>
                         {(options || []).map(({ text, value }, i) => (
                             <option key={value} value={value}>
                                 {text}
                             </option>
                         ))}
-                    </select>
+                    </Select>
                 )
             default:
                 return (
@@ -118,7 +122,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
             <Text>
                 {errors[name] && (
                     <Label error={true}>
-                        {errors[name].message}
+                        {errors[name].message || errors[name].type}
                     </Label>
                 )}
                 <Label>

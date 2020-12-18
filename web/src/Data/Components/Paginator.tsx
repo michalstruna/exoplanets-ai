@@ -76,7 +76,7 @@ const Row = Styled.div`
     }
 `
 
-const Stats = Styled.p`
+const Stats = Styled.div`
     font-size: 85%;
 `
 
@@ -146,9 +146,9 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
                         </Line>
                         <Line>
                         Velikost stránky {(
-                    <PerPage onChange={event => handleChangeSize(parseInt(event.target.value))}>
+                    <PerPage onChange={event => handleChangeSize(parseInt(event.target.value))} defaultValue={page.size}>
                         {[5, 10, 20, 50, 100, 200].map((value, i) => (
-                            <option key={i} value={value} selected={value === page.size}>
+                            <option key={i} value={value}>
                                 {value}
                             </option>
                         ))}

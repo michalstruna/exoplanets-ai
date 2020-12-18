@@ -15,6 +15,12 @@ const Root = Styled(IconText)`
     opacity: 0.8;
     text-align: left;
     max-width: 100%;
+    
+    ${IconText.Text} {
+        width: calc(100% - 2rem);
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 `
 
 const UserName = ({ user, ...props }: Props) => {

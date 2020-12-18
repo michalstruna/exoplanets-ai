@@ -122,10 +122,46 @@ export default {
             [DatasetPriority.NORMAL]: { [CS]: 'Normální', [EN]: 'Normal' },
             [DatasetPriority.HIGH]: { [CS]: 'Vysoká', [EN]: 'High' },
             [DatasetPriority.HIGHEST]: { [CS]: 'Nejvyšší', [EN]: 'Highest' }
-        }
+        },
+
+        // TODO: Remove from properties.
+        type: { [CS]: 'Typ', [EN]: 'Type' },
+        name: { [CS]: 'Název', [EN]: 'Name' },
+        missingName: { [CS]: 'Zadejte název', [EN]: 'Type name' },
+        totalSize: { [CS]: 'Objektů', [EN]: 'Objects' },
+        processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
+        date: { [CS]: 'Datum', [EN]: 'Date' },
+        published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
+        url: 'URL',
+        time: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
+        modified: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
+        priority: { [CS]: 'Priorita', [EN]: 'Priority' },
+
+        new: { [CS]: 'Nový dataset', [EN]: 'New dataset' },
+        add: { [CS]: 'Přidat dataset', [EN]: 'Add dataset' },
+        data: { [CS]: 'Údaje', [EN]: 'Data' },
+        fields: { [CS]: 'Pole', [EN]: 'Fields' },
+        modification: { [CS]: 'Modifikace', [EN]: 'Modification' },
+
+        itemsGetter: { [CS]: 'Items getter', [EN]: 'Items getter' },
+        itemGetter: { [CS]: 'Item getter', [EN]: 'Item getter' },
     },
 
     stars: {
+        type: { [CS]: 'Typ', [EN]: 'Type' },
+        name: { [CS]: 'Název', [EN]: 'Name' },
+        spectral_class: { [CS]: 'Spektrální třída', [EN]: 'Spectral class' },
+        luminosity_class: { [CS]: 'Třída svítivosti', [EN]: 'Luminosity class' },
+        diameter: { [CS]: 'Průměr', [EN]: 'Diameter' },
+        mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
+        distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
+        surface_temperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
+        absolute_magnitude: 'Abs. mag.',
+        apparent_magnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
+        metallicity: { [CS]: 'Metalicita', [EN]: 'Metallicity' },
+        ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
+        dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
+
         unknownSize: { [CS]: 'Typ', [EN]: 'Type' },
         unknownType: { [CS]: 'Neznámý', [EN]: 'Unknown' },
 
@@ -152,7 +188,6 @@ export default {
         orbit: { [CS]: 'Orbita planety', [EN]: 'Planet orbit' },
         lifeZone: { [CS]: 'Zóna života', [EN]: 'Life zone' },
         legend: { [CS]: 'Legenda', [EN]: 'Legend' },
-        distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' }
     },
 
     planets: {

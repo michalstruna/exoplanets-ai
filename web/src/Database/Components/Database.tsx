@@ -11,6 +11,7 @@ import DbTable from '../Constants/DbTable'
 import { provideStructure } from '../Utils/StructureProvider'
 import TableItemDetail from './TableItemDetail'
 import Tooltip from '../../Layout/Components/Tooltip'
+import DatasetForm from './DatasetForm'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -168,9 +169,7 @@ const Database = ({ ...props }: Props) => {
                         active={() => sort.column === undefined || sort.columnName} />
                 )} />
                 <Add>
-                    <Tooltip render={() => (
-                        null
-                    )} setCoords={addSetCoords}>
+                    <Tooltip render={() => <DatasetForm />} setCoords={addSetCoords}>
                         <AddButton onClick={() => null} />
                     </Tooltip>
                 </Add>

@@ -2,7 +2,7 @@ from flask_restx import fields
 
 from service.Dataset import DatasetService
 from utils.http import Api
-from constants.Database import DatasetType
+from constants.Dataset import DatasetType
 
 api = Api("datasets", description="Input datasets.")
 
@@ -22,7 +22,7 @@ dataset_field = api.ns.model("DatasetField", {
 })
 
 dataset_fields = api.ns.model("DatasetFields", {
-    "*": fields.Wildcard(fields.Nested(dataset_field))
+    "*": fields.Wildcard(fields.String())
 })
 
 dataset = api.ns.model("Dataset", {

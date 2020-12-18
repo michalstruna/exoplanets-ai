@@ -97,13 +97,16 @@ export interface StarDetailData extends StarData {
     datasets: Dataset[]
 }
 
-export type Dataset = {
-    _id: string
+export type DatasetNew = {
     name: string
     fields: Record<string, string>
     items_getter?: string
     item_getter?: string
     type: string
+}
+
+export type Dataset = DatasetNew & {
+    _id: string
     total_size: number
     current_size: number
     processed: number

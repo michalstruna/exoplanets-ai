@@ -121,16 +121,10 @@ class LogDocument(Document):
     modified = LongField(required=True)
 
 
-class DatasetField(EmbeddedDocument):
-    name = StringField(required=True, max_length=50)
-    prefix = StringField(max_length=50)
-    multiple = FloatField()
-
-
 class Dataset(LogDocument):
     name = StringField(max_length=50, required=True, unique=True)
-    fields = MapField(EmbeddedDocumentField(DatasetField), required=True)
-    item_getter = URLField(max_length=500, regex=".*{#}.*")
+    fields = MapField(StringField(), required=True)
+    item_getter = StringField(max_length=500)
     items_getter = URLField(max_length=500)
     items = ListField(StringField(max_length=50, default=[], required=True))
     total_size = IntField(min_value=0, required=True)
@@ -138,6 +132,7 @@ class Dataset(LogDocument):
     type = StringField(max_length=50, required=True)
     time = LongField(min_value=0, default=0, required=True)
     priority = IntField(min_value=1, max_value=5, default=3, required=True)
+    fields_meta = DictField()
 
 
 dataset_dao = Dao(Dataset, [
@@ -174,7 +169,7 @@ class StarProperties(EmbeddedDocument):
     dataset = StringField(required=True)
     constellation = StringField()
 
-    life_zone = EmbeddedDocumentField(LifeZone, default={})
+    life_zone = EmbeddedDocumentField(LifeZone)
     ra = FloatField()
     dec = FloatField()
     distance = FloatField(min_value=0)
