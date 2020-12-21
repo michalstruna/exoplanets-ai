@@ -67,15 +67,7 @@ const Form = <Values extends any = any>({ defaultValues, onSubmit, children, for
             {...props}
             noValidate={true}
             data-invalid={/*!(form.formState.isValid || !form.formState.isSubmitted) || */undefined}
-            onSubmit={form.handleSubmit(async values => {
-                await onSubmit(values, form)
-
-                console.log(111, form) // TODO: Error not showing.
-
-                if (!form.errors || !Object.keys(form.errors).length) {
-                //    form.reset()
-                }
-            })}>
+            onSubmit={form.handleSubmit(values => onSubmit(values, form))}>
             <FormContext {...form}>
                 {children}
             </FormContext>

@@ -52,17 +52,9 @@ const slice = Redux.slice(
         getPlotStats: async<void, PlotStats>('plotStats', () => Requests.get(`global_stats/plots`)),
 
         getDatasets: async<Cursor, SegmentData<Dataset>>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
-        addDataset: async<DatasetNew, Dataset>('newDataset', dataset => Requests.post(`datasets`, dataset)),
-        updateDataset: async<[string, DatasetUpdated], Dataset>('updatedDataset', ([id, dataset]) => Requests.put(`datasets/${id}`, dataset), {
-            onSuccess: (state, action) => {
-                state.datasets.payload!.content = state.datasets.payload!.content.map(d => d._id === action.meta?.arg[0] ? action.payload : d)
-            }
-        }),
-        deleteDataset: async<string, void>('deletedDataset', id => Requests.delete(`datasets/${id}`), {
-            onSuccess: (state, action) => {
-                state.datasets.payload!.content = state.datasets.payload!.content.filter(d => d._id !== action.meta?.arg ? action.payload : d)
-            }
-        })
+        addDataset: async<DatasetNew, Dataset>('newDataset', dataset => Requests.post(`datasets`, dataset), { onSuccess: Redux.addToSegment('datasets') }),
+        updateDataset: async<[string, DatasetUpdated], Dataset>('updatedDataset', ([id, dataset]) => Requests.put(`datasets/${id}`, dataset), { onSuccess: Redux.updateInSegment('datasets') }),
+        deleteDataset: async<string, void>('deletedDataset', id => Requests.delete(`datasets/${id}`), { onSuccess: Redux.deleteFromSegment('datasets') })
     })
 )
 

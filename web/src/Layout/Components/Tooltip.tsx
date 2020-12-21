@@ -1,5 +1,6 @@
 import React, { CSSProperties } from 'react'
 import Styled, { css } from 'styled-components'
+
 import { Color, Duration, ZIndex, zoomIn } from '../../Style'
 import { useTooltip, setTooltip } from '..'
 import { useActions } from '../../Data'
@@ -59,6 +60,12 @@ const Tooltip = ({ id: _id, setCoords, render, ...props }: Props) => {
 
     const id = React.useMemo(() => _id ?? new Date().getTime() + Math.random().toString(), [_id])
     const actions = useActions({ setTooltip })
+
+    React.useEffect(() => {
+        if (Tooltip.Area.instances[id]) {
+            Tooltip.Area.instances[id].render = render
+        }
+    }, [render])
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.stopPropagation()
@@ -176,6 +183,7 @@ const TooltipArea = ({ ...props }: AreaProps) => {
 TooltipArea.instances = {} as Record<string, any>
 
 Tooltip.Area = TooltipArea
+Tooltip.hide = () => setTooltip('')
 
 Tooltip.defaultProps = {
     setCoords: (e: React.MouseEvent<HTMLDivElement>) => ({ x: e.pageX, y: e.pageY })

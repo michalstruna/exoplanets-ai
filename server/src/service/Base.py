@@ -33,10 +33,7 @@ class Service(ABC):
         return self.dao.add(item, with_return=with_return)
 
     def delete(self, id):
-        x = self.dao.delete_by_id(id)
-        print(111, x)
-
-        return x
+        return self.dao.delete_by_id(id)
 
     def update(self, id, item, with_return=True):
         return self.dao.update_by_id(id, item, with_return=with_return)

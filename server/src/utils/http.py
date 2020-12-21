@@ -261,7 +261,7 @@ class Api:
             methods["get"] = get
 
         if self.resource_type["delete"]["include"]:
-            @self.ns.marshal_with(None, code=204, description=f"{self.model_name} was successfully deleted.")
+            @self.ns.response(204, f"{self.model_name} was successfully deleted.")
             @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
             def delete(_self, id):
                 return Response.delete(lambda: self.service.delete(id))

@@ -59,9 +59,7 @@ class Dao:
         pass  # TODO
 
     def delete_by_id(self, id):
-        return True
-
-  #      return self.collection(id=id).delete()
+        return self.collection(id=id).delete()
 
     def delete(self):
         pass

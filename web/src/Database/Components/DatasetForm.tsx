@@ -10,6 +10,7 @@ import DatasetPriority from '../Constants/DatasetPriority'
 import DatasetType from '../Constants/DatasetType'
 import DatasetFields from '../Constants/DatasetFields'
 import { addDataset, updateDataset } from '../Redux/Slice'
+import Tooltip from '../../Layout/Components/Tooltip'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     dataset?: Dataset
@@ -31,13 +32,11 @@ const defaultValues: DatasetNew = { fields: {}, item_getter: '', items_getter: '
 
 const DatasetForm = ({ dataset, ...props }: Props) => {
 
-    const actions = useActions({ addDataset, updateDataset })
+    const actions = useActions({ addDataset, updateDataset, hideTooltip: Tooltip.hide })
     const globalStrings = useStrings()
     const strings = globalStrings.datasets
     const form = useForm<DatasetNew>({ defaultValues: dataset ?? defaultValues })
     const values = form.watch()
-
-    console.log(values)
 
     const handleSubmit = async (values: DatasetNew, form: FormContextValues<DatasetNew>) => {
         const { type, ...updateValues } = values
@@ -46,7 +45,8 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, 'Chyba')
         } else {
-            // Tooltip.hide('dataset')
+            form.reset(dataset ? values : undefined)
+            actions.hideTooltip()
         }
     }
 

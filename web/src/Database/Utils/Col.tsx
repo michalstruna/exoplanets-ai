@@ -72,7 +72,6 @@ export const list = <T extends any>(cols: ColOptions<any, T>[], options: ColOpti
     }
 
     if (options.renderEditForm || options.onRemove) {
-        //const renderEditForm = options.renderEditForm ? (() => options.renderEditForm(item)) : undefined
         result.push({ title: '', format: (val, item, i) => (
             <ItemControls
                 key={i}
