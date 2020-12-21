@@ -1,5 +1,5 @@
 enum DatasetPriority {
-    LOWEST,
+    LOWEST = 1,
     LOW,
     NORMAL,
     HIGH ,

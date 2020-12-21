@@ -23,24 +23,17 @@ class DatasetService(Service):
         dataset["total_size"] = len(items.index)
         self.update_meta(dataset)
         items = self.standardize_dataset(dataset, items)
-
-        print("============= 666")
-        print(items)
+        items = items.where(pd.notnull(items), None)
 
         dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
-            items = items.where(pd.notnull(items), None)  # Replace NaN by None.
             dataset["processed"], dataset["items"] = items.memory_usage().sum(), []
             items["dataset"] = dataset["name"]
             stars = self.star_service.complete_stars(items.to_dict("records"))
             tmp = self.star_service.upsert_all_by_name(stars)
 
-            self.stats_service.add(
-                ms=time.now() - start,
-                bytes=dataset["processed"],
-                stars=tmp.upserted_count
-            )
+            self.stats_service.add(ms=time.now() - start, bytes=dataset["processed"], stars=tmp.upserted_count)
         else:
             pass
 

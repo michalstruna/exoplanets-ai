@@ -3,6 +3,7 @@ import Styled from 'styled-components'
 import Urls from 'url'
 import prettyBytes from 'pretty-bytes'
 import { pascalCase } from 'change-case'
+import { Dispatch } from 'redux'
 
 import DbTable from '../Constants/DbTable'
 import { Fraction, IconText, Level, ProgressBar } from '../../Layout'
@@ -17,7 +18,7 @@ import Detail from '../Components/TableItemDetail'
 import SpectralClass from '../Constants/SpectralClass'
 import { Cursor, EnumTextValues, Strings } from '../../Data'
 import PlanetType from '../Constants/PlanetType'
-import { DatasetType, Value } from '../index'
+import { DatasetType, Value, deleteDataset } from '../index'
 import DatasetPriority from '../Constants/DatasetPriority'
 import LuminosityClass from '../Constants/LuminosityClass'
 import PlanetStatus from '../Constants/PlanetStatus'
@@ -153,7 +154,7 @@ const Properties = ({ item, render }: PropertiesProps) => {
 }
 
 
-export const provideStructure = (table: DbTable, strings: Strings): Structure => {
+export const provideStructure = (table: DbTable, strings: Strings, dispatch: Dispatch<any>): Structure => {
     switch (table) {
         case DbTable.BODIES:
             return {
@@ -269,9 +270,9 @@ export const provideStructure = (table: DbTable, strings: Strings): Structure =>
                             { name: 'time', format: val => Dates.formatDistance(strings, 0, val, Dates.Format.LONG) },
                             { name: 'created', format: val => <DateTime s={val} />, title: strings.properties.published },
                             { name: 'modified', format: val => Dates.formatDistance(strings, val) },
-                            { name: 'priority', format: val => strings.datasets.priorities[val - 1], styleMap: priorityStyle },
+                            { name: 'priority', format: val => strings.datasets.priorities[val], styleMap: priorityStyle },
                             { name: 'url', format: (val, item) => <OptionalLine lines={[Urls.parse(item.items_getter || '').hostname, Urls.parse(item.item_getter || '').hostname]} />, width: 2 }
-                        ], { strings: strings.datasets, indexColumnName: 'index', renderEditForm: item => <DatasetForm dataset={item} />, onRemove: () => null })
+                        ], { strings: strings.datasets, indexColumnName: 'index', renderEditForm: item => <DatasetForm dataset={item} />, onRemove: d => dispatch(deleteDataset(d._id)) })
                     }
                 ],
                 getter: getDatasets,

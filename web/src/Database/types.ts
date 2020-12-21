@@ -97,11 +97,14 @@ export interface StarDetailData extends StarData {
     datasets: Dataset[]
 }
 
-export type DatasetNew = {
+export type DatasetUpdated = {
     name: string
     fields: Record<string, string>
     items_getter?: string
     item_getter?: string
+}
+
+export type DatasetNew = DatasetUpdated & {
     type: string
 }
 
@@ -113,7 +116,7 @@ export type Dataset = DatasetNew & {
 }
 
 export type SegmentData<T> = {
-    items: T[]
+    content: T[]
     count: number
 }
 

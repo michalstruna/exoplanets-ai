@@ -203,12 +203,13 @@ class Api:
 
     def __init__(self, name, description=None):
         self.ns = Namespace(name, description=description)
-        self.service, self.full_model, self.new_model, self.model_name, self.map_sort = None, None, None, None, None
+        self.service, self.full_model, self.new_model, self.updated_model, self.model_name, self.map_sort = None, None, None, None, None, None
 
-    def init(self, full_model=None, new_model=None, service=None, model_name=None, map_props=None, resource_type=UNSECURED_RESOURCE):
+    def init(self, full_model=None, new_model=None, updated_model=None, service=None, model_name=None, map_props=None, resource_type=UNSECURED_RESOURCE):
         self.service = service
         self.full_model = full_model
         self.new_model = new_model
+        self.updated_model = updated_model if updated_model else new_model
         self.model_name = model_name
         self.map_props = map_props
         self.resource_type = resource_type
@@ -254,7 +255,6 @@ class Api:
         if self.resource_type["get"]["include"]:
             @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
             @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
-            @self.ns.expect(fields.String)
             def get(_self, id):
                 return Response.get(lambda: self.service.get(id))
 
@@ -263,7 +263,6 @@ class Api:
         if self.resource_type["delete"]["include"]:
             @self.ns.marshal_with(None, code=204, description=f"{self.model_name} was successfully deleted.")
             @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
-            @self.ns.expect(fields.String)
             def delete(_self, id):
                 return Response.delete(lambda: self.service.delete(id))
 
@@ -274,7 +273,7 @@ class Api:
             @self.ns.response(400, f"{self.model_name} is invalid.")
             @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
             @self.ns.response(409, f"{self.model_name} is duplicate.")
-            @self.ns.expect(fields.String)
+            @self.ns.expect(self.updated_model)
             def put(_self, id):
                 return Response.put(lambda: self.service.update(id, request.get_json()))
 

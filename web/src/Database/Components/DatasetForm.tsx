@@ -9,7 +9,7 @@ import { ControlTitle, SubmitButton } from '../../Layout'
 import DatasetPriority from '../Constants/DatasetPriority'
 import DatasetType from '../Constants/DatasetType'
 import DatasetFields from '../Constants/DatasetFields'
-import { addDataset } from '../Redux/Slice'
+import { addDataset, updateDataset } from '../Redux/Slice'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     dataset?: Dataset
@@ -31,19 +31,21 @@ const defaultValues: DatasetNew = { fields: {}, item_getter: '', items_getter: '
 
 const DatasetForm = ({ dataset, ...props }: Props) => {
 
-    const actions = useActions({ addDataset })
+    const actions = useActions({ addDataset, updateDataset })
     const globalStrings = useStrings()
     const strings = globalStrings.datasets
     const form = useForm<DatasetNew>({ defaultValues: dataset ?? defaultValues })
     const values = form.watch()
 
+    console.log(values)
+
     const handleSubmit = async (values: DatasetNew, form: FormContextValues<DatasetNew>) => {
-        let action = await (dataset ? {} : actions.addDataset(values))
+        const { type, ...updateValues } = values
+        let action = await (dataset ? actions.updateDataset([dataset._id, updateValues]) : actions.addDataset(values))
 
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, 'Chyba')
         } else {
-
             // Tooltip.hide('dataset')
         }
     }
@@ -67,7 +69,8 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
                         type={Field.Type.SELECT}
                         label={strings.type}
                         required={strings.missingType}
-                        options={Object.entries(strings.types).map(([value, text]) => ({ text, value } as any))} />
+                        options={Object.entries(strings.types).map(([value, text]) => ({ text, value } as any))}
+                        disabled={!!dataset} />
                     <Field
                         name='priority'
                         type={Field.Type.SELECT}

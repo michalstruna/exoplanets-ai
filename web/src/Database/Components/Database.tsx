@@ -12,6 +12,7 @@ import { provideStructure } from '../Utils/StructureProvider'
 import TableItemDetail from './TableItemDetail'
 import Tooltip from '../../Layout/Components/Tooltip'
 import DatasetForm from './DatasetForm'
+import { useDispatch } from 'react-redux'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -139,7 +140,8 @@ const Database = ({ ...props }: Props) => {
     const table = useTable()
     const { app } = useElement()
     const strings = useStrings()
-    const { levels, rowHeight, getter } = React.useMemo(() => provideStructure(table, strings), [table, strings])
+    const dispatch = useDispatch()
+    const { levels, rowHeight, getter } = React.useMemo(() => provideStructure(table, strings, dispatch), [table, strings, dispatch])
     const items = useItems(table)
 
     const handleSort = (newSort: Partial<Sort>) => {

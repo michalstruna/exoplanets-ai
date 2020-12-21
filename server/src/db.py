@@ -44,7 +44,7 @@ class Dao:
         if "_id" in item:
             del item["_id"]
 
-        self.collection.objects(id=Dao.id(id)).update_one(**self.modified(item), full_result=True)
+        self.collection.objects(id=Dao.id(id)).update_one(**self.modified(item))
 
         if with_return:
             return self.get_by_id(id)  # TODO: Test.
@@ -58,8 +58,10 @@ class Dao:
     def update_all(self):
         pass  # TODO
 
-    def delete_by_id(self):
-        return self.collection(_id=Dao.id(id)).delete()
+    def delete_by_id(self, id):
+        return True
+
+  #      return self.collection(id=id).delete()
 
     def delete(self):
         pass
@@ -114,7 +116,13 @@ class Dao:
         return document
 
 
-class LogDocument(Document):
+class BaseDocument(Document):
+    meta = {"allow_inheritance": True, "abstract": True}
+
+    #_id = ObjectIdField(primary_key=True)
+
+
+class LogDocument(BaseDocument):
     meta = {"allow_inheritance": True, "abstract": True}
 
     created = LongField(required=True)
@@ -251,7 +259,7 @@ class GlobalStatsItem(EmbeddedDocument):
     curves = IntField(required=True, default=0)
 
 
-class GlobalStats(Document):
+class GlobalStats(BaseDocument):
     date = StringField(required=True)
     stats = EmbeddedDocumentField(GlobalStatsItem, required=True)
 
