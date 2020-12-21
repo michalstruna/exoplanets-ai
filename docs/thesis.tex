@@ -299,7 +299,17 @@ Další z~důležitých charakteristik orbity je inklinace (sklon), která nám 
 
 \subsubsection{Výpočet hmotnosti planety}
 
-Hmotnost planety z~tranzitní metody nelze vypočítat. Avšak z~empirických dat je možné ji odhadnout na základě kombinace jiných veličin pomocí umělé neuronové sítě. TODO.~\cite{nnmass}
+Tranzitní metoda nenabízí analytický způsob výpočtu hmotnosti exoplanety. Na základě již známých dat lze pozorovat korelaci mezi různými veličinami. Např. čím je planeta větší, tím pravděpodobněji bude i~hmotnější. Není to však pravidlem. Jistější je spoléhat se na korelaci mezi více veličinami. Nalézt vztahy ve vícerozměrných datech však nemusí být vždy jednoduché. A~zde nachází uplatnění umělá neuronová síť, která je mimo jiné určena pro hledání právě takovýchto vztahů.~\cite{nnmass}
+
+Vše, co potřebujeme, je dostatečně velký dataset s~planetami, u~kterých již známe všechny potřebné veličiny. Na těchto datech proběhne trénování neuronové sítě, která se naučí hustotu rozdělení pravděpodobností hodnot výše zmíněných veličin. S~takto naučenou sítí lze dále provádět 2~typy úloh:
+
+\begin{itemize}
+\item Vygenerovat novou „umělou“ planetu, jejíž vlastnosti jsou realistické (odpovídají náhodným rozdělením planet v~trénovací množině),
+
+\item Nebo užitečnější, na základě známých veličin planety odhadnout veličinu neznámou.
+\end{itemize}
+
+Právě druhý ze zmíněných typů úloh můžeme použít pro výpočet hmotnosti. Např. na základě poloměru, periody a rovnovážné teploty planety, které jsou tranzitní metodou lehce spočitatelné, můžeme odhadnout chybějící hmotnost planety.~\cite{nnmass}
 
 \clearpage
 \subsection{Metoda radiálních rychlostí}
@@ -840,7 +850,7 @@ Přičemž slabou umělou inteligenci lze dále dělit např. na:
 \item \textbf{Evoluční výpočty}~-~podoblast AI napodobující biologické procesy. Často se jedná o~metaheuristické optimalizační techniky, které kromě povahy řešeného problému nepotřebují žádné další informace a řešení (byť ne vždy optimální) najdou samy.
 
 \begin{itemize}
-\item \textbf{Evoluční algoritmy}~--~snaží o~napodobení evoluce a~vychází z pravidla přežití nejsilnějšího. Často se zde vyskytují pojmy jako generace, přirozený výběr, dědíčnost nebo křížení. Spadá sem např. genetický algoritmus nebo algoritmus diferenciální evoluce.
+\item \textbf{Evoluční algoritmy}~--~snaží o~napodobení evoluce a~vychází z pravidla přežití nejsilnějšího. Často se zde vyskytují pojmy jako generace, přirozený výběr, dědičnost nebo křížení. Spadá sem např. genetický algoritmus nebo algoritmus diferenciální evoluce.
 
 \item \textbf{Inteligence hejna}~--~simulace sociální inteligence v~nějaké množině převážně jednoduchých a~decentralizovaných jedinců. Patří sem např. optimalizace hejnem částic vycházející z~chování hejna ptáků nebo optimalizace mravenčí kolonií, jež se inspirovala mravenci a~jejich komunikací pomocí feromonů.
 
@@ -994,7 +1004,7 @@ Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klie
 
 \subsection{Server}
 
-Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~jeho adresářová struktura se dělí na následující moduly:
+Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~jeho struktura se dělí na následující moduly:
 
 \img[1]{Architektura serveru}{img/server.png}
 \draw
@@ -1013,21 +1023,35 @@ K~vytvoření rozhraní je nejdříve třeba nadefinovat příslušné struktury
 
 \lstinputlisting[caption={Vytvoření modelů v~REST API.}]{codes/api_model.txt}
 
-Následně může dojit k~nadefinování koncových bodů rozhraní. Koncovým bodem jsou metody jakékoliv třídy, jež je potomkem \code{Resource}, přičemž názvy metod třídy odpovídají názvům metod HTTP.
-
-\lstinputlisting[caption={Vytvoření koncového bodu v~REST API.}]{codes/rest_endpoint.txt}
+Následně může dojít k~nadefinování koncových bodů rozhraní. Koncovým bodem jsou metody jakékoliv třídy, jež je potomkem \code{Resource}, přičemž názvy metod třídy odpovídají názvům metod HTTP.
 
 Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nesprávnosti vstupních parametrů je odeslána chybová odpověď a~díky anotacím je také automaticky generována dokumentace REST API v~nástroji Swagger~UI dostupná na adrese \url{exoplanets.now.sh/api-docs}. Ukázka dokumentace REST API je umístěna v~příloze [TODO] na konci dokumentu.
 
-\subsubsection{Socket.io API}
+\lstinputlisting[caption={Vytvoření koncového bodu v~REST API.}]{codes/rest_endpoint.txt}
 
-Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní HTTP poskytuje také rozhraní Socket.io.
+\vspace{-10pt}
+
+\subsubsection{Socket.IO API}
+
+Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní HTTP poskytuje také rozhraní Socket.IO.
 
 \subsection{Webová aplikace}
+
+Webová aplikace zprostředkovává interakci s~uživatelem. Je napsána v~jazyce \textit{TypeScript}, pro tvorbu UI je využita knihovna \textit{React} a~pro stylování elementů na stránce knihovna \textit{Styled components}. Zdrojový kód je logicky rozdělen do následujících vrstev a~modulů:
 
 \img[1]{Architektura webové aplikace}{img/web_app.png}
 \draw
 
+Moduly z~vyšších vrstev mohou komunikovat pouze s~moduly ze stejné nebo z~nižší vrstvy. Tím je zabráněno kruhovým závislostem.
+
+\img[1]{Princip architektury Redux}{img/redux.png}
+\draw
+
+Ke správě dat je využita architektura a~knihovna Redux ukládající celý stav aplikace v~centralizovaném uložišti (store). Měnit stav tohoto uložiště může pouze funkce \textit{dispatch} jejímž argumentem je akce. Akce je prostý objekt obsahující povinnou položku \textit{type} a~libovolné další položky. Pro pohodlnější práci se akce často umisťuje do parametrizovatelné funkce zvané \textit{action creator}, která tuto akci vrací.
+
+Funkce \textit{dispatch} následně zjistí aktuální stav aplikace a~společně s~akcí v~argumentu zavolá funkci \textit{reducer}. Ten na základě aktuálního stavu a~akce vrátí stav nový. V~poslední řadě dojde k~překreslení všech komponent, které jsou napojené na právě změněnou část stavu aplikace~--~podoba UI je tak vždy aktuální.
+
+\lstinputlisting[caption={Ukázka použití knihovny Redux.}]{codes/redux.txt}
 
 \subsection{Klientská aplikace}
 
@@ -1041,6 +1065,10 @@ TODO: Odebrat osy a popisky z obrázku.
 
 \subsection{Databáze}
 
+K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~níž se na straně serveru přistupuje skrze ODM \textit{MongoEngine}.
+
+\lstinputlisting[caption={Připojení k databázi.}]{codes/db_conn.txt}
+
 \subsection{Datasety}
 
 Většina dat se do databáze nevkládá manuálně, jelikož je třeba pracovat se stovkami tisíc či miliony datových položkek. Namísto toho administrátor pouze definuje přístupový bod k~nějakému datasetu dostupnému přes webové rozhraní a~následně dojde k~automatickému zpracování datasetu a~všech položek v~něm. Některé typy datasetů jsou určeny k~jednorázovému uložení do databáze a~není nutno je nijak dál zpracovávat. Zpracování jiných je naopak výpočetně náročné a~připojené klientské aplikace tak činí postupně položku po položce. Jednotlivé typy datasetů jsou popsány níže.
@@ -1050,8 +1078,6 @@ U~všech typů datasetů je také vyřešena situace, kdy by se jedna a~ta samá
 \subsubsection{Target pixel files}
 
 \subsubsection{Světelné křivky hvězd}
-
-\subsubsection{Radiální rychlosti hvězd}
 
 \subsubsection{Hvězdy}
 
@@ -1082,7 +1108,7 @@ Aplikace je postavena flexibilně a~umožňuje libovolně namapovat sloupce z~da
 Datasety s~planetami nejsou pro běh aplikace taktéž nutné, protože veškeré informace o exoplanách jsou vypočítány z~jiných datasetů. Platí však, že čím více nezávislých zdrojů se na údajích o~exoplanetě shodne, tím spíše budou tyto údaje platné. Proto je umožněno ukládat do databáze i~datasety s~údaji o planetách -- mohou potvrdit nebo vyvrátit údaje vypočtené v~rámci aplikace.
 
 \img[1]{Část datasetu s~vlastnostmi planet}{img/planet_properties.png}
-\footnotetext[1]{Zdoj: \url{https://exoplanetarchive.ipac.caltech.edu}.}
+\footnotetext[1]{Zdroj: \url{https://exoplanetarchive.ipac.caltech.edu}.}
 
 Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nutno nijak složitě zpracovávat, pouze uložit do databáze.
 
@@ -1135,20 +1161,69 @@ K~zamezení toho, aby byly tyto položky vedeny jako dvě různé soustavy je nu
 
 \subsection{Přehled}
 
+Domovská stránka nabízí přehled globálních statistik aplikace jako např. počet objevených exoplanet, registrovaných dobrovolníků nebo množství zpracovaných dat. Dále se zde nachází žebříčky exoplanet dle různých kritérií (nejbližší exoplanety, exoplanety nejpodobnější Zemi, ...) a~stejně tak i žebříčky dobrovolníků (dle výpočetního času, počtu objevených planet, ...).
+
+\img[1]{Stránka Přehled}{img/overview_page.png}
+
 \subsection{Databáze}
+
+Všechna veřejně dostupná data (hvězdy, exoplanety, datasety, ...) lze procházet na této stránce. Samozřejmostí je stránkování, řazení dle libovolného údaje i~filtrování dle libovolného údaje nebo relace (rovná se, je menší, obsahuje, ...). Administrátoři mají navíc možnost některé položky přidávat, upravovat či mazat.
+
+\img[1]{Stránka Databáze}{img/db_page.png}
 
 \subsection{Detail systému}
 
-Na jediné stránce jsou shrnuty všechny známé informace o~systému. Kromě hodnot veličin hvězdy a~případných planet jsou zde zaznamenána všechna pozorování, vizuální porovnání velikostí a~vzdáleností oproti sluneční soustavě, seznam referencí a~v~neposlední řadě také interaktivní 3D model systému.
+Tato stránka shrnuje shrnuty všechny známé informace o~vybraném systému. Kromě hodnot veličin hvězdy a~případných planet jsou zde zaznamenána všechna pozorování, vizuální porovnání velikostí a~vzdáleností oproti sluneční soustavě, seznam referencí a~v~neposlední řadě také interaktivní 3D model systému.
+
+\img[1]{Stránka Detail systému}{img/system_page.png}
 
 \subsection{Objevování}
 
-\subsection{Nápověda}
+\vspace{-10pt}
+
+Uživatelé si zde mohou stáhnout klientskou aplikaci a~zapojit se do hledání exoplanet. Vedle toho je zde i výpis všech aktuálně připojených počítačů uživatele včetně některých informací jako např. operační systém, doba běhu nebo kompletní log (jaké položky z~jakých datasetů byly zpracovány, kolik planet bylo objeveno, ...).
+
+\img[1]{Stránka Objevování}{img/discovery_page.png}
+
+\vspace{-20pt}
 
 \subsection{Autentizace}
 
+\wrapimg{Přihlašovací formulář}{img/auth.png}{r}{11}
+
+Komponenty řešící autentizaci uživatele nevyžadují samostatnou stránku, ale jsou kdykoliv dostupné v~pravém horním rohu aplikace, kde je lze kliknutím na tlačítko rozbalit. Vždy jsou viditelné pouze ty komponenty, které daná uživatelská role vyžaduje. Jejich kompletní výčet je uveden v~tabulce 13.
+
+\clearpage
+
+{
+\tab[2]{Autentizační komponenty}{
+	\begin{tabular}{|p{0.3\textwidth}|p{0.15\textwidth}|p{0.5\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Komponenta & Role & Popis \\	
+		\hline	
+		Přihlašovací formulář & Nepřihlášený & Umožňuje uživateli přihlásit se do aplikace. Nabízí možnost autentizace přes email a~heslo nebo i~přes Facebook či Google. \\
+		\hline
+		Registrační formulář & Nepřihlášený & Slouží pro registraci nových uživatelů. Opět umožňuje reistraci přes email a~heslo nebo přes externí služby. \\
+		\hline
+		Formulář pro zapomenuté heslo & Nepřihlášený & Uživatelé si mohou na svůj email poslat odkaz pro nastavení nového hesla. \\
+		\hline
+		Uživatelský panel & Přihlášený & Informace o~aktuálně přihlášeném uživateli včetně tlačítka pro odhlášení. \\
+		\hline
+	\end{tabular}
+}
+
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
+
+Potenciálními zlepšeními aplikace do budoucna by mohly být např.:
+
+\begin{itemize}
+\item \textbf{Větší granularita úloh}: Analýza položky z~datasetu se světelnými křivkami trvá na průměrném osobním počítači řádově jednotky minut. V~případě, kdy uživatel násilně ukončí aplikaci uprostřed takového výpočtu by bylo vhodné nepřijít o~dosud vypočítaná data a~v průběhu samotného výpočtu je ukládat i~na server, aby ve výpočtech mohl případně pokračovat jiný uživatel. Na druhé straně, příliš velká granularita by naopak způsobila zbytečně velké množství přenesených dat přes síť.
+
+\item \textbf{Další metody}: Aplikace v~současné době detekuje exoplanety pouze na základě tranzitní metody. Pro zvýšení četnosti objevů a~zpřesnění vypočítaných veličin by tento proces bylo vhodné doplnit i~dalšími metodami. U~většiny ostatních metod však nebyly autorem nalezeny dotatečně velké a~volně přístupné datasety.
+\end{itemize}
+
 
 TODO: Verifikace výsledků.
 
@@ -1170,8 +1245,6 @@ TODO: Verifikace výsledků.
 
 \onlinesource[MARCY, Geoffrey]{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal 481(2)}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088}
 
-\onlinesource[MOUTOU, Claire, PONT, Frédéric]{transit}{Detection and characterization of extrasolar planets: the transit method}{Strasbourg: Observatoire astronomique de Strasbourg et Société Française d'Astronomie et d'Astrophysique}{2006}{8.~10.~2020}{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.4155&rep=rep1&type=pdf}
-
 \onlinesource[OGBUEFI, Kalvin]{transitprops}{Photometry Analysis of Exoplanets WASP-80b~\&~HD 189733b}{Baylor University}{2013}{23.~10.~2020}{https://www.baylor.edu/content/services/document.php/208057.pdf}
 
 \onlinesource[PERRYMAN, Michael]{exoplanets}{Extra-solar planets}{Reports on Progress in Physics 63(8)}{31.~5.~2000}{8.~10.~2020}{https://arxiv.org/abs/astro-ph/0005602}
@@ -1181,6 +1254,8 @@ TODO: Verifikace výsledků.
 \onlinesource[TASKER, Elizabeth, LANEUVILLE, Matthieu, GUTTENBERG, Nicholas]{nnmass}{Estimating Planetary Mass with Deep Learning}{The Astronomical Journal 159(2)}{25.~11.~2019}{9.~10.~2020}{https://arxiv.org/abs/1911.11035}
 
 \onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
+
+\onlinesource[MOUTOU, Claire, PONT, Frédéric]{transit}{Detection and characterization of extrasolar planets: the transit method}{Strasbourg: Observatoire astronomique de Strasbourg et Société Française d'Astronomie et d'Astrophysique}{2006}{8.~10.~2020}{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.4155&rep=rep1&type=pdf}
 
 \onlinesource{nasadata}{NASA Exoplanet Archive}{NASA Exoplanet Science Insititute}{12.~8.~2019}{25.~12.~2019}{https://exoplanetarchive.ipac.caltech.edu/docs/API_exoplanet_columns.html}
 
