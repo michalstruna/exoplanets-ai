@@ -155,3 +155,17 @@ class DatasetService(Service):
 
     def get_all_by_names(self, names):
         return self.get_all({"name": {"$in": names}})
+
+    def update(self, id, item, with_return=True):
+        if "name" in item:
+            dataset = self.get_by_id(id)
+
+            #db.star.updateMany({}, {$set: {"properties.$[current].dataset": "K4"}}, {
+            #    arrayFilters: [{"current.dataset": "K2"}]})
+
+            print(self.star_service.dao.collection.objects.updateMany)
+
+
+            #self.star_service.update_dataset_name(dataset["name"], item["name"])
+
+        return super().update(id, item, with_return);

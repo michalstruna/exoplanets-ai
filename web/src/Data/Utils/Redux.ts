@@ -51,27 +51,28 @@ type ActionsSet<State> = {
     set: SetActionCreator<State>
 }
 
-type ObjectWithId = {
+type UpdatableObject = {
     _id: string
+    index?: number
 }
 
-/** Add item to state property with type AsyncData<SegmentData<ObjectId>>. */
-export const addToSegment = <State extends Record<Key, AsyncData<SegmentData<ObjectWithId>>>, Key extends keyof State, Item extends ObjectWithId, Error>(property: keyof State): any => ( // TODO: Fix type.
+/** Add item to state property with type AsyncData<SegmentData<UpdatableObject>>. */
+export const addToSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): any => ( // TODO: Fix type.
     (state: State, action: Action<Item, Error>) => {
         state[property].payload!.content.push(action.payload)
         state[property].payload!.count++
     }
 )
 
-/** Update item by ID in state property with type AsyncData<SegmentData<ObjectId>>. */
-export const updateInSegment = <State extends Record<Key, AsyncData<SegmentData<ObjectWithId>>>, Key extends keyof State, Item extends ObjectWithId, Error>(property: keyof State): any => ( // TODO: Fix type.
+/** Update item by ID in state property with type AsyncData<SegmentData<UpdatableObject>>. */
+export const updateInSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): any => ( // TODO: Fix type.
     (state: State, action: Action<Item, Error>) => {
-        state[property].payload!.content = state[property].payload!.content.map(item => item._id === action.meta?.arg[0] ? action.payload : item)
+        state[property].payload!.content = state[property].payload!.content.map(item => item._id === action.meta?.arg[0] ? { ...action.payload, index: item.index } : item)
     }
 )
 
-/** Delete item by ID from state property with type AsyncData<SegmentData<ObjectWithId>>. */
-export const deleteFromSegment = <State extends Record<Key, AsyncData<SegmentData<ObjectWithId>>>, Key extends keyof State, Item extends ObjectWithId, Error>(property: keyof State): any => ( // TODO: Fix type.
+/** Delete item by ID from state property with type AsyncData<SegmentData<UpdatableObject>>. */
+export const deleteFromSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): any => ( // TODO: Fix type.
     (state: State, action: Action<Item, Error>) => {
         state[property].payload!.content = state[property].payload!.content.filter(item => item._id !== action.meta?.arg)
         state[property].payload!.count--
