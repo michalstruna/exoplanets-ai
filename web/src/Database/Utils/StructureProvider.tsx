@@ -271,7 +271,7 @@ export const provideStructure = (table: DbTable, strings: Strings, dispatch: Dis
                             { name: 'created', format: val => <DateTime s={val} />, title: strings.properties.published },
                             { name: 'modified', format: val => Dates.formatDistance(strings, val) },
                             { name: 'priority', format: val => strings.datasets.priorities[val], styleMap: priorityStyle },
-                            { name: 'url', format: (val, item) => <OptionalLine lines={[Urls.parse(item.items_getter || '').hostname, Urls.parse(item.item_getter || '').hostname]} />, width: 2 }
+                            { title: 'URL', name: 'items_getter', format: (val, item) => <OptionalLine lines={[Urls.parse(item.items_getter || '').hostname, Urls.parse(item.item_getter || '').hostname]} />, width: 2 }
                         ], { strings: strings.datasets, indexColumnName: 'index', renderEditForm: item => <DatasetForm dataset={item} />, onRemove: d => dispatch(deleteDataset(d._id)) })
                     }
                 ],
@@ -301,5 +301,3 @@ const ItemImage = Styled.div<ItemImageProps>`
     ${props => image(props.image)}
     display: inline - block
 `
-
-// 622 601, 548, 601, 523, 463, 456, 367, 228, 277

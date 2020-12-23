@@ -70,6 +70,7 @@ const Row = Styled.div`
     margin-top: 0.3rem;
     padding: 0 1rem;
     text-align: right;
+    white-space: nowrap;
     
     &:first-of-type {
         margin-top: 0;

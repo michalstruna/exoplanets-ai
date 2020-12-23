@@ -1,7 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useFixedX } from '../../Style'
 import { Paginator, Filter, useActions, useStrings } from '../../Data'
 import { setSegment, setFilter } from '../Redux/Slice'
 import { useCursor, useItems, useTable } from '..'
@@ -19,11 +18,15 @@ const Root = Styled.div`
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
+    overflow: hidden;
     max-width: calc(100% - 2rem);
     
     & > * {
         width: 33.33%;
     }
+    
+    position: sticky;
+    left: 1rem;
 `
 
 const Select = Styled(Form)`
@@ -41,17 +44,13 @@ const FilterForm = Styled(Filter)`
 `
 
 const Page = Styled(Paginator)`
-    widthh: 28rem;
-    min-width: 28rem;
+
 `
 
 const DatabaseSelector = ({ ...props }: Props) => {
 
-    const { segment, filter } = useCursor()
+    const { segment } = useCursor()
     const actions = useActions({ setSegment, setFilter })
-
-    const root = React.useRef()
-    useFixedX(root as any)
 
     const table = useTable()
     const items = useItems(table)
@@ -60,8 +59,9 @@ const DatabaseSelector = ({ ...props }: Props) => {
 
     const filterColumns = React.useMemo(() => provideFilterColumns(table, strings).map(x => ({ text: x[1], value: x[0], values: x[2] })), [table])
 
+
     return (
-        <Root {...props} ref={root as any}>
+        <Root {...props}>
             <Select onSubmit={() => null} defaultValues={{ table }}>
                 <Field
                     name='table'

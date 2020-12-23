@@ -1,9 +1,9 @@
 import pytest
 from http import HTTPStatus
-from uuid import uuid4
 
 from app_factory import create_app
-from constants.Database import DatasetType
+from constants.Dataset import DatasetType, DatasetPriority
+import utils.test as test
 
 
 @pytest.fixture
@@ -12,41 +12,42 @@ def app():
     return app
 
 
-def create_dataset(name=None, type=DatasetType.STAR_PROPERTIES):
-    name = name if name else uuid4().hex[:10]
+def create_dataset(name=None, type=DatasetType.STAR_PROPERTIES, priority=DatasetPriority.NORMAL):
+    name = name if name else test.rand_str(10)
 
     if type == DatasetType.STAR_PROPERTIES:
         return {
             "name": name,
             "fields": {
-                "temperature": {"name": "teff"},
-                "mass": {"name": "mass"},
-                "diameter": {"name": "radius"},
-                "name": {"name": "kepid", "prefix": "KIC "},
-                "distance": {"name": "dist"}
+                "name": "KIC {kepid}",
+                "surface_temperature": "{teff}",
+                "diameter": "{radius*2}",
+                "mass": "{mass}",
+                "ra": 45,
+                "dec": 60,
+                "distance": "{dist}",
+                "apparent_magnitude": "{kepmag}",
+                "metallicity": "{feh}"
             },
             "items_getter": "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=q1_q17_dr25_stellar&select=kepid,teff,radius,mass,dist&where=kepid%20like%20'10000800'%20or%20kepid%20like%20'10001116'",
-            "type": DatasetType.STAR_PROPERTIES.name
+            "type": type.value,
+            "priority": priority.value
         }
 
 
 def test_get_all_datasets_empty(client):
     res = client.get("/api/datasets")
-
-    assert res.json == []
-    assert res.status_code == HTTPStatus.OK
+    test.res_list_eq(res, [])
 
 
-def test_get_all_datasets(client):
+def test_get_datasets(client):
     dataset1 = client.post("/api/datasets", json=create_dataset()).json
     dataset2 = client.post("/api/datasets", json=create_dataset()).json
 
     res = client.get("/api/datasets")
     res_data = res.json
 
-    assert len(res_data) == 2
-    assert dataset1 in res_data
-    assert dataset2 in res_data
+    test.list_eq(res_data, [dataset1, dataset2])
 
 
 def test_add_star_properties_dataset(client):

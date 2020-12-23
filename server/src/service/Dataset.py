@@ -24,7 +24,6 @@ class DatasetService(Service):
         self.update_meta(dataset)
         items = self.standardize_dataset(dataset, items)
         items = items.where(pd.notnull(items), None)
-
         dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
@@ -79,7 +78,6 @@ class DatasetService(Service):
 
     def standardize_dataset(self, dataset, items):
         fields_map = self.fields_to_fields_map(dataset)
-
         items = items[fields_map.keys()].rename(columns=fields_map)
 
         for field_name in dataset["fields"]:
@@ -125,7 +123,7 @@ class DatasetService(Service):
         val = source[field_name].astype(str)
 
         if field_meta["ops"]:
-            val = float(val)
+            val = val.astype(float)
 
             for op in field_meta["ops"]:
                 if op[0] == "+":
@@ -137,11 +135,11 @@ class DatasetService(Service):
                 elif op[0] == "/":
                     val /= op[1]
 
-            val = str(val)
+            val = val.astype(str)
 
         field_type = DatasetFields[dataset["type"]].value[field_name]["type"]
 
-        return field_meta["prefix"] + val + field_meta["suffix"] if field_type == str else field_type(val)
+        return field_meta["prefix"] + val + field_meta["suffix"] if field_type == str else val.astype(field_type)
 
     def fields_to_fields_map(self, dataset):
         fields, meta = dataset["fields"], dataset["fields_meta"]
@@ -159,13 +157,24 @@ class DatasetService(Service):
     def update(self, id, item, with_return=True):
         if "name" in item:
             dataset = self.get_by_id(id)
+            self._external_update_name(self.star_service.dao, dataset["name"], item["name"])  # TODO: Also update planets.
 
-            #db.star.updateMany({}, {$set: {"properties.$[current].dataset": "K4"}}, {
-            #    arrayFilters: [{"current.dataset": "K2"}]})
+        return super().update(id, item, with_return)
 
-            print(self.star_service.dao.collection.objects.updateMany)
+    def delete(self, id):
+        dataset = self.get_by_id(id)
+        self._external_delete(self.star_service.dao, dataset["name"])
+        return super().delete(id)
 
+    # Update dataset name in other DB collections.
+    def _external_update_name(self, dao, old_name, new_name, container_name="properties", field_name="dataset"):
+        dao.collection._get_collection().update_many(
+            {},
+            {"$set": {f"{container_name}.$[current].{field_name}": new_name}},
+            array_filters=[{f"current.{field_name}": old_name}]
+        )
 
-            #self.star_service.update_dataset_name(dataset["name"], item["name"])
+    # Delete all array items with specified dataset.
+    def _external_delete(self, dao, name, container_name="properties", field_name="dataset"):
+        dao.collection._get_collection().update_many({}, {"$pull": {"properties": {"dataset": "K3"}}})
 
-        return super().update(id, item, with_return);
