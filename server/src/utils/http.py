@@ -256,7 +256,7 @@ class Api:
             @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
             @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
             def get(_self, id):
-                return Response.get(lambda: self.service.get(id))
+                return Response.get(lambda: self.service.get_by_id(id))
 
             methods["get"] = get
 

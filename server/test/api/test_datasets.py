@@ -1,5 +1,4 @@
 import pytest
-from http import HTTPStatus
 
 from app_factory import create_app
 from constants.Dataset import DatasetType, DatasetPriority
@@ -23,13 +22,13 @@ def create_dataset(name=None, type=DatasetType.STAR_PROPERTIES, priority=Dataset
                 "surface_temperature": "{teff}",
                 "diameter": "{radius*2}",
                 "mass": "{mass}",
-                "ra": 45,
-                "dec": 60,
+                "ra": "{ra}",
+                "dec": "{dec}",
                 "distance": "{dist}",
                 "apparent_magnitude": "{kepmag}",
                 "metallicity": "{feh}"
             },
-            "items_getter": "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=q1_q17_dr25_stellar&select=kepid,teff,radius,mass,dist&where=kepid%20like%20'10000800'%20or%20kepid%20like%20'10001116'",
+            "items_getter": "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=q1_q17_dr25_stellar&select=kepid,teff,radius,mass,ra,dec,dist,kepmag,feh&where=kepid%20like%20'10000800'%20or%20kepid%20like%20'10001116'",
             "type": type.value,
             "priority": priority.value
         }
@@ -40,16 +39,23 @@ def test_get_all_datasets_empty(client):
     test.res_list_eq(res, [])
 
 
-def test_get_datasets(client):
+def test_get_star_properties_datasets(client):
     dataset1 = client.post("/api/datasets", json=create_dataset()).json
     dataset2 = client.post("/api/datasets", json=create_dataset()).json
 
-    res = client.get("/api/datasets")
-    res_data = res.json
+    res_all = client.get("/api/datasets")
+    res_1 = client.get("/api/datasets/" + dataset1["_id"])
+    res_2 = client.get("/api/datasets/" + dataset2["_id"])
+    res_3 = client.get("/api/datasets/invalid_id")
+    res_4 = client.get("/api/datasets/" + test.rand_str(len(dataset1["_id"])))
 
-    test.list_eq(res_data, [dataset1, dataset2])
+    test.res_list_eq(res_all, [dataset1, dataset2])
+    test.res_eq(res_1, dataset1)
+    test.res_eq(res_2, dataset2)
+    test.res_not_found(res_3)
+    test.res_not_found(res_4)
 
-
+"""
 def test_add_star_properties_dataset(client):
     dataset = create_dataset()
     res = client.post("/api/datasets", json=dataset)
@@ -62,3 +68,4 @@ def test_add_star_properties_dataset(client):
     assert len(res_stars.json) == 2
     assert res_stars.json[0]["properties"][0]["dataset"] == res.json["name"]
     assert res_dataset.json == res.json
+"""
