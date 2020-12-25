@@ -1,4 +1,5 @@
-from flask_restx import fields
+from flask_restx import fields, Resource
+from flask_restx._http import HTTPStatus
 
 from service.Dataset import DatasetService
 from utils.http import Api
@@ -55,6 +56,14 @@ new_dataset = api.ns.inherit("NewDataset", updated_dataset, {
 dataset_item = api.ns.model("DatasetItem", {
     "name": fields.String(required=True, description="Name of item.")
 })
+
+@api.ns.route("/<string:dataset_id>/reset")
+class AggregatedGlobalStats(Resource):
+
+    @api.ns.response(HTTPStatus.OK, description="Data from dataset was reset succesfully.")
+    @api.ns.response(HTTPStatus.NOT_FOUND, description="Dataset with specified ID was not found.")
+    def put(self, dataset_id):
+        dataset_service.reset(dataset_id)
 
 dataset_service = DatasetService()
 api.init(full_model=dataset, new_model=new_dataset, updated_model=updated_dataset, service=dataset_service, model_name="Dataset", map_props=map_props)

@@ -180,3 +180,5 @@ class StarService(Service):
         if "distance" in star and "apparent_magnitude" in star and star["distance"] and star["apparent_magnitude"]:
             return round(star["apparent_magnitude"] + 5 * (1 - math.log10(star["distance"])), 2)
 
+    def delete_empty(self):
+        self.dao.delete({"__raw__": {"$where": "this.properties.length == 0"}})

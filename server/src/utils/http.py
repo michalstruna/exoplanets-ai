@@ -97,7 +97,7 @@ class Request:
         parser = RequestParser()
         parser.add_argument("limit", type=int, default=100, help="Max count of returned items.")
         parser.add_argument("offset", type=int, default=0, help="Skip first n items.")
-        parser.add_argument("filter", type=str, action="append", default=[], help="Filter result by comma separated strings property,relation,value. Relation could be one of eq, cont, gt, gte, lt, lte, stars or ends. Nested property should be separated by dot. Example: 'article.name,cont,Abc'.")
+        parser.add_argument("filter", type=str, action="append", default=[], help="Filter result by comma separated strings property,relation,value. Relation could be one of eq, cont, gt, gte, lt, lte, starts or ends. Nested property should be separated by dot. Example: 'article.name,cont,Abc'.")
         parser.add_argument("sort", type=str, action="append", default=[], help="Sort items by comma separated pairs property,order where order is asc or desc.")
 
         return parser

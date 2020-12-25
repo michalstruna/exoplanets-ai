@@ -61,8 +61,8 @@ class Dao:
     def delete_by_id(self, id):
         return self.collection(id=id).delete()
 
-    def delete(self):
-        pass
+    def delete(self, filter):
+        self.collection.objects(**filter).delete()
 
     def delete_all(self):
         pass

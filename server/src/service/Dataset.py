@@ -157,24 +157,38 @@ class DatasetService(Service):
     def update(self, id, item, with_return=True):
         if "name" in item:
             dataset = self.get_by_id(id)
-            self._external_update_name(self.star_service.dao, dataset["name"], item["name"])  # TODO: Also update planets.
+            self.update_meta(item)
+            self.star_service.update_array_items("properties", "dataset", dataset["name"], item["name"])  # TODO: Also update planets.
 
         return super().update(id, item, with_return)
 
     def delete(self, id):
         dataset = self.get_by_id(id)
-        self._external_delete(self.star_service.dao, dataset["name"])
+        self.star_service.delete_array_items("properties", "dataset", dataset["name"])
+        self.star_service.delete_empty()
         return super().delete(id)
 
-    # Update dataset name in other DB collections.
-    def _external_update_name(self, dao, old_name, new_name, container_name="properties", field_name="dataset"):
-        dao.collection._get_collection().update_many(
-            {},
-            {"$set": {f"{container_name}.$[current].{field_name}": new_name}},
-            array_filters=[{f"current.{field_name}": old_name}]
-        )
+    def reset(self, id):
+        dataset = self.get_by_id(id)
 
-    # Delete all array items with specified dataset.
-    def _external_delete(self, dao, name, container_name="properties", field_name="dataset"):
-        dao.collection._get_collection().update_many({}, {"$pull": {"properties": {"dataset": "K3"}}})
+        if dataset["type"] == DatasetType.STAR_PROPERTIES.value:
+            self.star_service.delete_array_items("properties", "dataset", dataset["name"])
+            self.star_service.delete_empty()
 
+            items = pd.read_csv(dataset["items_getter"])
+            items = self.standardize_dataset(dataset, items)
+            items = items.where(pd.notnull(items), None)
+
+            items["dataset"] = dataset["name"]
+
+            print("€€€€€€€€€€€€€€€€€€€€")
+            for x in items.to_dict("records"):
+                print(x)
+
+            stars = self.star_service.complete_stars(items.to_dict("records"))
+
+            print("############################")
+            for x in stars:
+                print(x)
+
+            self.star_service.upsert_all_by_name(stars)
