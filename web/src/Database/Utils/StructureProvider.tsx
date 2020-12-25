@@ -8,8 +8,8 @@ import { Dispatch } from 'redux'
 import DbTable from '../Constants/DbTable'
 import { Fraction, IconText, Level, ProgressBar } from '../../Layout'
 import { Curve } from '../../Stats'
-import { image, size } from '../../Style'
-import { getDatasets, getStars, getPlanets } from '../Redux/Slice'
+import { Color, image, size } from '../../Style'
+import { getDatasets, getStars, getPlanets, resetDataset } from '../Redux/Slice'
 import { Dates, Numbers } from '../../Native'
 import LifeType from '../Constants/LifeType'
 import * as Col from './Col'
@@ -23,7 +23,7 @@ import DatasetPriority from '../Constants/DatasetPriority'
 import LuminosityClass from '../Constants/LuminosityClass'
 import PlanetStatus from '../Constants/PlanetStatus'
 import BodyType from '../Components/BodyType'
-import { Url } from '../../Routing'
+import { Link, Url } from '../../Routing'
 import { MultiValue } from './Col'
 import DatasetForm from '../Components/DatasetForm'
 
@@ -35,11 +35,30 @@ const DateTime = ({ s }: { s: number }) => (
     </>
 )
 
-const OptionalLine = ({ lines }: { lines: (string | null)[] }) => (
+interface OptionalLineProps {
+    lines: React.ReactNode[]
+    format?: (item: React.ReactNode) => React.ReactNode
+}
+
+const OptionalLine = ({ lines, format }: OptionalLineProps) => (
     <>
-        {lines.filter(line => !!line).map(line => <div>{line}</div>)}
+        {lines.filter(line => !!line).map(line => <div style={{ width: '100%' }}>{format ? format(line!) : line}</div>)}
     </>
 )
+
+const TextLink = Styled(Link)`
+    ${image('Controls/Link.svg', 'auto 90%', 'left center')}
+    box-sizing: border-box;
+    overflow: hidden;
+    padding-left: 1.5rem;
+    text-overflow: ellipsis;
+    text-decoration: underline;
+    max-width: 100%;
+    
+    &:hover, &:active {
+        text-decoration: none;
+    }
+`
 
 const lifeTypeStyle = { [LifeType.PROMISING]: { color: '#AFA', fontWeight: 'bold' }, [LifeType.IMPOSSIBLE]: { color: '#FAA' }, [LifeType.UNKNOWN]: { color: '#777', fontStyle: 'italic' }, [LifeType.POSSIBLE]: { color: '#5FF', fontWeight: 'bold' } }
 const planetStatusStyle = { [PlanetStatus.CANDIDATE]: { color: '#AAA', fontStyle: 'italic' }, [PlanetStatus.CONFIRMED]: { color: '#AFA', fontWeight: 'bold' }, [PlanetStatus.REJECTED]: { color: '#F55' } }
@@ -271,8 +290,14 @@ export const provideStructure = (table: DbTable, strings: Strings, dispatch: Dis
                             { name: 'created', format: val => <DateTime s={val} />, title: strings.properties.published },
                             { name: 'modified', format: val => Dates.formatDistance(strings, val) },
                             { name: 'priority', format: val => strings.datasets.priorities[val], styleMap: priorityStyle },
-                            { title: 'URL', name: 'items_getter', format: (val, item) => <OptionalLine lines={[Urls.parse(item.items_getter || '').hostname, Urls.parse(item.item_getter || '').hostname]} />, width: 2 }
-                        ], { strings: strings.datasets, indexColumnName: 'index', renderEditForm: item => <DatasetForm dataset={item} />, onRemove: d => dispatch(deleteDataset(d._id)) })
+                            { title: 'URL', name: 'items_getter', format: (val, item) => <OptionalLine lines={[item.items_getter, item.item_getter]} format={url => <TextLink pathname={url as string}>{Urls.parse(url as string).hostname}</TextLink>} />, width: 1.75     }
+                        ], {
+                            strings: strings.datasets,
+                            indexColumnName: 'index',
+                            renderEditForm: item => <DatasetForm dataset={item} />,
+                            onRemove: d => dispatch(deleteDataset(d._id)),
+                            onReset: d => dispatch(resetDataset(d._id))
+                        })
                     }
                 ],
                 getter: getDatasets,

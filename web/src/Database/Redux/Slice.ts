@@ -22,7 +22,8 @@ const slice = Redux.slice(
         datasets: Redux.async<SegmentData<Dataset>>(),
         newDataset: Redux.async<Dataset>(),
         updatedDataset: Redux.async<Dataset>(),
-        deletedDataset: Redux.async<void>()
+        deletedDataset: Redux.async<void>(),
+        resetDataset: Redux.async<void>()
     },
     ({ async, set }) => ({
         setFilter: set<FilterData>('filter', {
@@ -54,7 +55,8 @@ const slice = Redux.slice(
         getDatasets: async<Cursor, SegmentData<Dataset>>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
         addDataset: async<DatasetNew, Dataset>('newDataset', dataset => Requests.post(`datasets`, dataset), { onSuccess: Redux.addToSegment('datasets') }),
         updateDataset: async<[string, DatasetUpdated], Dataset>('updatedDataset', ([id, dataset]) => Requests.put(`datasets/${id}`, dataset), { onSuccess: Redux.updateInSegment('datasets') }),
-        deleteDataset: async<string, void>('deletedDataset', id => Requests.delete(`datasets/${id}`), { onSuccess: Redux.deleteFromSegment('datasets') })
+        deleteDataset: async<string, void>('deletedDataset', id => Requests.delete(`datasets/${id}`), { onSuccess: Redux.deleteFromSegment('datasets') }),
+        resetDataset: async<string, void>('resetDataset', id => Requests.put(`datasets/${id}/reset`))
     })
 )
 
@@ -62,7 +64,7 @@ export default slice.reducer
 export const {
     setFilter, setSort, setSegment,
     getStars,
-    getDatasets, addDataset, updateDataset, deleteDataset,
+    getDatasets, addDataset, updateDataset, deleteDataset, resetDataset,
     getPlanets,
     getSystem,
     getGlobalStats, getPlotStats

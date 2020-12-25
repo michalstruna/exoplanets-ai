@@ -7,6 +7,7 @@ import Tooltip from '../../Layout/Components/Tooltip'
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     renderEditForm?: () => React.ReactNode
     onRemove?: () => void
+    onReset?: () => void
 }
 
 const Root = Styled.div`
@@ -34,7 +35,7 @@ const Button = Styled(IconText)`
     }
 `
 
-const ItemControls = ({ renderEditForm, onRemove, ...props }: Props) => {
+const ItemControls = ({ renderEditForm, onRemove, onReset, ...props }: Props) => {
 
     return (
         <Root {...props}>
@@ -44,6 +45,7 @@ const ItemControls = ({ renderEditForm, onRemove, ...props }: Props) => {
                 </Tooltip>
             )}
             {onRemove && <Button text='Smazat' icon='Controls/Delete.svg' size={IconText.SMALL} onClick={onRemove} />}
+            {onReset && <Button text='Reset' icon='Controls/Reset.svg' size={IconText.SMALL} onClick={onReset} />}
         </Root>
     )
 

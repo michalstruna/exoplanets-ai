@@ -54,7 +54,7 @@ const Cell = Styled.div<CellProps>`
     &:not(:first-of-type):not([data-header]):nth-of-type(2n + 1) {
         background-color: rgba(0, 0, 0, 0.07);
     }
-    
+        
     ${props => props.icon && css`
         &:before {
             ${image(undefined)}

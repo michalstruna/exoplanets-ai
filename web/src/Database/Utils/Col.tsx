@@ -18,11 +18,12 @@ interface ColOptions<TVal, TItem> {
     styleMap?: Record<string | number, any>
 }
 
-interface ColOptionsList<TItem> {
+interface ColOptionsList<Item> {
     strings: Strings
     indexColumnName?: string
-    renderEditForm?: (item: TItem) => React.ReactNode
-    onRemove?: (item: TItem) => void
+    renderEditForm?: (item: Item) => React.ReactNode
+    onRemove?: (item: Item) => void
+    onReset?: (item: Item) => void
 }
 
 export const MultiValue = ({ items, property, formatter = val => val }: { items: any[], property: string, formatter?: (val: any, i: any, item: any) => any }) => items ? (
@@ -71,13 +72,16 @@ export const list = <T extends any>(cols: ColOptions<any, T>[], options: ColOpti
         result.unshift({ name: options.indexColumnName, width: '3rem', title: '#', headerIcon: false })
     }
 
-    if (options.renderEditForm || options.onRemove) {
+    const controls = [options.renderEditForm, options.onRemove, options.onReset].filter(c => !!c)
+
+    if (controls.length > 0) {
         result.push({ title: '', format: (val, item, i) => (
             <ItemControls
                 key={i}
                 renderEditForm={options.renderEditForm ? (() => options.renderEditForm!(item)) : undefined}
-                onRemove={options.onRemove ? (() => options.onRemove!(item)) : undefined} />
-        ), width: 1.5 })
+                onRemove={options.onRemove ? (() => options.onRemove!(item)) : undefined}
+                onReset={options.onReset ? (() => options.onReset!(item)) : undefined} />
+        ), width: controls.length * 0.5 + 0.36 })
     }
 
     return result.map(col)
