@@ -200,7 +200,13 @@ export const provideStructure = (table: DbTable, strings: Strings, dispatch: Dis
                                         <MultiValue items={item.light_curves} property='dataset' formatter={val => <IconText text={val} icon='/img/Database/Dataset/TargetPixel.svg' />} />
                                     </div>
                                 ), width: 1.5 }
-                        ], { strings: strings.stars, indexColumnName: 'index' })
+                        ], {
+                            strings: strings.stars,
+                            indexColumnName: 'index',
+                            renderRemove: item => <b>123456789</b>,
+                            onRemove: () => null,
+                            onReset: () => null
+                        })
                     },
                     {
                         columns: Col.list<PlanetData>([
@@ -221,7 +227,13 @@ export const provideStructure = (table: DbTable, strings: Strings, dispatch: Dis
                             { name: 'todo' },
                             { name: 'todo' },
                             { name: 'dataset', format: (val, planet, i) => <IconText text={val} icon={`/img/Database/Dataset/${(planet as any).processed ? 'TargetPixel' : 'PlanetProperties'}.svg`} />, width: 1.5, multi: 'properties' }
-                        ], { strings: strings.planets, indexColumnName: 'index' }),
+                        ], {
+                            strings: strings.planets,
+                            indexColumnName: 'index',
+                            renderRemove: item => <b>123456789</b>,
+                            onRemove: () => null,
+                            onReset: () => null
+                        }),
                         accessor: (star: StarData) => star.planets
                     }
                 ],
@@ -292,7 +304,7 @@ export const provideStructure = (table: DbTable, strings: Strings, dispatch: Dis
                         ], {
                             strings: strings.datasets,
                             indexColumnName: 'index',
-                            renderEditForm: item => <DatasetForm dataset={item} />,
+                            renderEdit: item => <DatasetForm dataset={item} />,
                             onRemove: d => dispatch(deleteDataset(d._id)),
                             onReset: d => dispatch(resetDataset(d._id))
                         })

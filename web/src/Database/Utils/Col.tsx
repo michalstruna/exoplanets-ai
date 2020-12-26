@@ -21,7 +21,10 @@ interface ColOptions<TVal, TItem> {
 interface ColOptionsList<Item> {
     strings: Strings
     indexColumnName?: string
-    renderEditForm?: (item: Item) => React.ReactNode
+    renderEdit?: (item: Item) => React.ReactNode
+    renderRemove?: (item: Item) => React.ReactNode
+    renderReset?: (item: Item) => React.ReactNode
+    onEdit?: (item: Item) => void
     onRemove?: (item: Item) => void
     onReset?: (item: Item) => void
 }
@@ -72,13 +75,16 @@ export const list = <T extends any>(cols: ColOptions<any, T>[], options: ColOpti
         result.unshift({ name: options.indexColumnName, width: '3rem', title: '#', headerIcon: false })
     }
 
-    const controls = [options.renderEditForm, options.onRemove, options.onReset].filter(c => !!c)
+    const controls = [options.renderEdit || options.onEdit, options.renderRemove || options.onRemove, options.renderReset || options.onReset].filter(c => !!c)
 
     if (controls.length > 0) {
         result.push({ title: '', format: (val, item, i) => (
             <ItemControls
                 key={i}
-                renderEditForm={options.renderEditForm ? (() => options.renderEditForm!(item)) : undefined}
+                renderEdit={options.renderEdit ? (() => options.renderEdit!(item)) : undefined}
+                renderRemove={options.renderRemove ? (() => options.renderRemove!(item)) : undefined}
+                renderReset={options.renderReset ? (() => options.renderReset!(item)) : undefined}
+                onEdit={options.onEdit ? (() => options.onEdit!(item)) : undefined}
                 onRemove={options.onRemove ? (() => options.onRemove!(item)) : undefined}
                 onReset={options.onReset ? (() => options.onReset!(item)) : undefined} />
         ), width: controls.length * 0.5 + 0.36 })

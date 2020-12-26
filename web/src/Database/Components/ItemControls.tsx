@@ -5,7 +5,10 @@ import { Color, Duration } from '../../Style'
 import Tooltip from '../../Layout/Components/Tooltip'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    renderEditForm?: () => React.ReactNode
+    renderEdit?: () => React.ReactNode
+    renderRemove?: () => React.ReactNode
+    renderReset?: () => React.ReactNode
+    onEdit?: () => void
     onRemove?: () => void
     onReset?: () => void
 }
@@ -35,17 +38,27 @@ const Button = Styled(IconText)`
     }
 `
 
-const ItemControls = ({ renderEditForm, onRemove, onReset, ...props }: Props) => {
+const ItemControls = ({ renderEdit, renderRemove, renderReset, onEdit, onRemove, onReset, ...props }: Props) => {
 
     return (
         <Root {...props}>
-            {renderEditForm && (
-                <Tooltip render={renderEditForm}>
+            {renderEdit ? (
+                <Tooltip render={renderEdit}>
                     <Button text='Upravit' icon='Controls/Edit.svg' size={IconText.SMALL} onClick={() => null} />
                 </Tooltip>
-            )}
-            {onRemove && <Button text='Smazat' icon='Controls/Delete.svg' size={IconText.SMALL} onClick={onRemove} />}
-            {onReset && <Button text='Reset' icon='Controls/Reset.svg' size={IconText.SMALL} onClick={onReset} />}
+            ) : (onEdit && <Button text='Upravit' icon='Controls/Edit.svg' size={IconText.SMALL} onClick={onEdit} />)}
+
+            {renderRemove ? (
+                <Tooltip render={renderRemove}>
+                    <Button text='Smazat' icon='Controls/Delete.svg' size={IconText.SMALL} onClick={() => null} />
+                </Tooltip>
+            ) : (onRemove && <Button text='Smazat' icon='Controls/Delete.svg' size={IconText.SMALL} onClick={onRemove} />)}
+
+            {renderReset ? (
+                <Tooltip render={renderReset}>
+                    <Button text='Reset' icon='Controls/Reset.svg' size={IconText.SMALL} onClick={onReset} />
+                </Tooltip>
+            ) : (onReset && <Button text='Reset' icon='Controls/Reset.svg' size={IconText.SMALL} onClick={onReset} />)}
         </Root>
     )
 

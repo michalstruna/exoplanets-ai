@@ -47,11 +47,12 @@ const slice = Redux.slice(
                 isAsc: [Query.SORT_IS_ASC, [false, true]]
             })
         }),
-        getStars: async<Cursor, StarData[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
         getPlanets: async<Cursor, PlanetData[]>('planets', cursor => Requests.get('planets', undefined, cursor)),
         getSystem: async<string, StarData>('system', name => Requests.get(`stars/name/${name}`)),
         getGlobalStats: async<void, AggregatedStats>('globalStats', () => Requests.get(`global_stats/aggregated`)),
         getPlotStats: async<void, PlotStats>('plotStats', () => Requests.get(`global_stats/plots`)),
+
+        getStars: async<Cursor, StarData[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
 
         getDatasets: async<Cursor, SegmentData<Dataset>>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
         addDataset: async<DatasetNew, Dataset>('newDataset', dataset => Requests.post(`datasets`, dataset), { onSuccess: Redux.addToSegment('datasets') }),
