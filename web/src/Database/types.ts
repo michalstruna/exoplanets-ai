@@ -39,6 +39,7 @@ export interface PlanetProperties {
 }
 
 export interface PlanetData {
+    _id: string
     properties: PlanetProperties[]
     status: PlanetStatus
 }
@@ -88,6 +89,7 @@ export interface LifeZone {
 }
 
 export interface StarData {
+    _id: string
     properties: StarProperties[]
     light_curves: LightCurve[]
     planets: PlanetData[]

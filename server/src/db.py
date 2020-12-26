@@ -117,8 +117,6 @@ class Dao:
 class BaseDocument(Document):
     meta = {"allow_inheritance": True, "abstract": True}
 
-    #_id = ObjectIdField(primary_key=True)
-
 
 class LogDocument(BaseDocument):
     meta = {"allow_inheritance": True, "abstract": True}

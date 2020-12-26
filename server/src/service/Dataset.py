@@ -171,24 +171,9 @@ class DatasetService(Service):
     def reset(self, id):
         dataset = self.get_by_id(id)
 
-        if dataset["type"] == DatasetType.STAR_PROPERTIES.value:
-            self.star_service.delete_array_items("properties", "dataset", dataset["name"])
-            self.star_service.delete_empty()
+        for key in ["_id", "index", "current_size"]:
+            del dataset[key]
 
-            items = pd.read_csv(dataset["items_getter"])
-            items = self.standardize_dataset(dataset, items)
-            items = items.where(pd.notnull(items), None)
+        self.delete(id)
+        self.add(dataset)
 
-            items["dataset"] = dataset["name"]
-
-            print("€€€€€€€€€€€€€€€€€€€€")
-            for x in items.to_dict("records"):
-                print(x)
-
-            stars = self.star_service.complete_stars(items.to_dict("records"))
-
-            print("############################")
-            for x in stars:
-                print(x)
-
-            self.star_service.upsert_all_by_name(stars)

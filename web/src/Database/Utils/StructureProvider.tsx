@@ -8,7 +8,7 @@ import { Dispatch } from 'redux'
 import DbTable from '../Constants/DbTable'
 import { Fraction, IconText, Level, ProgressBar } from '../../Layout'
 import { Curve } from '../../Stats'
-import { Color, image, size } from '../../Style'
+import { Color, Duration, image, size } from '../../Style'
 import { getDatasets, getStars, getPlanets, resetDataset } from '../Redux/Slice'
 import { Dates, Numbers } from '../../Native'
 import LifeType from '../Constants/LifeType'
@@ -47,16 +47,14 @@ const OptionalLine = ({ lines, format }: OptionalLineProps) => (
 )
 
 const TextLink = Styled(Link)`
-    ${image('Controls/Link.svg', 'auto 90%', 'left center')}
-    box-sizing: border-box;
+    border-bottom: 1px solid ${Color.LIGHT};
     overflow: hidden;
-    padding-left: 1.5rem;
     text-overflow: ellipsis;
-    text-decoration: underline;
-    max-width: 100%;
+    transition: border-color ${Duration.FAST};
+    max-width: calc(100% - 1.5rem);
     
     &:hover, &:active {
-        text-decoration: none;
+        border-color: transparent;
     }
 `
 
@@ -259,7 +257,7 @@ export const provideStructure = (table: DbTable, strings: Strings, dispatch: Dis
                     {
                         columns: Col.list<PlanetData>([
                             { name: 'type', format: (val, item) => <ItemImage image={`Database/Planet/${pascalCase(item.properties[0].type)}.png`} />, width: '4rem', headerIcon: false },
-                            { name: 'name', format: (val, item) => <Detail pathname='/abc' title={item.properties[0].name} subtitle={strings.planets.types[item.properties[0].type]} />, width: 1.5, headerIcon: false },
+                            { name: 'name', format: (val, item) => <Detail title={item.properties[0].name} subtitle={strings.planets.types[item.properties[0].type]} />, width: 1.5, headerIcon: false },
                             { name: 'diameter', unit: '⊕', multi: 'properties' },
                             { name: 'mass', unit: '⊕', multi: 'properties' },
                             { name: 'density', unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/>, multi: 'properties' },
@@ -283,14 +281,14 @@ export const provideStructure = (table: DbTable, strings: Strings, dispatch: Dis
                     {
                         columns: Col.list<Dataset>([
                             { name: 'type', format: val => <ItemImage image={`Database/Dataset/${pascalCase(val)}.svg`} />, width: '4rem', headerIcon: false },
-                            { name: 'name', format: (val, item) => <Detail pathname='/abc' title={val} subtitle={strings.datasets.types[item.type]} />, width: 1.5, headerIcon: false },
+                            { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.datasets.types[item.type]} />, width: 1.5, headerIcon: false },
                             { name: 'total_size', format: Numbers.format },
                             { name: 'processed', format: (val, item) => <ProgressBar range={item.total_size} value={item.total_size - item.current_size} label={prettyBytes(item.processed || 0)} title={`${Numbers.format(item.total_size - item.current_size)} / ${Numbers.format(item.total_size)}`} /> },
                             { name: 'time', format: val => Dates.formatDistance(strings, 0, val, Dates.Format.LONG) },
                             { name: 'created', format: val => <DateTime s={val} />, title: strings.properties.published },
                             { name: 'modified', format: val => Dates.formatDistance(strings, val) },
                             { name: 'priority', format: val => strings.datasets.priorities[val], styleMap: priorityStyle },
-                            { title: 'URL', name: 'items_getter', format: (val, item) => <OptionalLine lines={[item.items_getter, item.item_getter]} format={url => <TextLink pathname={url as string}>{Urls.parse(url as string).hostname}</TextLink>} />, width: 1.75     }
+                            { icon: true, title: 'URL', name: 'items_getter', format: (val, item) => <OptionalLine lines={[item.items_getter, item.item_getter]} format={url => <TextLink pathname={url as string}>{Urls.parse(url as string).hostname}</TextLink>} />, width: 1.75     }
                         ], {
                             strings: strings.datasets,
                             indexColumnName: 'index',

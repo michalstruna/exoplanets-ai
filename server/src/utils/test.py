@@ -92,14 +92,6 @@ class Comparator:
                     _ignore = ignore[i] if i in ignore else []
                     Comparator.is_in(actual[i], expected[i], path=[*path, i], ignore=_ignore)
         elif isinstance(expected, list):
-            print("==================================")
-            for x in actual:
-                print(x)
-            print("--------------------------------------------")
-            for x in expected:
-                print(x)
-
-            print(len(actual), len(expected))
             assert len(actual) == len(expected)
 
             for i in range(len(expected)):
