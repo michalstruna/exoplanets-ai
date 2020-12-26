@@ -1,5 +1,5 @@
 import React from 'react'
-import Styled from 'styled-components'
+import Styled, { css } from 'styled-components'
 import { Link, LinkData } from '../../Routing'
 import { Duration, image, size } from '../../Style'
 
@@ -8,24 +8,28 @@ interface Props extends Omit<React.ComponentPropsWithoutRef<'a'>, 'title'>, Link
     subtitle: React.ReactNode
 }
 
-const Root = Styled(Link)`
+const Root = Styled(Link)<LinkData>`
     ${size()}
     align-items: center;
     display: flex;
-
-    &:after {   
-        ${image('Controls/ArrowRight.svg', '80%')}
-        ${size('1rem')}
-        content: "";
-        display: inline-block;
-        margin-left: 0.5rem;
-        opacity: 0.8;
-        vertical-align: middle;
-        transition: transform ${Duration.MEDIUM}, opacity ${Duration.MEDIUM};
-    }
+    
+    ${props => props.pathname && css`
+        &:after {   
+            ${image('Controls/ArrowRight.svg', '80%')}
+            ${size('1rem')}
+            content: "";
+            display: inline-block;
+            margin-left: 0.5rem;
+            opacity: 0.8;
+            vertical-align: middle;
+            transition: transform ${Duration.MEDIUM}, opacity ${Duration.MEDIUM};
+        }
+    `}
 `
 
 const TableItemDetail = ({ title, subtitle, ...props }: Props) => {
+
+    console.log(props)
 
     return (
         <Root {...props}>

@@ -44,7 +44,7 @@ class Dao:
         if "_id" in item:
             del item["_id"]
 
-        self.collection.objects(id=Dao.id(id)).update_one(**self.modified(item), full_result=True)
+        self.collection.objects(id=Dao.id(id)).update_one(**self.modified(item))
 
         if with_return:
             return self.get_by_id(id)  # TODO: Test.
@@ -58,11 +58,11 @@ class Dao:
     def update_all(self):
         pass  # TODO
 
-    def delete_by_id(self):
-        return self.collection(_id=Dao.id(id)).delete()
+    def delete_by_id(self, id):
+        return self.collection(id=id).delete()
 
-    def delete(self):
-        pass
+    def delete(self, filter):
+        self.collection.objects(**filter).delete()
 
     def delete_all(self):
         pass
@@ -114,23 +114,21 @@ class Dao:
         return document
 
 
-class LogDocument(Document):
+class BaseDocument(Document):
+    meta = {"allow_inheritance": True, "abstract": True}
+
+
+class LogDocument(BaseDocument):
     meta = {"allow_inheritance": True, "abstract": True}
 
     created = LongField(required=True)
     modified = LongField(required=True)
 
 
-class DatasetField(EmbeddedDocument):
-    name = StringField(required=True, max_length=50)
-    prefix = StringField(max_length=50)
-    multiple = FloatField()
-
-
 class Dataset(LogDocument):
     name = StringField(max_length=50, required=True, unique=True)
-    fields = MapField(EmbeddedDocumentField(DatasetField), required=True)
-    item_getter = URLField(max_length=500, regex=".*{#}.*")
+    fields = MapField(StringField(), required=True)
+    item_getter = StringField(max_length=500)
     items_getter = URLField(max_length=500)
     items = ListField(StringField(max_length=50, default=[], required=True))
     total_size = IntField(min_value=0, required=True)
@@ -138,6 +136,7 @@ class Dataset(LogDocument):
     type = StringField(max_length=50, required=True)
     time = LongField(min_value=0, default=0, required=True)
     priority = IntField(min_value=1, max_value=5, default=3, required=True)
+    fields_meta = DictField()
 
 
 dataset_dao = Dao(Dataset, [
@@ -174,7 +173,7 @@ class StarProperties(EmbeddedDocument):
     dataset = StringField(required=True)
     constellation = StringField()
 
-    life_zone = EmbeddedDocumentField(LifeZone, default={})
+    life_zone = EmbeddedDocumentField(LifeZone)
     ra = FloatField()
     dec = FloatField()
     distance = FloatField(min_value=0)
@@ -256,7 +255,7 @@ class GlobalStatsItem(EmbeddedDocument):
     curves = IntField(required=True, default=0)
 
 
-class GlobalStats(Document):
+class GlobalStats(BaseDocument):
     date = StringField(required=True)
     stats = EmbeddedDocumentField(GlobalStatsItem, required=True)
 

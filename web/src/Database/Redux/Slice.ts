@@ -1,7 +1,7 @@
 import { Query } from '../../Routing'
 import { Redux,  FilterData, Sort, Segment, Cursor } from '../../Data'
 import { Requests } from '../../Async'
-import { Dataset, StarData, PlanetData } from '../types'
+import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData } from '../types'
 import { AggregatedStats, PlotStats } from '../../Stats'
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
@@ -11,14 +11,20 @@ const slice = Redux.slice(
     {
         stars: Redux.async<StarData[]>(),
         planets: Redux.async<PlanetData[]>(),
-        datasets: Redux.async<Dataset[]>(),
         filter: Redux.empty<FilterData>({}),
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),
         system: Redux.async<StarData>(),
         usersRank: 0,
         globalStats: Redux.async<AggregatedStats>(),
-        plotStats: Redux.async<PlotStats>()
+        plotStats: Redux.async<PlotStats>(),
+
+        datasets: Redux.async<SegmentData<Dataset>>(),
+        newDataset: Redux.async<Dataset>(),
+
+        updatedItem: Redux.async<Dataset>(),
+        deletedItem: Redux.async<void>(),
+        resetItem: Redux.async<void>()
     },
     ({ async, set }) => ({
         setFilter: set<FilterData>('filter', {
@@ -43,12 +49,24 @@ const slice = Redux.slice(
         }),
         getStars: async<Cursor, StarData[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
         getPlanets: async<Cursor, PlanetData[]>('planets', cursor => Requests.get('planets', undefined, cursor)),
-        getDatasets: async<Cursor, Dataset[]>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
         getSystem: async<string, StarData>('system', name => Requests.get(`stars/name/${name}`)),
         getGlobalStats: async<void, AggregatedStats>('globalStats', () => Requests.get(`global_stats/aggregated`)),
-        getPlotStats: async<void, PlotStats>('plotStats', () => Requests.get(`global_stats/plots`))
+        getPlotStats: async<void, PlotStats>('plotStats', () => Requests.get(`global_stats/plots`)),
+
+        getDatasets: async<Cursor, SegmentData<Dataset>>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
+        addDataset: async<DatasetNew, Dataset>('newDataset', dataset => Requests.post(`datasets`, dataset), { onSuccess: Redux.addToSegment('datasets') }),
+        updateDataset: async<[string, DatasetUpdated], Dataset>('updatedItem', ([id, dataset]) => Requests.put(`datasets/${id}`, dataset), { onSuccess: Redux.updateInSegment('datasets') }),
+        deleteDataset: async<string, void>('updatedItem', id => Requests.delete(`datasets/${id}`), { onSuccess: Redux.deleteFromSegment('datasets') }),
+        resetDataset: async<string, void>('updatedItem', id => Requests.put(`datasets/${id}/reset`))
     })
 )
 
 export default slice.reducer
-export const { setFilter, setSort, setSegment, getStars, getDatasets, getPlanets, getSystem, getGlobalStats, getPlotStats } = slice.actions
+export const {
+    setFilter, setSort, setSegment,
+    getStars,
+    getDatasets, addDataset, updateDataset, deleteDataset, resetDataset,
+    getPlanets,
+    getSystem,
+    getGlobalStats, getPlotStats
+} = slice.actions

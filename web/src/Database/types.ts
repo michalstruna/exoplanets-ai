@@ -39,6 +39,7 @@ export interface PlanetProperties {
 }
 
 export interface PlanetData {
+    _id: string
     properties: PlanetProperties[]
     status: PlanetStatus
 }
@@ -88,6 +89,7 @@ export interface LifeZone {
 }
 
 export interface StarData {
+    _id: string
     properties: StarProperties[]
     light_curves: LightCurve[]
     planets: PlanetData[]
@@ -97,20 +99,26 @@ export interface StarDetailData extends StarData {
     datasets: Dataset[]
 }
 
-export type Dataset = {
-    _id: string
+export type DatasetUpdated = {
     name: string
     fields: Record<string, string>
     items_getter?: string
     item_getter?: string
+}
+
+export type DatasetNew = DatasetUpdated & {
     type: string
+}
+
+export type Dataset = DatasetNew & {
+    _id: string
     total_size: number
     current_size: number
     processed: number
 }
 
 export type SegmentData<T> = {
-    items: T[]
+    content: T[]
     count: number
 }
 

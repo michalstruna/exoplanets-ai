@@ -122,10 +122,57 @@ export default {
             [DatasetPriority.NORMAL]: { [CS]: 'Normální', [EN]: 'Normal' },
             [DatasetPriority.HIGH]: { [CS]: 'Vysoká', [EN]: 'High' },
             [DatasetPriority.HIGHEST]: { [CS]: 'Nejvyšší', [EN]: 'Highest' }
-        }
+        },
+
+        // TODO: Remove from properties.
+        type: { [CS]: 'Typ', [EN]: 'Type' },
+        name: { [CS]: 'Název', [EN]: 'Name' },
+        missingName: { [CS]: 'Zadejte název', [EN]: 'Type name' },
+        totalSize: { [CS]: 'Objektů', [EN]: 'Objects' },
+        processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
+        date: { [CS]: 'Datum', [EN]: 'Date' },
+        published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
+        url: 'URL',
+        time: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
+        modified: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
+        priority: { [CS]: 'Priorita', [EN]: 'Priority' },
+
+        new: { [CS]: 'Nový dataset', [EN]: 'New dataset' },
+        add: { [CS]: 'Přidat dataset', [EN]: 'Add dataset' },
+        edit: { [CS]: 'Upravit dataset', [EN]: 'Edit dataset' },
+        data: { [CS]: 'Údaje', [EN]: 'Data' },
+        fields: { [CS]: 'Pole', [EN]: 'Fields' },
+        modification: { [CS]: 'Modifikace', [EN]: 'Modification' },
+
+        itemsGetter: { [CS]: 'Items getter', [EN]: 'Items getter' },
+        itemGetter: { [CS]: 'Item getter', [EN]: 'Item getter' },
     },
 
     stars: {
+        // Properties
+        type: { [CS]: 'Typ', [EN]: 'Type' },
+        name: { [CS]: 'Název', [EN]: 'Name' },
+        spectral_class: { [CS]: 'Spektrální třída', [EN]: 'Spectral class' },
+        luminosity_class: { [CS]: 'Třída svítivosti', [EN]: 'Luminosity class' },
+        diameter: { [CS]: 'Průměr', [EN]: 'Diameter' },
+        mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
+        density: { [CS]: 'Hustota', [EN]: 'Density' },
+        surfaceTemperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
+        luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
+        distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
+        surface_temperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
+        absolute_magnitude: 'Abs. mag.',
+        apparent_magnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
+        metallicity: { [CS]: 'Metalicita', [EN]: 'Metallicity' },
+        ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
+        dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
+        surfaceGravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
+        planets: { [CS]: 'Planet', [EN]: 'Planets' },
+        dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
+        lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
+        absoluteMagnitude: 'Abs. mag.',
+        apparentMagnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
+
         unknownSize: { [CS]: 'Typ', [EN]: 'Type' },
         unknownType: { [CS]: 'Neznámý', [EN]: 'Unknown' },
 
@@ -152,13 +199,30 @@ export default {
         orbit: { [CS]: 'Orbita planety', [EN]: 'Planet orbit' },
         lifeZone: { [CS]: 'Zóna života', [EN]: 'Life zone' },
         legend: { [CS]: 'Legenda', [EN]: 'Legend' },
-        distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' }
     },
 
     planets: {
+        // Properties
+        name: { [CS]: 'Název', [EN]: 'Name' },
+        type: { [CS]: 'Typ', [EN]: 'Type' },
+        diameter: { [CS]: 'Průměr', [EN]: 'Diatemer' },
+        mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
+        density: { [CS]: 'Hustota', [EN]: 'Density' },
+        surfaceTemperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
+        semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
+        transit: { [CS]: 'Tranzit', [EN]: 'Transit' },
+        orbitalPeriod: { [CS]: 'Perioda', [EN]: 'Period' },
+        orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
+        lifeConditions: { [CS]: 'Život', [EN]: 'Life' },
+        planet: { [CS]: 'Planeta', [EN]: 'Planet' },
+        status: 'Status',
+        eccentricity: { [CS]: 'Excentricita', [EN]: 'Eccentricity' },
+        surfaceGravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
+        dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
+
         unknownType: { [CS]: 'Neznámý typ', [EN]: 'Unknown type' },
 
-        lifeConditions: {
+        lifeConditionsTypes: {
             [LifeType.IMPOSSIBLE]: { [CS]: 'Vyloučen', [EN]: 'Impossible' },
             [LifeType.POSSIBLE]: { [CS]: 'Možný', [EN]: 'Possible' },
             [LifeType.UNKNOWN]: { [CS]: 'Neznámý', [EN]: 'Unknown' },

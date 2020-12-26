@@ -94,9 +94,10 @@ const YAxis = Styled.div<YAxisProps>`
     
     ${AxisLabel} {
         position: relative;
-        transform: rotate(-90deg) translateY(-50%);
+        transform: rotate(-90deg) translateY(-260%);
         top: 50%;
         white-space: nowrap;
+        width: 6rem;
     }
 `
 

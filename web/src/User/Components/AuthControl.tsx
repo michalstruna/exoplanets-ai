@@ -2,16 +2,19 @@ import React from 'react'
 
 import Auth from './Auth'
 import UserRole from '../Constants/UserRole'
-import { Window, IconText } from '../../Layout'
+import { IconText } from '../../Layout'
 import { useIdentity } from '../index'
 import UserPreview from './UserPreview'
 import AuthForm from './AuthForm'
+import Tooltip from '../../Layout/Components/Tooltip'
 
-interface Props extends React.ComponentPropsWithoutRef<'div'> {
+interface Props {
 
 }
 
-const AuthControl = ({ ...props }: Props) => {
+const setCoords = () => ({ x: window.innerWidth - 70, y: 25 })
+
+const AuthControl = ({  }: Props) => {
 
     const identity = useIdentity()
 
@@ -19,17 +22,14 @@ const AuthControl = ({ ...props }: Props) => {
         <Auth
             role={UserRole.UNAUTHENTICATED}
             when={() => (
-                <Window renderButton={() => <IconText icon='User/User.svg' text='Přihlášení' onClick={() => null} />}>
-                    <AuthForm />
-                </Window>
+                <Tooltip render={() => <AuthForm />} setCoords={setCoords}>
+                    <IconText icon='User/User.svg' text='Přihlášení' onClick={() => null} />
+                </Tooltip>
             )}
             otherwise={() => (
-                <Window renderButton={() => <IconText
-                    icon='User/User.svg'
-                    text={identity.payload.name}
-                    onClick={() => null} />}>
-                    <UserPreview user={identity.payload} />
-                </Window>
+                <Tooltip render={() => <UserPreview user={identity.payload} />} setCoords={setCoords}>
+                    <IconText icon='User/User.svg' text={identity.payload.name} onClick={() => null} />
+                </Tooltip>
             )} />
     )
 

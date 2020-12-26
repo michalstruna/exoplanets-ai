@@ -71,7 +71,7 @@ const Row = Styled.div`
 `
 
 const Submit = Styled.button`
-    ${image('Database/Filter/Submit.svg', '90%')}
+    ${image('Controls/Submit.svg', '90%')}
     ${opacityHover()}
     ${size('1.75rem !important')}
     margin 0.3rem 0.5rem !important;

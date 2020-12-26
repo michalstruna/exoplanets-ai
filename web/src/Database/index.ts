@@ -22,6 +22,7 @@ export { default as PlanetStatus } from './Constants/PlanetStatus'
 export { default as SpectralClass } from './Constants/SpectralClass'
 export { default as SpectralSubclass } from './Constants/SpectralSubclass'
 export { default as DatasetType } from './Constants/DatasetType'
+export { default as DatasetFields } from './Constants/DatasetFields'
 export { default as DatasetPriority } from './Constants/DatasetPriority'
 export { default as LifeType } from './Constants/LifeType'
 

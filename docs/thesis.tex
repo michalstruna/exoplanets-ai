@@ -299,7 +299,17 @@ Další z~důležitých charakteristik orbity je inklinace (sklon), která nám 
 
 \subsubsection{Výpočet hmotnosti planety}
 
-Hmotnost planety z~tranzitní metody nelze vypočítat. Avšak z~empirických dat je možné ji odhadnout na základě kombinace jiných veličin pomocí umělé neuronové sítě. TODO.~\cite{nnmass}
+Tranzitní metoda nenabízí analytický způsob výpočtu hmotnosti exoplanety. Na základě již známých dat lze pozorovat korelaci mezi různými veličinami. Např. čím je planeta větší, tím pravděpodobněji bude i~hmotnější. Není to však pravidlem. Jistější je spoléhat se na korelaci mezi více veličinami. Nalézt vztahy ve vícerozměrných datech však nemusí být vždy jednoduché. A~zde nachází uplatnění umělá neuronová síť, která je mimo jiné určena pro hledání právě takovýchto vztahů.~\cite{nnmass}
+
+Vše, co potřebujeme, je dostatečně velký dataset s~planetami, u~kterých již známe všechny potřebné veličiny. Na těchto datech proběhne trénování neuronové sítě, která se naučí hustotu rozdělení pravděpodobností hodnot výše zmíněných veličin. S~takto naučenou sítí lze dále provádět 2~typy úloh:
+
+\begin{itemize}
+\item Vygenerovat novou „umělou“ planetu, jejíž vlastnosti jsou realistické (odpovídají náhodným rozdělením planet v~trénovací množině),
+
+\item Nebo užitečnější, na základě známých veličin planety odhadnout veličinu neznámou.
+\end{itemize}
+
+Právě druhý ze zmíněných typů úloh můžeme použít pro výpočet hmotnosti. Např. na základě poloměru, periody a rovnovážné teploty planety, které jsou tranzitní metodou lehce spočitatelné, můžeme odhadnout chybějící hmotnost planety.~\cite{nnmass}
 
 \clearpage
 \subsection{Metoda radiálních rychlostí}
@@ -840,7 +850,7 @@ Přičemž slabou umělou inteligenci lze dále dělit např. na:
 \item \textbf{Evoluční výpočty}~-~podoblast AI napodobující biologické procesy. Často se jedná o~metaheuristické optimalizační techniky, které kromě povahy řešeného problému nepotřebují žádné další informace a řešení (byť ne vždy optimální) najdou samy.
 
 \begin{itemize}
-\item \textbf{Evoluční algoritmy}~--~snaží o~napodobení evoluce a~vychází z pravidla přežití nejsilnějšího. Často se zde vyskytují pojmy jako generace, přirozený výběr, dědíčnost nebo křížení. Spadá sem např. genetický algoritmus nebo algoritmus diferenciální evoluce.
+\item \textbf{Evoluční algoritmy}~--~snaží o~napodobení evoluce a~vychází z pravidla přežití nejsilnějšího. Často se zde vyskytují pojmy jako generace, přirozený výběr, dědičnost nebo křížení. Spadá sem např. genetický algoritmus nebo algoritmus diferenciální evoluce.
 
 \item \textbf{Inteligence hejna}~--~simulace sociální inteligence v~nějaké množině převážně jednoduchých a~decentralizovaných jedinců. Patří sem např. optimalizace hejnem částic vycházející z~chování hejna ptáků nebo optimalizace mravenčí kolonií, jež se inspirovala mravenci a~jejich komunikací pomocí feromonů.
 
@@ -1032,14 +1042,14 @@ Webová aplikace zprostředkovává interakci s~uživatelem. Je napsána v~jazyc
 \img[1]{Architektura webové aplikace}{img/web_app.png}
 \draw
 
-Moduly z~vyšších vrstev mohou komunikovat pouze s~moduly ze stejné nebo z~nižších vrstev. Tím je zabráněno kruhovým závislostem.
+Moduly z~vyšších vrstev mohou komunikovat pouze s~moduly ze stejné nebo z~nižší vrstvy. Tím je zabráněno kruhovým závislostem.
 
 \img[1]{Princip architektury Redux}{img/redux.png}
 \draw
 
-Ke správě dat je využita architektura a~knihovna Redux ukládající celý stav aplikace v~centralizovaném uložišti (store). Měnit stav tohoto uložiště může pouze funkce \textit{dispatch} jejímž argumentem je akce. Akce je prostý objekt obsahující povinnou položku \textit{type} a~libovolné další položky. Pro pohodlnější práci se často umisťuje akce do funkce zvané \textit{action creator}, která tuto akci vrací.
+Ke správě dat je využita architektura a~knihovna Redux ukládající celý stav aplikace v~centralizovaném uložišti (store). Měnit stav tohoto uložiště může pouze funkce \textit{dispatch} jejímž argumentem je akce. Akce je prostý objekt obsahující povinnou položku \textit{type} a~libovolné další položky. Pro pohodlnější práci se akce často umisťuje do parametrizovatelné funkce zvané \textit{action creator}, která tuto akci vrací.
 
-Funkce \textit{dispatch} následně zjistí aktuální stav aplikace a~společně s~akcí v argumentudra zavolá funkci \textit{reducer}. Ten na základě aktuálního stavu a~akce vrátí stav nový. V~poslední řadě dojde k aktualizaci všech komponent, které jsou napojené na právě změněnou část stavu aplikace.
+Funkce \textit{dispatch} následně zjistí aktuální stav aplikace a~společně s~akcí v~argumentu zavolá funkci \textit{reducer}. Ten na základě aktuálního stavu a~akce vrátí stav nový. V~poslední řadě dojde k~překreslení všech komponent, které jsou napojené na právě změněnou část stavu aplikace~--~podoba UI je tak vždy aktuální.
 
 \lstinputlisting[caption={Ukázka použití knihovny Redux.}]{codes/redux.txt}
 
@@ -1206,6 +1216,15 @@ Komponenty řešící autentizaci uživatele nevyžadují samostatnou stránku, 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
 
+Potenciálními zlepšeními aplikace do budoucna by mohly být např.:
+
+\begin{itemize}
+\item \textbf{Větší granularita úloh}: Analýza položky z~datasetu se světelnými křivkami trvá na průměrném osobním počítači řádově jednotky minut. V~případě, kdy uživatel násilně ukončí aplikaci uprostřed takového výpočtu by bylo vhodné nepřijít o~dosud vypočítaná data a~v průběhu samotného výpočtu je ukládat i~na server, aby ve výpočtech mohl případně pokračovat jiný uživatel. Na druhé straně, příliš velká granularita by naopak způsobila zbytečně velké množství přenesených dat přes síť.
+
+\item \textbf{Další metody}: Aplikace v~současné době detekuje exoplanety pouze na základě tranzitní metody. Pro zvýšení četnosti objevů a~zpřesnění vypočítaných veličin by tento proces bylo vhodné doplnit i~dalšími metodami. U~většiny ostatních metod však nebyly autorem nalezeny dotatečně velké a~volně přístupné datasety.
+\end{itemize}
+
+
 TODO: Verifikace výsledků.
 
 \addcontentsline{toc}{section}{Použitá literatura}
@@ -1226,8 +1245,6 @@ TODO: Verifikace výsledků.
 
 \onlinesource[MARCY, Geoffrey]{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal 481(2)}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088}
 
-\onlinesource[MOUTOU, Claire, PONT, Frédéric]{transit}{Detection and characterization of extrasolar planets: the transit method}{Strasbourg: Observatoire astronomique de Strasbourg et Société Française d'Astronomie et d'Astrophysique}{2006}{8.~10.~2020}{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.4155&rep=rep1&type=pdf}
-
 \onlinesource[OGBUEFI, Kalvin]{transitprops}{Photometry Analysis of Exoplanets WASP-80b~\&~HD 189733b}{Baylor University}{2013}{23.~10.~2020}{https://www.baylor.edu/content/services/document.php/208057.pdf}
 
 \onlinesource[PERRYMAN, Michael]{exoplanets}{Extra-solar planets}{Reports on Progress in Physics 63(8)}{31.~5.~2000}{8.~10.~2020}{https://arxiv.org/abs/astro-ph/0005602}
@@ -1237,6 +1254,8 @@ TODO: Verifikace výsledků.
 \onlinesource[TASKER, Elizabeth, LANEUVILLE, Matthieu, GUTTENBERG, Nicholas]{nnmass}{Estimating Planetary Mass with Deep Learning}{The Astronomical Journal 159(2)}{25.~11.~2019}{9.~10.~2020}{https://arxiv.org/abs/1911.11035}
 
 \onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
+
+\onlinesource[MOUTOU, Claire, PONT, Frédéric]{transit}{Detection and characterization of extrasolar planets: the transit method}{Strasbourg: Observatoire astronomique de Strasbourg et Société Française d'Astronomie et d'Astrophysique}{2006}{8.~10.~2020}{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.4155&rep=rep1&type=pdf}
 
 \onlinesource{nasadata}{NASA Exoplanet Archive}{NASA Exoplanet Science Insititute}{12.~8.~2019}{25.~12.~2019}{https://exoplanetarchive.ipac.caltech.edu/docs/API_exoplanet_columns.html}
 

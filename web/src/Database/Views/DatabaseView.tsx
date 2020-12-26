@@ -8,17 +8,13 @@ interface Props {
 
 }
 
-const Root = Styled.div`
-
-`
-
-const DatabaseView = ({ ...props }: Props) => {
+const DatabaseView = ({}: Props) => {
 
     return (
-        <Root {...props}>
+        <>
             <DatabaseSelector />
             <Database />
-        </Root>
+        </>
     )
 
 }

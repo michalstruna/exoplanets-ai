@@ -6,3 +6,5 @@ build
 .idea
 index.min.js
 node_modules
+__pycache__
+.pytest_cache

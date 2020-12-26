@@ -1,8 +1,9 @@
-from flask_restx import fields
+from flask_restx import fields, Resource
+from flask_restx._http import HTTPStatus
 
 from service.Dataset import DatasetService
 from utils.http import Api
-from constants.Database import DatasetType
+from constants.Dataset import DatasetType
 
 api = Api("datasets", description="Input datasets.")
 
@@ -22,7 +23,7 @@ dataset_field = api.ns.model("DatasetField", {
 })
 
 dataset_fields = api.ns.model("DatasetFields", {
-    "*": fields.Wildcard(fields.Nested(dataset_field))
+    "*": fields.Wildcard(fields.String())
 })
 
 dataset = api.ns.model("Dataset", {
@@ -41,17 +42,28 @@ dataset = api.ns.model("Dataset", {
     "index": fields.Integer(min=1)
 })
 
-new_dataset = api.ns.model("NewDataset", {
+updated_dataset = api.ns.model("UpdatedDataset", {
     "name": fields.String(required=True, description="Name of dataset."),
     "fields": fields.Nested(dataset_fields, required=True, description="Info about dataset fields (columns)."),
-    "type": fields.String(required=True, description="Type of dataset.", enum=DatasetType._member_names_),
     "items_getter": fields.String(required=True, max_length=500, description="URL for obtaining all item names.", example="https://dataset.org?select=name"),
     "priority": fields.Integer(min=1, max=5, default=3, description="1 = lowest, 2 = low, 3 = normal, 4 = high, 5 = highest. More prioritized datasets will be processed first.")
+})
+
+new_dataset = api.ns.inherit("NewDataset", updated_dataset, {
+    "type": fields.String(required=True, description="Type of dataset.", enum=DatasetType._member_names_)
 })
 
 dataset_item = api.ns.model("DatasetItem", {
     "name": fields.String(required=True, description="Name of item.")
 })
 
+@api.ns.route("/<string:dataset_id>/reset")
+class AggregatedGlobalStats(Resource):
+
+    @api.ns.response(HTTPStatus.OK, description="Data from dataset was reset succesfully.")
+    @api.ns.response(HTTPStatus.NOT_FOUND, description="Dataset with specified ID was not found.")
+    def put(self, dataset_id):
+        dataset_service.reset(dataset_id)
+
 dataset_service = DatasetService()
-api.init(full_model=dataset, new_model=new_dataset, service=dataset_service, model_name="Dataset", map_props=map_props)
+api.init(full_model=dataset, new_model=new_dataset, updated_model=updated_dataset, service=dataset_service, model_name="Dataset", map_props=map_props)

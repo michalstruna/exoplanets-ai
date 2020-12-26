@@ -1,11 +1,12 @@
 const defaultState = { counter: 0 } // State
 
 const reducer = (state = defaultState, action) => { // Reducer
-    switch (action.type) {
-        case 'INCREMENT': return state.counter + action.value
-    }
+  switch (action.type) {
+    case 'INC': return { ...state, counter: state.counter + action.val }
+    case 'RESET': return { ...state, counter: 0 }
+  }
 }
 
 const store = Redux.createStore(reducer) // Store
-const increment = value => ({ type: 'INCREMENT', value }) // Action
+const increment = val => ({ type: 'INC', val }) // Action
 store.dispatch(increment(7)) // Dispatch

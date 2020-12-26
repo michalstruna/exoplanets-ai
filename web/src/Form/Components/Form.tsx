@@ -18,7 +18,6 @@ const Root = Styled.form`
         font-weight: bold;
         margin: 0 auto;
         margin-top: 2rem;
-        padding: 0.8rem 0;
         position: relative;
         width: 100%;
     }    
@@ -38,8 +37,7 @@ const FormLoader = Styled(Loader)`
 const ErrorContainer = Styled.p`
     color: ${Color.RED};
     font-size: 90%;
-    margin: 0 auto;
-    margin-bottom: 0.5rem;
+    margin: 0.5rem auto;
     text-align: center;
 `
 
@@ -68,12 +66,8 @@ const Form = <Values extends any = any>({ defaultValues, onSubmit, children, for
         <Root
             {...props}
             noValidate={true}
-            data-invalid={!(form.formState.isValid || !form.formState.isSubmitted) || undefined}
-            onSubmit={e => {
-                e.preventDefault()
-                onSubmit(form.getValues({ nest: true }), form)
-                //form.handleSubmit(values => onSubmit(values, form)) // TODO: Async error.
-            }}>
+            data-invalid={/*!(form.formState.isValid || !form.formState.isSubmitted) || */undefined}
+            onSubmit={form.handleSubmit(values => onSubmit(values, form))}>
             <FormContext {...form}>
                 {children}
             </FormContext>

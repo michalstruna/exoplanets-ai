@@ -3,6 +3,8 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import Query from '../../Routing/Constants/Query'
 import { Validator } from '../../Native'
 import { Urls } from '../../Routing'
+import { AsyncData, Segment } from '../types'
+import { SegmentData } from '../../Database/types'
 
 export const async = <T>(payload: T | null = null) => ({ pending: false, payload, error: null })
 export const empty = <T>(value: any = undefined) => value as T
@@ -48,6 +50,37 @@ type ActionsSet<State> = {
     async: AsyncActionCreator<State>
     set: SetActionCreator<State>
 }
+
+type UpdatableObject = {
+    _id: string
+    index?: number
+}
+
+/** Add item to state property with type AsyncData<SegmentData<UpdatableObject>>. */
+export const addToSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): any => ( // TODO: Fix type.
+    (state: State, action: Action<Item, Error>) => {
+        const maxIndex = Math.max(...state[property].payload!.content.map(item => item.index!), 0)
+        action.payload.index = maxIndex + 1
+
+        state[property].payload!.content.push(action.payload)
+        state[property].payload!.count++
+    }
+)
+
+/** Update item by ID in state property with type AsyncData<SegmentData<UpdatableObject>>. */
+export const updateInSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): any => ( // TODO: Fix type.
+    (state: State, action: Action<Item, Error>) => {
+        state[property].payload!.content = state[property].payload!.content.map(item => item._id === action.meta?.arg[0] ? { ...action.payload, index: item.index } : item)
+    }
+)
+
+/** Delete item by ID from state property with type AsyncData<SegmentData<UpdatableObject>>. */
+export const deleteFromSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): any => ( // TODO: Fix type.
+    (state: State, action: Action<Item, Error>) => {
+        state[property].payload!.content = state[property].payload!.content.filter(item => item._id !== action.meta?.arg)
+        state[property].payload!.count--
+    }
+)
 
 export const slice = <State extends Record<any, any>, Actions extends Record<string, ActionWrapper<State>>>(name: string, initialState: State, actionsAccessor: (actions: ActionsSet<State>) => Actions) => {
     const reducers = {} as any

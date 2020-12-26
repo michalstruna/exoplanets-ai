@@ -40,3 +40,9 @@ export type Cursor = {
     sort: Sort
     segment: Segment
 }
+
+export type Strings = any
+
+export type UniqueObject = {
+    _id: string
+}

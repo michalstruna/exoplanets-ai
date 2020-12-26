@@ -37,3 +37,13 @@ class Service(ABC):
 
     def update(self, id, item, with_return=True):
         return self.dao.update_by_id(id, item, with_return=with_return)
+
+    def update_array_items(self, array_name, field_name, old_field_value, new_field_value):
+        self.dao.collection._get_collection().update_many(
+            {},
+            {"$set": {f"{array_name}.$[current].{field_name}": new_field_value}},
+            array_filters=[{f"current.{field_name}": old_field_value}]
+        )
+
+    def delete_array_items(self, array_name, field_name, field_value):
+        self.dao.collection._get_collection().update_many({}, {"$pull": {array_name: {field_name: field_value}}})
