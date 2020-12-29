@@ -6,6 +6,7 @@ from flask_restx import Namespace, Resource, fields, abort
 from flask import request
 
 from constants.Data import Relation
+from constants.User import UserRole
 
 
 class Response:
@@ -186,20 +187,14 @@ class Api:
     _endpoint_uid = 0
 
     UNSECURED_RESOURCE = {
-        "get_all": {"include": True, "secure": False},
-        "get": {"include": True, "secure": False},
-        "add": {"include": True, "secure": False},
-        "update": {"include": True, "secure": False},
-        "delete": {"include": True, "secure": False}
+        "get_all": { "role": UserRole.UNAUTH},
+        "get": {"role": UserRole.UNAUTH},
+        "add": {"role": UserRole.UNAUTH},
+        "update": {"role": UserRole.UNAUTH},
+        "delete": {"role": UserRole.UNAUTH}
     }
 
-    CUSTOM_RESOURCE = {
-        "get_all": {"include": False, "secure": False},
-        "get": {"include": False, "secure": False},
-        "add": {"include": False, "secure": False},
-        "update": {"include": False, "secure": False},
-        "delete": {"include": False, "secure": False}
-    }
+    CUSTOM_RESOURCE = {}
 
     def __init__(self, name, description=None):
         self.ns = Namespace(name, description=description)
@@ -226,7 +221,7 @@ class Api:
     def all_resources(self, path=""):
         methods = {}
 
-        if self.resource_type["get_all"]["include"]:
+        if "get_all" in self.resource_type:
             @self.ns.marshal_with(Response.page_model(self.ns, self.full_model), description=f"Successfully get {self.model_name}s.")
             @self.ns.response(400, "Invalid query parameters.")
             @self.ns.expect(Request.cursor_parser())
@@ -235,7 +230,7 @@ class Api:
 
             methods["get"] = get
 
-        if self.resource_type["add"]["include"]:
+        if "add" in self.resource_type:
             @self.ns.marshal_with(self.full_model, code=201, description=f"{self.model_name} was successfully created.")
             @self.ns.response(400, f"{self.model_name} is invalid.")
             @self.ns.response(409, f"{self.model_name} is duplicate.")
@@ -252,7 +247,7 @@ class Api:
     def single_resource(self, path="/<string:id>"):
         methods = {}
 
-        if self.resource_type["get"]["include"]:
+        if "get" in self.resource_type:
             @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
             @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
             def get(_self, id):
@@ -260,7 +255,7 @@ class Api:
 
             methods["get"] = get
 
-        if self.resource_type["delete"]["include"]:
+        if "delete" in self.resource_type:
             @self.ns.response(204, f"{self.model_name} was successfully deleted.")
             @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
             def delete(_self, id):
@@ -268,7 +263,7 @@ class Api:
 
             methods["delete"] = delete
 
-        if self.resource_type["update"]["include"]:
+        if "update" in self.resource_type:
             @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
             @self.ns.response(400, f"{self.model_name} is invalid.")
             @self.ns.response(404, f"{self.model_name} with specified ID was not found.")

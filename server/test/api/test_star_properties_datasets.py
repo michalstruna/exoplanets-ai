@@ -1,14 +1,5 @@
-import pytest
-
-from app_factory import create_app
 from constants.Dataset import DatasetPriority
-from utils.test import Comparator, Creator, Res, KEPIDS, FIELDS
-
-
-@pytest.fixture  # Move to another file.
-def app():
-    app, api, socket = create_app("test")
-    return app
+from utils.test import Comparator, Creator, Res, KEPIDS, FIELDS, app
 
 
 def test_get(client):

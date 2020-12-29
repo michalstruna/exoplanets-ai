@@ -1,6 +1,7 @@
 from flask_restx import fields, Resource
 
 from constants.Database import SpectralClass, SpectralSubclass, LuminosityClass, LuminositySubclass
+from constants.User import UserRole
 from service.Dataset import DatasetService
 from service.Star import StarService
 from utils.http import Api
@@ -97,7 +98,6 @@ star_detail = api.ns.inherit("StarDetail", star, {
 star_service = StarService()
 dataset_service = DatasetService()
 
-
 @api.ns.route("/name/<string:name>")
 class StarByName(Resource):
 
@@ -120,4 +120,9 @@ class MergePlanets(Resource):
         pass
 
 
-api.init(full_model=star, new_model=star_properties, service=star_service, model_name="Star", map_props=map_props)
+resource_type = {
+    "get_all": {"role": UserRole.UNAUTH},
+    "get": {"role": UserRole.UNAUTH}
+}
+
+api.init(full_model=star, new_model=star_properties, service=star_service, model_name="Star", map_props=map_props, resource_type=resource_type)
