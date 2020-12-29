@@ -47,10 +47,13 @@ class Res:
         return res
 
     @staticmethod
-    def deleted(res, expected=None, ignore=["index"]):
-        print(res.data)
-        assert res.data == b""
-        assert res.status_code == HTTPStatus.NO_CONTENT
+    def deleted(res, expected=None, ignore=["index"], body=False):
+        if body or expected:
+            assert res.data != b""
+            assert res.status_code == HTTPStatus.OK
+        else:
+            assert res.data == b""
+            assert res.status_code == HTTPStatus.NO_CONTENT
 
         if expected:
             Comparator.is_in(res.json, expected, ignore=ignore)

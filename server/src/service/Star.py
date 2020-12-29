@@ -190,11 +190,12 @@ class StarService(Service):
         for category in selection:
             star[category] = list(filter(lambda category_item: category_item["dataset"] not in selection[category], star[category]))
 
-        self.update(id, self.to_updated(star), with_return=False)
+        result = self.update(id, self.to_updated(star))
 
         for prop in ["properties", "light_curves"]:  # If star is empty, delete whole object. TODO: self.delete_empty for single star?
             if prop in star and star[prop]:
-                return
+                print(22, result)
+                return result
 
         self.delete(id)
 

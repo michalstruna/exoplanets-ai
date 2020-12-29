@@ -25,13 +25,12 @@ class Response:
         return Response._process(handler)
 
     @staticmethod
-    def delete(handler):
-        return Response._process(handler, delete=True)
+    def delete(handler, with_return=False):
+        return Response._process(handler, delete=not with_return)
 
     @staticmethod
     def _process(handler, delete=False, create=False):
         status = HTTPStatus.CREATED if create else (HTTPStatus.NO_CONTENT if delete else HTTPStatus.OK)
-
         try:
             return handler(), status
         except ValidationError as e:
