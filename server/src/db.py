@@ -131,6 +131,7 @@ class Dataset(LogDocument):
     item_getter = StringField(max_length=500)
     items_getter = URLField(max_length=500)
     items = ListField(StringField(max_length=50, default=[], required=True))
+    deleted_items = ListField(StringField(max_length=50, default=[], required=True))
     total_size = IntField(min_value=0, required=True)
     processed = LongField(min_value=0, default=0, required=True)
     type = StringField(max_length=50, required=True)

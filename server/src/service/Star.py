@@ -188,13 +188,20 @@ class StarService(Service):
         self.check_selection(star, selection)
 
         for category in selection:
-            star[category] = list(filter(lambda category_item: category_item["dataset"] not in selection[category], star[category]))
+            def filter_delete(category_item):
+                tmp = category_item["dataset"] not in selection[category]
+
+                if not tmp:
+                    db.dataset_dao.update({"name": category_item["dataset"]}, {"push__deleted_items": category_item["name"]})
+
+                return tmp
+
+            star[category] = list(filter(filter_delete, star[category]))
 
         result = self.update(id, self.to_updated(star))
 
         for prop in ["properties", "light_curves"]:  # If star is empty, delete whole object. TODO: self.delete_empty for single star?
             if prop in star and star[prop]:
-                print(22, result)
                 return result
 
         self.delete(id)
