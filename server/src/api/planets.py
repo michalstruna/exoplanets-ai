@@ -60,7 +60,7 @@ planet = api.ns.model("Planet", {
 planet_service = PlanetService()
 
 
-@api.ns.route("/<string:planetId>/merge/<string:targetId>")
+@api.ns.route("/<string:planet_id>/merge/<string:target_id>")
 class MergePlanets(Resource):
 
     @api.ns.marshal_with(planet, description="Successfully merge planets.")

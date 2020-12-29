@@ -10,14 +10,18 @@ const Root = Styled.div`
     border-bottom: 2px dashed rgba(255, 255, 255, 0.1);
     display: flex;
     padding: 0.5rem 1rem;
-    padding-top: 0;
+    padding-top: 0.5rem;
     
     & + button {
         margin-top: 0 !important;
     }
     
-    &:first-of-type {
+    &:not(:first-of-child) {
         border-top: 2px dashed rgba(255, 255, 255, 0.1);
+    }
+    
+    &:last-child {
+        border-bottom: none;
     }
 `
 
@@ -38,6 +42,7 @@ const Inner = Styled.div<InnerProps>`
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    width: 100%;
 
     & > * {
         min-height: 1px;

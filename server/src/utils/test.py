@@ -1,10 +1,10 @@
 from http import HTTPStatus
 from uuid import uuid4
-
 import pytest
 
 from app_factory import create_app
 from constants.Dataset import DatasetPriority, DatasetType
+from constants.Error import ErrorType
 from service.Dataset import DatasetService
 
 dataset_service = DatasetService()
@@ -39,7 +39,6 @@ class Res:
 
     @staticmethod
     def updated(res, expected=None, ignore=["index"]):
-        assert res.data != b"" if expected is None else res.data == ""
         assert res.status_code == HTTPStatus.OK
 
         if expected:
@@ -49,6 +48,7 @@ class Res:
 
     @staticmethod
     def deleted(res, expected=None, ignore=["index"]):
+        print(res.data)
         assert res.data == b""
         assert res.status_code == HTTPStatus.NO_CONTENT
 
@@ -58,13 +58,9 @@ class Res:
         return res
 
     @staticmethod
-    def not_found(res, expected=None, ignore=["index"]):
-        assert res.data != b""
-        assert res.json["type"] == "NOT_FOUND"
+    def not_found(res):
+        assert res.json["type"] == ErrorType.NOT_FOUND.value
         assert res.status_code == HTTPStatus.NOT_FOUND
-
-        if expected:
-            Comparator.is_in(res.json, expected, ignore=ignore)
 
 
 KEPIDS = ["10000800", "11904151", "10874614"]

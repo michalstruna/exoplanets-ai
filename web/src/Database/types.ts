@@ -122,4 +122,4 @@ export type SegmentData<T> = {
     count: number
 }
 
-export type RefItem = Dataset
+export type DatasetSelection<T> = Record<string, string[]>

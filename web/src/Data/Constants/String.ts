@@ -146,6 +146,16 @@ export default {
 
         itemsGetter: { [CS]: 'Items getter', [EN]: 'Items getter' },
         itemGetter: { [CS]: 'Item getter', [EN]: 'Item getter' },
+
+        selection: {
+            noDatasets: { [CS]: 'Žádná data k dispozici', [EN]: 'No data available' },
+            delete: { [CS]: 'Smazat', [EN]: 'Delete' },
+
+        }
+    },
+
+    forms: {
+        reset: { [CS]: 'Výchozí', [EN]: 'Default' }
     },
 
     stars: {
@@ -199,6 +209,9 @@ export default {
         orbit: { [CS]: 'Orbita planety', [EN]: 'Planet orbit' },
         lifeZone: { [CS]: 'Zóna života', [EN]: 'Life zone' },
         legend: { [CS]: 'Legenda', [EN]: 'Legend' },
+
+        quantitites: { [CS]: 'Veličiny', [EN]: 'Quantities' },
+        curves: { [CS]: 'Křivky', [EN]: 'Curves' }
     },
 
     planets: {

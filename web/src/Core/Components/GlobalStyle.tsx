@@ -51,6 +51,12 @@ const GlobalStyle = createGlobalStyle`
         padding: 0;
         text-align: center;
         user-select: none;
+        vertical-align: middle;
+        
+        &[disabled] {
+            opacity: 0.5;
+            pointer-events: none;
+        }
      }
       
     p, h1, h2, h3, h4, h5, h6 {

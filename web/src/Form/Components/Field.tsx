@@ -34,7 +34,6 @@ type LabelProps = {
 const Root = Styled.label`
     display: block;
     margin: 0.5rem 0;
-    margin-top: 1rem;
     position: relative;
     text-align: left;
 `
@@ -73,6 +72,69 @@ const Label = Styled.p<LabelProps>`
     margin: 0;
 `
 
+const CheckSlider = Styled.div`
+    background-color: ${Color.MEDIUM_DARK};
+    border-radius: 1rem;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    user-select: none;
+    top: 0;
+    transition: ${Duration.SLOW};
+    
+    &:before {
+        ${size('1.4rem')}
+        background-color: white;
+        border-radius: 50%;
+        content: "";
+        position: absolute;
+        top: 50%;
+        transition: transform ${Duration.SLOW};
+        transform: translateY(-50%) translateX(0.4rem) translateZ(0);
+    }
+`
+
+const CheckContainer = Styled.div`
+    ${size('3.5rem', '1.8rem')}
+    display: inline-block;
+    user-select: none;
+    position: relative;
+    vertical-align: middle;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        
+        &:checked + ${CheckSlider} {
+            background-color: #2196F3;
+            
+            &:before {
+                transform: translateY(-50%) translateX(3.5rem) translateX(-0.3rem) translateX(-100%) translateZ(0);
+            }
+        }
+    }
+    
+    & + ${Text} {
+        cursor: pointer;
+        display:inline-block;
+        padding-left: 0.5rem;
+        pointer-events: all;
+        position: relative;
+        user-select: none;
+        vertical-align: middle;
+        width: auto;
+        max-width: calc(100% - 3.5rem);
+        
+        ${Label} {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+`
+
 const Field = ({ label, name, type, required, invalid, validator, placeholder, options, ...props }: Props) => {
 
     const { register, errors, getValues } = useFormContext()
@@ -100,6 +162,14 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                             </option>
                         ))}
                     </Select>
+                )
+            case FieldType.CHECKBOX:
+                return (
+                    <CheckContainer>
+                        <input type='checkbox' onChange={handleChange} ref={register(registerOptions)} name={name} />
+                        <CheckSlider />
+                    </CheckContainer>
+
                 )
             default:
                 return (

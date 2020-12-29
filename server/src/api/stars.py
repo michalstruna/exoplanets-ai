@@ -1,12 +1,15 @@
 from flask_restx import fields, Resource
+from flask import request
+from flask_restx._http import HTTPStatus
 
 from constants.Database import SpectralClass, SpectralSubclass, LuminosityClass, LuminositySubclass
 from constants.User import UserRole
 from service.Dataset import DatasetService
 from service.Star import StarService
-from utils.http import Api
+from utils.http import Api, Response
 from .datasets import dataset
 from .planets import planet
+from .errors import error
 
 
 def map_props(prop):
@@ -94,6 +97,11 @@ star_detail = api.ns.inherit("StarDetail", star, {
     "datasets": fields.List(fields.Nested(dataset))
 })
 
+star_selection = api.ns.model("StarSelection", {
+    "properties": fields.List(fields.String(required=True), default=[], description="List of star properties datasets to select."),
+    "light_curves": fields.List(fields.String(required=True), default=[], description="List of lcs datasets to select."),
+})
+
 
 star_service = StarService()
 dataset_service = DatasetService()
@@ -101,22 +109,40 @@ dataset_service = DatasetService()
 @api.ns.route("/name/<string:name>")
 class StarByName(Resource):
 
-    @api.ns.marshal_with(star_detail, description="Sucessfully get star by name,")
-    @api.ns.response(404, "Star with specified name was not found.")
+    @api.ns.marshal_with(star_detail, code=HTTPStatus.OK, description="Sucessfully get star by name,")
+    @api.ns.response(HTTPStatus.NOT_FOUND, "Star with specified name was not found.", error)
     def get(self, name):
         star = star_service.get_by_name(name)
         datasets = star_service.get_dataset_names(star)
         star["datasets"] = dataset_service.get_all_by_names(datasets)
 
-        return star
+        return star  # TODO: Response.page
 
-@api.ns.route("/<string:starId>/merge/<string:targetId>")
+"""
+@api.ns.route("/<string:id>/merge/<string:target_id>")
 class MergePlanets(Resource):
 
     @api.ns.marshal_with(star, description="Successfully merge stars.")
-    @api.ns.response(400, "It's not possible to merge two identical stars.")
-    @api.ns.response(404, "Star with specified ID was not found.")
-    def put(self):
+    @api.ns.response(HTTPStatus.BAD_REQUEST, "It's not possible to merge two identical stars.")
+    @api.ns.response(HTTPStatus.NOT_FOUND, "Star with specified ID was not found.")
+    def put(self, target_id):
+        pass
+"""
+
+
+@api.ns.route("/<string:id>/selection")
+class StarSelection(Resource):
+
+    @api.ns.response(HTTPStatus.NO_CONTENT, "Star selection was sucessfully deleted.")
+    @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
+    @api.ns.expect(star_selection)
+    def delete(self, id):
+        return Response.delete(lambda: star_service.delete_selection(id, request.get_json()))
+
+    @api.ns.response(HTTPStatus.NO_CONTENT, "Star selection was sucessfully reset.")
+    @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
+    @api.ns.expect(star_selection)
+    def put(self, id):
         pass
 
 

@@ -9,7 +9,7 @@ import DbTable from '../Constants/DbTable'
 import { Fraction, IconText, Level, ProgressBar } from '../../Layout'
 import { Curve } from '../../Stats'
 import { Color, Duration, image, size } from '../../Style'
-import { getDatasets, getStars, getPlanets, resetDataset } from '../Redux/Slice'
+import { getDatasets, getStars, deleteStar, getPlanets, resetDataset } from '../Redux/Slice'
 import { Dates, Numbers } from '../../Native'
 import LifeType from '../Constants/LifeType'
 import * as Col from './Col'
@@ -26,6 +26,7 @@ import BodyType from '../Components/BodyType'
 import { Link, Url } from '../../Routing'
 import { MultiValue } from './Col'
 import DatasetForm from '../Components/DatasetForm'
+import DatasetsSelectionForm from '../Components/DatasetsSelectionForm'
 
 const DateTime = ({ s }: { s: number }) => (
     <>
@@ -203,7 +204,13 @@ export const provideStructure = (table: DbTable, strings: Strings, dispatch: Dis
                         ], {
                             strings: strings.stars,
                             indexColumnName: 'index',
-                            renderRemove: item => <b>123456789</b>,
+                            renderRemove: item => (
+                                <DatasetsSelectionForm
+                                    item={item}
+                                    categories={[['properties', 'dataset', strings.stars.quantitites], ['light_curves', 'dataset', strings.stars.curves]]}
+                                    onSubmit={values => dispatch(deleteStar([item._id, values]))}
+                                    submitLabel={strings.datasets.selection.delete} />
+                            ),
                             onRemove: () => null,
                             onReset: () => null
                         })

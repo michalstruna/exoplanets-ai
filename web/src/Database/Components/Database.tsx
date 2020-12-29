@@ -121,9 +121,9 @@ const Table = Styled(HierarchicalTable)`
 `
 
 const Add = Styled.div`
-    bottom: 2rem;
+    bottom: 3rem;
     position: fixed;
-    right: 2rem;
+    right: 3rem;
 `
 
 const AddButton = Styled(PrimaryButton)`
@@ -131,7 +131,7 @@ const AddButton = Styled(PrimaryButton)`
     ${size('3rem')}
 `
 
-const addSetCoords = () => ({ x: window.innerWidth - 50, y: window.innerHeight - 70 })
+const addSetCoords = () => ({ x: window.innerWidth - 65, y: window.innerHeight - 80 })
 
 const Database = ({ ...props }: Props) => {
 

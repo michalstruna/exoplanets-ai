@@ -155,10 +155,12 @@ class DatasetService(Service):
         return self.get_all({"name": {"$in": names}})
 
     def update(self, id, item, with_return=True):
-        if "name" in item:
+        if "name" in item:  # If dataset name changed, change dataset name in external structures too.
             dataset = self.get_by_id(id)
-            self.update_meta(item)
-            self.star_service.update_array_items("properties", "dataset", dataset["name"], item["name"])  # TODO: Also update planets.
+
+            if dataset["name"] != item["name"]:
+                self.update_meta(item)
+                self.star_service.update_array_items("properties", "dataset", dataset["name"], item["name"])  # TODO: Also update planets.
 
         return super().update(id, item, with_return)
 
@@ -175,5 +177,5 @@ class DatasetService(Service):
             del dataset[key]
 
         self.delete(id)
-        self.add(dataset)
 
+        self.add(dataset)

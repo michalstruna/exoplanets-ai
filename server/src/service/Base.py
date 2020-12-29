@@ -1,5 +1,7 @@
 from abc import ABC
 
+from mongoengine import DoesNotExist
+
 
 class Service(ABC):
 
@@ -47,3 +49,12 @@ class Service(ABC):
 
     def delete_array_items(self, array_name, field_name, field_value):
         self.dao.collection._get_collection().update_many({}, {"$pull": {array_name: {field_name: field_value}}})
+
+    def check_selection(self, item, selection):
+        for category in selection:
+            if category not in item or type(item[category]) != list:
+                raise DoesNotExist(f"Invalid selection: Category \"{category}\" does not exist.")
+
+            for selection_item in selection[category]:
+                if not list(filter(lambda x: x["dataset"] == selection_item, item[category])):
+                    raise DoesNotExist(f"Invalid selection: Dataset \"{selection_item}\" does not exist in \"{category}\".")

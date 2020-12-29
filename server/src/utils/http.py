@@ -1,10 +1,11 @@
-from http import HTTPStatus
 from mongoengine.errors import ValidationError, NotUniqueError, DoesNotExist
 from bson.errors import InvalidId
 from flask_restx.reqparse import RequestParser
 from flask_restx import Namespace, Resource, fields, abort
 from flask import request
+from flask_restx._http import HTTPStatus
 
+from api.errors import error
 from constants.Data import Relation
 from constants.User import UserRole
 
@@ -222,8 +223,8 @@ class Api:
         methods = {}
 
         if "get_all" in self.resource_type:
-            @self.ns.marshal_with(Response.page_model(self.ns, self.full_model), description=f"Successfully get {self.model_name}s.")
-            @self.ns.response(400, "Invalid query parameters.")
+            @self.ns.marshal_with(Response.page_model(self.ns, self.full_model), code=HTTPStatus.OK, description=f"Successfully get {self.model_name}s.", )
+            @self.ns.response(HTTPStatus.BAD_REQUEST, "Invalid query parameters.", error)
             @self.ns.expect(Request.cursor_parser())
             def get(_self):
                 return Response.page(self.service, self.map_props)
@@ -231,9 +232,9 @@ class Api:
             methods["get"] = get
 
         if "add" in self.resource_type:
-            @self.ns.marshal_with(self.full_model, code=201, description=f"{self.model_name} was successfully created.")
-            @self.ns.response(400, f"{self.model_name} is invalid.")
-            @self.ns.response(409, f"{self.model_name} is duplicate.")
+            @self.ns.marshal_with(self.full_model, code=HTTPStatus.CREATED, description=f"{self.model_name} was successfully created.")
+            @self.ns.response(HTTPStatus.BAD_REQUEST, f"{self.model_name} is invalid.", error)
+            @self.ns.response(HTTPStatus.CONFLICT, f"{self.model_name} is duplicate.", error)
             @self.ns.expect(self.new_model)
             def post(_self):
                 return Response.post(lambda: self.service.add(request.get_json()))
@@ -248,26 +249,26 @@ class Api:
         methods = {}
 
         if "get" in self.resource_type:
-            @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
-            @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
+            @self.ns.marshal_with(self.full_model, code=HTTPStatus.OK, description=f"Successfully get {self.model_name}.")
+            @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
             def get(_self, id):
                 return Response.get(lambda: self.service.get_by_id(id))
 
             methods["get"] = get
 
         if "delete" in self.resource_type:
-            @self.ns.response(204, f"{self.model_name} was successfully deleted.")
-            @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
+            @self.ns.response(HTTPStatus.NO_CONTENT, description=f"{self.model_name} was successfully deleted.")
+            @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
             def delete(_self, id):
                 return Response.delete(lambda: self.service.delete(id))
 
             methods["delete"] = delete
 
         if "update" in self.resource_type:
-            @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
-            @self.ns.response(400, f"{self.model_name} is invalid.")
-            @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
-            @self.ns.response(409, f"{self.model_name} is duplicate.")
+            @self.ns.marshal_with(self.full_model, code=HTTPStatus.OK, description=f"Successfully get {self.model_name}.")
+            @self.ns.response(HTTPStatus.BAD_REQUEST, f"{self.model_name} is invalid.", error)
+            @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
+            @self.ns.response(HTTPStatus.CONFLICT, f"{self.model_name} is duplicate.", error)
             @self.ns.expect(self.updated_model)
             def put(_self, id):
                 return Response.put(lambda: self.service.update(id, request.get_json()))

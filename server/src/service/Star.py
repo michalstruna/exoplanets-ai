@@ -182,3 +182,25 @@ class StarService(Service):
 
     def delete_empty(self):
         self.dao.delete({"__raw__": {"$where": "this.properties.length == 0"}})
+
+    def delete_selection(self, id, selection):
+        star = self.get_by_id(id)
+        self.check_selection(star, selection)
+
+        for category in selection:
+            star[category] = list(filter(lambda category_item: category_item["dataset"] not in selection[category], star[category]))
+
+        self.update(id, self.to_updated(star), with_return=False)
+
+        for prop in ["properties", "light_curves"]:  # If star is empty, delete whole object. TODO: self.delete_empty for single star?
+            if prop in star and star[prop]:
+                return
+
+        self.delete(id)
+
+    def to_updated(self, star):
+        for prop in ["_id", "index", "datasets"]:
+            if prop in star:
+                del star[prop]
+
+        return star
