@@ -207,6 +207,7 @@ export const provideStructure = (table: DbTable, strings: Strings, dispatch: Dis
                             renderRemove: item => (
                                 <DatasetsSelectionForm
                                     item={item}
+                                    key={JSON.stringify(item)}
                                     categories={[['properties', 'dataset', strings.stars.quantitites], ['light_curves', 'dataset', strings.stars.curves]]}
                                     onSubmit={values => dispatch(deleteStar([item._id, values]))}
                                     submitLabel={strings.datasets.selection.delete} />

@@ -32,6 +32,21 @@ const Message = Styled.p`
     white-space: nowrap; 
 `
 
+const getFormValuesToOutput = <T extends any>(values: Values<T>): DatasetSelection<T> => {
+    const result: DatasetSelection<T> = {}
+
+    for (const groupName in values) {
+        result[groupName] = []
+
+        for (const i in values[groupName]) {
+            if (values[groupName][i]) {
+                result[groupName].push(i)
+            }
+        }
+    }
+
+    return result
+}
 
 const DatasetsSelectionForm = <T extends any>({ item, categories, onSubmit, title, submitLabel, ...props }: Props<T>) => {
 
@@ -47,23 +62,7 @@ const DatasetsSelectionForm = <T extends any>({ item, categories, onSubmit, titl
         }
 
         return result as Values<T>
-    }, [])
-
-    const getFormValuesToOutput = (values: Values<T>): DatasetSelection<T> => {
-        const result: DatasetSelection<T> = {}
-
-        for (const groupName in values) {
-            result[groupName] = []
-
-            for (const i in values[groupName]) {
-                if (values[groupName][i]) {
-                    result[groupName].push(i)
-                }
-            }
-        }
-
-        return result
-    }
+    }, [item, categories])
 
     const form = useForm({ defaultValues })
     const values = form.watch({ nest: true })
@@ -79,14 +78,14 @@ const DatasetsSelectionForm = <T extends any>({ item, categories, onSubmit, titl
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, 'Chyba')
         } else {
-            form.reset(values)
+            form.reset()
             actions.hideTooltip()
         }
     }
 
     return (
         <Root {...props}>
-            <Form onSubmit={handleSubmit} defaultValues={defaultValues} form={form}>
+            <Form onSubmit={handleSubmit} form={form}>
                 {title && <ControlTitle>
                     {title}
                 </ControlTitle>}
