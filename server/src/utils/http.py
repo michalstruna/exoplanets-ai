@@ -26,7 +26,12 @@ class Response:
 
     @staticmethod
     def delete(handler, with_return=False):
-        return Response._process(handler, delete=not with_return)
+        res, status = Response._process(handler, delete=True)
+
+        if with_return and res:
+            return res, HTTPStatus.OK
+        else:
+            return None, status
 
     @staticmethod
     def _process(handler, delete=False, create=False):

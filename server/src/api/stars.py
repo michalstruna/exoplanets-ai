@@ -106,6 +106,7 @@ star_selection = api.ns.model("StarSelection", {
 star_service = StarService()
 dataset_service = DatasetService()
 
+
 @api.ns.route("/name/<string:name>")
 class StarByName(Resource):
 

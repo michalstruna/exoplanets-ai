@@ -53,7 +53,9 @@ const slice = Redux.slice(
         getPlotStats: async<void, PlotStats>('plotStats', () => Requests.get(`global_stats/plots`)),
 
         getStars: async<Cursor, StarData[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
-        deleteStar: async<[string, DatasetSelection<StarData>], StarData>('deletedItem', ([id, datasetSelection]) => Requests.delete(`stars/${id}/selection`, datasetSelection)),
+        deleteStar: async<[string, DatasetSelection<StarData>], StarData>('deletedItem', ([id, datasetSelection]) => Requests.delete(`stars/${id}/selection`, datasetSelection), {
+            onSuccess: (state, action) => (action.payload ? Redux.updateInSegment : Redux.deleteFromSegment)('stars')(state, action)
+        }),
 
         getDatasets: async<Cursor, SegmentData<Dataset>>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
         addDataset: async<DatasetNew, Dataset>('newDataset', dataset => Requests.post(`datasets`, dataset), { onSuccess: Redux.addToSegment('datasets') }),
