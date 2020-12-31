@@ -1,11 +1,13 @@
 from pymongo import UpdateOne
 import math
 import numbers
+import numpy as np
 
-from constants.Database import SpectralClass, SpectralSubclass, LuminosityClass, LuminositySubclass
+from constants.Star import SpectralClass, SpectralSubclass, LuminosityClass
 from .Base import Service
 import db
 from .Constellation import ConstellationService
+from service.AI import NN
 
 spectral_temperatures = [50000, 30000, 11000, 7500, 6000, 5000, 3500, 3000]
 
@@ -34,12 +36,14 @@ class StarService(Service):
         for props in star["properties"]:
             result.add(props["dataset"])
 
-        for lc in star["light_curves"]:
-            result.add(lc["dataset"])
+        if "light_curves" in star:  # TODO: Remove.
+            for lc in star["light_curves"]:
+                result.add(lc["dataset"])
 
-        for planet in star["planets"]:
-            for props in planet["properties"]:
-                result.add(props["dataset"])
+        if "planets" in star:  # TODO: Remove.
+            for planet in star["planets"]:
+                for props in planet["properties"]:
+                    result.add(props["dataset"])
 
         return list(result)
 
@@ -73,6 +77,7 @@ class StarService(Service):
         operations = []
 
         for star in stars:
+            x = star
             star = self.dao.collection(properties=[star])
             star.validate()
             star = star.to_mongo()  # TODO: Remove?
@@ -125,10 +130,7 @@ class StarService(Service):
             cls, subcls = self.get_spectral_class(star)
             tmp["type"]["spectral_class"] = cls
             tmp["type"]["spectral_subclass"] = subcls
-
-            cls, subcls = self.get_luminosity_class(tmp)
-            tmp["type"]["luminosity_class"] = cls
-            tmp["type"]["luminosity_subclass"] = subcls
+            tmp["type"]["luminosity_class"] = self.get_luminosity_class(tmp)
 
         return tmp["type"]
 
@@ -163,17 +165,26 @@ class StarService(Service):
 
                 return spectral_class, spectral_subclass
 
+    def get_bv_index(self, star):
+        t = star["surface_temperature"]
+
+        if not t:
+            return None
+
+        return -3.684 * np.log10(t) + 14.551 if t < 9641 else 0.344 * np.log10(t) ** 2 - 3.402 * np.log10(t) + 8.037
+
     def get_luminosity_class(self, star):
         if not star["type"]:
-            return None, None
+            return None
 
+        bv = self.get_bv_index(star)
         cls = star["type"]["spectral_class"]
         mag = star["absolute_magnitude"]
 
-        if cls is None or mag is None:
-            return None, None
+        if cls is None or mag is None or bv is None:
+            return None
 
-        return LuminosityClass.III.value, LuminositySubclass.A.value  # TODO
+        return LuminosityClass.values()[NN.predict_class(NN.instance.LUM_CLASS, [bv, star["absolute_magnitude"]])]
 
 
     def get_absolute_magnitude(self, star):

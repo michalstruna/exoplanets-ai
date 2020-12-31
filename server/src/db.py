@@ -2,6 +2,7 @@ from mongoengine import *
 from bson.objectid import ObjectId
 
 from constants.Database import *
+from constants.Star import *
 from utils import time
 
 
@@ -150,7 +151,6 @@ class StarType(EmbeddedDocument):
     spectral_class = StringField(enum=SpectralClass.values())
     spectral_subclass = StringField(enum=SpectralSubclass.values())
     luminosity_class = StringField(enum=LuminosityClass.values())
-    luminosity_subclass = StringField(enum=LuminositySubclass.values())
 
 
 class LifeZone(EmbeddedDocument):

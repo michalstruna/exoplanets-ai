@@ -176,6 +176,5 @@ class DatasetService(Service):
         for key in ["_id", "index", "current_size"]:
             del dataset[key]
 
-        self.delete(id)
-
+        self.delete(id)  # TODO: Transation?
         self.add(dataset)

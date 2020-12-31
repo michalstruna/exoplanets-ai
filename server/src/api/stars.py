@@ -2,7 +2,7 @@ from flask_restx import fields, Resource
 from flask import request
 from flask_restx._http import HTTPStatus
 
-from constants.Database import SpectralClass, SpectralSubclass, LuminosityClass, LuminositySubclass
+from constants.Star import SpectralClass, SpectralSubclass, LuminosityClass
 from constants.User import UserRole
 from service.Dataset import DatasetService
 from service.Star import StarService
@@ -52,7 +52,6 @@ new_star = api.ns.model("NewStar", {
 
 star_type = api.ns.model("StarType", {
     "luminosity_class": fields.String(enum=LuminosityClass.values()),
-    "luminosity_subclass": fields.String(enum=LuminositySubclass.values()),
     "spectral_class": fields.String(enum=SpectralClass.values()),
     "spectral_subclass": fields.String(enum=SpectralSubclass.values())
 })

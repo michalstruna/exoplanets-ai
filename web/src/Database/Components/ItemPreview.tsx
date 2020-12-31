@@ -135,7 +135,6 @@ const Star = ({ item, withLink, withImage, ...props }: SpecificProps<StarData>) 
                         {type.spectral_class}
                         {type.spectral_subclass}
                         {type.luminosity_class}
-                        {type.luminosity_subclass}
                     </SpectralType>
                 </Colored>
             )}
