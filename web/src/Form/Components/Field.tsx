@@ -4,6 +4,7 @@ import { useFormContext } from 'react-hook-form'
 
 import { Color, Duration, size } from '../../Style'
 import FieldType from '../Constants/FieldType'
+import { TextValue } from '../../Data'
 
 interface Option {
     text: string
@@ -23,7 +24,7 @@ interface Props extends Omit<Omit<Omit<React.ComponentPropsWithoutRef<'input'>, 
     invalid?: string
     required?: string
     validator?: (value: any) => string
-    options?: Option[]
+    options?: TextValue<string | number | TextValue<string | number>[]>[]
     onChange?: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
 }
 
@@ -156,11 +157,23 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
             case FieldType.SELECT:
                 return (
                     <Select {...props as any} onChange={handleChange} ref={register(registerOptions)} name={name}>
-                        {(options || []).map(({ text, value }, i) => (
-                            <option key={value} value={value}>
-                                {text}
-                            </option>
-                        ))}
+                        {Array.isArray(options![0].value) ? (
+                            (options as TextValue<TextValue<string | number>[]>[]).map((group, i) => (
+                                <optgroup label={group.text}>
+                                    {group.value.map((option, i) => (
+                                        <option key={i} value={option.value}>
+                                            {option.text}
+                                        </option>
+                                    ))}
+                                </optgroup>
+                            ))
+                        ) : (
+                            (options as TextValue<string | number>[]).map((option, i) => (
+                                <option key={i} value={option.value}>
+                                    {option.text}
+                                </option>
+                            ))
+                        )}
                     </Select>
                 )
             case FieldType.CHECKBOX:

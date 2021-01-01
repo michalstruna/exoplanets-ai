@@ -1,9 +1,9 @@
 import React from 'react'
 import Styled from 'styled-components'
 import Url from 'url'
+import useRouter from 'use-react-router'
 
 import { Dataset } from '../types'
-import useRouter from 'use-react-router'
 import { Color } from '../../Style'
 import { Link } from '../../Routing'
 

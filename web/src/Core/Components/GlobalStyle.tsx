@@ -33,6 +33,13 @@ const GlobalStyle = createGlobalStyle`
         -webkit-appearance: none;
     }
     
+    optgroup {
+        background-color: ${Color.DARK};
+        border: none;
+        padding: 0.5em;
+        outline: none;
+    }
+    
     option {
         background-color: ${Color.MEDIUM_DARK};
         border: none;

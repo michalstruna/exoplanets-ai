@@ -29,10 +29,10 @@ def map_props(prop):
         if prop == "name":
             return [f"properties.{prop}", f"light_curves.{prop}"], str
 
-        if prop in ["type", "life_conditions", "semi_major_axis", "transit_depth", "distance", "dataset"]:
+        if prop in ["type", "life_conditions", "semi_major_axis", "transit_depth", "dataset"]:
             return f"properties.{prop}", str
 
-        if prop in ["diameter", "mass", "density", "surface_temperature", "distance", "luminosity", "transit_depth", "planets", "surface_gravity", "absolute_magnitude", "apparent_magnitude", "metallicity", "datasets"]:
+        if prop in ["diameter", "mass", "density", "surface_temperature", "distance", "luminosity", "transit_depth", "planets", "surface_gravity", "absolute_magnitude", "apparent_magnitude", "metallicity", "datasets", "ra", "dec"]:
             return f"properties.{prop}", float
 
 

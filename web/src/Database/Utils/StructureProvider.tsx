@@ -15,12 +15,8 @@ import LifeType from '../Constants/LifeType'
 import * as Col from './Col'
 import { Dataset, PlanetData, PlanetProperties, StarData } from '../types'
 import Detail from '../Components/TableItemDetail'
-import SpectralClass from '../Constants/SpectralClass'
-import { Cursor, EnumTextValues, Strings } from '../../Data'
-import PlanetType from '../Constants/PlanetType'
-import { DatasetType, Value, deleteDataset } from '../index'
-import DatasetPriority from '../Constants/DatasetPriority'
-import LuminosityClass from '../Constants/LuminosityClass'
+import { Cursor, Strings } from '../../Data'
+import {  Value, deleteDataset } from '../index'
 import PlanetStatus from '../Constants/PlanetStatus'
 import BodyType from '../Components/BodyType'
 import { Link, Url } from '../../Routing'
@@ -62,91 +58,6 @@ const TextLink = Styled(Link)`
 const lifeTypeStyle = { [LifeType.PROMISING]: { color: '#AFA', fontWeight: 'bold' }, [LifeType.IMPOSSIBLE]: { color: '#FAA' }, [LifeType.UNKNOWN]: { color: '#777', fontStyle: 'italic' }, [LifeType.POSSIBLE]: { color: '#5FF', fontWeight: 'bold' } }
 const planetStatusStyle = { [PlanetStatus.CANDIDATE]: { color: '#AAA', fontStyle: 'italic' }, [PlanetStatus.CONFIRMED]: { color: '#AFA', fontWeight: 'bold' }, [PlanetStatus.REJECTED]: { color: '#F55' } }
 const priorityStyle = { 1: { color: '#666' }, 2: { color: '#888' }, 3: { color: '#EEE' }, 4: { color: '#EAA', fontWeight: 'bold' }, 5: { color: '#F55', fontWeight: 'bold' } }
-
-// TODO: Hooks instaed providers?
-// TODO: Root strings in parameter.
-export const provideFilterColumns = (table: DbTable, strings: any): [string, string, EnumTextValues][] => {
-    switch (table) {
-        case DbTable.BODIES:
-            return [
-                ['name', strings.properties.name, String],
-                ['spectral_class', strings.properties.spectral_class, Object.values(SpectralClass).map(value => ({ text: `${strings.stars.colors[value]} (${value})`, value }))],
-                ['luminosity_class', strings.properties.luminosity_class, Object.values(LuminosityClass).map(value => ({ text: `${strings.stars.sizes[value]} (${value})`, value }))],
-                ['diameter', strings.properties.diameter + ' [☉]', Number],
-                ['mass', strings.properties.mass + ' [☉]', Number],
-                ['density', strings.properties.density + ' [kg/m^3]', Number],
-                ['surface_temperature', strings.properties.surfaceTemperature + ' [K]', Number],
-                ['distance', strings.properties.distance + ' [ly]', Number],
-                ['luminosity', strings.properties.luminosity + ' [☉]', Number],
-                ['transit_depth', strings.properties.transit, Number],
-                ['planets', strings.properties.planets, Number],
-                ['surface_gravity', strings.properties.surfaceGravity + ' [km/s]', Number],
-                ['absolute_magnitude', strings.properties.absoluteMagnitude, Number],
-                ['apparent_magnitude', strings.properties.apparentMagnitude, Number],
-                ['metallicity', strings.properties.metallicity, Number],
-                ['life_conditions', strings.properties.lifeConditions, Object.values(LifeType).map(value => ({ text: strings.planets.lifeConditionsTypes[value], value }))],
-                ['dataset', strings.properties.dataset, String],
-                ['planet_name', strings.properties.name + ' (' + strings.properties.planet + ')', String],
-                ['planet_type', strings.properties.type + ' (' + strings.properties.planet + ')', Object.values(PlanetType).map(value => ({ text: strings.planets.types[value], value }))],
-                ['planet_diameter', strings.properties.diameter + ' [⊕]' + ' (' + strings.properties.planet + ')', Number],
-                ['planet_mass', strings.properties.mass + ' [⊕]' + ' (' + strings.properties.planet + ')', Number],
-                ['planet_density', strings.properties.density + ' [kg/m^3]' + ' (' + strings.properties.planet + ')', Number],
-                ['planet_surface_temperature', strings.properties.surfaceTemperature + ' [°C]' + ' (' + strings.properties.planet + ')', Number],
-                ['planet_semi_major_axis', strings.properties.semiMajorAxis + ' [au]' + ' (' + strings.properties.planet + ')', Number],
-                ['planet_orbital_period', strings.properties.orbitalPeriod + ' [d]' + ' (' + strings.properties.planet + ')', Number],
-                ['planet_orbital_velocity', strings.properties.orbitalVelocity + ' [km/s]' + ' (' + strings.properties.planet + ')', Number],
-                ['planet_life_conditions', strings.properties.lifeConditions + ' (' + strings.properties.planet + ')', Object.values(LifeType).map(value => ({ text: strings.planets.lifeConditionsTypes[value], value }))],
-                ['planet_transit_depth', strings.properties.transit + ' (' + strings.properties.planet + ')', Number],
-                ['planet_dataset', strings.properties.dataset + ' (' + strings.properties.planet + ')', String]
-            ]
-        case DbTable.STARS:
-            return [
-                ['name', strings.properties.name, String],
-                //['type', strings.properties.type, Object.values(StarSize).map(value => ({ text: strings.stars.types[value], value }))],
-                ['diameter', strings.properties.diameter + ' [☉]', Number],
-                ['mass', strings.properties.mass + ' [☉]', Number],
-                ['density', strings.properties.density + ' [kg/m^3]', Number],
-                ['surface_temperature', strings.properties.surfaceTemperature + ' [K]', Number],
-                ['distance', strings.properties.distance + ' [ly]', Number],
-                ['luminosity', strings.properties.luminosity + ' [☉]', Number],
-                ['gravity', strings.properties.surfaceGravity + ' [km/s]', Number],
-                ['life_conditions', strings.properties.lifeConditions, Object.values(LifeType).map(value => ({ text: strings.planets.lifeConditionsTypes[value], value }))],
-                ['distance', strings.properties.distance + ' [ly]', Number],
-                ['transit_depth', strings.properties.transit, Number],
-                ['dataset', strings.properties.dataset, String]
-            ]
-        case DbTable.PLANETS:
-            return [
-                ['name', strings.properties.name, String],
-                ['type', strings.properties.type, Object.values(PlanetType).map(value => ({ text: strings.planets.types[value], value }))],
-                ['diameter', strings.properties.diameter + ' [⊕]', Number],
-                ['mass', strings.properties.mass + ' [⊕]', Number],
-                ['density', strings.properties.density + ' [kg/m^3]', Number],
-                ['surface_temperature', strings.properties.surfaceTemperature + ' [°C]', Number],
-                ['semi_major_axis', strings.properties.semiMajorAxis + ' [au]', Number],
-                ['orbital_period', strings.properties.orbitalPeriod + ' [d]', Number],
-                ['orbital_velocity', strings.properties.orbitalVelocity + ' [km/s]', Number],
-                ['life_conditions', strings.properties.lifeConditions, Object.values(LifeType).map(value => ({ text: strings.planets.lifeConditionsTypes[value], value }))],
-                ['distance', strings.properties.distance + ' [ly]', Number],
-                ['transit_depth', strings.properties.transit, Number],
-                ['dataset', strings.properties.dataset, String]
-            ]
-        case DbTable.DATASETS:
-            return [
-                ['name', strings.properties.name, String],
-                ['type', strings.properties.type, Object.values(DatasetType).map(value => ({ text: strings.datasets.types[value], value }))],
-                ['total_size', strings.properties.totalSize, Number],
-                ['processed', strings.properties.processed + ' [B]', Number],
-                ['time', strings.properties.time + ' [s]', Number],
-                ['created', strings.properties.published, Date],
-                ['modified', strings.properties.modified, Date],
-                ['priority', strings.properties.priority, Object.values(DatasetPriority).filter(value => typeof value === 'number').map(value => ({ text: strings.datasets.priorities[value], value }))], // TODO: DatasetPriority enum.
-                ['url', strings.properties.url, String]
-            ]
-    }
-
-    return []
-}
 
 type Structure = {
     levels: Level[]

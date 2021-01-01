@@ -6,16 +6,29 @@ export type AsyncData<TData, TError = string | number | Error> = {
     error?: TError
 }
 
+/**
+ * Object pair with properties text and value.
+ */
 export type TextValue<TValue = any> = {
     text: string
     value: TValue
 }
 
-export type EnumTextValues<TValue = any> = TextValue<TValue>[] | StringConstructor | NumberConstructor | DateConstructor
+/**
+ * Possible values can be:
+ * - Type constructor (String, Number, Date),
+ * - List of array pairs [text, value],
+ * - List of array pairs [text, ArrayPair[]] where text is title of group and ArrayPair[] is list of [text, value].
+ */
+export type PossibleValues<TValue = any> = TextValue<TValue>[] | StringConstructor | NumberConstructor | DateConstructor
 
-export type EnumTextValue<TValue = any> = TextValue<TValue> & {
-    values: EnumTextValues<TValue>
+/**
+ * Object pair with possible values.
+ */
+export type TextEnumValue<TValue = any> =  TextValue<TValue> & {
+    values: PossibleValues<TValue>
 }
+
 
 export type FilterData<TValue = string | number> = {
     attribute: string[]
@@ -42,7 +55,3 @@ export type Cursor = {
 }
 
 export type Strings = any
-
-export type UniqueObject = {
-    _id: string
-}

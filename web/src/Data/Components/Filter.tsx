@@ -2,14 +2,15 @@ import React from 'react'
 import Styled from 'styled-components'
 import { useForm } from 'react-hook-form'
 
-import { EnumTextValue, EnumTextValues, FilterData } from '../types'
+import { FilterData, PossibleValues, TextEnumValue, TextValue } from '../types'
 import { Field, Form } from '../../Form'
 import { Duration, image, opacityHover, size } from '../../Style'
 import { Validator } from '../../Native'
 import { useStrings } from '..'
 
 interface Props extends Omit<Omit<React.ComponentPropsWithoutRef<'form'>, 'onChange'>, 'onSubmit'> {
-    attributes: EnumTextValue[]
+    attributes: TextEnumValue[]
+    groupAttributes?: (attr: TextEnumValue) => string // Accepts attribute, returns name of group.
     onChange?: (values: FilterData) => void
     onSubmit?: (values: FilterData) => void
     initialValues?: FilterData
@@ -78,9 +79,13 @@ const Submit = Styled.button`
     min-width: 1.75rem;
 `
 
-const getDefaultValue = (values: EnumTextValues) => {
+const getDefaultValue = (values: PossibleValues) => {
     if (Array.isArray(values)) {
-        return values[0].value
+        if (Array.isArray(values[0])) {
+            return values[0].value
+        } else {
+            return values[0].value
+        }
     } else if (values === Number) {
         return 0
     } else {
@@ -88,11 +93,11 @@ const getDefaultValue = (values: EnumTextValues) => {
     }
 }
 
-const getDefaultRelation = (values: EnumTextValues) => (
+const getDefaultRelation = (values: PossibleValues) => (
     values === String ? Validator.Relation.CONTAINS : Validator.Relation.EQUALS
 )
 
-const getRelations = (values: EnumTextValues) => {
+const getRelations = (values: PossibleValues) => {
     switch (values) {
         case String:
             return Object.values(Validator.Relation)
@@ -104,7 +109,7 @@ const getRelations = (values: EnumTextValues) => {
     }
 }
 
-const getInputType = (values: EnumTextValues) => {
+const getInputType = (values: PossibleValues) => {
     switch (values) {
         case Number:
             return Field.Type.NUMBER
@@ -115,12 +120,16 @@ const getInputType = (values: EnumTextValues) => {
     }
 }
 
-const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Props) => {
+const Filter = ({ attributes, groupAttributes, onChange, initialValues, onSubmit, ...props }: Props) => {
 
     const strings = useStrings().filter
 
     const defaultValues = initialValues ? { filter: toInternal(initialValues) } : {
-        filter: [{ attribute: attributes[0].value, relation: getDefaultRelation(attributes[0].values), value: getDefaultValue(attributes[0].values) }]
+        filter: attributes[0] ? [{
+            attribute: attributes[0].value,
+            relation: getDefaultRelation(attributes[0].values),
+            value: getDefaultValue(attributes[0].values)
+        }]: []
     }
 
     const form = useForm<Values>({ defaultValues })
@@ -190,9 +199,32 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
         onSubmit?.(fromInternal(vals))
     }
 
-    const getAttrByName = (name: string): EnumTextValue => (
+    const getAttrByName = (name: string): TextEnumValue => (
         attributes.find(attr => attr.value === name)!
     )
+
+    const groupedAttrs = React.useMemo(() => {
+        if (!groupAttributes) {
+            return attributes
+        }
+
+        const groupHash: Record<string, number> = {} // Map group to index in groups array.
+        const groups: TextValue<TextValue<string | number>[]>[] = []
+
+
+        for (const attr of attributes) {
+            const group = groupAttributes(attr)
+
+            if (groupHash[group] === undefined) {
+                groupHash[group] = groups.length
+                groups.push({ text: group, value: [] })
+            }
+
+            groups[groupHash[group]].value.push(attr)
+        }
+
+        return groups
+    }, [attributes, groupAttributes])
 
     return (
         <Root {...props} onSubmit={handleSubmit} form={form}>
@@ -204,7 +236,7 @@ const Filter = ({ attributes, onChange, initialValues, onSubmit, ...props }: Pro
                         <Field
                             name={`filter[${i}].attribute`}
                             type={Field.Type.SELECT}
-                            options={attributes}
+                            options={groupedAttrs}
                             onChange={e => handleChangeAttribute(e.target.value, i)}
                             value={value.attribute} />
                         <Field

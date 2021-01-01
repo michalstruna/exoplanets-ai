@@ -3,9 +3,8 @@ import Styled from 'styled-components'
 
 import { Paginator, Filter, useActions, useStrings } from '../../Data'
 import { setSegment, setFilter } from '../Redux/Slice'
-import { useCursor, useItems, useTable } from '..'
+import { useCursor, useFilterFields, useItems, useTable } from '..'
 import DbTable from '../Constants/DbTable'
-import { provideFilterColumns } from '../Utils/StructureProvider'
 import { Urls } from '../../Routing'
 import { Field, FieldType, Form } from '../../Form'
 
@@ -56,9 +55,7 @@ const DatabaseSelector = ({ ...props }: Props) => {
     const items = useItems(table)
 
     const strings = useStrings()
-
-    const filterColumns = React.useMemo(() => provideFilterColumns(table, strings).map(x => ({ text: x[1], value: x[0], values: x[2] })), [table])
-
+    const filterFields = useFilterFields()
 
     return (
         <Root {...props}>
@@ -71,7 +68,8 @@ const DatabaseSelector = ({ ...props }: Props) => {
                     options={Object.values(DbTable).map(table => ({ text: strings.database.tables[table], value: table }))} />
             </Select>
             <FilterForm
-                attributes={filterColumns}
+                attributes={filterFields}
+                groupAttributes={table === DbTable.BODIES ? (attr => attr.value.toString().startsWith('planet_') ? 'Planety' : 'Hvězdy') : undefined}
                 onChange={() => null}
                 onSubmit={actions.setFilter} />
             <Page
