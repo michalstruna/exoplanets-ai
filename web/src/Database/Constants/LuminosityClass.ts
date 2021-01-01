@@ -1,8 +1,6 @@
 enum LuminosityClass {
     ZERO = '0',
-    Ia = 'Ia',
-    Iab = 'Iab',
-    Ib = 'Ib',
+    I = 'I',
     II = 'II',
     III = 'III',
     IV = 'IV',

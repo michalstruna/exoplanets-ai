@@ -64,6 +64,11 @@ def test_delete_props(client):
 
 # TODO: Test non existing star.
 
+
+def test_add_props(client):
+    pass
+
+
 def test_delete_lcs(client):
     pass
 

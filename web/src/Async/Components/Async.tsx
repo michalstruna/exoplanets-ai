@@ -20,6 +20,7 @@ type AsyncDataAction<TPayload, TError = string> = {
 
 const Async: any = <T extends any>({ data: rawData, pending, success, fail, active }: Props<T>) => {
 
+    const [isInitialized, setInitialized] = React.useState(false)
     const isSingle = !Array.isArray(rawData) || (('payload' in rawData[0]) && typeof rawData[1] === 'function')
     const data = ((isSingle ? [rawData] : rawData) as any).map((item: any) => Array.isArray(item) ? item : [item])
     const dispatch = useDispatch()
@@ -45,6 +46,8 @@ const Async: any = <T extends any>({ data: rawData, pending, success, fail, acti
                 }
             }
         }
+
+        setInitialized(true)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -78,11 +81,11 @@ const Async: any = <T extends any>({ data: rawData, pending, success, fail, acti
 
     const { isPending, error, hasPayloads } = getState()
 
-    if (error) {
+    if (error && isInitialized) {
         return fail ? fail() : error.toString()
-    } else if (hasPayloads) {
+    } else if (hasPayloads && isInitialized) {
         return success ? success() : null
-    } else if (isPending) {
+    } else if (isPending || !isInitialized) {
         return pending ? pending() : <Loader />
     }
 

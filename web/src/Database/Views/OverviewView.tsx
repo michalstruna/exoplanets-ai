@@ -37,13 +37,13 @@ const OverviewUsersBlock = Styled(UsersBlock)`
     margin-top: 1.5rem;
 `
 
-const ChatBlock = Styled(Chat)`
-    ${size('100%', `calc(100% - 32rem)`)}
-    margin-top: 1.5rem;
+const ChatBlock = Styled(Block)`
+    ${size('100%', `calc(100% - 32.5rem)`)}
 `
 
 const PlanetsRankBlock = Styled(PlanetsRank)`
-    ${size('100%', '29rem')}
+    ${size('100%', '29.5rem')}
+    margin-top: 1.5rem;
     padding: 0;
     
     ${Table.Root} {
@@ -67,14 +67,12 @@ const OverviewView = ({ ...props }: Props) => {
         <Root {...props}>
             <GlobalStatsPanel />
             <Center>
-                <Todo>
-
-                </Todo>
+                <Todo />
                 <OverviewUsersBlock />
             </Center>
             <Right>
-                <PlanetsRankBlock />
                 <ChatBlock />
+                <PlanetsRankBlock />
             </Right>
         </Root>
     )

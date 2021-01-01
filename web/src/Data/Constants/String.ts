@@ -188,9 +188,7 @@ export default {
 
         sizes: {
             [LuminosityClass.ZERO]: { [CS]: 'Hyperobr', [EN]: 'Hypergiant' },
-            [LuminosityClass.Ia]: { [CS]: 'Veleobr', [EN]: 'Supergiant' },
-            [LuminosityClass.Iab]: { [CS]: 'Veleobr', [EN]: 'Supergiant' },
-            [LuminosityClass.Ib]: { [CS]: 'Veleobr', [EN]: 'Supergiant' },
+            [LuminosityClass.I]: { [CS]: 'Veleobr', [EN]: 'Supergiant' },
             [LuminosityClass.II]: { [CS]: 'Nadobr', [EN]: 'Bright giant' },
             [LuminosityClass.III]: { [CS]: 'Obr', [EN]: 'Giant' },
             [LuminosityClass.IV]: { [CS]: 'Podobr', [EN]: 'Subgiant' },

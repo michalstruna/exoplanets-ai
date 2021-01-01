@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 import numpy as np
+import os
 
 from utils.patterns import Enum
 
@@ -11,7 +12,7 @@ graph = tf.get_default_graph()
 session = tf.keras.backend.get_session()
 init = tf.global_variables_initializer()
 session.run(init)
-lum_class_nn = load_model("../data/lum_class/lum_class.h5")
+lum_class_nn = load_model(os.path.join(os.path.dirname(__file__), "../../../data/lum_class/lum_class.h5"))
 
 
 class NNInstance(Enum):

@@ -1,6 +1,6 @@
 import pytest
 
-from constants.Database import SpectralClass as SC, SpectralSubclass as SS
+from constants.Star import SpectralClass as SC, SpectralSubclass as SS
 from service.Star import StarService
 
 
@@ -29,4 +29,4 @@ from service.Star import StarService
 ])
 def test_spectral_type(teff, spectral_class, spectral_subclass):
     service = StarService()
-    assert service.get_spectral_class(teff) == (spectral_class.value, spectral_subclass.value)
+    assert service.get_spectral_class({"surface_temperature": teff}) == (spectral_class.value, spectral_subclass.value)
