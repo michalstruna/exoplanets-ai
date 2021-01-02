@@ -26,21 +26,32 @@ export const PrimaryButton = Styled.button`
     background-color: ${Color.DARKEST};
     font-size: 110%;
     font-weight: bold;
+    overflow: hidden;
     padding: 1rem;
     transition: background-color ${Duration.MEDIUM};
-    width: 100%;
+    text-overflow: ellipsis;
     white-space: nowrap;
+    width: 100%;
     
     &:hover {
         background-color: ${Color.DARKEST_HOVER};
     }
 `
 
+export const MiniPrimaryButton = Styled(PrimaryButton)`
+    font-size: 90%;
+    margin 0 !important;
+    padding: 0.5rem !important;
+    width: auto !important;
+`
+
 export const SubmitButton = Styled.button`
-    ${image('Controls/Submit.svg', '70% auto')}
+    ${image('Controls/Submit.svg', '2rem auto', 'right center')}
     ${opacityHover()}
-    ${size('2.5rem !important')}
+    ${size('auto !important', '2.5rem', true)}
     background-color: transparent;
+    padding-right: 2.5rem;
+    white-space: nowrap;
 `
 
 export const ControlTitle = Styled(SectionTitle)`
@@ -49,4 +60,10 @@ export const ControlTitle = Styled(SectionTitle)`
 
 export const ControlSubtitle = Styled(MinorSectionTitle)`
     font-size: 105%;
+`
+
+export const SecondaryButton = Styled.button`
+    ${opacityHover()}
+    border-bottom: 1px solid transparent;
+    font-size: 90%;
 `

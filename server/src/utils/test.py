@@ -1,7 +1,10 @@
 from http import HTTPStatus
 from uuid import uuid4
+import pytest
 
+from app_factory import create_app
 from constants.Dataset import DatasetPriority, DatasetType
+from constants.Error import ErrorType
 from service.Dataset import DatasetService
 
 dataset_service = DatasetService()
@@ -36,7 +39,6 @@ class Res:
 
     @staticmethod
     def updated(res, expected=None, ignore=["index"]):
-        assert res.data != b"" if expected is None else res.data == ""
         assert res.status_code == HTTPStatus.OK
 
         if expected:
@@ -45,9 +47,13 @@ class Res:
         return res
 
     @staticmethod
-    def deleted(res, expected=None, ignore=["index"]):
-        assert res.data == b""
-        assert res.status_code == HTTPStatus.NO_CONTENT
+    def deleted(res, expected=None, ignore=["index"], body=False):
+        if body or expected:
+            assert res.data != b""
+            assert res.status_code == HTTPStatus.OK
+        else:
+            assert res.data == b""
+            assert res.status_code == HTTPStatus.NO_CONTENT
 
         if expected:
             Comparator.is_in(res.json, expected, ignore=ignore)
@@ -55,13 +61,9 @@ class Res:
         return res
 
     @staticmethod
-    def not_found(res, expected=None, ignore=["index"]):
-        assert res.data != b""
-        assert res.json["type"] == "NOT_FOUND"
+    def not_found(res):
+        assert res.json["type"] == ErrorType.NOT_FOUND.value
         assert res.status_code == HTTPStatus.NOT_FOUND
-
-        if expected:
-            Comparator.is_in(res.json, expected, ignore=ignore)
 
 
 KEPIDS = ["10000800", "11904151", "10874614"]
@@ -99,12 +101,32 @@ class Comparator:
         else:
             assert actual == expected
 
+        return actual
+
 
 class Creator:
 
     @staticmethod
     def rand_str(length=10):
         return uuid4().hex[:length]
+
+    """@staticmethod
+    def star(new=False, properties=None, datasets=[], planets=[], light_curves=[]):
+        result = {}
+
+        if properties:
+            result["properties"] = properties
+        else:
+            result["properties"] = []
+
+            for i in range(len(datasets)):
+                result["properties"][i] = {
+                    ""
+                    "dataset": datasets[i]
+                }
+
+        result["planets"] = planets
+        result["light_curves"] = light_curves"""
 
     @staticmethod
     def dataset(new=False, update=False, name=None, type=DatasetType.STAR_PROPERTIES, priority=DatasetPriority.NORMAL, kepids=[KEPIDS[0], KEPIDS[1]], fields=FIELDS):
@@ -141,6 +163,20 @@ class Creator:
         return Creator._from_mongo(dataset_service.dao.add(d), ignore=["_cls", "fields_meta"])
 
     @staticmethod
+    def add_dataset(client, **kwargs):
+        return client.post("/api/datasets", json=Creator.dataset(**kwargs)).json
+
+    @staticmethod
+    def add_datasets(client, *args):
+        result = []
+        data = [{} for i in range(args[0])] if type(args[0]) == int else args
+
+        for kwargs in data:
+            result.append(Creator.add_dataset(client, **kwargs))
+
+        return result
+
+    @staticmethod
     def _from_mongo(item, ignore=["_cls"]):
         if "_id" in item:
             item["_id"] = str(item["_id"])
@@ -150,3 +186,9 @@ class Creator:
                 del item[key]
 
         return item
+
+
+@pytest.fixture
+def app():
+    app, api, socket = create_app("test")
+    return app

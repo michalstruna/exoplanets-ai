@@ -63,6 +63,7 @@
 \shortlist
 
 \begin{description}[font=\mdseries,leftmargin=6em,labelwidth=!,]
+\item[AI]       Artificial intelligence
 \item[au]		Astronomical unit
 \item[CNN]      Convolutional neural network
 \item[csv]      Comma-separated values
@@ -72,6 +73,8 @@
 \item[ly]		Light year
 \item[ODM]      Object-document mapper
 \item[pc]       Parsec
+\item[TESS]     Transiting Exoplanet Survey Satellite
+\item[TPF]      Target pixel file
 \item[TTV]		Transit timing variation
 \end{description}
 
@@ -263,7 +266,7 @@ Na obrázku 12 je uprostřed slabě patrný transit. Má malou šířku, protož
 \nasa
 \end{multicols}
 
-Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ sousedních bodů ($\alpha$ -- současný počet bodů, $\beta$ -- požadovaný počet bodů) jediným, který bude reprezentovat jejich medián. Pro potřeby neuronové sítě je nutno oba pohledy taktéž normalizovat tak, aby platilo $H~=~\left<1; -1\right>$. U~případů, které neuronová síť vyhodnotí jako planety, je možné pokračovat výpočtem dalších informací o~planetě.~\cite{kepler80}
+Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ sousedních bodů ($\alpha$ -- současný počet bodů, $\beta$ -- požadovaný počet bodů) jediným, který bude reprezentovat jejich medián. Pro potřeby neuronové sítě je vhodné oba pohledy taktéž normalizovat tak, aby platilo $H~=~\left<1; -1\right>$. U~případů, které neuronová síť vyhodnotí jako planety, je možné pokračovat výpočtem dalších informací o~planetě.~\cite{kepler80}
 
 \subsubsection{Výpočet vlastností planety}
 
@@ -289,7 +292,7 @@ Dále je možno odhadnout i~průměrnou rychlost pohybu planety po oběžné dr�
 \end{tabular}
 }
 
-Další z~důležitých charakteristik orbity je inklinace (sklon), která nám řekne, jaký úhel svírají roviny pozorovatele a~oběhu exoplanety. Bohužel lze zjistit minimální úhel sklonu dráhy a~nikoliv jeho přesnou hodnotu. Inkinace se bude zpravidla blížit 90$^{\circ}$.~\cite{transitprops}
+Další z~důležitých charakteristik orbity je inklinace (sklon), která nám řekne, jaký úhel svírá rovina oběhu exoplanety vůči pozorovateli. Bohužel lze zjistit pouze minimální, nikoliv skutečnou velikost úhlu sklonu dráhy. Inkinace se bude zpravidla blížit 90$^{\circ}$.~\cite{transitprops}
 
 \formula{Výpočet inklinace dráhy}{\cos{i} \leq \frac{R + r}{a}}{
 \begin{tabular}{llll}
@@ -338,15 +341,15 @@ Graf znázorňující radiální rychlost hvězdy 51~Pegasi může vypadat takto
 \img[1]{Radiální rychlost hvězdy 51 Pegasi v čase}{img/51_pegasi_radial_velocity.png}
 \data{1}{51pegasi}
 
-Na první pohled je patrná jedna periodická složka s periodou 4,23 dne a~amplitudou 66,67 $\frac{m}{s}$, která značí, že kolem této hvězdy obíhá jedna planeta. Aby metoda radiálních rychlostí fungovala, musí být exoplaneta vůči své hvězdě dostatečně hmotná a~také nesmí obíhat po rovině, která je kolmá k~přímce směrem k~pozorovateli.
+Na první pohled je patrná jedna periodická složka s periodou 4,23 dne značící, že kolem této hvězdy obíhá jedna planeta. Aby metoda radiálních rychlostí fungovala, musí být exoplaneta vůči své hvězdě dostatečně hmotná a~také nesmí obíhat po rovině, která je kolmá k~přímce směrem k~pozorovateli.
 
 \vspace{-10pt}
 
 \subsubsection{Výpočet hmotnosti planety}
 
-Hlavní výhodou metody radiálních rychlostí oproti tranzitní metodě je možnost spočítat hmotnost exoplanety. Její přesnou hodnodu však lze odvodit pouze se znalostí sklony dráhy exoplanety vůči pozorovateli. V~opačném případě lze vypočítat pouze dolní mez hmotnosti planety, a~to zejména kvůli $M_p * sin(i)$ ve vzorci 7.~\cite{methods}
+Hlavní výhodou metody radiálních rychlostí oproti tranzitní metodě je možnost spočítat hmotnost exoplanety. Její přesnou hodnodu však lze odvodit pouze se znalostí sklonu dráhy exoplanety vůči pozorovateli. V~opačném případě lze vypočítat pouze dolní mez hmotnosti planety, a~to zejména kvůli $M_p * sin(i)$ ve vzorci 7.~\cite{methods}
 
-\formula{Radiální rychlost}{\Delta v_{max} = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}\vspace{5pt}}{
+\formula{Vztah radiální rychlosti a~hmotnosti planety}{\Delta v_{max} = \sqrt[3]{\frac{2\pi G}{T}} * \frac{M_p * sin(i)}{\sqrt[3]{(M_p + M_s)^2}} * \frac{1}{\sqrt{1 - e^2}}\vspace{5pt}}{
 \begin{tabular}{l|l|l}
 	$\Delta v_{max}$ = amplituda změny rychlosti & $M_s$ = hmotnost hvězdy & $M_p$ = hmotnost planety \\
 	sin(i) = sklon dráhy vůči pozorovateli & e = excentricita dráhy & T = oběžná doba \\
@@ -390,7 +393,7 @@ Hlavní výhodou metody radiálních rychlostí oproti tranzitní metodě je mo�
 
 \subsection{Astrometrická metoda}
 
-\wrapimg[1]{Obíhání hvězdy a~planety kolem společného těžiště}{img/astrometry.pdf}{r}{11}
+\wrapimg[2]{Obíhání hvězdy a~planety kolem společného těžiště}{img/astrometry.pdf}{r}{11}
 
 Astrometrická metoda využívá stejné vlastnosti vzájemného působení těles jako metoda radiálních rychlostí. Namísto zkoumání vlnové délky záření se však zaměřuje na polohu hvězdy. Hvězda, kolem níž obíhá dostatečně hmotné těleso, se bude v~důsledku jeho působení nepatrně vychylovat ze své pozice.~\cite{methods}
 
@@ -424,7 +427,7 @@ Světlo má obvykle tendenci se pohybovat prázdným prostorem po přímé traje
 
 {\setstretch{0.8}\footnotetext[2]{Vytvořeno autorem, fotografie gravitační čočky převzata od NASA (\url{https://apod.nasa.gov/apod/image/1112/lensshoe_hubble_3235.jpg}), oříznuto a~zdeformováno}}
 
-V~případě, kdy se nějaké hmotné těleso (např. galaxie) nachází mezi pozorovatelem a~zdrojem světla (např. jinou galaxií), mluvíme o~tzv. gravitační čočce~--~zdroj světla bude vidět vícekrát na různých místech, nebo bude naopak zdeformován.~\cite{methods}
+V~případě, kdy se nějaké hmotné těleso (např. galaxie) nachází mezi pozorovatelem a~zdrojem světla (např. jinou galaxií), mluvíme o~tzv. gravitační čočce~--~zdroj světla bude viděn vícekrát na různých místech, nebo bude naopak zdeformován.~\cite{methods}
 
 \img[1]{Ilustrace gravitační mikročočky OGLE 2003-BLG-235}{img/lens_plot.png}
 \data{1}{nasadata}
@@ -569,7 +572,7 @@ Protože neuron může mít více vstupů, ale vždy pouze jediný výstup, je t
 
 \subsubsection{Aktivační funkce}
 
-Ještě než je potenciál $y_a$ přiveden na výstup neuronu, je na něj aplikována aktivační funkce. Tato funkce je závislá na typu řešeného problému a~stejně tak i~na poloze neuronu v~síti. Je běžné, že pro výstupní neurony se pouažívají jiné aktivační funkce, než pro neurony ve skrytých vrstvách. Funkce mohou být lineární, nelineární, spojité i~diskrétní.~\cite{nn}
+Ještě než je potenciál $y_a$ přiveden na výstup neuronu, je na něj aplikována aktivační funkce. Tato funkce je závislá na typu řešeného problému a~stejně tak i~na poloze neuronu v~síti. Je běžné, že pro výstupní neurony se používají jiné aktivační funkce, než pro neurony ve skrytých vrstvách. Funkce mohou být lineární, nelineární, spojité i~diskrétní.~\cite{nn}
 
 \formula{Hyperbolicko-tangenciální aktivační funkce}{y = \tanh{y_a}}
 
@@ -584,7 +587,7 @@ Ještě než je potenciál $y_a$ přiveden na výstup neuronu, je na něj apliko
 
 \subsection{Typy neuronových sítí}
 
-V~této kapitole budou zmíněny některé typy neuronových sítí. Uvedený výčet však v~žádném případě není kompletní. Vedle zmíněných typů existují např. rekurentní neuronové sítě nebo samoorganizující se neuronové sítě.
+V~této kapitole budou zmíněny některé typy neuronových sítí. Uvedený výčet však v~žádném případě není kompletní. Vedle zmíněných typů existují např. rekurentní samoorganizující se neuronové sítě.
 
 \vspace{-10pt}
 
@@ -625,7 +628,7 @@ Zpracování vícedimenzionálních dat o~velkých rozměrech by s~použitím kl
 
 \vspace{-10pt}
 
-Pro člověka je jednoduché rozpoznat, že všechny útvary na obrázku 25 jsou číslice 9 i~přesto, že každá vypadá jinak. Sestrojit algoritmus, který by to dokázal také, už ale triviální úkol rozhodně není. Obecně, získáváním informací z~obrázku se zabývá obor počítačového vidění.~\cite{convnn}
+Pro člověka je jednoduché rozpoznat, že všechny útvary na obrázku 31 jsou číslice 9 i~přesto, že každá vypadá jinak. Sestrojit algoritmus, který by to dokázal také, už ale triviální úkol rozhodně není. Obecně, získáváním informací z~obrázku se zabývá obor počítačového vidění.~\cite{convnn}
 
 Zásadní myšlenkou počítačového vidění je nesnažit se rozpoznávat celý objekt, ale nejdříve extrahovat fragmenty (vlastnosti), ze kterých se daný objekt skládá. U~číslice 9~by těmito vlastnostmi mohly být např. elipsa a~z~ní vycházející křivka či úsečka. K~extrakci vlastností z~obrázku lze přistupovat dvěma způsoby založenými na:
 
@@ -637,9 +640,9 @@ Zásadní myšlenkou počítačového vidění je nesnažit se rozpoznávat cel�
 \img[2]{Vztah mezi počítačovým viděním, strojovým učením a~konvoluční sítí}{img/vision.png}
 \draw[2]
 
-My se zde budeme zabývat pouze konvoluční neuronovou sítí (CNN). Tu můžeme chápat jako klasickou FFNN, jejíž vstupy jsou ovšem nejdříve modifikovány tak, aby z~nich byly vyextrahovány výše zmíněné vlastnosti. Tato extrakce je prováděna pomocí konvoluční vrstvy, jejíž způsob fungování je detailněji popsán v~kapitole 4.3.2.
+My se zde budeme zabývat pouze konvoluční neuronovou sítí (CNN). Tu můžeme chápat jako klasickou FFNN, jejíž vstupy jsou ovšem nejdříve modifikovány tak, aby z~nich byly vyextrahovány výše zmíněné vlastnosti. Tato extrakce je prováděna pomocí konvoluční vrstvy, jejíž způsob fungování je detailněji popsán v~kapitole 2.3.2.
 
-Dále je třeba brát v~úvahu velikost obrázku. Full HD obrázek (1~920~*~1~080) se skládá z~více jak 2~milionů pixelů. V~případě RGB obrázku se množství informací zvýší až na 6~milionů (3~složky pro každý pixel). Posílat takové množství hodnot do FFNN, která se skládá z~plně propojených vrstev, kde jsou neurony v sousedních vrstvách propojeny způsobem „každý z~každým“, by bylo problematické. Z~tohoto důvodu existuje tzv. pooling vrstva popsaná v~kapitole 4.3.3, která umožňuje zmenšit velikost vstupu a~přitom zachovat vzory charakteristické pro vstup.
+Dále je třeba brát v~úvahu velikost obrázku. Full HD obrázek (1~920~*~1~080) se skládá z~více jak 2~milionů pixelů. V~případě RGB obrázku se množství informací zvýší až na 6~milionů (3~složky pro každý pixel). Posílat takové množství hodnot do FFNN, která se skládá z~plně propojených vrstev, kde jsou neurony v sousedních vrstvách propojeny způsobem „každý z~každým“, by bylo problematické. Z~tohoto důvodu existuje tzv. pooling vrstva popsaná v~kapitole 2.3.3, která umožňuje zmenšit velikost vstupu a~přitom zachovat vzory charakteristické pro vstup.
 
 \img[1]{Příklad konvoluční sítě pro ropoznávání ručně psaných číslic}{img/cnn.png}
 \drawgimp
@@ -692,7 +695,7 @@ Výřez se postupně posouvá (\textit{stride}) v~rámci vstupu a~pro každou ko
 
 \vspace{-5pt}
 
-Na obrázku 29 je znázorněno rozpoznávání diagonály. Ve výstupu jsou v~oblastech, kde jsou ve vstupu diagonály (v~pravém horním i~dolním rohu), vyšší čiselné hodnoty než tam, kde ve vstupu diagonály nejsou. Celý tento postup se opakuje pro všechny filtry, jimiž konvoluční vrstva disponuje. Výstupem vrstvy je tak jedna nebo více \textit{feature maps}.~\cite{convnn}
+Na obrázku 35 je znázorněno rozpoznávání diagonály. Ve výstupu jsou v~oblastech, kde jsou ve vstupu diagonály (v~pravém horním i~dolním rohu), vyšší čiselné hodnoty než tam, kde ve vstupu diagonály nejsou. Celý tento postup se opakuje pro všechny filtry, jimiž konvoluční vrstva disponuje. Výstupem vrstvy je tak jedna nebo více \textit{feature maps}.~\cite{convnn}
 
 {
 \tab[2]{Parametry konvoluční vrstvy}{
@@ -721,7 +724,7 @@ Vrstva Max-Pooling si klade za cíl zmenšit velikost vstupu a~zároveň zachova
 \img[1]{Příklad operace Max-Pooling}{img/max_pooling}
 \draw
 
-Na obrázku 30 je ukázána aplikace operace Max-Pooling na vstup, který byl výstupem v~minulé kapitole~--~\textit{feature map} ukazující umístění diagonál v~původním obrázku. Jak je vidět, velikost struktury se zmenšila na čtvrtinu, a~přesto v~ní zůstaly všechny důležité informace. V~pravém dolním i~horním rohu máme stále vysoké číselné hodnoty indikující přítomnost diagonály.
+Na obrázku 36 je ukázána aplikace operace Max-Pooling na vstup, který byl výstupem v~minulé kapitole~--~\textit{feature map} ukazující umístění diagonál v~původním obrázku. Jak je vidět, velikost struktury se zmenšila na čtvrtinu, a~přesto v~ní zůstaly všechny důležité informace. V~pravém dolním i~horním rohu máme stále vysoké číselné hodnoty indikující přítomnost diagonály.
 
 {
 \tab[2]{Parametry vrstvy Max-Pooling}{
@@ -740,7 +743,7 @@ Na obrázku 30 je ukázána aplikace operace Max-Pooling na vstup, který byl v�
 }
 \footnotetext[2]{Zdroj: \cite{keras}}
 
-Obdobně k~vrstvě Max-Pooling existuje např. i~Min-Pooling nebo Average-Pooling. Jejich fungování je stejné s~tím rozdílem, že na výstup předávají místo maximální hodnoty tu minimální, resp. průměrnou. Jejich použití je opět závislé na typu řešeného problému (např. zda vstupní obrázek ma světlé pozadí a~tmavé popředí či naopak).~\cite{keras}
+Obdobně k~vrstvě Max-Pooling existuje např. i~Min-Pooling nebo Average-Pooling. Jejich fungování je stejné s~tím rozdílem, že na výstup předávají místo maximální hodnoty tu minimální, resp. průměrnou. Jejich použití je opět závislé na typu řešeného problému (např. zda vstupní obrázek má světlé pozadí a~tmavé popředí či naopak).~\cite{keras}
 
 \subsubsection{Vrstva Flatten}
 
@@ -781,7 +784,7 @@ Vytvořená neuronová síť dle předchozích kapitol nebude umět řešit žá
 
 \subsubsection{Algoritmus zpětného šíření chyby}
 
-Algoritmus zpětného šíření chyby je učící algoritmus určený pro FFNN s~diferencovatelnými spojitými aktivačními funkcemi. Neuronové síti je předložen vzor, pro který síť stanoví odezvu. Chyba pro jeden vzor je definována dle vzorce 15.~\cite{nn}
+Algoritmus zpětného šíření chyby je učící algoritmus určený pro FFNN s~diferencovatelnými spojitými aktivačními funkcemi. Neuronové síti je předložen vzor, pro který síť stanoví odezvu. Chyba pro jeden vzor je definována jako~\cite{nn}:
 
 \formula{Výpočet chyby pro jeden vzor u~algoritmu zpětného šíření chyby}{E = \sum_{i=1}^{Q}{(t_i - y_i)^2} = \sum_{i=1}^{Q}{e_i^2}\vspace{5pt}}{
 \begin{tabular}{c|c|c}
@@ -797,7 +800,12 @@ $\delta_j^k$ = lokální gradient neuronu aktualizované váhy & E = chyba jedno
 $y^{k-1}_j$ = výstup j-tého neuronu v $k-1$. vrstvě
 \end{tabular}}
 
-Přičemž lokální gradient neuronu je vypočítán dle vzorce 17.
+Přičemž lokální gradient neuronu je vypočítán dle vzorce 20. Tento postup je opakován pro všechny vzory v~trénovací množině~--~této iteraci se říká \textit{epocha}. Učení sestává z~jedné nebo více epoch a~může skončit:
+
+\begin{itemize}
+\item Po pevném počtu epoch,
+\item Po neurčitém počtu epoch, až chyba učení na klesne na určitou hodnotu.~\cite{nn}
+\end{itemize}
 
 \formula{Výpočet lokálního gradientu neuronu}{
 \delta_j^k = \begin{cases}
@@ -810,13 +818,6 @@ $y_{aj}^k$ = vstupní potenciál j-tého neuronu k-té vrstvy & $\phi^k$ = deriv
 $w_{ij}^k$ = váha spoje mezi i-tým a j-tým neuronem k-té vrstvy & 
 \end{tabular}}
 
-Tento postup je opakován pro všechny vzory v~trénovací množině~--~této iteraci se říká \textit{epocha}. Učení sestává z~jedné nebo více epoch a~může skončit:
-
-\begin{itemize}
-\item Po pevném počtu epoch,
-\item Po neurčitém počtu epoch, až chyba učení na klesne na určitou hodnotu.~\cite{nn}
-\end{itemize}
-
 \img[1]{Příklad algoritmu zpětného šíření chyby}{img/backpropagation.png}
 \draw
 
@@ -826,7 +827,7 @@ Počáteční hodnoty vah spojů mezi neurony mohou být nastaveny např. náhod
 
 \section{Další oblasti umělé inteligence}
 
-Umělá inteligence (UI nebo AI) je podstatně rozsáhlejší obor a~neobsahuje pouze umělé neuronové sítě. Další podoblasti však nejsou natolik důležité v~kontextu této práce, a~proto zde budou popsány pouze okrajově. Ačkoliv se definice v~různých zdrojích různí, AI lze popsat jako odvětví informatiky zabývající se automatizací inteligentního chování strojů.~\cite{ai} Lze ji rozdělit na 2 základní kategorie:
+Umělá inteligence (AI) je podstatně rozsáhlejší obor a~neobsahuje pouze umělé neuronové sítě. Další podoblasti však nejsou natolik důležité v~kontextu této práce, a~proto zde budou popsány pouze okrajově. Ačkoliv se definice v~různých zdrojích různí, AI lze popsat jako odvětví informatiky zabývající se automatizací inteligentního chování strojů.~\cite{ai} Lze ji rozdělit na 2 základní kategorie:
 
 \begin{itemize}
 \item \textbf{Silná umělá inteligence}~--~hypotetická obecná inteligence stroje umožňující řešit jakýkoliv problém, který dokáže řešit člověk. Takový koncept však dosud reálně neexistuje, a proto zde nebude dále rozebírán.

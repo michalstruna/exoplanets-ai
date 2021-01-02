@@ -4,6 +4,7 @@ import { Duration, size } from '../../Style'
 import { IconText } from '../../Layout'
 import UsersRank from './UsersRank'
 import OnlineUsers from './OnlineUsers'
+import Chat from './Chat'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -33,7 +34,7 @@ const links = [
     { icon: 'Database/RealTime/Discussion.svg', text: 'Diskuse (2)' }
 ]
 
-const tabs = [() => <UsersRank />, () => <OnlineUsers />, () => <div />]
+const tabs = [() => <UsersRank />, () => <OnlineUsers />, () => <Chat />]
 
 const UsersBlock = ({ ...props }: Props) => {
 

@@ -4,6 +4,7 @@ import { useForm, FormContextValues, FormContext } from 'react-hook-form'
 
 import { Color, opacityHover } from '../../Style'
 import { Loader } from '../../Async'
+import { SecondaryButton } from '../../Layout'
 
 interface Props<Values> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
     defaultValues?: Values
@@ -48,12 +49,6 @@ interface ButtonsProps {
 const Buttons = Styled.div<ButtonsProps>`
     display: flex;
     justify-content: ${props => props.single ? 'center' : 'space-between'};
-`
-
-const Button = Styled.button`
-    ${opacityHover()}
-    border-bottom: 1px solid transparent;
-    font-size: 90%;
     margin-top: 1rem;
 `
 
@@ -76,9 +71,9 @@ const Form = <Values extends any = any>({ defaultValues, onSubmit, children, for
             {buttons && (
                 <Buttons single={buttons.length === 1}>
                     {buttons.map(([handler, text], i) => handler && text && (
-                        <Button onClick={handler} key={i} type='button'>
+                        <SecondaryButton onClick={handler} key={i} type='button'>
                             {text}
-                        </Button>
+                        </SecondaryButton>
                     ))}
                 </Buttons>
             )}

@@ -7,6 +7,7 @@ enum Color {
     LIGHT = '#CCC',
     LIGHTEST = '#EEE',
     RED = '#D00',
+    LIGHT_RED = '#EBB',
     GREEN = '#3C3',
     DARK_GREEN = '#383',
     BLUE = '#9EF',

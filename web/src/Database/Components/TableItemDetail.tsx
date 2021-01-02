@@ -29,8 +29,6 @@ const Root = Styled(Link)<LinkData>`
 
 const TableItemDetail = ({ title, subtitle, ...props }: Props) => {
 
-    console.log(props)
-
     return (
         <Root {...props}>
             <div>

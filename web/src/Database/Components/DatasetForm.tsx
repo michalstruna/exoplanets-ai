@@ -1,6 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 import { FormContextValues, useForm } from 'react-hook-form'
+import { camelCase } from 'change-case'
 
 import { Field, Form, FormGroup } from '../../Form'
 import { useActions, useStrings } from '../../Data'
@@ -94,7 +95,7 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
                             key={i}
                             name={`fields.${field}`}
                             type={Field.Type.TEXT}
-                            label={globalStrings[datasetTypeToEntity[datasetType]][field]} />
+                            label={globalStrings[datasetTypeToEntity[datasetType]][camelCase(field)]} />
                     ))}
                 </FormGroup>
                 <SubmitButton />

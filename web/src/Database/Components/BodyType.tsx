@@ -56,7 +56,6 @@ const BodyType = ({ body, withImage, ...props }: Props) => {
                     {type.spectral_class}
                     {type.spectral_subclass}
                     {type.luminosity_class}
-                    {type.luminosity_subclass}
                 </SpectralType>
             </Root>
         )

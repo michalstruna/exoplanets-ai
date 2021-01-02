@@ -143,8 +143,6 @@ const DistanceVisualization = ({ systems, lifeZones, ...props }: Props) => {
     const ratio = Math.min(minRatio, maxRatio)
     const step = minRatio > maxRatio ? maxDistance / 10 : minDistance * 2
 
-    console.log(minDistance, maxDistance, ratio, step)
-
     return (
         <Root {...props}>
             {new Array(15).fill(null).map((_, i) => (

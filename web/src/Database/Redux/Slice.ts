@@ -1,7 +1,7 @@
 import { Query } from '../../Routing'
 import { Redux,  FilterData, Sort, Segment, Cursor } from '../../Data'
 import { Requests } from '../../Async'
-import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData } from '../types'
+import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData, DatasetSelection } from '../types'
 import { AggregatedStats, PlotStats } from '../../Stats'
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
@@ -47,11 +47,15 @@ const slice = Redux.slice(
                 isAsc: [Query.SORT_IS_ASC, [false, true]]
             })
         }),
-        getStars: async<Cursor, StarData[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
         getPlanets: async<Cursor, PlanetData[]>('planets', cursor => Requests.get('planets', undefined, cursor)),
         getSystem: async<string, StarData>('system', name => Requests.get(`stars/name/${name}`)),
         getGlobalStats: async<void, AggregatedStats>('globalStats', () => Requests.get(`global_stats/aggregated`)),
         getPlotStats: async<void, PlotStats>('plotStats', () => Requests.get(`global_stats/plots`)),
+
+        getStars: async<Cursor, StarData[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
+        deleteStar: async<[string, DatasetSelection<StarData>], StarData>('deletedItem', ([id, datasetSelection]) => Requests.delete(`stars/${id}/selection`, datasetSelection), {
+            onSuccess: (state, action) => (action.payload ? Redux.updateInSegment : Redux.deleteFromSegment)('stars')(state, action)
+        }),
 
         getDatasets: async<Cursor, SegmentData<Dataset>>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
         addDataset: async<DatasetNew, Dataset>('newDataset', dataset => Requests.post(`datasets`, dataset), { onSuccess: Redux.addToSegment('datasets') }),
@@ -64,7 +68,7 @@ const slice = Redux.slice(
 export default slice.reducer
 export const {
     setFilter, setSort, setSegment,
-    getStars,
+    getStars,deleteStar,
     getDatasets, addDataset, updateDataset, deleteDataset, resetDataset,
     getPlanets,
     getSystem,

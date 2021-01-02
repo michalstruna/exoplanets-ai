@@ -59,7 +59,6 @@ export interface StarProperties {
         spectral_class?: SpectralClass
         spectral_subclass?: SpectralSubclass
         luminosity_class?: LuminosityClass
-        luminosity_subclass?: LuminositySubclass
     }
     planets?: PlanetData[]
     distance?: number
@@ -122,4 +121,4 @@ export type SegmentData<T> = {
     count: number
 }
 
-export type RefItem = Dataset
+export type DatasetSelection<T> = Record<string, string[]>

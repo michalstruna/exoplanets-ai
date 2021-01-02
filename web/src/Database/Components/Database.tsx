@@ -5,10 +5,9 @@ import { useActions, useStrings, Sort } from '../../Data'
 import { useDrag, useElement } from '../../Native'
 import { image, size, ZIndex } from '../../Style'
 import { HierarchicalTable, PrimaryButton } from '../../Layout'
-import { setSort, useCursor, useItems, useTable } from '..'
+import { setSort, useCursor, useItems, useTable, useTableColumns } from '..'
 import { Async } from '../../Async'
 import DbTable from '../Constants/DbTable'
-import { provideStructure } from '../Utils/StructureProvider'
 import TableItemDetail from './TableItemDetail'
 import Tooltip from '../../Layout/Components/Tooltip'
 import DatasetForm from './DatasetForm'
@@ -121,9 +120,9 @@ const Table = Styled(HierarchicalTable)`
 `
 
 const Add = Styled.div`
-    bottom: 2rem;
+    bottom: 3rem;
     position: fixed;
-    right: 2rem;
+    right: 3rem;
 `
 
 const AddButton = Styled(PrimaryButton)`
@@ -131,7 +130,7 @@ const AddButton = Styled(PrimaryButton)`
     ${size('3rem')}
 `
 
-const addSetCoords = () => ({ x: window.innerWidth - 50, y: window.innerHeight - 70 })
+const addSetCoords = () => ({ x: window.innerWidth - 65, y: window.innerHeight - 80 })
 
 const Database = ({ ...props }: Props) => {
 
@@ -139,10 +138,10 @@ const Database = ({ ...props }: Props) => {
     const actions = useActions({ setSort })
     const table = useTable()
     const { app } = useElement()
-    const strings = useStrings()
-    const dispatch = useDispatch()
     const items = useItems(table)
-    const { levels, rowHeight, getter } = React.useMemo(() => provideStructure(table, strings, dispatch), [table, strings, dispatch, items])
+
+    const { levels, rowHeight, getter } = useTableColumns()
+    //const { levels, rowHeight, getter } = React.useMemo(() => provideStructure(table, strings, dispatch), [table, strings, dispatch, items])
 
     const handleSort = (newSort: Partial<Sort>) => {
         if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level || newSort.columnName !== sort.columnName) {

@@ -1,11 +1,13 @@
-from http import HTTPStatus
 from mongoengine.errors import ValidationError, NotUniqueError, DoesNotExist
 from bson.errors import InvalidId
 from flask_restx.reqparse import RequestParser
 from flask_restx import Namespace, Resource, fields, abort
 from flask import request
+from flask_restx._http import HTTPStatus
 
+from api.errors import error
 from constants.Data import Relation
+from constants.User import UserRole
 
 
 class Response:
@@ -23,13 +25,17 @@ class Response:
         return Response._process(handler)
 
     @staticmethod
-    def delete(handler):
-        return Response._process(handler, delete=True)
+    def delete(handler, with_return=False):
+        res, status = Response._process(handler, delete=True)
+
+        if with_return and res:
+            return res, HTTPStatus.OK
+        else:
+            return None, status
 
     @staticmethod
     def _process(handler, delete=False, create=False):
         status = HTTPStatus.CREATED if create else (HTTPStatus.NO_CONTENT if delete else HTTPStatus.OK)
-
         try:
             return handler(), status
         except ValidationError as e:
@@ -186,20 +192,14 @@ class Api:
     _endpoint_uid = 0
 
     UNSECURED_RESOURCE = {
-        "get_all": {"include": True, "secure": False},
-        "get": {"include": True, "secure": False},
-        "add": {"include": True, "secure": False},
-        "update": {"include": True, "secure": False},
-        "delete": {"include": True, "secure": False}
+        "get_all": { "role": UserRole.UNAUTH},
+        "get": {"role": UserRole.UNAUTH},
+        "add": {"role": UserRole.UNAUTH},
+        "update": {"role": UserRole.UNAUTH},
+        "delete": {"role": UserRole.UNAUTH}
     }
 
-    CUSTOM_RESOURCE = {
-        "get_all": {"include": False, "secure": False},
-        "get": {"include": False, "secure": False},
-        "add": {"include": False, "secure": False},
-        "update": {"include": False, "secure": False},
-        "delete": {"include": False, "secure": False}
-    }
+    CUSTOM_RESOURCE = {}
 
     def __init__(self, name, description=None):
         self.ns = Namespace(name, description=description)
@@ -226,19 +226,19 @@ class Api:
     def all_resources(self, path=""):
         methods = {}
 
-        if self.resource_type["get_all"]["include"]:
-            @self.ns.marshal_with(Response.page_model(self.ns, self.full_model), description=f"Successfully get {self.model_name}s.")
-            @self.ns.response(400, "Invalid query parameters.")
+        if "get_all" in self.resource_type:
+            @self.ns.marshal_with(Response.page_model(self.ns, self.full_model), code=HTTPStatus.OK, description=f"Successfully get {self.model_name}s.", )
+            @self.ns.response(HTTPStatus.BAD_REQUEST, "Invalid query parameters.", error)
             @self.ns.expect(Request.cursor_parser())
             def get(_self):
                 return Response.page(self.service, self.map_props)
 
             methods["get"] = get
 
-        if self.resource_type["add"]["include"]:
-            @self.ns.marshal_with(self.full_model, code=201, description=f"{self.model_name} was successfully created.")
-            @self.ns.response(400, f"{self.model_name} is invalid.")
-            @self.ns.response(409, f"{self.model_name} is duplicate.")
+        if "add" in self.resource_type:
+            @self.ns.marshal_with(self.full_model, code=HTTPStatus.CREATED, description=f"{self.model_name} was successfully created.")
+            @self.ns.response(HTTPStatus.BAD_REQUEST, f"{self.model_name} is invalid.", error)
+            @self.ns.response(HTTPStatus.CONFLICT, f"{self.model_name} is duplicate.", error)
             @self.ns.expect(self.new_model)
             def post(_self):
                 return Response.post(lambda: self.service.add(request.get_json()))
@@ -252,27 +252,27 @@ class Api:
     def single_resource(self, path="/<string:id>"):
         methods = {}
 
-        if self.resource_type["get"]["include"]:
-            @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
-            @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
+        if "get" in self.resource_type:
+            @self.ns.marshal_with(self.full_model, code=HTTPStatus.OK, description=f"Successfully get {self.model_name}.")
+            @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
             def get(_self, id):
                 return Response.get(lambda: self.service.get_by_id(id))
 
             methods["get"] = get
 
-        if self.resource_type["delete"]["include"]:
-            @self.ns.response(204, f"{self.model_name} was successfully deleted.")
-            @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
+        if "delete" in self.resource_type:
+            @self.ns.response(HTTPStatus.NO_CONTENT, description=f"{self.model_name} was successfully deleted.")
+            @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
             def delete(_self, id):
                 return Response.delete(lambda: self.service.delete(id))
 
             methods["delete"] = delete
 
-        if self.resource_type["update"]["include"]:
-            @self.ns.marshal_with(self.full_model, description=f"Successfully get {self.model_name}.")
-            @self.ns.response(400, f"{self.model_name} is invalid.")
-            @self.ns.response(404, f"{self.model_name} with specified ID was not found.")
-            @self.ns.response(409, f"{self.model_name} is duplicate.")
+        if "update" in self.resource_type:
+            @self.ns.marshal_with(self.full_model, code=HTTPStatus.OK, description=f"Successfully get {self.model_name}.")
+            @self.ns.response(HTTPStatus.BAD_REQUEST, f"{self.model_name} is invalid.", error)
+            @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
+            @self.ns.response(HTTPStatus.CONFLICT, f"{self.model_name} is duplicate.", error)
             @self.ns.expect(self.updated_model)
             def put(_self, id):
                 return Response.put(lambda: self.service.update(id, request.get_json()))

@@ -1,8 +1,9 @@
 from flask_restx import fields, Resource
 from flask_restx._http import HTTPStatus
 
+from api.errors import error
 from service.Dataset import DatasetService
-from utils.http import Api
+from utils.http import Api, Response
 from constants.Dataset import DatasetType
 
 api = Api("datasets", description="Input datasets.")
@@ -39,6 +40,7 @@ dataset = api.ns.model("Dataset", {
     "modified": fields.Integer(required=True, description="Timestamp of last dataset change [ms]."),
     "time": fields.Integer(required=True, description="Total process time in dataset [ms]."),
     "priority": fields.Integer(required=True, min=1, max=5, default=3, description="1 = lowest, 2 = low, 3 = normal, 4 = high, 5 = highest. More prioritized datasets will be processed first."),
+    "deleted_items": fields.List(fields.String(required=True), default=[]),
     "index": fields.Integer(min=1)
 })
 
@@ -57,13 +59,15 @@ dataset_item = api.ns.model("DatasetItem", {
     "name": fields.String(required=True, description="Name of item.")
 })
 
-@api.ns.route("/<string:dataset_id>/reset")
-class AggregatedGlobalStats(Resource):
 
-    @api.ns.response(HTTPStatus.OK, description="Data from dataset was reset succesfully.")
-    @api.ns.response(HTTPStatus.NOT_FOUND, description="Dataset with specified ID was not found.")
-    def put(self, dataset_id):
-        dataset_service.reset(dataset_id)
+@api.ns.route("/<string:id>/reset")
+class DatasetReset(Resource):
+
+    @api.ns.response(HTTPStatus.OK, "Data from dataset was reset succesfully.")
+    @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified ID was not found.", error)
+    def put(self, id):
+        return Response.put(lambda: dataset_service.reset(id))
+
 
 dataset_service = DatasetService()
 api.init(full_model=dataset, new_model=new_dataset, updated_model=updated_dataset, service=dataset_service, model_name="Dataset", map_props=map_props)

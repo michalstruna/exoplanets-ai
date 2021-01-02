@@ -77,7 +77,8 @@ export const updateInSegment = <State extends Record<Key, AsyncData<SegmentData<
 /** Delete item by ID from state property with type AsyncData<SegmentData<UpdatableObject>>. */
 export const deleteFromSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): any => ( // TODO: Fix type.
     (state: State, action: Action<Item, Error>) => {
-        state[property].payload!.content = state[property].payload!.content.filter(item => item._id !== action.meta?.arg)
+        const itemId = Array.isArray(action.meta!.arg) ? action.meta!.arg[0] : action.meta!.arg
+        state[property].payload!.content = state[property].payload!.content.filter(item => item._id !== itemId)
         state[property].payload!.count--
     }
 )

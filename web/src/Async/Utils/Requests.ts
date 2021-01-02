@@ -40,11 +40,11 @@ export default class Requests {
         )
     }
 
-    public static delete<T>(path: string, query: Record<string, any> = {}): Promise<T> {
+    public static delete<T>(path: string, body?: Record<string, any>, query: Record<string, any> = {}): Promise<T> {
         return this.process<T>(
             Axios.delete(
                 Url.resolve(Config.apiUrl, path),
-                this.getOptions(query)
+                { ...this.getOptions(query), data: body }
             )
         )
     }

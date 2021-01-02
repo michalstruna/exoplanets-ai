@@ -146,40 +146,49 @@ export default {
 
         itemsGetter: { [CS]: 'Items getter', [EN]: 'Items getter' },
         itemGetter: { [CS]: 'Item getter', [EN]: 'Item getter' },
+
+        selection: {
+            noDatasets: { [CS]: 'Žádná data k dispozici', [EN]: 'No data available' },
+            delete: { [CS]: 'Smazat', [EN]: 'Delete' },
+
+        }
+    },
+
+    forms: {
+        reset: { [CS]: 'Výchozí', [EN]: 'Default' }
     },
 
     stars: {
         // Properties
         type: { [CS]: 'Typ', [EN]: 'Type' },
         name: { [CS]: 'Název', [EN]: 'Name' },
-        spectral_class: { [CS]: 'Spektrální třída', [EN]: 'Spectral class' },
-        luminosity_class: { [CS]: 'Třída svítivosti', [EN]: 'Luminosity class' },
+        spectralClass: { [CS]: 'Spektrální třída', [EN]: 'Spectral class' },
+        luminosityClass: { [CS]: 'Třída svítivosti', [EN]: 'Luminosity class' },
         diameter: { [CS]: 'Průměr', [EN]: 'Diameter' },
         mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
         density: { [CS]: 'Hustota', [EN]: 'Density' },
-        surfaceTemperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
         luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
         distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
-        surface_temperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
-        absolute_magnitude: 'Abs. mag.',
-        apparent_magnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
+        surfaceTemperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
+        surfaceGravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
+        absoluteMagnitude: 'Abs. mag.',
+        apparentMagnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
         metallicity: { [CS]: 'Metalicita', [EN]: 'Metallicity' },
         ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
         dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
-        surfaceGravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
         dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
         lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
-        absoluteMagnitude: 'Abs. mag.',
-        apparentMagnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
+        transit: 'Transit',
+        transitDepth: { [CS]: 'Hloubka transitu', [EN]: 'Transit depth' },
 
         unknownSize: { [CS]: 'Typ', [EN]: 'Type' },
         unknownType: { [CS]: 'Neznámý', [EN]: 'Unknown' },
 
         sizes: {
             [LuminosityClass.ZERO]: { [CS]: 'Hyperobr', [EN]: 'Hypergiant' },
-            [LuminosityClass.I]: { [CS]: 'Superobr', [EN]: 'Supergiant' },
-            [LuminosityClass.II]: { [CS]: 'Obr', [EN]: 'Giant' },
+            [LuminosityClass.I]: { [CS]: 'Veleobr', [EN]: 'Supergiant' },
+            [LuminosityClass.II]: { [CS]: 'Nadobr', [EN]: 'Bright giant' },
             [LuminosityClass.III]: { [CS]: 'Obr', [EN]: 'Giant' },
             [LuminosityClass.IV]: { [CS]: 'Podobr', [EN]: 'Subgiant' },
             [LuminosityClass.V]: { [CS]: 'Trpaslík', [EN]: 'Dwarf' },
@@ -199,6 +208,9 @@ export default {
         orbit: { [CS]: 'Orbita planety', [EN]: 'Planet orbit' },
         lifeZone: { [CS]: 'Zóna života', [EN]: 'Life zone' },
         legend: { [CS]: 'Legenda', [EN]: 'Legend' },
+
+        quantitites: { [CS]: 'Veličiny', [EN]: 'Quantities' },
+        curves: { [CS]: 'Křivky', [EN]: 'Curves' }
     },
 
     planets: {
@@ -211,6 +223,7 @@ export default {
         surfaceTemperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
         semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
         transit: { [CS]: 'Tranzit', [EN]: 'Transit' },
+        transitDepth: { [CS]: 'Hloubka transitu', [EN]: 'Transit depth' },
         orbitalPeriod: { [CS]: 'Perioda', [EN]: 'Period' },
         orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
         lifeConditions: { [CS]: 'Život', [EN]: 'Life' },
@@ -219,6 +232,9 @@ export default {
         eccentricity: { [CS]: 'Excentricita', [EN]: 'Eccentricity' },
         surfaceGravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
         dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
+        ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
+        dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
+        distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
 
         unknownType: { [CS]: 'Neznámý typ', [EN]: 'Unknown type' },
 

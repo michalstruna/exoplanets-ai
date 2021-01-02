@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 import { Color, size } from '../../Style'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-
+    target: string
 }
 
 const Root = Styled.div`
@@ -46,7 +46,7 @@ var renderLabel = function (source: any, ctx: CanvasRenderingContext2D, viewPara
 
 declare var A: any
 
-const SkyMap = ({ ...props }: Props) => {
+const SkyMap = ({ target, ...props }: Props) => {
 
     React.useEffect(() => {
         const cons = [ // TODO: Fetch from server.
@@ -495,7 +495,7 @@ const SkyMap = ({ ...props }: Props) => {
         var aladin = A.aladin('#aladin-lite', {
             survey: 'P/DSS2/color',
             fov: 0.1,
-            target: 'Kepler-10',
+            target,
             showZoomControl: false,
             showLayersControl: false
         })

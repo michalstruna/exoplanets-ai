@@ -4,7 +4,7 @@ import Styled, { css } from 'styled-components'
 import { Color, Duration, ZIndex, zoomIn } from '../../Style'
 import { useTooltip, setTooltip } from '..'
 import { useActions } from '../../Data'
-import { useEvent } from '../../Native'
+import { useElement, useEvent } from '../../Native'
 
 interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'id'> {
     render: () => React.ReactNode
@@ -26,7 +26,7 @@ const Root = Styled.div`
 
 const TransformationWrapper = Styled.div<AreaRootProps>`
     pointer-events: none;
-    position: fixed;
+    position: absolute;
     z-index: ${ZIndex.TOOLTIP};
 `
 
@@ -95,17 +95,28 @@ const TooltipArea = ({ ...props }: AreaProps) => {
 
     const actions = useActions({ setTooltip })
     const tooltip = useTooltip()
+    const { app } = useElement()
 
-    const getPosition = (id: string, windowSize: [number, number]): [CSSProperties?, CSSProperties?] => {
+    const getAndSetCoords = (id: string) => {
         const instance = TooltipArea.instances[id]
-        const coords = instance.setCoords(instance.event)
 
-        if (!instance) {
-            return [undefined, undefined]
+        if (instance.coords) {
+            const tmp = instance.coords
+            instance.coords = null
+            return tmp
+        } else {
+            instance.coords = instance.setCoords(instance.event)
+            return instance.coords
         }
+    }
 
-        const withXShift = coords.x > windowSize[0] - 400 // TODO: Calculate width.
-        const withYShift = coords.y > windowSize[1] - 290 // TODO: Calculate height.
+    const getPosition = (id: string, windowSize: [number, number]): [CSSProperties?, CSSProperties?, CSSProperties?] => {
+        const instance = TooltipArea.instances[id]
+        const coords = getAndSetCoords(id)
+        const isActive = id === tooltip
+
+        const withXShift = coords.x > windowSize[0] * 0.5 // TODO: Calculate width.
+        const withYShift = coords.y > windowSize[1] * 0.5 // TODO: Calculate height.
 
         const transform = []
         transform.push(withXShift ? 'translateX(-100%) translateX(2rem)' : 'translateX(-2rem)')
@@ -114,33 +125,20 @@ const TooltipArea = ({ ...props }: AreaProps) => {
         return [
             {
                 transform: transform.join(' '),
-                left: Math.max(MIN_EDGE, Math.min(windowSize[0] - MIN_EDGE, coords.x)) + 'px',
-                top: Math.max(MIN_EDGE, Math.min(windowSize[1] - MIN_EDGE, coords.y)) + 'px'
+                left: Math.max(MIN_EDGE, Math.min(windowSize[0] - MIN_EDGE + app.current.scrollLeft, coords.x)) + 'px',
+                top: Math.max(MIN_EDGE, Math.min(windowSize[1] - MIN_EDGE + app.current.scrollTop, coords.y)) + 'px',
+                position: instance.setCoords === Tooltip.defaultProps.setCoords ? 'absolute': 'fixed'
             },
             {
                 [withYShift ? 'top' : 'bottom']: '100%',
                 [withYShift ? 'borderTopColor' : 'borderBottomColor']: '#444',
                 [withXShift ? 'right' : 'left']: '2rem'
+            },
+            {
+                transform: `scale(${+isActive})`,
+                transformOrigin: [withXShift ? 'right' : 'left', withYShift ? 'bottom' : 'top'].join(' ')
             }
         ]
-    }
-
-    const getScale = (id: string, windowSize: [number, number]) => {
-        const isActive = id === tooltip
-        const instance = TooltipArea.instances[id]
-        const coords = instance.setCoords(instance.event)
-
-        if (!instance) {
-            return undefined
-        }
-
-        const withXShift = coords.x > windowSize[0] - 400 // TODO: Calculate width.
-        const withYShift = coords.y > windowSize[1] - 290 // TODO: Calculate height.
-
-        return {
-            transform: `scale(${+isActive})`,
-            transformOrigin: [withXShift ? 'right' : 'left', withYShift ? 'bottom' : 'top'].join(' ')
-        }
     }
 
     const instance = TooltipArea.instances[tooltip]
@@ -156,7 +154,7 @@ const TooltipArea = ({ ...props }: AreaProps) => {
         <>
             {Object.entries(TooltipArea.instances).map(([id, instance], i: number) => {
                 if (!instance) return null
-                const [rootPos, arrowPos] = getPosition(id, windowSize)
+                const [rootPos, arrowPos, scale] = getPosition(id, windowSize)
 
                 return (
                     <TransformationWrapper
@@ -166,7 +164,7 @@ const TooltipArea = ({ ...props }: AreaProps) => {
                         <AreaRoot
                             {...props}
                             key={i}
-                            style={getScale(id, windowSize)}
+                            style={scale}
                             isVisible={id === tooltip.toString()}
                             onClick={e => e.stopPropagation()}>
                             <Arrow style={arrowPos} />
@@ -186,7 +184,10 @@ Tooltip.Area = TooltipArea
 Tooltip.hide = () => setTooltip('')
 
 Tooltip.defaultProps = {
-    setCoords: (e: React.MouseEvent<HTMLDivElement>) => ({ x: e.pageX, y: e.pageY })
+    setCoords: (e: React.MouseEvent<HTMLDivElement>) => {
+        const app = document.getElementById('app')!
+        return { x: e.clientX + app.scrollLeft - app.offsetLeft, y: e.clientY + app.scrollTop - app.offsetTop }
+    }
 }
 
 export default Tooltip

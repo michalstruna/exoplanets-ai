@@ -1,5 +1,6 @@
 from flask_restx import Api
 
+from api.errors import ns as errors_ns
 from api.datasets import api as datasets_api
 from api.planets import api as planets_api
 from api.stars import api as stars_api
@@ -14,6 +15,7 @@ api = Api(
     prefix='/api'
 )
 
+api.add_namespace(errors_ns)
 api.add_namespace(datasets_api.ns)
 api.add_namespace(stars_api.ns)
 api.add_namespace(planets_api.ns)
