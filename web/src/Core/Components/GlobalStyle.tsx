@@ -43,7 +43,6 @@ const GlobalStyle = createGlobalStyle`
     option {
         background-color: ${Color.MEDIUM_DARK};
         border: none;
-        padding: 0.5rem;
         outline: none;
         
         &:hover, &:focus, &:active, &:checked {

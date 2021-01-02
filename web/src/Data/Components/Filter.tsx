@@ -7,6 +7,7 @@ import { Field, Form } from '../../Form'
 import { Duration, image, opacityHover, size } from '../../Style'
 import { Validator } from '../../Native'
 import { useStrings } from '..'
+import DbTable from '../../Database/Constants/DbTable'
 
 interface Props extends Omit<Omit<React.ComponentPropsWithoutRef<'form'>, 'onChange'>, 'onSubmit'> {
     attributes: TextEnumValue[]
@@ -51,6 +52,7 @@ const Row = Styled.div`
     display: flex;
     justify-content: space-between;
     margin: 0 -0.5rem;
+    position: relative;
     transition: opacity ${Duration.MEDIUM};
     
     & > * {
@@ -69,6 +71,18 @@ const Row = Styled.div`
     select {
         width: 100%;
     }
+`
+
+interface SelectedGroupProps {
+    image: string
+}
+
+const SelectedGroup = Styled.div<SelectedGroupProps>`
+    ${props => image('Database/Dataset/' + props.image + '.svg')}
+    ${size('1rem')}
+    position: absolute;
+    left: calc(33% - 3rem);
+    top: 0.6rem;
 `
 
 const Submit = Styled.button`
@@ -233,6 +247,7 @@ const Filter = ({ attributes, groupAttributes, onChange, initialValues, onSubmit
 
                 return (
                     <Row key={i}>
+                        {groupAttributes && <SelectedGroup image={attr.value.toString().startsWith('planet_') ? 'PlanetProperties' : 'StarProperties'} />}
                         <Field
                             name={`filter[${i}].attribute`}
                             type={Field.Type.SELECT}
