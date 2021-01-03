@@ -7,7 +7,9 @@ from flask_restx._http import HTTPStatus
 
 from api.errors import error
 from constants.Data import Relation
+from constants.Error import ErrorType
 from constants.User import UserRole
+from utils.exceptions import BadCredentials
 
 
 class Response:
@@ -36,6 +38,7 @@ class Response:
     @staticmethod
     def _process(handler, delete=False, create=False):
         status = HTTPStatus.CREATED if create else (HTTPStatus.NO_CONTENT if delete else HTTPStatus.OK)
+
         try:
             return handler(), status
         except ValidationError as e:
@@ -49,28 +52,30 @@ class Response:
             Response.duplicate(str(e))
         except DoesNotExist as e:
             Response.not_found(str(e))
+        except BadCredentials as e:
+            Response.bad_credentials(str(e))
         except Exception as e:
             Response.bad_request(str(e))
 
     @staticmethod
     def not_found(message=""):
-        abort(HTTPStatus.NOT_FOUND, type="NOT_FOUND", message=message)
+        abort(HTTPStatus.NOT_FOUND, type=ErrorType.NOT_FOUND.value, message=message)
 
     @staticmethod
     def invalid(message=""):
-        abort(HTTPStatus.UNPROCESSABLE_ENTITY, type="INVALID", message=message)
+        abort(HTTPStatus.BAD_REQUEST, type=ErrorType.INVALID.value, message=message)
 
     @staticmethod
     def duplicate(message=""):
-        abort(HTTPStatus.CONFLICT, type="DUPLICATE", message=message)
+        abort(HTTPStatus.CONFLICT, type=ErrorType.DUPLICATE.value, message=message)
 
     @staticmethod
     def bad_credentials(message=""):
-        abort(HTTPStatus.BAD_REQUEST, type="BAD_CREDENTIALS", message=message)
+        abort(HTTPStatus.BAD_REQUEST, type=ErrorType.BAD_CREDENTIALS.value, message=message)
 
     @staticmethod
     def bad_request(message=""):
-        abort(HTTPStatus.BAD_REQUEST, type="BAD_REQUEST", message=message)
+        abort(HTTPStatus.BAD_REQUEST, type=ErrorType.BAD_REQUEST.value, message=message)
 
     @staticmethod
     def ok(body):

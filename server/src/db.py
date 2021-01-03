@@ -3,7 +3,12 @@ from bson.objectid import ObjectId
 
 from constants.Database import *
 from constants.Star import *
+from constants.User import UserRole
 from utils import time
+from service.Security import SecurityService
+
+
+security_service = SecurityService()
 
 
 class Dao:
@@ -281,12 +286,33 @@ class UserPersonal(EmbeddedDocument):
 
 
 class User(LogDocument):
-    name = StringField(required=True, max_length=50)
-    email = EmailField(max_length=200, unique=True, sparse=True)
-    password = StringField(max_length=200)
+
+    name = StringField(required=True, unique=True, sparse=True, max_length=20)
+    username = EmailField(max_length=200, unique=True, sparse=True)
+    password = BinaryField(max_length=200)
+    role = IntField(required=True, default=UserRole.AUTH.value, enum=UserRole.values())
     fb_id = StringField(max_length=200, unique=True, sparse=True)
     avatar = StringField(max_length=200)
-    personal = EmbeddedDocumentField(UserPersonal, default={})
+    personal = EmbeddedDocumentField(UserPersonal)
+
+    PASSWORD_MIN_LENGTH = 6
+    PASSWORD_MAX_LENGTH = 50
+
+    def clean(self):
+        if not self.fb_id:  # If local user.
+            if not self.password or len(self.password) < User.PASSWORD_MIN_LENGTH:
+                raise ValidationError(f"Minimum length of password is {User.PASSWORD_MIN_LENGTH}.")
+
+            if not self.password or len(self.password) > User.PASSWORD_MAX_LENGTH:
+                raise ValidationError(f"Maximum length of password is {User.PASSWORD_MAX_LENGTH}.")
+
+            if not self.username:
+                raise ValidationError("Username is required.")
+
+            if not self.name:
+                raise ValidationError("Name is required.")
+
+            self.password = security_service.hash(self.password)
 
 
 user_dao = Dao(User)

@@ -5,6 +5,7 @@ import pytest
 from app_factory import create_app
 from constants.Dataset import DatasetPriority, DatasetType
 from constants.Error import ErrorType
+from constants.User import UserRole
 from service.Dataset import DatasetService
 
 dataset_service = DatasetService()
@@ -13,22 +14,26 @@ dataset_service = DatasetService()
 class Res:
 
     @staticmethod
-    def item(res, expected=None, ignore=["index"]):
+    def item(res, expected=None, ignore=["index", "token"]):
         assert res.status_code == HTTPStatus.OK
 
         if expected:
             Comparator.is_in(res.json, expected, ignore=ignore)
 
+        return res
+
     @staticmethod
-    def list(res, expected, ignore=["index"]):
+    def list(res, expected, ignore=["index", "token"]):
         assert res.json["count"] == len(res.json["content"])
         assert res.status_code == HTTPStatus.OK
 
         if expected:
             Comparator.is_in(res.json["content"], expected, ignore=ignore)
 
+        return res
+
     @staticmethod
-    def created(res, expected=None, ignore=["index"]):
+    def created(res, expected=None, ignore=["index", "token"]):
         assert res.data != b""
         assert res.status_code == HTTPStatus.CREATED
 
@@ -38,7 +43,7 @@ class Res:
         return res
 
     @staticmethod
-    def updated(res, expected=None, ignore=["index"]):
+    def updated(res, expected=None, ignore=["index", "token"]):
         assert res.status_code == HTTPStatus.OK
 
         if expected:
@@ -47,7 +52,7 @@ class Res:
         return res
 
     @staticmethod
-    def deleted(res, expected=None, ignore=["index"], body=False):
+    def deleted(res, expected=None, ignore=["index", "token"], body=False):
         if body or expected:
             assert res.data != b""
             assert res.status_code == HTTPStatus.OK
@@ -64,6 +69,31 @@ class Res:
     def not_found(res):
         assert res.json["type"] == ErrorType.NOT_FOUND.value
         assert res.status_code == HTTPStatus.NOT_FOUND
+        return res
+
+    @staticmethod
+    def invalid(res):
+        assert res.json["type"] == ErrorType.INVALID.value
+        assert res.status_code == HTTPStatus.BAD_REQUEST
+        return res
+
+    @staticmethod
+    def bad_request(res):
+        assert res.json["type"] == ErrorType.BAD_REQUEST.value
+        assert res.status_code == HTTPStatus.BAD_REQUEST
+        return res
+
+    @staticmethod
+    def bad_credentials(res):
+        assert res.json["type"] == ErrorType.BAD_CREDENTIALS.value
+        assert res.status_code == HTTPStatus.BAD_REQUEST
+        return res
+
+    @staticmethod
+    def duplicate(res):
+        assert res.json["type"] == ErrorType.DUPLICATE.value
+        assert res.status_code == HTTPStatus.CONFLICT
+        return res
 
 
 KEPIDS = ["10000800", "11904151", "10874614"]
@@ -109,6 +139,36 @@ class Creator:
     @staticmethod
     def rand_str(length=10):
         return uuid4().hex[:length]
+
+    @staticmethod
+    def local_credentials(id=1, new=False, username=None, password=None, name=None):
+        result = {
+            "username": username if username is not None else f"test_{id}@example.com",
+            "password": password if password is not None else f"p4s$w0rd{id}!"
+        }
+
+        if new:
+            result["name"] = name if name is not None else f"User{id}"
+
+        return result
+
+    @staticmethod
+    def user(id=1, role=UserRole.AUTH, with_personal=False, token=None, name=None):
+        result = {
+            "name": name if name is not None else f"User{id}",
+            "role": role.value,
+            "score": {},
+            "personal": {}
+        }
+
+        if with_personal:
+            result["personal"] = {"is_male": id % 2 == 0, "country": f"Country{id}", "birth": id}
+
+        if token:
+            result["token"] = token
+
+        return result
+
 
     """@staticmethod
     def star(new=False, properties=None, datasets=[], planets=[], light_curves=[]):

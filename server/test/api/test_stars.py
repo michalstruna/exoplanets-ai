@@ -2,7 +2,7 @@ from utils.test import Comparator, Creator, Res, KEPIDS, app
 
 
 def test_get(client):
-    Res.list(client.get("/api/stars"), [])  # There is no dataset.
+    Res.list(client.get("/api/stars"), [])  # There is no stars.
 
     dataset1, dataset2 = Creator.add_datasets(client, 2)  # Add two datasets.
 

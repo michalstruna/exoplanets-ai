@@ -3,6 +3,8 @@ from http import HTTPStatus
 from mongoengine.errors import DoesNotExist
 from datetime import datetime
 
+from constants.User import UserRole
+from utils.exceptions import BadCredentials
 from .Base import Service
 from .Security import SecurityService
 import db
@@ -13,6 +15,29 @@ class UserService(Service):
     def __init__(self):
         super().__init__(db.user_dao)
         self.security_service = SecurityService()
+
+    def local_sign_up(self, credentials):
+
+        self.add({
+            "username": credentials["username"],
+            "name": credentials["name"],
+            "password": credentials["password"]
+        })
+
+        return self.local_login(credentials)
+
+    def local_login(self, credentials):
+        try:
+            user = self.get({"username": credentials["username"]})
+        except DoesNotExist:
+            raise BadCredentials("Bad credentials.")
+
+        if self.security_service.verify_hash(user["password"], credentials["password"]):
+            user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})  # TODO: Is str() neccesary?
+
+            return user
+        else:
+            raise BadCredentials("Bad credentials.")
 
     def facebook_login(self, token):
         # TODO: FacebookService or ExternalService?
