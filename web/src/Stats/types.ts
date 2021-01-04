@@ -6,22 +6,25 @@ export interface Stats {
     lcs: number
 }
 
-export interface ExtendedStats extends Stats {
-    volunteers: number
-}
-
-export interface AggregatedStatsItem {
+export interface StatsItem {
     value: number
     diff: number
 }
 
+export interface GlobalAggregatedStats {
+    planets: StatsItem
+    volunteers: StatsItem
+    hours: StatsItem
+    stars: StatsItem
+    gibs: StatsItem
+    curves: StatsItem
+}
+
 export interface AggregatedStats {
-    planets: AggregatedStatsItem
-    volunteers: AggregatedStatsItem
-    hours: AggregatedStatsItem
-    stars: AggregatedStatsItem
-    gibs: AggregatedStatsItem
-    curves: AggregatedStatsItem
+    planets: StatsItem
+    hours: StatsItem
+    gibs: StatsItem
+    curves: StatsItem
 }
 
 export interface PlotAxis {

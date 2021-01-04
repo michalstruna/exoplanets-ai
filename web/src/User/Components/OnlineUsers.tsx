@@ -42,7 +42,7 @@ const OnlineUsers = ({ ...props }: Props) => {
     const renderedTable = React.useMemo(() => users.payload && (
         <Table
             columns={[
-                { accessor: user => user.score.rank, title: 'Rank', render: rank => rank + '.' },
+                { accessor: user => user.stats.planets, title: 'Rank', render: rank => rank + '.' },
                 {
                     accessor: user => user.name, title: 'Jméno',
                     render: (name, user) => <UserName user={user} />,

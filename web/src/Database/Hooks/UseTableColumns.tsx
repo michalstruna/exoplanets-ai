@@ -1,5 +1,5 @@
 import React from 'react'
-import Styled from 'styled-components'
+import Styled, { css } from 'styled-components'
 import Urls from 'url'
 import prettyBytes from 'pretty-bytes'
 import { pascalCase } from 'change-case'
@@ -23,6 +23,7 @@ import { Link, Url } from '../../Routing'
 import { MultiValue } from '../Utils/Col'
 import DatasetForm from '../Components/DatasetForm'
 import DatasetsSelectionForm from '../Components/DatasetsSelectionForm'
+import { getUsers, User } from '../../User'
 
 const DateTime = ({ s }: { s: number }) => (
     <>
@@ -88,7 +89,7 @@ export default (): Structure => {
     const dispatch = useDispatch()
     const table = useTable()
     const strings = useStrings()
-    const { stars, planets, datasets } = strings
+    const { stars, planets, datasets, users } = strings
 
     return React.useMemo(() => {
         switch (table) {
@@ -243,6 +244,28 @@ export default (): Structure => {
                     getter: getDatasets,
                     rowHeight: () => 72
                 }
+            case DbTable.USERS:
+                return {
+                    levels: [
+                        {
+                            columns: Col.list<User>([
+                                { name: 'role', format: (val, user) => user.avatar && <ItemImage image={user.avatar} />, width: '4rem', headerIcon: false },
+                                { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.users.roles[item.role]} />, width: 1.5, headerIcon: false },
+                                { name: 'planets', format: (val, user) => user.stats.planets.value },
+                                { name: 'curves', format: (val, user) => user.stats.curves.value },
+                                { name: 'gibs', format: (val, user) => user.stats.gibs.value },
+                                { name: 'hours', format: (val, user) => user.stats.hours.value },
+                                { name: 'created', format: (val, user) => <DateTime s={val} /> },
+                                { name: 'modified', format: (val, user) => Dates.formatDistance(strings, val) },
+                            ], {
+                                strings: users,
+                                indexColumnName: 'index'
+                            })
+                        }
+                    ],
+                    getter: getUsers,
+                    rowHeight: () => 72
+                }
         }
 
         return null as any
@@ -264,6 +287,12 @@ interface ItemImageProps {
 
 const ItemImage = Styled.div<ItemImageProps>`
     ${props => size(props.large ? '4rem' : '2.5rem')}
-    ${props => image(props.image)}
+    
+    ${props => props.image.startsWith('http') ? css`
+        ${image()}
+        background-image: url(${props.image});
+    ` : css`
+        ${image(props.image)}
+    `}
     display: inline - block
 `

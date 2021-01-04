@@ -5,15 +5,6 @@ from utils.http import Api
 
 api = Api("global_stats", description="Global statistics.")
 
-global_stats_item = api.ns.model("GlobalStatsItem", {
-    "planets": fields.Integer(required=True, min=0, default=0, description="Count of discovered planets."),
-    "volunteers": fields.Integer(required=True, min=0, default=0, description="Count of registered volunteers."),
-    "hours": fields.Float(required=True, min=0, default=0, description="Count of hours."),
-    "stars": fields.Integer(required=True, min=0, default=0, description="Count of processed stars."),
-    "gibs": fields.Float(required=True, min=0, default=0, description="Count of processed GiB."),
-    "curves": fields.Integer(required=True, min=0, default=0, description="Count of processed curves."),
-})
-
 stat_int_item = api.ns.model("StatIntItem", {
     "value": fields.Integer(required=True, min=0, default=0, description="Value of statistic."),
     "diff": fields.Integer(required=True, default=0, description="Change of statistic."),
@@ -24,7 +15,14 @@ stat_float_item = api.ns.model("StatFloatItem", {
     "diff": fields.Float(required=True, default=0, description="Change of statistic."),
 })
 
-global_stats_aggregated = api.ns.model("GlobalStatsAggregatedItem", {
+stats_aggregated = api.ns.model("StatsAggregated", {
+    "planets": fields.Nested(stat_int_item, required=True),
+    "hours": fields.Nested(stat_float_item, required=True),
+    "gibs": fields.Nested(stat_float_item, required=True),
+    "curves": fields.Nested(stat_int_item, required=True)
+})
+
+global_stats_aggregated = api.ns.model("GlobalStatsAggregated", {
     "planets": fields.Nested(stat_int_item, required=True),
     "volunteers": fields.Nested(stat_int_item, required=True),
     "hours": fields.Nested(stat_float_item, required=True),

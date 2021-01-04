@@ -254,9 +254,7 @@ star_dao = Dao(Star, [
 
 class GlobalStatsItem(EmbeddedDocument):
     planets = IntField(required=True, default=0)
-    volunteers = IntField(required=True, default=0)
     hours = FloatField(required=True, default=0)
-    stars = IntField(required=True, default=0)
     gibs = FloatField(required=True, default=0)
     curves = IntField(required=True, default=0)
 
@@ -279,6 +277,14 @@ global_stats_dao = Dao(GlobalStats, [
 ])
 
 
+class Stats(EmbeddedDocument):
+    date = StringField(required=True)
+    planets = IntField(required=True, default=0)
+    hours = FloatField(required=True, default=0)
+    gibs = FloatField(required=True, default=0)
+    curves = IntField(required=True, default=0)
+
+
 class UserPersonal(EmbeddedDocument):
     is_male = BooleanField()
     country = StringField(max_length=10)
@@ -294,6 +300,7 @@ class User(LogDocument):
     fb_id = StringField(max_length=200, unique=True, sparse=True)
     avatar = StringField(max_length=200)
     personal = EmbeddedDocumentField(UserPersonal)
+    stats = EmbeddedDocumentListField(Stats)
 
     PASSWORD_MIN_LENGTH = 6
     PASSWORD_MAX_LENGTH = 50
@@ -315,7 +322,29 @@ class User(LogDocument):
             self.password = security_service.hash(self.password)
 
 
-user_dao = Dao(User)
+user_dao = Dao(User, [
+    {"$unwind": {"path": "$stats", "preserveNullAndEmptyArrays": True}},
+
+    {"$group": {
+        "_id": "$_id",
+        "stats_gibs": {"$sum": "$stats.gibs"},
+        "stats_curves": {"$sum": "$stats.curves"},
+        "stats_planets": {"$sum": "$stats.planets"},
+        "stats_hours": {"$sum": "$stats.hours"},
+        "root": {"$first": "$$ROOT"}
+    }},
+
+    {"$addFields": {"root.stats": {
+        "gibs": {"value": "$stats_gibs"},
+        "curves": {"value": "$stats_curves"},
+        "planets": {"value": "$stats_planets"},
+        "hours": {"value": "$stats_hours"}
+    }}},
+
+    {"$replaceRoot": {"newRoot": "$root", }},
+
+    {"$project": {"stats.date": 0}}
+])
 
 
 # TODO: Star aliases.

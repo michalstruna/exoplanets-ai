@@ -1,10 +1,11 @@
 import Cookies from 'js-cookie'
 
 import { Cookie } from '../../Native'
-import { Redux } from '../../Data'
+import { Cursor, Redux } from '../../Data'
 import UserRole from '../Constants/UserRole'
-import { Credentials, ExternalCredentials, Identity, UserSimple } from '../types'
+import { Credentials, ExternalCredentials, Identity, User } from '../types'
 import { Requests } from '../../Async'
+import { SegmentData } from '../../Database/types'
 
 const demoIdentity: Identity = {
     _id: 'abc',
@@ -12,28 +13,24 @@ const demoIdentity: Identity = {
     name: 'Michal Struna',
     avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/1200px-Google_Earth_icon.svg.png',
     role: UserRole.ADMIN,
-    score: {
-        rank: 193,
-        planets: 216,
-        stars: 512,
-        time: 337
+    stats: {
+        planets: { value: 0, diff: 0 },
+        curves: { value: 0, diff: 0 },
+        hours: { value: 0, diff: 0 },
+        gibs: { value: 0, diff: 0 }
     },
     personal: {
         country: 'CZ',
         birth: 456,
-        isMale: true
+        male: true
     },
-    activity: {
-        devices: {
-            count: 3,
-            power: 2317
-        },
-        isOnline: true,
-        last: new Date().getTime()
-    }
+    created: new Date().getTime(),
+    modified: new Date().getTime(),
+    online: true,
+    devices: { count: 0, power: 0 }
 }
 
-const onlineUsers = [] as UserSimple[]
+const onlineUsers = [] as User[]
 
 for (let i = 0; i < 38; i++) {
     onlineUsers.push({
@@ -41,35 +38,34 @@ for (let i = 0; i < 38; i++) {
         avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png',
         name: ('Michal Struna ' + i).repeat(Math.floor(Math.random() * 2 + 1)),
         role: UserRole.AUTHENTICATED,
-        score: {
-            rank: 193,
-            planets: 213,
-            stars: 512,
-            time: 337
+        stats: {
+            planets: { value: 0, diff: 0 },
+            curves: { value: 0, diff: 0 },
+            hours: { value: 0, diff: 0 },
+            gibs: { value: 0, diff: 0 }
         },
         personal: {
             country: 'CZ',
             birth: 456,
-            isMale: true
+            male: true
         },
-        activity: {
-            isOnline: true,
-            last: new Date().getTime(),
-            devices: {
-                count: 3,
-                power: 456781
-            }
-        }
+        created: new Date().getTime(),
+        modified: new Date().getTime(),
+        online: true,
+        devices: { count: 3, power: 456781 }
     })
 }
 
 const Slice = Redux.slice(
     'user',
     {
+        users: Redux.async<User>(),
         identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name)),
-        onlineUsers: Redux.async<UserSimple[]>(onlineUsers)
+        onlineUsers: Redux.async<User[]>(onlineUsers)
     },
     ({ set, async, plain }) => ({
+        getUsers: async<Cursor, SegmentData<User>>('users', cursor => Requests.get(`users`, undefined, cursor)),
+
         login: async<Credentials, Identity>('identity', ({ email, password }) => new Promise((resolve, reject) => {
             // TODO: Cookies
             setTimeout(() => {
@@ -96,4 +92,4 @@ const Slice = Redux.slice(
 )
 
 export default Slice.reducer
-export const { login, logout, facebookLogin } = Slice.actions
+export const { getUsers, login, logout, facebookLogin } = Slice.actions

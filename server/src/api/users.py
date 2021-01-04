@@ -2,6 +2,7 @@ from flask_restx import Resource, fields
 from flask import request
 from flask_restx._http import HTTPStatus
 
+from api.global_stats import stats_aggregated
 from constants.User import UserRole
 from utils.http import Api, Response
 from service.User import UserService
@@ -16,7 +17,7 @@ user_score = api.ns.model("UserScore", {
 })
 
 user_personal = api.ns.model("UserPersonal", {
-    "is_male": fields.Boolean(),
+    "male": fields.Boolean(),
     "country": fields.String(max_length=10),
     "birth": fields.Integer()
 })
@@ -30,9 +31,10 @@ user = api.ns.model("User", {
     "name": fields.String(required=True, description="Name of user."),
     "avatar": fields.String(required=True, description="Url of user avatar."),
     "role": fields.Integer(requred=True, description="Role of user."),
-    "score": fields.Nested(user_score),
+    "stats": fields.Nested(stats_aggregated, required=True, description="Stats of user."),
     "personal": fields.Nested(user_personal),
-    "activity": fields.Nested(user_activity)
+    "activity": fields.Nested(user_activity),
+    "index": fields.Integer(min=1)
 })
 
 identity = api.ns.inherit("Identity", user, {

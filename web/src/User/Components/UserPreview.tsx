@@ -4,14 +4,14 @@ import Countries from 'emoji-flags'
 
 import { IconText } from '../../Layout'
 import Auth from './Auth'
-import { UserSimple } from '../types'
+import { User } from '../types'
 import { useActions } from '../../Data'
 import { image, dots, size } from '../../Style'
 import { logout } from '../Redux/Slice'
 import Avatar from './Avatar'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    user: UserSimple
+    user: User
 }
 
 const Root = Styled.div`
@@ -167,12 +167,12 @@ const UserPreview = ({ user, ...props }: Props) => {
                 </Name>
                 <Avatar user={user} size='7.4rem' />
                 <Rank>
-                    Rank <ItemValue>{user.score.rank}.</ItemValue>
+                    Planet <ItemValue>{user.stats.planets.value}.</ItemValue>
                 </Rank>
                 <Stats>
-                    <Item title='Planet' value={user.score.planets} />
-                    <Item title='Hvězd' value={user.score.stars} />
-                    <Item title='Hodin' value={user.score.time} />
+                    <Item title='Křivek' value={user.stats.curves.value} />
+                    <Item title='GiB' value={user.stats.gibs.value} />
+                    <Item title='Hodin' value={user.stats.hours.value} />
                 </Stats>
             </Left>
             <Right>

@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react'
+import React, { CSSProperties, useReducer } from 'react'
 import Styled, { css } from 'styled-components'
 
 import { Color, Duration, ZIndex, zoomIn } from '../../Style'
@@ -64,6 +64,7 @@ const Tooltip = ({ id: _id, setCoords, render, ...props }: Props) => {
     React.useEffect(() => {
         if (Tooltip.Area.instances[id]) {
             Tooltip.Area.instances[id].render = render
+            Tooltip.Area.update?.()
         }
     }, [render])
 
@@ -76,7 +77,7 @@ const Tooltip = ({ id: _id, setCoords, render, ...props }: Props) => {
             Tooltip.Area.instances[id] = { setCoords, event, render }
         } else {
             setTimeout(() => {
-                //Tooltip.Area.instances[id] = null
+                Tooltip.Area.instances[id] = null
             }, 250)
         }
 
@@ -96,6 +97,11 @@ const TooltipArea = ({ ...props }: AreaProps) => {
     const actions = useActions({ setTooltip })
     const tooltip = useTooltip()
     const { app } = useElement()
+    TooltipArea.update = useReducer(x => x + 1, 0)[1]
+
+    React.useEffect(() => {
+
+    })
 
     const getAndSetCoords = (id: string) => {
         const instance = TooltipArea.instances[id]
@@ -179,6 +185,7 @@ const TooltipArea = ({ ...props }: AreaProps) => {
 }
 
 TooltipArea.instances = {} as Record<string, any>
+TooltipArea.update = null as (() => void) | null
 
 Tooltip.Area = TooltipArea
 Tooltip.hide = () => setTooltip('')

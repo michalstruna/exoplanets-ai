@@ -1,33 +1,28 @@
 import UserRole from './Constants/UserRole'
+import { AggregatedStats } from '../Stats'
 
-export type UserSimple = {
+export type User = {
     _id: string
     name: string
     avatar?: string,
     role: UserRole
-    score: {
-        rank: number
-        time: number
-        stars: number
-        planets: number
-    }
+    stats: AggregatedStats
+    created: number
+    modified: number
+    online?: boolean  // TODO: Remove?
     personal: {
-        isMale?: boolean
+        male?: boolean
         birth?: number
         country?: string
         text?: string
     }
-    activity: {
-        isOnline: boolean,
-        last: number,
-        devices: {
-            count: number,
-            power: number
-        }
+    devices: {
+        count: number,
+        power: number
     }
 }
 
-export type Identity = UserSimple & {
+export type Identity = User & {
     token: string
 }
 

@@ -9,6 +9,7 @@ import DatasetPriority from '../../Database/Constants/DatasetPriority'
 import SpectralClass from '../../Database/Constants/SpectralClass'
 import LuminosityClass from '../../Database/Constants/LuminosityClass'
 import PlanetStatus from '../../Database/Constants/PlanetStatus'
+import { UserRole } from '../../User'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -323,6 +324,27 @@ export default {
         signUp: { [CS]: 'Zaregistrovat se', [EN]: 'Sign up' },
         resetPassword: { [CS]: 'Resetovat heslo', [EN]: 'Reset password' },
         signUpToLogin: { [CS]: 'Již máte účet?', [EN]: 'Already have account?' }
+    },
+
+    users: {
+
+        name: { [CS]: 'Jméno', [EN]: 'Name' },
+        role: 'Role',
+        created: { [CS]: 'Registrace', [EN]: 'Registration' },
+        modified: { [CS]: 'Aktivní', [EN]: 'Active' },
+        rank: { [CS]: 'Umístění', [EN]: 'Rank' },
+        planets: { [CS]: 'Planet', [EN]: 'Planets' },
+        stars: { [CS]: 'Hvězd', [EN]: 'Stars' },
+        curves: { [CS]: 'Křivek', [EN]: 'Curves' },
+        gibs: 'GiB',
+        hours: { [CS]: 'Hodin', [EN]: 'Hours' },
+
+        roles: {
+            [UserRole.UNAUTHENTICATED]: 'Nepřihlášený',
+            [UserRole.AUTHENTICATED]: 'Uživatel',
+            [UserRole.MODERATOR]: 'Moderátor',
+            [UserRole.ADMIN]: 'Administrátor'
+        }
     },
 
     discovery: {
