@@ -1,19 +1,18 @@
 import UserRole from './Constants/UserRole'
-import { AggregatedStats } from '../Stats'
+import { StatsObject } from '../Stats'
+import { LogObject } from '../Data'
 
-export type User = {
+export type User = LogObject & StatsObject & {
     _id: string
     name: string
     avatar?: string,
     role: UserRole
-    stats: AggregatedStats
-    created: number
-    modified: number
     online?: boolean  // TODO: Remove?
     personal: {
         male?: boolean
         birth?: number
         country?: string
+        contact?: string
         text?: string
     }
     devices: {

@@ -77,7 +77,7 @@ const Tooltip = ({ id: _id, setCoords, render, ...props }: Props) => {
             Tooltip.Area.instances[id] = { setCoords, event, render }
         } else {
             setTimeout(() => {
-                Tooltip.Area.instances[id] = null
+                //Tooltip.Area.instances[id] = null
             }, 250)
         }
 

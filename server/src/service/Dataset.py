@@ -20,26 +20,28 @@ class DatasetService(Service):
     def add(self, dataset):
         start = time.now()
         items = pd.read_csv(dataset["items_getter"])
-        dataset["total_size"] = len(items.index)
+        dataset["stats"] = [{"date": time.today()}]
+        dataset["size"] = len(items.index)
         self.update_meta(dataset)
         items = self.standardize_dataset(dataset, items)
         items = items.where(pd.notnull(items), None)
         dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
-            dataset["processed"], dataset["items"] = items.memory_usage().sum(), []
+            dataset["stats"][0]["data"], dataset["items"] = items.memory_usage().sum(), []
             items["dataset"] = dataset["name"]
             stars = self.star_service.complete_stars(items.to_dict("records"))
             tmp = self.star_service.upsert_all_by_name(stars)
 
-            self.stats_service.add(ms=time.now() - start, bytes=dataset["processed"], stars=tmp.upserted_count)
+            self.stats_service.add(ms=time.now() - start, bytes=dataset["stats"][0]["data"], stars=tmp.upserted_count)
         else:
             pass
 
-        result = self.dao.add(dataset)
         end = time.now()
+        dataset["stats"][0]["time"] = end - start
 
-        return self.update(result["_id"], {"time": end - start})
+        return self.dao.add(dataset)
+
 
     def add_processed(self, dataset, n_bytes):
         if isinstance(dataset, str):
@@ -173,7 +175,7 @@ class DatasetService(Service):
     def reset(self, id):
         dataset = self.get_by_id(id)
 
-        for key in ["_id", "index", "current_size"]:
+        for key in ["_id", "index"]:
             del dataset[key]
 
         self.delete(id)  # TODO: Transation?

@@ -34,7 +34,8 @@ class UserService(Service):
 
         if self.security_service.verify_hash(user["password"], credentials["password"]):
             user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})  # TODO: Is str() neccesary?
-
+            self.update(user["_id"], {**user, "online": True})
+            user["online"] = True
             return user
         else:
             raise BadCredentials("Bad credentials.")

@@ -52,7 +52,7 @@ export default {
         name: { [CS]: 'Název', [EN]: 'Name' },
 
         // Datasets
-        totalSize: { [CS]: 'Objektů', [EN]: 'Objects' },
+        size: { [CS]: 'Objektů', [EN]: 'Objects' },
         processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
         date: { [CS]: 'Datum', [EN]: 'Date' },
         published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
@@ -129,7 +129,7 @@ export default {
         type: { [CS]: 'Typ', [EN]: 'Type' },
         name: { [CS]: 'Název', [EN]: 'Name' },
         missingName: { [CS]: 'Zadejte název', [EN]: 'Type name' },
-        totalSize: { [CS]: 'Objektů', [EN]: 'Objects' },
+        size: { [CS]: 'Objektů', [EN]: 'Objects' },
         processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
         date: { [CS]: 'Datum', [EN]: 'Date' },
         published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
@@ -327,7 +327,6 @@ export default {
     },
 
     users: {
-
         name: { [CS]: 'Jméno', [EN]: 'Name' },
         role: 'Role',
         created: { [CS]: 'Registrace', [EN]: 'Registration' },
@@ -336,8 +335,16 @@ export default {
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
         stars: { [CS]: 'Hvězd', [EN]: 'Stars' },
         curves: { [CS]: 'Křivek', [EN]: 'Curves' },
-        gibs: 'GiB',
-        hours: { [CS]: 'Hodin', [EN]: 'Hours' },
+        data: { [CS]: 'Zprac. dat', [EN]: 'Proc. data' },
+        time: { [CS]: 'Výpoč. čas', [EN]: 'Comput. time' },
+        country: { [CS]: 'Země', [EN]: 'Country' },
+        sex: { [CS]: 'Pohlaví', [EN]: 'Sex' },
+        birth: { [CS]: 'Věk', [EN]: 'Age' },
+        contact: { [CS]: 'Kontakt', [EN]: 'Contact' },
+
+        male: { [CS]: 'Muž', [EN]: 'Male' },
+        female: { [CS]: 'Žena', [EN]: 'Female' },
+
 
         roles: {
             [UserRole.UNAUTHENTICATED]: 'Nepřihlášený',

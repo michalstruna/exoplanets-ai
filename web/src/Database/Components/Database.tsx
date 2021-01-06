@@ -139,9 +139,7 @@ const Database = ({ ...props }: Props) => {
     const table = useTable()
     const { app } = useElement()
     const items = useItems(table)
-
     const { levels, rowHeight, getter } = useTableColumns()
-    //const { levels, rowHeight, getter } = React.useMemo(() => provideStructure(table, strings, dispatch), [table, strings, dispatch, items])
 
     const handleSort = (newSort: Partial<Sort>) => {
         if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level || newSort.columnName !== sort.columnName) {

@@ -225,9 +225,9 @@ export default (): Structure => {
                             columns: Col.list<Dataset>([
                                 { name: 'type', format: val => <ItemImage image={`Database/Dataset/${pascalCase(val)}.svg`} />, width: '4rem', headerIcon: false },
                                 { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.datasets.types[item.type]} />, width: 1.5, headerIcon: false },
-                                { name: 'total_size', format: Numbers.format },
-                                { name: 'processed', format: (val, item) => <ProgressBar range={item.total_size} value={item.total_size - item.current_size} label={prettyBytes(item.processed || 0)} title={`${Numbers.format(item.total_size - item.current_size)} / ${Numbers.format(item.total_size)}`} /> },
-                                { name: 'time', format: val => Dates.formatDistance(strings, 0, val, Dates.Format.LONG) },
+                                { name: 'size', format: Numbers.format },
+                                { name: 'processed', format: (val, item) => <ProgressBar range={item.size} value={item.size - item.current_size} label={prettyBytes(item.processed || 0)} title={`${Numbers.format(item.size - item.current_size)} / ${Numbers.format(item.size)}`} /> },
+                                { name: 'time', format: (val, item) => Dates.formatDistance(strings, 0, item.stats.time.value, Dates.Format.LONG) },
                                 { name: 'created', format: val => <DateTime s={val} />, title: strings.properties.published },
                                 { name: 'modified', format: val => Dates.formatDistance(strings, val) },
                                 { name: 'priority', format: val => strings.datasets.priorities[val], styleMap: priorityStyle },
@@ -249,14 +249,18 @@ export default (): Structure => {
                     levels: [
                         {
                             columns: Col.list<User>([
-                                { name: 'role', format: (val, user) => user.avatar && <ItemImage image={user.avatar} />, width: '4rem', headerIcon: false },
+                                { name: 'role', format: (val, user) => user.avatar && <ItemImage image={user.avatar} large={true} />, width: '5rem', headerIcon: false },
                                 { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.users.roles[item.role]} />, width: 1.5, headerIcon: false },
                                 { name: 'planets', format: (val, user) => user.stats.planets.value },
-                                { name: 'curves', format: (val, user) => user.stats.curves.value },
-                                { name: 'gibs', format: (val, user) => user.stats.gibs.value },
-                                { name: 'hours', format: (val, user) => user.stats.hours.value },
+                                { name: 'items', format: (val, user) => user.stats.items.value },
+                                { name: 'data', format: (val, user) => user.stats.data.value },
+                                { name: 'time', format: (val, user) => user.stats.time.value },
                                 { name: 'created', format: (val, user) => <DateTime s={val} /> },
                                 { name: 'modified', format: (val, user) => Dates.formatDistance(strings, val) },
+                                { name: 'country', format: (val, user) => user.personal.country },
+                                { name: 'sex', format: (val, user) => user.name ? users.sex.male : users.sex.female },
+                                { name: 'birth', format: (val, user) => user.personal.birth && Dates.formatDistance(strings, user.personal.birth * 1000) },
+                                { name: 'contact', format: (val, user) => user.personal.contact },
                             ], {
                                 strings: users,
                                 indexColumnName: 'index'

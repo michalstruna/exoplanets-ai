@@ -169,25 +169,6 @@ class Creator:
 
         return result
 
-
-    """@staticmethod
-    def star(new=False, properties=None, datasets=[], planets=[], light_curves=[]):
-        result = {}
-
-        if properties:
-            result["properties"] = properties
-        else:
-            result["properties"] = []
-
-            for i in range(len(datasets)):
-                result["properties"][i] = {
-                    ""
-                    "dataset": datasets[i]
-                }
-
-        result["planets"] = planets
-        result["light_curves"] = light_curves"""
-
     @staticmethod
     def dataset(new=False, update=False, name=None, type=DatasetType.STAR_PROPERTIES, priority=DatasetPriority.NORMAL, kepids=[KEPIDS[0], KEPIDS[1]], fields=FIELDS):
         name = name if name else Creator.rand_str(10)
@@ -199,14 +180,14 @@ class Creator:
                 "name": name,
                 "fields": fields,
                 "items": [],
-                "total_size": len(kepids),
+                "size": len(kepids),
                 "priority": priority.value,
                 "items_getter": "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=q1_q17_dr25_stellar&select=kepid,teff,radius,mass,ra,dec,dist,kepmag,feh&where=kepid%20like%20%27" + url_filter + "%27",
                 "type": type.value
             }
 
             if new or update:
-                for key in ["_id", "total_size", "items", "index"]:
+                for key in ["_id", "size", "items", "index"]:
                     if key in result:
                         del result[key]
 

@@ -30,21 +30,6 @@ const AuthControl = ({  }: Props) => {
         </Tooltip>
     )
 
-    /*return (
-        <Auth
-            role={UserRole.UNAUTHENTICATED}
-            when={() => (
-                <Tooltip render={() => <AuthForm />} setCoords={setCoords} id='login' key='login'>
-                    <IconText icon='User/User.svg' text='Přihlášení' onClick={() => null} />
-                </Tooltip>
-            )}
-            otherwise={() => (
-                <Tooltip render={() => <UserPreview user={identity.payload} />} setCoords={setCoords} id='logout'>
-                    <IconText icon='User/User.svg' text={identity.payload.name} onClick={() => null} />
-                </Tooltip>
-            )} />
-    )*/
-
 }
 
 export default AuthControl

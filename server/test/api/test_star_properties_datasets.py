@@ -19,7 +19,7 @@ def test_add(client):
 
     dataset1 = Res.created(client.post("/api/datasets", json=Creator.dataset())).json  # Add first dataset.
     Res.list(client.get("/api/datasets"), [dataset1])  # There is 1 dataset.
-    assert dataset1["total_size"] == 2
+    assert dataset1["size"] == 2
 
     Comparator.is_in(client.get("/api/stars").json["content"], [  # There are 2 stars from 1 dataset.
         {"properties": [{"name": KEPIDS[0], "dataset": dataset1["name"]}]},
@@ -28,7 +28,7 @@ def test_add(client):
 
     dataset2 = Res.created(client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]]))).json  # Add second dataset.
     Res.list(client.get("/api/datasets"), [dataset1, dataset2])  # There are two datasets.
-    assert dataset2["total_size"] == 2
+    assert dataset2["size"] == 2
 
     Comparator.is_in(client.get("/api/stars").json["content"], [  # There are 3 stars from 2 datasets.
         {"properties": [{"name": KEPIDS[0], "dataset": dataset1["name"]}]},

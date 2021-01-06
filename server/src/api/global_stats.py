@@ -5,6 +5,11 @@ from utils.http import Api
 
 api = Api("global_stats", description="Global statistics.")
 
+logged_item = api.ns.model("LoggedItem", {
+    "created": fields.Integer(description="Timestamp of creation."),
+    "modified": fields.Integer(description="Timestamp of last update.")
+})
+
 stat_int_item = api.ns.model("StatIntItem", {
     "value": fields.Integer(required=True, min=0, default=0, description="Value of statistic."),
     "diff": fields.Integer(required=True, default=0, description="Change of statistic."),
@@ -17,9 +22,9 @@ stat_float_item = api.ns.model("StatFloatItem", {
 
 stats_aggregated = api.ns.model("StatsAggregated", {
     "planets": fields.Nested(stat_int_item, required=True),
-    "hours": fields.Nested(stat_float_item, required=True),
-    "gibs": fields.Nested(stat_float_item, required=True),
-    "curves": fields.Nested(stat_int_item, required=True)
+    "time": fields.Nested(stat_float_item, required=True),
+    "data": fields.Nested(stat_float_item, required=True),
+    "items": fields.Nested(stat_int_item, required=True)
 })
 
 global_stats_aggregated = api.ns.model("GlobalStatsAggregated", {

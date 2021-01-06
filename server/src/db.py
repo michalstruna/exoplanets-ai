@@ -120,6 +120,31 @@ class Dao:
         return document
 
 
+aggregate_stats_pipeline = [
+    {"$unwind": {"path": "$stats", "preserveNullAndEmptyArrays": True}},
+
+    {"$group": {
+        "_id": "$_id",
+        "stats_data": {"$sum": "$stats.data"},
+        "stats_items": {"$sum": "$stats.items"},
+        "stats_planets": {"$sum": "$stats.planets"},
+        "stats_time": {"$sum": "$stats.time"},
+        "root": {"$first": "$$ROOT"}
+    }},
+
+    {"$addFields": {"root.stats": {
+        "data": {"value": "$stats_data"},
+        "items": {"value": "$stats_items"},
+        "planets": {"value": "$stats_planets"},
+        "time": {"value": "$stats_time"}
+    }}},
+
+    {"$replaceRoot": {"newRoot": "$root", }},
+
+    {"$project": {"stats.date": 0}}
+]
+
+
 class BaseDocument(Document):
     meta = {"allow_inheritance": True, "abstract": True}
 
@@ -131,6 +156,14 @@ class LogDocument(BaseDocument):
     modified = LongField(required=True)
 
 
+class Stats(EmbeddedDocument):
+    date = StringField(required=True)
+    planets = LongField(required=True, default=0, min_value=0)  # N of planets.
+    time = LongField(required=True, default=0, min_value=0)  # N of seconds.
+    data = LongField(required=True, default=0, min_value=0)  # N of bytes.
+    items = LongField(required=True, default=0, min_value=0)  # N of processed items.
+
+
 class Dataset(LogDocument):
     name = StringField(max_length=50, required=True, unique=True)
     fields = MapField(StringField(), required=True)
@@ -138,16 +171,15 @@ class Dataset(LogDocument):
     items_getter = URLField(max_length=500)
     items = ListField(StringField(max_length=50, default=[], required=True))
     deleted_items = ListField(StringField(max_length=50, default=[], required=True))
-    total_size = IntField(min_value=0, required=True)
-    processed = LongField(min_value=0, default=0, required=True)
+    size = IntField(min_value=0, required=True)
     type = StringField(max_length=50, required=True)
-    time = LongField(min_value=0, default=0, required=True)
     priority = IntField(min_value=1, max_value=5, default=3, required=True)
+    stats = EmbeddedDocumentListField(Stats, default=[])
     fields_meta = DictField()
 
 
 dataset_dao = Dao(Dataset, [
-    {"$addFields": {"current_size": {"$size": "$items"}}},
+    *aggregate_stats_pipeline,
     {"$project": {"items": 0}}
 ])
 
@@ -254,6 +286,7 @@ star_dao = Dao(Star, [
 
 class GlobalStatsItem(EmbeddedDocument):
     planets = IntField(required=True, default=0)
+    stars = IntField(required=True, default=0)
     hours = FloatField(required=True, default=0)
     gibs = FloatField(required=True, default=0)
     curves = IntField(required=True, default=0)
@@ -277,14 +310,6 @@ global_stats_dao = Dao(GlobalStats, [
 ])
 
 
-class Stats(EmbeddedDocument):
-    date = StringField(required=True)
-    planets = IntField(required=True, default=0)
-    hours = FloatField(required=True, default=0)
-    gibs = FloatField(required=True, default=0)
-    curves = IntField(required=True, default=0)
-
-
 class UserPersonal(EmbeddedDocument):
     is_male = BooleanField()
     country = StringField(max_length=10)
@@ -301,6 +326,7 @@ class User(LogDocument):
     avatar = StringField(max_length=200)
     personal = EmbeddedDocumentField(UserPersonal)
     stats = EmbeddedDocumentListField(Stats)
+    online = BooleanField(required=True, default=False)
 
     PASSWORD_MIN_LENGTH = 6
     PASSWORD_MAX_LENGTH = 50
@@ -322,29 +348,7 @@ class User(LogDocument):
             self.password = security_service.hash(self.password)
 
 
-user_dao = Dao(User, [
-    {"$unwind": {"path": "$stats", "preserveNullAndEmptyArrays": True}},
-
-    {"$group": {
-        "_id": "$_id",
-        "stats_gibs": {"$sum": "$stats.gibs"},
-        "stats_curves": {"$sum": "$stats.curves"},
-        "stats_planets": {"$sum": "$stats.planets"},
-        "stats_hours": {"$sum": "$stats.hours"},
-        "root": {"$first": "$$ROOT"}
-    }},
-
-    {"$addFields": {"root.stats": {
-        "gibs": {"value": "$stats_gibs"},
-        "curves": {"value": "$stats_curves"},
-        "planets": {"value": "$stats_planets"},
-        "hours": {"value": "$stats_hours"}
-    }}},
-
-    {"$replaceRoot": {"newRoot": "$root", }},
-
-    {"$project": {"stats.date": 0}}
-])
+user_dao = Dao(User, aggregate_stats_pipeline)
 
 
 # TODO: Star aliases.

@@ -2,19 +2,12 @@ from flask_restx import Resource, fields
 from flask import request
 from flask_restx._http import HTTPStatus
 
-from api.global_stats import stats_aggregated
+from api.global_stats import stats_aggregated, logged_item
 from constants.User import UserRole
 from utils.http import Api, Response
 from service.User import UserService
 
 api = Api("users", description="Users and authentication.")
-
-user_score = api.ns.model("UserScore", {
-    "rank": fields.Integer(min=1, requred=True, description="User rank."),
-    "planets": fields.Integer(min=0, required=True, description="Count of discovered planets.", default=0),
-    "stars": fields.Integer(min=0, required=True, description="Count of explored stars.", default=0),
-    "time": fields.Integer(min=0, required=True, description="Count of seconds of computing power.", default=0)
-})
 
 user_personal = api.ns.model("UserPersonal", {
     "male": fields.Boolean(),
@@ -22,18 +15,14 @@ user_personal = api.ns.model("UserPersonal", {
     "birth": fields.Integer()
 })
 
-user_activity = api.ns.model("UserActivity", {
-
-})
-
-user = api.ns.model("User", {
+user = api.ns.inherit("User", logged_item, {
     "_id": fields.String(requred=True, description="User unique identifier."),
     "name": fields.String(required=True, description="Name of user."),
     "avatar": fields.String(required=True, description="Url of user avatar."),
     "role": fields.Integer(requred=True, description="Role of user."),
     "stats": fields.Nested(stats_aggregated, required=True, description="Stats of user."),
     "personal": fields.Nested(user_personal),
-    "activity": fields.Nested(user_activity),
+    "online": fields.Boolean(required=True, description="User is online."),
     "index": fields.Integer(min=1)
 })
 

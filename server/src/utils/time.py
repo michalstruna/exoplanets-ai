@@ -1,4 +1,5 @@
 import time as native
+from datetime import date
 
 
 def now():
@@ -7,3 +8,7 @@ def now():
 
 def sleep(ms):
     native.sleep(ms / 1000)
+
+
+def today():
+    return date.today().strftime('%Y-%m-%d')
