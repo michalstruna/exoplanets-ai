@@ -121,9 +121,9 @@ for (let i = 0; i < 11; i++) {
             role: UserRole.AUTHENTICATED,
             stats: {
                 planets: { value: 0, diff: 0 },
-                curves: { value: 0, diff: 0 },
-                hours: { value: 0, diff: 0 },
-                gibs: { value: 0, diff: 0 }
+                items: { value: 0, diff: 0 },
+                time: { value: 0, diff: 0 },
+                data: { value: 0, diff: 0 }
             },
             personal: {
                 country: 'CZ',

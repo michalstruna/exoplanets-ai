@@ -22,9 +22,13 @@ export interface GlobalAggregatedStats {
 
 export interface AggregatedStats {
     planets: StatsItem
-    hours: StatsItem
-    gibs: StatsItem
-    curves: StatsItem
+    time: StatsItem
+    data: StatsItem
+    items: StatsItem
+}
+
+export type StatsObject = {
+    stats: AggregatedStats
 }
 
 export interface PlotAxis {

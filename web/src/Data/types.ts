@@ -55,3 +55,9 @@ export type Cursor = {
 }
 
 export type Strings = any
+
+
+export type LogObject = {
+    created: number
+    modified: number
+}

@@ -2,9 +2,10 @@ import PlanetType from './Constants/PlanetType'
 import SpectralClass from './Constants/SpectralClass'
 import SpectralSubclass from './Constants/SpectralSubclass'
 import LuminosityClass from './Constants/LuminosityClass'
-import LuminositySubclass from './Constants/LuminositySubclass'
 import LifeType from './Constants/LifeType'
 import PlanetStatus from './Constants/PlanetStatus'
+import { LogObject } from '../Data'
+import { StatsObject } from '../Stats'
 
 interface View {
     plot: string
@@ -109,9 +110,9 @@ export type DatasetNew = DatasetUpdated & {
     type: string
 }
 
-export type Dataset = DatasetNew & {
+export type Dataset = LogObject & StatsObject & DatasetNew & {
     _id: string
-    total_size: number
+    size: number
     current_size: number
     processed: number
 }

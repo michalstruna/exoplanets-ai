@@ -170,9 +170,9 @@ const UserPreview = ({ user, ...props }: Props) => {
                     Planet <ItemValue>{user.stats.planets.value}.</ItemValue>
                 </Rank>
                 <Stats>
-                    <Item title='Křivek' value={user.stats.curves.value} />
-                    <Item title='GiB' value={user.stats.gibs.value} />
-                    <Item title='Hodin' value={user.stats.hours.value} />
+                    <Item title='Křivek' value={user.stats.items.value} />
+                    <Item title='GiB' value={user.stats.data.value} />
+                    <Item title='Hodin' value={user.stats.time.value} />
                 </Stats>
             </Left>
             <Right>
