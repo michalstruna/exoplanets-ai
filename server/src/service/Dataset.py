@@ -28,7 +28,7 @@ class DatasetService(Service):
         dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
-            dataset["stats"][0]["data"], dataset["items"] = items.memory_usage().sum(), []
+            dataset["stats"][0]["data"], dataset["stats"][0]["items"], dataset["items"] = items.memory_usage().sum(), len(items), []
             items["dataset"] = dataset["name"]
             stars = self.star_service.complete_stars(items.to_dict("records"))
             tmp = self.star_service.upsert_all_by_name(stars)

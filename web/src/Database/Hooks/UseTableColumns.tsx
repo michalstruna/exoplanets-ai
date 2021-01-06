@@ -225,9 +225,12 @@ export default (): Structure => {
                             columns: Col.list<Dataset>([
                                 { name: 'type', format: val => <ItemImage image={`Database/Dataset/${pascalCase(val)}.svg`} />, width: '4rem', headerIcon: false },
                                 { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.datasets.types[item.type]} />, width: 1.5, headerIcon: false },
-                                { name: 'size', format: Numbers.format },
-                                { name: 'processed', format: (val, item) => <ProgressBar range={item.size} value={item.size - item.current_size} label={prettyBytes(item.processed || 0)} title={`${Numbers.format(item.size - item.current_size)} / ${Numbers.format(item.size)}`} /> },
+
+                                { name: 'planets', format: (val, item) => item.stats.planets.value },
+                                { name: 'data', format: (val, item) => <ProgressBar range={item.size} value={item.stats.items.value} label={prettyBytes(item.stats.data.value || 0)} title={`${Numbers.format(item.stats.items.value)} / ${Numbers.format(item.size)}`} /> },
                                 { name: 'time', format: (val, item) => Dates.formatDistance(strings, 0, item.stats.time.value, Dates.Format.LONG) },
+
+                                { name: 'size', format: Numbers.format },
                                 { name: 'created', format: val => <DateTime s={val} />, title: strings.properties.published },
                                 { name: 'modified', format: val => Dates.formatDistance(strings, val) },
                                 { name: 'priority', format: val => strings.datasets.priorities[val], styleMap: priorityStyle },
@@ -254,7 +257,7 @@ export default (): Structure => {
                                 { name: 'planets', format: (val, user) => user.stats.planets.value },
                                 { name: 'items', format: (val, user) => user.stats.items.value },
                                 { name: 'data', format: (val, user) => user.stats.data.value },
-                                { name: 'time', format: (val, user) => user.stats.time.value },
+                                { name: 'time', format: (val, item) => Dates.formatDistance(strings, 0, item.stats.time.value, Dates.Format.LONG) },
                                 { name: 'created', format: (val, user) => <DateTime s={val} /> },
                                 { name: 'modified', format: (val, user) => Dates.formatDistance(strings, val) },
                                 { name: 'country', format: (val, user) => user.personal.country },

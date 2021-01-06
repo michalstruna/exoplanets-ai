@@ -136,6 +136,16 @@ class Comparator:
 
 class Creator:
 
+    def stats(box=True, **kwargs):
+        result = {}
+
+        for stat in kwargs:
+            val = kwargs[stat] if type(kwargs[stat]) == int else kwargs[stat][0]
+            diff = 0#kwargs[stat] if type(kwargs[stat]) == int else kwargs[stat][0]
+            result[stat] = {"value": val, "diff": diff}
+
+        return {"stats": result} if box else result
+
     @staticmethod
     def rand_str(length=10):
         return uuid4().hex[:length]

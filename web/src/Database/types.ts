@@ -113,8 +113,6 @@ export type DatasetNew = DatasetUpdated & {
 export type Dataset = LogObject & StatsObject & DatasetNew & {
     _id: string
     size: number
-    current_size: number
-    processed: number
 }
 
 export type SegmentData<T> = {

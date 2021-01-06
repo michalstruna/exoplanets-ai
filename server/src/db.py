@@ -141,7 +141,8 @@ aggregate_stats_pipeline = [
 
     {"$replaceRoot": {"newRoot": "$root", }},
 
-    {"$project": {"stats.date": 0}}
+    {"$project": {"stats.date": 0}},
+    {"$sort": {"_id": 1}}
 ]
 
 

@@ -52,7 +52,7 @@ export default {
         name: { [CS]: 'Název', [EN]: 'Name' },
 
         // Datasets
-        size: { [CS]: 'Objektů', [EN]: 'Objects' },
+        size: { [CS]: 'Položek', [EN]: 'Items' },
         processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
         date: { [CS]: 'Datum', [EN]: 'Date' },
         published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
@@ -129,19 +129,23 @@ export default {
         type: { [CS]: 'Typ', [EN]: 'Type' },
         name: { [CS]: 'Název', [EN]: 'Name' },
         missingName: { [CS]: 'Zadejte název', [EN]: 'Type name' },
-        size: { [CS]: 'Objektů', [EN]: 'Objects' },
+        size: { [CS]: 'Položek', [EN]: 'Items' },
+
+        planets: { [CS]: 'Planet', [EN]: 'Planets' },
+        items: { [CS]: 'Křivek', [EN]: 'Curves' },
+        data: { [CS]: 'Zpracováno', [EN]: 'Processed' },
+        time: { [CS]: 'Výpoč. čas', [EN]: 'Comput. time' },
+
         processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
         date: { [CS]: 'Datum', [EN]: 'Date' },
         published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
         url: 'URL',
-        time: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
-        modified: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
+        modified: { [CS]: 'Aktivní', [EN]: 'Active' },
         priority: { [CS]: 'Priorita', [EN]: 'Priority' },
 
         new: { [CS]: 'Nový dataset', [EN]: 'New dataset' },
         add: { [CS]: 'Přidat dataset', [EN]: 'Add dataset' },
         edit: { [CS]: 'Upravit dataset', [EN]: 'Edit dataset' },
-        data: { [CS]: 'Údaje', [EN]: 'Data' },
         fields: { [CS]: 'Pole', [EN]: 'Fields' },
         modification: { [CS]: 'Modifikace', [EN]: 'Modification' },
 
@@ -331,11 +335,10 @@ export default {
         role: 'Role',
         created: { [CS]: 'Registrace', [EN]: 'Registration' },
         modified: { [CS]: 'Aktivní', [EN]: 'Active' },
-        rank: { [CS]: 'Umístění', [EN]: 'Rank' },
+        rank: { [CS]: 'Umístění', [EN]: 'Rank' },  // TODO: Remove.
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
-        stars: { [CS]: 'Hvězd', [EN]: 'Stars' },
-        curves: { [CS]: 'Křivek', [EN]: 'Curves' },
-        data: { [CS]: 'Zprac. dat', [EN]: 'Proc. data' },
+        items: { [CS]: 'Křivek', [EN]: 'Curves' },
+        data: { [CS]: 'Zpracováno', [EN]: 'Processed' },
         time: { [CS]: 'Výpoč. čas', [EN]: 'Comput. time' },
         country: { [CS]: 'Země', [EN]: 'Country' },
         sex: { [CS]: 'Pohlaví', [EN]: 'Sex' },

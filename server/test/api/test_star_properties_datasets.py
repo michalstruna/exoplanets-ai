@@ -1,5 +1,8 @@
+import pytest
+
 from constants.Dataset import DatasetPriority
 from utils.test import Comparator, Creator, Res, KEPIDS, FIELDS, app
+from utils import time
 
 
 def test_get(client):
@@ -117,6 +120,19 @@ def test_reset(client):
         {"properties": [{"name": KEPIDS[2], "dataset": dataset2["name"], "diameter": stars[2]["properties"][0]["diameter"], "mass": stars[2]["properties"][0]["mass"]}]},
         {"properties": [{"name": KEPIDS[0], "dataset": dataset1_updated["name"], "diameter": stars[0]["properties"][0]["mass"], "mass": stars[0]["properties"][0]["diameter"]}]}
     ])
+
+
+def test_stats(client):
+    t1 = time.now()
+    client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1]])).json  # Add first dataset.
+    t2 = time.now()
+    client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]])).json  # Add second dataset.
+    t3 = time.now()
+
+    datasets = Res.list(client.get("/api/datasets"), [Creator.stats(planets=0, items=1), Creator.stats(planets=0, items=2)]).json["content"]
+
+    assert datasets[0]["stats"]["time"]["value"] == pytest.approx(t2 - t1, rel=0.1)  # Time diff is max 10 %.
+    assert datasets[1]["stats"]["time"]["value"] == pytest.approx(t3 - t2, rel=0.1)
 
 
 def test_fields(client):
