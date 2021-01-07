@@ -15,7 +15,9 @@ class Service(ABC):
         return self.dao.get(filter)
 
     def get_all(self, filter=None, sort=None, limit=None, offset=None):
-        return self.aggregate(self.dao.pipeline, filter=filter, limit=limit, skip=offset, sort=sort, with_index=True)
+        x = self.aggregate(self.dao.pipeline, filter=filter, limit=limit, skip=offset, sort=sort, with_index=True)
+        print(x)
+        return x
 
     def get_count(self, filter={}, **kwargs):
         return self.dao.get_count(self.dao.pipeline, filter=filter)

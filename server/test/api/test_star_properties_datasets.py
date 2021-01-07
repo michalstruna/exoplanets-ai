@@ -1,4 +1,4 @@
-import pytest
+from pytest import approx
 
 from constants.Dataset import DatasetPriority
 from utils.test import Comparator, Creator, Res, KEPIDS, FIELDS, app
@@ -124,15 +124,20 @@ def test_reset(client):
 
 def test_stats(client):
     t1 = time.now()
-    client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1]])).json  # Add first dataset.
+    dataset1 = client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1]])).json  # Add first dataset.
     t2 = time.now()
-    client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]])).json  # Add second dataset.
+    dataset2 = client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]])).json  # Add second dataset.
     t3 = time.now()
 
-    datasets = Res.list(client.get("/api/datasets"), [Creator.stats(planets=0, items=1), Creator.stats(planets=0, items=2)]).json["content"]
+    print(11, dataset1)
 
-    assert datasets[0]["stats"]["time"]["value"] == pytest.approx(t2 - t1, rel=0.1)  # Time diff is max 10 %.
-    assert datasets[1]["stats"]["time"]["value"] == pytest.approx(t3 - t2, rel=0.1)
+    size1 = int(client.head(dataset1["items_getter"]).headers["content-length"])
+    size2 = int(client.head(dataset2["items_getter"]).headers["content-length"])
+
+    Res.list(client.get("/api/datasets"), [
+        {"size": 1, "stats": Creator.stats(planets=0, items=1, time=approx(t2 - t1, rel=0.1), data=approx(size1, rel=0.2))},
+        {"size": 2, "stats": Creator.stats(planets=0, items=2, time=approx(t3 - t2, rel=0.1), data=approx(size2, rel=0.2))}
+    ]).json["content"]
 
 
 def test_fields(client):

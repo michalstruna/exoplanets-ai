@@ -4,7 +4,7 @@ import { Color, size } from '../../Style'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     range: number | [number, number]
-    value: number
+    value: number | number[]
     label?: React.ReactNode
 }
 
@@ -24,28 +24,37 @@ const Outer = Styled.div`
     background-color: ${Color.DARK};
     border: 1px solid ${Color.MEDIUM};
     box-sizing: border-box;
+    position: relative;
 `
 
 const Inner = Styled.div`
-    background-color: ${Color.DARK_GREEN};
     height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
 `
 
+const colors = [Color.GREEN, Color.DARK_GREEN]
+
 const ProgressBar = ({ range, value, label, ...props }: Props) => {
+
+    const values = Array.isArray(value) ? value : [value]
 
     const min = Array.isArray(range) ? range[0] : 0
     const max = Array.isArray(range) ? range[1] : range
 
-    const percentage = Math.round(10000 * value / (max - min)) / 100
+    const percentages = values.map(value => Math.round(10000 * value / (max - min)) / 100)
 
     return (
         <Root {...props}>
             <Header>
-                <div>{percentage} %</div>
+                <div>{percentages[0]} %</div>
                 <div>{label}</div>
             </Header>
             <Outer>
-                <Inner style={{ width: `${percentage}%` }} />
+                {percentages.map((percentage, i) => (
+                    <Inner style={{ width: `${percentage}%`, backgroundColor: colors[i % colors.length] }} key={i} />
+                ))}
             </Outer>
         </Root>
     )

@@ -10,6 +10,7 @@ export * from './Components/Styled'
 export { default as Tags } from './Components/Tags'
 export { default as ListSection } from './Components/ListSection'
 export { default as Block } from './Components/Block'
+export { default as Diff } from './Components/Diff'
 
 export { default as Reducer } from './Redux/Slice'
 export * from './Redux/Slice'

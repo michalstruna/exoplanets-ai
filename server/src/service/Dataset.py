@@ -20,7 +20,7 @@ class DatasetService(Service):
     def add(self, dataset):
         start = time.now()
         items = pd.read_csv(dataset["items_getter"])
-        dataset["stats"] = [{"date": time.today()}]
+        dataset["stats"] = [{"date": time.day()}]
         dataset["size"] = len(items.index)
         self.update_meta(dataset)
         items = self.standardize_dataset(dataset, items)

@@ -11,11 +11,45 @@ from service.Security import SecurityService
 security_service = SecurityService()
 
 
+def aggregate_stats_pipeline(field="stats", days=7, fields=("data", "items", "planets", "time")):
+    before = time.day(-days)
+
+    return [
+        {"$unwind": {"path": f"${field}", "preserveNullAndEmptyArrays": True}},
+
+        {"$group": {
+            "_id": "$_id",
+            f"{field}_data": {"$sum": f"${field}.data"},
+            f"{field}_items": {"$sum": f"${field}.items"},
+            f"{field}_planets": {"$sum": f"${field}.planets"},
+            f"{field}_time": {"$sum": f"${field}.time"},
+            f"{field}_data_diff": {"$sum": {"$cond": [{"$gte": [f"${field}.date", before]}, f"${field}.data", 0]}},
+            f"{field}_items_diff": {"$sum": {"$cond": [{"$gte": [f"${field}.date", before]}, f"${field}.items", 0]}},
+            f"{field}_planets_diff": {"$sum": {"$cond": [{"$gte": [f"${field}.date", before]}, f"${field}.planets", 0]}},
+            f"{field}_time_diff": {"$sum": {"$cond": [{"$gte": [f"${field}.date", before]}, f"${field}.time", 0]}},
+            "root": {"$first": "$$ROOT"}
+        }},
+
+        {"$addFields": {"root.stats": {
+            "data": {"value": f"${field}_data", "diff": f"${field}_data_diff"},
+            "items": {"value": f"${field}_items", "diff": f"${field}_items_diff"},
+            "planets": {"value": f"${field}_planets", "diff": f"${field}_planets_diff"},
+            "time": {"value": f"${field}_time", "diff": f"${field}_time_diff"}
+        }}},
+
+        {"$replaceRoot": {"newRoot": "$root", }},
+
+        {"$project": {"stats.date": 0}},
+        {"$sort": {"_id": 1}}
+    ]
+
+
 class Dao:
 
-    def __init__(self, collection, pipeline=[]):
+    def __init__(self, collection, pipeline=[], stats=None):
         self.collection = collection
         self.pipeline = pipeline
+        self.stats = stats
 
     def get_by_id(self, id):
         return self.get({"_id": Dao.id(id)})
@@ -101,6 +135,9 @@ class Dao:
                 {"$addFields": {"index": {"$add": ["$index", (offset if offset else 0) + 1]}}}
             ]
 
+        if self.pipeline:
+            pipeline += aggregate_stats_pipeline("stats")
+
         return list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
 
     @staticmethod
@@ -118,32 +155,6 @@ class Dao:
             document["modified"] = time.now()
 
         return document
-
-
-aggregate_stats_pipeline = [
-    {"$unwind": {"path": "$stats", "preserveNullAndEmptyArrays": True}},
-
-    {"$group": {
-        "_id": "$_id",
-        "stats_data": {"$sum": "$stats.data"},
-        "stats_items": {"$sum": "$stats.items"},
-        "stats_planets": {"$sum": "$stats.planets"},
-        "stats_time": {"$sum": "$stats.time"},
-        "root": {"$first": "$$ROOT"}
-    }},
-
-    {"$addFields": {"root.stats": {
-        "data": {"value": "$stats_data"},
-        "items": {"value": "$stats_items"},
-        "planets": {"value": "$stats_planets"},
-        "time": {"value": "$stats_time"}
-    }}},
-
-    {"$replaceRoot": {"newRoot": "$root", }},
-
-    {"$project": {"stats.date": 0}},
-    {"$sort": {"_id": 1}}
-]
 
 
 class BaseDocument(Document):
@@ -179,10 +190,7 @@ class Dataset(LogDocument):
     fields_meta = DictField()
 
 
-dataset_dao = Dao(Dataset, [
-    *aggregate_stats_pipeline,
-    {"$project": {"items": 0}}
-])
+dataset_dao = Dao(Dataset, [{"$project": {"items": 0}}], stats="stats")
 
 
 class StarType(EmbeddedDocument):
@@ -349,7 +357,7 @@ class User(LogDocument):
             self.password = security_service.hash(self.password)
 
 
-user_dao = Dao(User, aggregate_stats_pipeline)
+user_dao = Dao(User, stats="stats")
 
 
 # TODO: Star aliases.

@@ -1,5 +1,5 @@
 import time as native
-from datetime import date
+from datetime import date, timedelta
 
 
 def now():
@@ -10,5 +10,5 @@ def sleep(ms):
     native.sleep(ms / 1000)
 
 
-def today():
-    return date.today().strftime('%Y-%m-%d')
+def day(before=0):
+    return str(date.today() + timedelta(days=before))

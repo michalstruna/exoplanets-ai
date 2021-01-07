@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from uuid import uuid4
 import pytest
+from _pytest.python_api import ApproxScalar
 
 from app_factory import create_app
 from constants.Dataset import DatasetPriority, DatasetType
@@ -118,6 +119,8 @@ class Comparator:
     def is_in(actual, expected, path=[], ignore=[]):
         #assert type(actual) == type(expected)  # TODO: bson.int64 is not int
 
+        #if isinstance(expected, ApproxScalar):
+        #    assert actual == expected
         if isinstance(expected, dict):
             for i in expected:
                 if i not in ignore:
@@ -136,13 +139,15 @@ class Comparator:
 
 class Creator:
 
-    def stats(box=True, **kwargs):
+    def stats(box=False, **kwargs):
         result = {}
 
         for stat in kwargs:
-            val = kwargs[stat] if type(kwargs[stat]) == int else kwargs[stat][0]
-            diff = 0#kwargs[stat] if type(kwargs[stat]) == int else kwargs[stat][0]
+            val = kwargs[stat] if (type(kwargs[stat]) == int or type(kwargs[stat]) == ApproxScalar) else kwargs[stat][0]
+            diff = kwargs[stat] if (type(kwargs[stat]) == int or type(kwargs[stat]) == ApproxScalar) else kwargs[stat][1]
             result[stat] = {"value": val, "diff": diff}
+
+        print(444, result)
 
         return {"stats": result} if box else result
 

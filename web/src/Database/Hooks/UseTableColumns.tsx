@@ -24,6 +24,7 @@ import { MultiValue } from '../Utils/Col'
 import DatasetForm from '../Components/DatasetForm'
 import DatasetsSelectionForm from '../Components/DatasetsSelectionForm'
 import { getUsers, User } from '../../User'
+import Diff from '../../Layout/Components/Diff'
 
 const DateTime = ({ s }: { s: number }) => (
     <>
@@ -226,9 +227,9 @@ export default (): Structure => {
                                 { name: 'type', format: val => <ItemImage image={`Database/Dataset/${pascalCase(val)}.svg`} />, width: '4rem', headerIcon: false },
                                 { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.datasets.types[item.type]} />, width: 1.5, headerIcon: false },
 
-                                { name: 'planets', format: (val, item) => item.stats.planets.value },
-                                { name: 'data', format: (val, item) => <ProgressBar range={item.size} value={item.stats.items.value} label={prettyBytes(item.stats.data.value || 0)} title={`${Numbers.format(item.stats.items.value)} / ${Numbers.format(item.size)}`} /> },
-                                { name: 'time', format: (val, item) => Dates.formatDistance(strings, 0, item.stats.time.value, Dates.Format.LONG) },
+                                { name: 'planets', format: (val, item) => <Diff {...item.stats.planets} /> },
+                                { name: 'data', format: (val, item) => <ProgressBar range={item.size} value={[item.stats.items.value, item.stats.items.value - item.stats.items.diff]} label={<Diff {...item.stats.data} format={prettyBytes} />} title={`${Numbers.format(item.stats.items.value)} / ${Numbers.format(item.size)}`} />, width: 1.5 },
+                                { name: 'time', format: (val, item) => <Diff {...item.stats.time} format={val => Dates.formatDistance(strings, 0, val, Dates.Format.LONG) } />},
 
                                 { name: 'size', format: Numbers.format },
                                 { name: 'created', format: val => <DateTime s={val} />, title: strings.properties.published },
