@@ -57,7 +57,7 @@ class UserService(Service):
                 "fb_id": identity["id"],
                 "avatar": identity["picture"]["data"]["url"],
                 "personal": {
-                    "is_male": identity["gender"] != "female",
+                    "sex": identity["gender"] == "female",
                     "birth": datetime.timestamp(datetime.strptime(identity["birthday"], "%d/%m/%Y")),
                     "country": "CZ"  # TODO
                 }

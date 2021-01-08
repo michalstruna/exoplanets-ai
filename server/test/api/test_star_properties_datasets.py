@@ -129,8 +129,6 @@ def test_stats(client):
     dataset2 = client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]])).json  # Add second dataset.
     t3 = time.now()
 
-    print(11, dataset1)
-
     size1 = int(client.head(dataset1["items_getter"]).headers["content-length"])
     size2 = int(client.head(dataset2["items_getter"]).headers["content-length"])
 

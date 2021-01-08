@@ -2,13 +2,14 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 import Countries from 'emoji-flags'
 
-import { IconText } from '../../Layout'
+import { Diff, IconText } from '../../Layout'
 import Auth from './Auth'
 import { User } from '../types'
 import { useActions } from '../../Data'
 import { image, dots, size } from '../../Style'
 import { logout } from '../Redux/Slice'
 import Avatar from './Avatar'
+import { Numbers } from '../../Native'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: User
@@ -20,7 +21,7 @@ const Root = Styled.div`
     overflow: hidden;
     
     ${Avatar.Root} {
-        margin: 1rem auto;
+        margin: 0.5rem auto;
     }
 `
 
@@ -109,7 +110,7 @@ const Rank = Styled.div`
 `
 
 interface ItemProps {
-    value?: string | number
+    value?: React.ReactNode
     title: string
     icon?: string
     full?: boolean
@@ -167,12 +168,12 @@ const UserPreview = ({ user, ...props }: Props) => {
                 </Name>
                 <Avatar user={user} size='7.4rem' />
                 <Rank>
-                    Planet <ItemValue>{user.stats.planets.value}.</ItemValue>
+                    Planet <ItemValue><Diff {...user.stats.planets} /></ItemValue>
                 </Rank>
                 <Stats>
-                    <Item title='Křivek' value={user.stats.items.value} />
-                    <Item title='GiB' value={user.stats.data.value} />
-                    <Item title='Hodin' value={user.stats.time.value} />
+                    <Item title='Křivek' value={<Diff {...user.stats.items} br={true} />} />
+                    <Item title='GiB' value={<Diff {...user.stats.data} br={true} format={val => Numbers.format(val / 1024**3)} />} />
+                    <Item title='Hodin' value={<Diff {...user.stats.time} br={true} />} />
                 </Stats>
             </Left>
             <Right>

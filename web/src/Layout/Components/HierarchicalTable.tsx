@@ -7,6 +7,7 @@ import { Column, Level } from '../types'
 import { Sort } from '../../Data'
 import { useElement } from '../../Native'
 import VirtualizedList from './VirtualizedList'
+import IconText from './IconText'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     items: any[]
@@ -71,6 +72,10 @@ const Cell = Styled.div<CellProps>`
         &:after {
 
         }
+    }
+    
+    ${IconText.Root} {
+        height: auto;
     }
 `
 

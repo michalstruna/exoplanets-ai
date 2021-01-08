@@ -6,6 +6,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
     value?: number
     diff: number
     format?: (val: number) => React.ReactNode
+    br?: boolean
 }
 
 interface DiffProps {
@@ -21,7 +22,7 @@ const meta = {
 }
 
 const Root = Styled.div`
-
+    white-space: nowrap;
 `
 
 const DiffVal = Styled.span<DiffProps>`
@@ -38,14 +39,14 @@ const DiffVal = Styled.span<DiffProps>`
     }
 `
 
-const Diff = ({ value, diff, format, ...props }: Props) => {
+const Diff = ({ value, diff, format, br, ...props }: Props) => {
 
     const currentMeta = diff < 0 ? meta.negative : (diff > 0 ? meta.positive : meta.zero)
 
     if (value !== undefined) {
         return (
             <Root {...props}>
-                {format!(value)} <DiffVal {...currentMeta} bracket={true}>{format!(diff)}</DiffVal>
+                {format!(value)} {br && <br />}<DiffVal {...currentMeta} bracket={!br}>{format!(diff)}</DiffVal>
             </Root>
         )
     } else {

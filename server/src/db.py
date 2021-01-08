@@ -135,7 +135,7 @@ class Dao:
                 {"$addFields": {"index": {"$add": ["$index", (offset if offset else 0) + 1]}}}
             ]
 
-        if self.pipeline:
+        if self.stats:
             pipeline += aggregate_stats_pipeline("stats")
 
         return list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
@@ -320,9 +320,11 @@ global_stats_dao = Dao(GlobalStats, [
 
 
 class UserPersonal(EmbeddedDocument):
-    is_male = BooleanField()
+    sex = BooleanField()
     country = StringField(max_length=10)
     birth = LongField()
+    contact = StringField(max_length=50)
+    text = StringField(max_length=100)
 
 
 class User(LogDocument):

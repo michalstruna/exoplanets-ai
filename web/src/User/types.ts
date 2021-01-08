@@ -9,7 +9,7 @@ export type User = LogObject & StatsObject & {
     role: UserRole
     online?: boolean  // TODO: Remove?
     personal: {
-        male?: boolean
+        sex?: boolean
         birth?: number
         country?: string
         contact?: string

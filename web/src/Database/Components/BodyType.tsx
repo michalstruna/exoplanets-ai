@@ -70,8 +70,6 @@ const BodyType = ({ body, withImage, ...props }: Props) => {
         )
     }
 
-    return null
-
 }
 
 export default BodyType

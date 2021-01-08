@@ -4,6 +4,7 @@ import Urls from 'url'
 import prettyBytes from 'pretty-bytes'
 import { pascalCase } from 'change-case'
 import { useDispatch } from 'react-redux'
+import Countries from 'emoji-flags'
 
 import DbTable from '../Constants/DbTable'
 import { Fraction, IconText, Level, ProgressBar } from '../../Layout'
@@ -253,18 +254,18 @@ export default (): Structure => {
                     levels: [
                         {
                             columns: Col.list<User>([
-                                { name: 'role', format: (val, user) => user.avatar && <ItemImage image={user.avatar} large={true} />, width: '5rem', headerIcon: false },
+                                { name: 'role', format: (val, item) => item.avatar && <ItemImage image={item.avatar} large={true} />, width: '5rem', headerIcon: false },
                                 { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.users.roles[item.role]} />, width: 1.5, headerIcon: false },
-                                { name: 'planets', format: (val, user) => user.stats.planets.value },
-                                { name: 'items', format: (val, user) => user.stats.items.value },
-                                { name: 'data', format: (val, user) => user.stats.data.value },
-                                { name: 'time', format: (val, item) => Dates.formatDistance(strings, 0, item.stats.time.value, Dates.Format.LONG) },
+                                { name: 'planets', format: (val, item) => <Diff {...item.stats.planets} /> },
+                                { name: 'items', format: (val, item) => <Diff {...item.stats.items} /> },
+                                { name: 'data', format: (val, item) => <Diff {...item.stats.data} format={prettyBytes}  /> },
+                                { name: 'time', format: (val, item) => <Diff {...item.stats.data} format={val => Dates.formatDistance(strings, 0, item.stats.time.value, Dates.Format.LONG) } />},
                                 { name: 'created', format: (val, user) => <DateTime s={val} /> },
                                 { name: 'modified', format: (val, user) => Dates.formatDistance(strings, val) },
-                                { name: 'country', format: (val, user) => user.personal.country },
-                                { name: 'sex', format: (val, user) => user.name ? users.sex.male : users.sex.female },
+                                { name: 'country', format: (val, user) => user.personal.country && (Countries.countryCode(user.personal.country).emoji + ' ' + user.personal.country) },
+                                { name: 'sex', format: (val, user) => user.personal.sex === true ? <IconText icon='User/Female.svg' text={users.female} />  : <IconText icon='User/Male.svg' text={users.male} /> },
                                 { name: 'birth', format: (val, user) => user.personal.birth && Dates.formatDistance(strings, user.personal.birth * 1000) },
-                                { name: 'contact', format: (val, user) => user.personal.contact },
+                                { name: 'contact', format: (val, user) => <TextLink pathname={user.personal.contact}>{user.personal.contact}</TextLink>, width: 1.75 },
                             ], {
                                 strings: users,
                                 indexColumnName: 'index'

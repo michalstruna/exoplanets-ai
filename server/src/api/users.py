@@ -10,9 +10,11 @@ from service.User import UserService
 api = Api("users", description="Users and authentication.")
 
 user_personal = api.ns.model("UserPersonal", {
-    "male": fields.Boolean(),
+    "sex": fields.Boolean(),
     "country": fields.String(max_length=10),
-    "birth": fields.Integer()
+    "birth": fields.Integer(),
+    "contact": fields.String(),
+    "text": fields.String()
 })
 
 user = api.ns.inherit("User", logged_item, {

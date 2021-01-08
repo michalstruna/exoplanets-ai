@@ -22,7 +22,7 @@ const demoIdentity: Identity = {
     personal: {
         country: 'CZ',
         birth: 456,
-        male: true
+        sex: true
     },
     created: new Date().getTime(),
     modified: new Date().getTime(),
@@ -47,7 +47,7 @@ for (let i = 0; i < 38; i++) {
         personal: {
             country: 'CZ',
             birth: 456,
-            male: true
+            sex: true
         },
         created: new Date().getTime(),
         modified: new Date().getTime(),

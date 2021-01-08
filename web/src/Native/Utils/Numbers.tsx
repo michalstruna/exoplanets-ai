@@ -9,6 +9,10 @@ export const format = (value: number): string => {
         return ''
     }
 
+    if (value < 10e-5) {
+        return '0'
+    }
+
     const abs = Math.abs(value)
 
     if (abs > 0 && abs < 0.001) {

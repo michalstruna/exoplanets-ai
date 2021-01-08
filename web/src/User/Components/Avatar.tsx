@@ -27,7 +27,7 @@ const Avatar = ({ user, size, ...props }: Props) => {
     let url = user.avatar
 
     if (!url) {
-        const sex = user.personal.male === false ? 'Female' : 'Male'
+        const sex = user.personal.sex === true ? 'Female' : 'Male'
         url = `/img/User/Avatar/${sex}.svg`
     }
 

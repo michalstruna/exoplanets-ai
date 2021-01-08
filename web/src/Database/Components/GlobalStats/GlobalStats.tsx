@@ -4,8 +4,6 @@ import Styled from 'styled-components'
 import { useStrings } from '../../../Data'
 import { Numbers } from '../../../Native'
 import { Color } from '../../../Style'
-import { useGlobalStats, getGlobalStats } from '../../index'
-import { Async } from '../../../Async'
 import { AggregatedStats } from '../../../Stats'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {

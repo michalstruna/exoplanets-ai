@@ -105,6 +105,7 @@ IconText.SMALL = '1rem'
 IconText.MEDIUM = '1.35rem'
 IconText.LARGE = '2.5rem'
 
+IconText.Root = Root
 IconText.Text = Text
 
 export default IconText

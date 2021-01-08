@@ -128,7 +128,7 @@ for (let i = 0; i < 11; i++) {
             personal: {
                 country: 'CZ',
                 birth: 456,
-                male: true
+                sex: false
             }
         }
     })

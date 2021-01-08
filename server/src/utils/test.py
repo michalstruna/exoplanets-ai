@@ -147,8 +147,6 @@ class Creator:
             diff = kwargs[stat] if (type(kwargs[stat]) == int or type(kwargs[stat]) == ApproxScalar) else kwargs[stat][1]
             result[stat] = {"value": val, "diff": diff}
 
-        print(444, result)
-
         return {"stats": result} if box else result
 
     @staticmethod
@@ -177,7 +175,7 @@ class Creator:
         }
 
         if with_personal:
-            result["personal"] = {"is_male": id % 2 == 0, "country": f"Country{id}", "birth": id}
+            result["personal"] = {"sex": id % 2 == 0, "country": f"Country{id}", "birth": id}
 
         if token:
             result["token"] = token

@@ -99,10 +99,6 @@ const TooltipArea = ({ ...props }: AreaProps) => {
     const { app } = useElement()
     TooltipArea.update = useReducer(x => x + 1, 0)[1]
 
-    React.useEffect(() => {
-
-    })
-
     const getAndSetCoords = (id: string) => {
         const instance = TooltipArea.instances[id]
 
