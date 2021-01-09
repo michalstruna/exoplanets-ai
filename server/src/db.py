@@ -23,10 +23,10 @@ def aggregate_stats_pipeline(field="stats", days=7, fields=("data", "items", "pl
             f"{field}_items": {"$sum": f"${field}.items"},
             f"{field}_planets": {"$sum": f"${field}.planets"},
             f"{field}_time": {"$sum": f"${field}.time"},
-            f"{field}_data_diff": {"$sum": {"$cond": [{"$gte": [f"${field}.date", before]}, f"${field}.data", 0]}},
-            f"{field}_items_diff": {"$sum": {"$cond": [{"$gte": [f"${field}.date", before]}, f"${field}.items", 0]}},
-            f"{field}_planets_diff": {"$sum": {"$cond": [{"$gte": [f"${field}.date", before]}, f"${field}.planets", 0]}},
-            f"{field}_time_diff": {"$sum": {"$cond": [{"$gte": [f"${field}.date", before]}, f"${field}.time", 0]}},
+            f"{field}_data_diff": {"$sum": {"$cond": [{"$gt": [f"${field}.date", before]}, f"${field}.data", 0]}},
+            f"{field}_items_diff": {"$sum": {"$cond": [{"$gt": [f"${field}.date", before]}, f"${field}.items", 0]}},
+            f"{field}_planets_diff": {"$sum": {"$cond": [{"$gt": [f"${field}.date", before]}, f"${field}.planets", 0]}},
+            f"{field}_time_diff": {"$sum": {"$cond": [{"$gt": [f"${field}.date", before]}, f"${field}.time", 0]}},
             "root": {"$first": "$$ROOT"}
         }},
 
@@ -110,7 +110,10 @@ class Dao:
     def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True, init_filter=None):
         pipeline = []
 
-        if init_filter:
+        if self.stats:
+            pipeline += aggregate_stats_pipeline("stats")
+
+        if init_filter:  # TODO: Remove global aggregated stats.
             pipeline.append({"$match": init_filter})
 
         pipeline += operations
@@ -134,9 +137,6 @@ class Dao:
                 {"$replaceRoot": {"newRoot": "$items"}},
                 {"$addFields": {"index": {"$add": ["$index", (offset if offset else 0) + 1]}}}
             ]
-
-        if self.stats:
-            pipeline += aggregate_stats_pipeline("stats")
 
         return list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
 
@@ -336,7 +336,7 @@ class User(LogDocument):
     fb_id = StringField(max_length=200, unique=True, sparse=True)
     avatar = StringField(max_length=200)
     personal = EmbeddedDocumentField(UserPersonal)
-    stats = EmbeddedDocumentListField(Stats)
+    stats = EmbeddedDocumentListField(Stats, default=[])
     online = BooleanField(required=True, default=False)
 
     PASSWORD_MIN_LENGTH = 6

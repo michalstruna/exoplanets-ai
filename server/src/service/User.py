@@ -17,7 +17,6 @@ class UserService(Service):
         self.security_service = SecurityService()
 
     def local_sign_up(self, credentials):
-
         self.add({
             "username": credentials["username"],
             "name": credentials["name"],
@@ -33,9 +32,9 @@ class UserService(Service):
             raise BadCredentials("Bad credentials.")
 
         if self.security_service.verify_hash(user["password"], credentials["password"]):
+            self.update(user["_id"], {"online": True})
+            user = self.get_by_id(user["_id"])
             user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})  # TODO: Is str() neccesary?
-            self.update(user["_id"], {**user, "online": True})
-            user["online"] = True
             return user
         else:
             raise BadCredentials("Bad credentials.")

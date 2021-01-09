@@ -8,14 +8,19 @@ from constants.Dataset import DatasetPriority, DatasetType
 from constants.Error import ErrorType
 from constants.User import UserRole
 from service.Dataset import DatasetService
+from service.User import UserService
+from utils import time
 
 dataset_service = DatasetService()
+user_service = UserService()
+
+default_ignore = ["index", "token", "modified"]
 
 
 class Res:
 
     @staticmethod
-    def item(res, expected=None, ignore=["index", "token"]):
+    def item(res, expected=None, ignore=default_ignore):
         assert res.status_code == HTTPStatus.OK
 
         if expected:
@@ -24,7 +29,7 @@ class Res:
         return res
 
     @staticmethod
-    def list(res, expected, ignore=["index", "token"]):
+    def list(res, expected, ignore=default_ignore):
         assert res.json["count"] == len(res.json["content"])
         assert res.status_code == HTTPStatus.OK
 
@@ -34,7 +39,7 @@ class Res:
         return res
 
     @staticmethod
-    def created(res, expected=None, ignore=["index", "token"]):
+    def created(res, expected=None, ignore=default_ignore):
         assert res.data != b""
         assert res.status_code == HTTPStatus.CREATED
 
@@ -44,7 +49,7 @@ class Res:
         return res
 
     @staticmethod
-    def updated(res, expected=None, ignore=["index", "token"]):
+    def updated(res, expected=None, ignore=default_ignore):
         assert res.status_code == HTTPStatus.OK
 
         if expected:
@@ -53,7 +58,7 @@ class Res:
         return res
 
     @staticmethod
-    def deleted(res, expected=None, ignore=["index", "token"], body=False):
+    def deleted(res, expected=None, ignore=default_ignore, body=False):
         if body or expected:
             assert res.data != b""
             assert res.status_code == HTTPStatus.OK
@@ -116,7 +121,7 @@ class Comparator:
     # Recursively check if all values in expected are also in actual.
     # Path is list of keys for better orientation in nested objects and arrays.
     @staticmethod
-    def is_in(actual, expected, path=[], ignore=[]):
+    def is_in(actual, expected, path=[], ignore=default_ignore):
         #assert type(actual) == type(expected)  # TODO: bson.int64 is not int
 
         #if isinstance(expected, ApproxScalar):
@@ -139,6 +144,7 @@ class Comparator:
 
 class Creator:
 
+    @staticmethod
     def stats(box=False, **kwargs):
         result = {}
 
@@ -148,6 +154,10 @@ class Creator:
             result[stat] = {"value": val, "diff": diff}
 
         return {"stats": result} if box else result
+
+    @staticmethod
+    def stats_item(days=999, **kwargs):
+        return {"date": time.day(-days), **kwargs}
 
     @staticmethod
     def rand_str(length=10):
@@ -162,23 +172,6 @@ class Creator:
 
         if new:
             result["name"] = name if name is not None else f"User{id}"
-
-        return result
-
-    @staticmethod
-    def user(id=1, role=UserRole.AUTH, with_personal=False, token=None, name=None):
-        result = {
-            "name": name if name is not None else f"User{id}",
-            "role": role.value,
-            "score": {},
-            "personal": {}
-        }
-
-        if with_personal:
-            result["personal"] = {"sex": id % 2 == 0, "country": f"Country{id}", "birth": id}
-
-        if token:
-            result["token"] = token
 
         return result
 
@@ -229,6 +222,41 @@ class Creator:
             result.append(Creator.add_dataset(client, **kwargs))
 
         return result
+
+    @staticmethod
+    def user(id=0, new=False, update=False, role=UserRole.AUTH, token=False, name=None, stats=None, personal=None, **kwargs):
+        result = {
+            **kwargs,
+            "name": name if name is not None else f"User{id}",
+            "role": role.value
+        }
+
+        if stats or (not new and not update):
+            result["stats"] = stats if stats is not None else Creator.stats(planets=0, items=0, time=0, data=0)
+
+        if personal:
+            result["personal"] = {"sex": id % 2 == 0, "country": f"Country{id}", "birth": id}
+
+        if token:
+            result["token"] = token
+
+        if new or update:
+            for key in ["_id", "index"]:
+                if key in result:
+                    del result[key]
+
+        if new:
+            pass
+
+        if update:
+            pass
+
+        return result
+
+    @staticmethod
+    def save_user(**kwargs):
+        u = Creator.user(**kwargs, new=True, username=f"username@domain.cz{kwargs['id']}", password=f"password{kwargs['id']}")
+        return Creator._from_mongo(user_service.dao.add(u), ignore=["_cls", "fields_meta"])
 
     @staticmethod
     def _from_mongo(item, ignore=["_cls"]):

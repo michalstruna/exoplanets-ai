@@ -208,7 +208,7 @@ class Api:
 
     def __init__(self, name, description=None):
         self.ns = Namespace(name, description=description)
-        self.service, self.full_model, self.new_model, self.updated_model, self.model_name, self.map_sort = None, None, None, None, None, None
+        self.service, self.full_model, self.new_model, self.updated_model, self.model_name, self.map_props, self.resource_type = None, None, None, None, None, None, None
 
     def init(self, full_model=None, new_model=None, updated_model=None, service=None, model_name=None, map_props=None, resource_type=UNSECURED_RESOURCE):
         self.service = service

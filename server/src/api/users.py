@@ -7,7 +7,28 @@ from constants.User import UserRole
 from utils.http import Api, Response
 from service.User import UserService
 
-api = Api("users", description="Users and authentication.")
+api = Api("users", "Users and authentication.")
+
+
+def map_props(prop):
+    if prop in ["planets", "items", "time", "data"]:
+        return f"stats.{prop}.value", str
+
+    if prop in ["planets_diff", "items_diff", "time_diff", "data_diff"]:
+        return f"stats.{prop}.diff", str
+
+    if prop in ["created", "modified", "role"]:
+        return prop, int
+
+    if prop in ["name"]:
+        return prop, str
+
+    if prop in ["sex", "country", "contact", "text"]:
+        return f"personal.{prop}", str
+
+    if prop in ["birth"]:
+        return f"personal.{prop}", int
+
 
 user_personal = api.ns.model("UserPersonal", {
     "sex": fields.Boolean(),
@@ -88,4 +109,4 @@ resource_type = {
     "delete": {"role": UserRole.ADMIN}
 }
 
-api.init(service=user_service, full_model=user, resource_type=resource_type, model_name="User")
+api.init(service=user_service, full_model=user, resource_type=resource_type, model_name="User", map_props=map_props)
