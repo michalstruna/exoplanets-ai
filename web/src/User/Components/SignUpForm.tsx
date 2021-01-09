@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { useActions, useStrings } from '../../Data'
-import { login, RegistrationData } from '..'
+import { signUp, RegistrationCredentials } from '..'
 import { Color, size } from '../../Style'
 import FacebookLogin from './FacebookLogin'
 import GoogleLogin from './GoogleLogin'
@@ -63,15 +63,15 @@ const Submit = Styled(PrimaryButton)`
 
 const LoginForm = ({ handleLogin, ...props }: Props) => {
 
-    //const actions = useActions({ login })
+    const actions = useActions({ signUp })
     const strings = useStrings().auth
 
-    const handleSubmit = async (values: RegistrationData, form: FormContextValues<RegistrationData>) => {
-        /*const action = await actions.login(values) // TODO.
+    const handleSubmit = async (values: RegistrationCredentials, form: FormContextValues<RegistrationCredentials>) => {
+        const action = await actions.signUp(values)
 
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, strings.error)
-        }*/
+        }
     }
 
     return (
@@ -87,7 +87,7 @@ const LoginForm = ({ handleLogin, ...props }: Props) => {
                     {strings.or}
                 </HorizontalTextLine>
                 <Field
-                    name='email'
+                    name='username'
                     type={Field.Type.EMAIL}
                     label={strings.email}
                     required={strings.missingEmail}

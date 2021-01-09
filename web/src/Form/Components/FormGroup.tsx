@@ -1,5 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
+import Field from './Field'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     nColumns?: number
@@ -22,6 +23,10 @@ const Root = Styled.div`
     
     &:last-child {
         border-bottom: none;
+    }
+    
+    ${Field.Root} {
+        margin: 0.5rem 0;
     }
 `
 

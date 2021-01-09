@@ -30,7 +30,7 @@ export type Credentials = {
     password: string
 }
 
-export type RegistrationData = Credentials & {
+export type RegistrationCredentials = Credentials & {
     name: string
 }
 

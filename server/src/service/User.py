@@ -32,15 +32,13 @@ class UserService(Service):
             raise BadCredentials("Bad credentials.")
 
         if self.security_service.verify_hash(user["password"], credentials["password"]):
-            self.update(user["_id"], {"online": True})
-            user = self.get_by_id(user["_id"])
+            user = self.update(user["_id"], {"online": True})
             user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})  # TODO: Is str() neccesary?
             return user
         else:
             raise BadCredentials("Bad credentials.")
 
     def facebook_login(self, token):
-        # TODO: FacebookService or ExternalService?
         fb_profile_res = requests.get(f"https://graph.facebook.com/me?fields=id,name,gender,email,birthday,picture.width(200).height(200),address,location{'{location{city,state,region_id}}'}&access_token={token}")
 
         if fb_profile_res.status_code != HTTPStatus.OK:
@@ -62,9 +60,6 @@ class UserService(Service):
                 }
             })
 
+        user = self.update(user["_id"], {"online": True})
         user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})
-        user["score"] = {}
-        user["score"]["rank"] = 12
-
-        # TODO: Token
         return user

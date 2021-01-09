@@ -26,6 +26,7 @@ import DatasetForm from '../Components/DatasetForm'
 import DatasetsSelectionForm from '../Components/DatasetsSelectionForm'
 import { getUsers, User } from '../../User'
 import Diff from '../../Layout/Components/Diff'
+import Avatar from '../../User/Components/Avatar'
 
 const DateTime = ({ s }: { s: number }) => (
     <>
@@ -254,7 +255,7 @@ export default (): Structure => {
                     levels: [
                         {
                             columns: Col.list<User>([
-                                { name: 'role', format: (val, item) => item.avatar && <ItemImage image={item.avatar} large={true} />, width: '5rem', headerIcon: false },
+                                { name: 'role', format: (val, item) => <Avatar user={item} size='3.5rem' />, width: '5rem', headerIcon: false },
                                 { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.users.roles[item.role]} />, width: 1.5, headerIcon: false },
                                 { name: 'planets', format: (val, item) => <Diff {...item.stats.planets} /> },
                                 { name: 'items', format: (val, item) => <Diff {...item.stats.items} /> },
@@ -263,7 +264,7 @@ export default (): Structure => {
                                 { name: 'created', format: (val, user) => <DateTime s={val} /> },
                                 { name: 'modified', format: (val, user) => Dates.formatDistance(strings, val) },
                                 { name: 'country', format: (val, user) => user.personal.country && (Countries.countryCode(user.personal.country).emoji + ' ' + user.personal.country) },
-                                { name: 'sex', format: (val, user) => user.personal.sex === true ? <IconText icon='User/Female.svg' text={users.female} />  : <IconText icon='User/Male.svg' text={users.male} /> },
+                                { name: 'sex', format: (val, user) => typeof user.personal.sex === 'boolean' && (user.personal.sex ? <IconText icon='User/Female.svg' text={users.female} />  : <IconText icon='User/Male.svg' text={users.male} />) },
                                 { name: 'birth', format: (val, user) => user.personal.birth && Dates.formatDistance(strings, user.personal.birth * 1000) },
                                 { name: 'contact', format: (val, user) => <TextLink pathname={user.personal.contact}>{user.personal.contact}</TextLink>, width: 1.75 },
                             ], {

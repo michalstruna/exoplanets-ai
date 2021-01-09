@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 import { Cookie } from '../../Native'
 import { Cursor, Redux } from '../../Data'
 import UserRole from '../Constants/UserRole'
-import { Credentials, ExternalCredentials, Identity, User } from '../types'
+import { Credentials, ExternalCredentials, Identity, RegistrationCredentials, User } from '../types'
 import { Requests } from '../../Async'
 import { SegmentData } from '../../Database/types'
 
@@ -77,6 +77,14 @@ const Slice = Redux.slice(
                 }
             }, 1000)
         })),
+
+        signUp: async<RegistrationCredentials, Identity>('identity', credentials => Requests.post(`users/sign-up`, credentials), {
+            onSuccess: (state, action) => {
+                state.identity.payload = action.payload
+                Cookies.set(Cookie.IDENTITY.name, action.payload, { expires: Cookie.IDENTITY.expiration })
+            }
+        }),
+
         facebookLogin: async<ExternalCredentials, Identity>('identity', credentials => Requests.post(`users/login/facebook`, credentials), {
                 onSuccess: (state, action) => {
                     state.identity.payload = action.payload
@@ -92,4 +100,4 @@ const Slice = Redux.slice(
 )
 
 export default Slice.reducer
-export const { getUsers, login, logout, facebookLogin } = Slice.actions
+export const { getUsers, signUp, login, logout, facebookLogin } = Slice.actions

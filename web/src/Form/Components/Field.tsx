@@ -34,7 +34,7 @@ type LabelProps = {
 
 const Root = Styled.label`
     display: block;
-    margin: 0.5rem 0;
+    margin: 1rem 0;
     position: relative;
     text-align: left;
 `
@@ -217,6 +217,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
 
 }
 
+Field.Root = Root
 Field.Type = FieldType
 
 export default Field

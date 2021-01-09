@@ -5,11 +5,11 @@ import Countries from 'emoji-flags'
 import { Diff, IconText } from '../../Layout'
 import Auth from './Auth'
 import { User } from '../types'
-import { useActions } from '../../Data'
+import { useActions, useStrings } from '../../Data'
 import { image, dots, size } from '../../Style'
 import { logout } from '../Redux/Slice'
 import Avatar from './Avatar'
-import { Numbers } from '../../Native'
+import { Dates, Numbers } from '../../Native'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: User
@@ -159,6 +159,7 @@ const UserPreview = ({ user, ...props }: Props) => {
 
     const country = user.personal.country ? (Countries as any).countryCode(user.personal.country) : null
     const actions = useActions({ logout })
+    const strings = useStrings()
 
     return (
         <Root {...props}>
@@ -177,14 +178,14 @@ const UserPreview = ({ user, ...props }: Props) => {
                 </Stats>
             </Left>
             <Right>
-                <Item title='Aktivní' value={'Před ' + 23 + ' m'} icon='Controls/Active.svg' />
-                <Item title='Členem' value='2,2 roku' icon='User/Origin.svg' />
-                <IconText icon='User/Male.svg' text='23 let' />
+                <Item title='Aktivní' value={user.online ? 'Právě teď' : 'Před ' + Dates.formatDistance(strings, user.modified)} icon='Controls/Active.svg' />
+                <Item title='Členem' value={Dates.formatDistance(strings, user.created, new Date().getTime())} icon='User/Origin.svg' />
+                <IconText icon={typeof user.personal.sex === 'boolean' ? `User/${user.personal.sex ? 'Female' : 'Male'}.svg` : `User/Sex.svg`} text='23 let' />
                 {country && (
                     <Item title={country.code} icon={country.emoji} />
                 )}
                 {true && (
-                    <Item title='Kontakt' value='email@domain.com' icon='User/Contact.svg' full={true} />
+                    <Item title='Kontakt' value={user.personal.contact} icon='User/Contact.svg' full={true} />
                 )}
                 <About>
                     {user.personal.text || 'Tento uživatel o sobě nic nenapsal.'}
