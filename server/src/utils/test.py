@@ -29,7 +29,7 @@ class Res:
         return res
 
     @staticmethod
-    def list(res, expected, ignore=default_ignore):
+    def list(res, expected=None, ignore=default_ignore):
         assert res.json["count"] == len(res.json["content"])
         assert res.status_code == HTTPStatus.OK
 
@@ -235,7 +235,7 @@ class Creator:
             result["stats"] = stats if stats is not None else Creator.stats(planets=0, items=0, time=0, data=0)
 
         if personal:
-            result["personal"] = {"sex": id % 2 == 0, "country": f"Country{id}", "birth": id}
+            result["personal"] = {"sex": id % 2 == 0, "country": f"Country{id}", "birth": id, "contact": f"mail{id}@user.cz", "text": f"aby{id}"}
 
         if token:
             result["token"] = token

@@ -1,3 +1,4 @@
+from constants.User import UserRole
 from utils.test import Comparator, Creator, Res, app
 
 
@@ -102,6 +103,66 @@ def test_aggregate_stats(client):
         Creator.stats(True, planets=[6, 0], items=[15, 0], time=[24000, 0], data=[6000, 0]),
         Creator.stats(True, planets=[6, 6], items=[15, 15], time=[24000, 24000], data=[6000, 6000])
     ])
+
+
+def test_sort(client):
+    Creator.save_user(id=1, role=UserRole.AUTH, personal=True, stats=[
+        Creator.stats_item(days=50, planets=0, items=80, time=970, data=9960),
+        Creator.stats_item(days=1, planets=10, items=20, time=30, data=40)
+    ])
+
+    Creator.save_user(id=2, role=UserRole.ADMIN, personal=True, stats=[
+        Creator.stats_item(days=50, planets=15, items=800, time=7, data=996),
+        Creator.stats_item(days=1, planets=5, items=300, time=3, data=4)
+    ])
+
+    Creator.save_user(id=3, role=UserRole.AUTH, personal=True, stats=[
+        Creator.stats_item(days=50, planets=15, items=0, time=0, data=950),
+        Creator.stats_item(days=1, planets=0, items=0, time=40, data=51)
+    ])
+
+    Creator.save_user(id=4, role=UserRole.AUTH, personal=True, stats=[
+        Creator.stats_item(days=50, planets=0, items=0, time=0, data=965),
+        Creator.stats_item(days=1, planets=1, items=1, time=950, data=34)
+    ])
+
+    usr1, usr2, usr3, usr4 = client.get("/api/users").json["content"]
+
+    Res.list(client.get("/api/users?sort=name,asc"), [usr1, usr2, usr3, usr4])  # Name, role
+    Res.list(client.get("/api/users?sort=name,desc"), [usr4, usr3, usr2, usr1])
+    Res.list(client.get("/api/users?sort=role,asc&sort=name,desc"), [usr4, usr3, usr1, usr2])
+    Res.list(client.get("/api/users?sort=role,desc&sort=name,desc"), [usr2, usr4, usr3, usr1])
+
+    Res.list(client.get("/api/users?sort=planets,asc"), [usr4, usr1, usr3, usr2])  # Stats
+    Res.list(client.get("/api/users?sort=planets,desc"), [usr2, usr3, usr1, usr4])
+    Res.list(client.get("/api/users?sort=items,asc"), [usr3, usr4, usr1, usr2])
+    Res.list(client.get("/api/users?sort=items,desc"), [usr2, usr1, usr4, usr3])
+    Res.list(client.get("/api/users?sort=data,asc"), [usr4, usr2, usr3, usr1])
+    Res.list(client.get("/api/users?sort=data,desc"), [usr1, usr3, usr2, usr4])
+    Res.list(client.get("/api/users?sort=time,asc"), [usr2, usr3, usr4, usr1])
+    Res.list(client.get("/api/users?sort=time,desc"), [usr1, usr4, usr3, usr2])
+
+    Res.list(client.get("/api/users?sort=created,asc"), [usr1, usr2, usr3, usr4])  # Create/update
+    Res.list(client.get("/api/users?sort=created,desc"), [usr4, usr3, usr2, usr1])
+    Res.list(client.get("/api/users?sort=modified,asc"), [usr1, usr2, usr3, usr4])
+    Res.list(client.get("/api/users?sort=modified,desc"), [usr4, usr3, usr2, usr1])
+
+    Res.list(client.get("/api/users?sort=country,asc"), [usr1, usr2, usr3, usr4])  # Personal
+    Res.list(client.get("/api/users?sort=country,desc"), [usr4, usr3, usr2, usr1])
+    Res.list(client.get("/api/users?sort=sex,asc&name,asc"), [usr1, usr3, usr2, usr4])
+    Res.list(client.get("/api/users?sort=sex,desc&name,asc"), [usr2, usr4, usr1, usr3])
+    Res.list(client.get("/api/users?sort=contact,asc"), [usr1, usr2, usr3, usr4])
+    Res.list(client.get("/api/users?sort=contact,desc"), [usr4, usr3, usr2, usr1])
+    Res.list(client.get("/api/users?sort=birth,asc"), [usr1, usr2, usr3, usr4])
+    Res.list(client.get("/api/users?sort=birth,desc"), [usr4, usr3, usr2, usr1])
+
+
+def test_filter(client):
+    pass
+
+
+def test_cursor(client):
+    pass
 
 
 def test_edit_profile(client):
