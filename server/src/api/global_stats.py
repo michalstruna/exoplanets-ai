@@ -27,13 +27,9 @@ stats_aggregated = api.ns.model("StatsAggregated", {
     "items": fields.Nested(stat_int_item, required=True)
 })
 
-global_stats_aggregated = api.ns.model("GlobalStatsAggregated", {
-    "planets": fields.Nested(stat_int_item, required=True),
+global_stats_aggregated = api.ns.inherit("GlobalStatsAggregated", stats_aggregated, {
     "volunteers": fields.Nested(stat_int_item, required=True),
-    "hours": fields.Nested(stat_float_item, required=True),
-    "stars": fields.Nested(stat_int_item, required=True),
-    "gibs": fields.Nested(stat_float_item, required=True),
-    "curves": fields.Nested(stat_int_item, required=True)
+    "stars": fields.Nested(stat_int_item, required=True)
 })
 
 axis = api.ns.model("ChartAxis", {
@@ -62,6 +58,7 @@ plots_stats = api.ns.model("PlotsStats", {
     "distance_count": fields.Nested(chart, required=True),
     "progress": fields.Nested(chart, required=True)
 })
+
 
 @api.ns.route("/aggregated")
 class AggregatedGlobalStats(Resource):

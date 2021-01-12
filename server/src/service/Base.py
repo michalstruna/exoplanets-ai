@@ -21,15 +21,7 @@ class Service(ABC):
         return self.dao.get_count(self.dao.pipeline, filter=filter)
 
     def aggregate(self, operations, filter=None, limit=None, skip=None, sort=None, with_index=False):
-        result = self.dao.aggregate(operations, filter, limit, skip, sort)  # TODO: init_filter.
-        if with_index and False:
-            index = skip + 1 if skip is not None else 1
-
-            for item in result:
-                item["index"] = index
-                index += 1
-
-        return result
+        return self.dao.aggregate(operations, filter, limit, skip, sort)  # TODO: init_filter.
 
     def add(self, item, with_return=True):
         return self.dao.add(item, with_return=with_return)

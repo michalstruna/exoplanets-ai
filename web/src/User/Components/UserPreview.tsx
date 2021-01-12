@@ -5,7 +5,7 @@ import Countries from 'emoji-flags'
 import { Diff, IconText } from '../../Layout'
 import Auth from './Auth'
 import { User } from '../types'
-import { useActions, useStrings } from '../../Data'
+import { Units, UnitType, useActions, useStrings } from '../../Data'
 import { image, dots, size } from '../../Style'
 import { logout } from '../Redux/Slice'
 import Avatar from './Avatar'
@@ -45,7 +45,7 @@ const Left = Styled.div`
     box-sizing: border-box;
     padding: 0.5rem;
     padding-bottom: 0.25rem;
-    width: 12rem;
+    width: 11rem;
     
     ${ItemValue} {
         font-size: 115%;
@@ -89,14 +89,12 @@ const RightMenu = Styled.div`
 
 const Stats = Styled.div`
     display: flex;
+    justify-content: space-between;
     margin-top: 0.5rem;
     
-    & > div {
-        width: 33%;
-        
-        &:first-of-type {
-            width: 34%;
-        }
+    div {
+        font-size: 0.8rem;
+        font-weight: normal;
     }
 `
 
@@ -169,12 +167,12 @@ const UserPreview = ({ user, ...props }: Props) => {
                 </Name>
                 <Avatar user={user} size='7.4rem' />
                 <Rank>
-                    Planet <ItemValue><Diff {...user.stats.planets} /></ItemValue>
+                    Planety <ItemValue><Diff {...user.stats.planets} /></ItemValue>
                 </Rank>
                 <Stats>
-                    <Item title='Křivek' value={<Diff {...user.stats.items} br={true} />} />
-                    <Item title='GiB' value={<Diff {...user.stats.data} br={true} format={val => Numbers.format(val / 1024**3)} />} />
-                    <Item title='Hodin' value={<Diff {...user.stats.time} br={true} />} />
+                    <Item title='Data' value={<Diff {...user.stats.data} br={true} format={val => Units.format(val, UnitType.MEMORY)} />} />
+                    <Item title='Čas' value={<Diff {...user.stats.time} br={true} format={val => Units.format(val, UnitType.TIME)} />} />
+                    <Item title='Křivky' value={<Diff {...user.stats.items} br={true} />} />
                 </Stats>
             </Left>
             <Right>
@@ -184,7 +182,7 @@ const UserPreview = ({ user, ...props }: Props) => {
                 {country && (
                     <Item title={country.code} icon={country.emoji} />
                 )}
-                {true && (
+                {user.personal.contact && (
                     <Item title='Kontakt' value={user.personal.contact} icon='User/Contact.svg' full={true} />
                 )}
                 <About>

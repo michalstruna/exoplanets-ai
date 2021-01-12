@@ -1,13 +1,12 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useStrings } from '../../../Data'
-import { Numbers } from '../../../Native'
-import { Color } from '../../../Style'
-import { AggregatedStats } from '../../../Stats'
+import { Units, UnitType, UnitTypeData, useStrings } from '../../../Data'
+import { GlobalAggregatedStats } from '../../../Stats'
+import { Diff } from '../../../Layout'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    value: AggregatedStats
+    value: GlobalAggregatedStats
 }
 
 const Root = Styled.div`
@@ -48,21 +47,15 @@ const Interval = Styled.div`
     font-size: 80%;
 `
 
-const Unit = Styled.div`
-    font-size: 70%;
-    display: inline-block; 
-    
-    &:empty {
-        display: none;
-    }
-`
-
-const Diff = Styled.div`
-    color: ${Color.GREEN};
-    display: inline-block;
+const StatDiff = Styled(Diff)`
     font-size: 90%;
     font-weight: bold;
 `
+
+const units: Record<string, UnitTypeData> = {
+    time: UnitType.TIME,
+    data: UnitType.MEMORY
+}
 
 const GlobalStats = ({ value, ...props }: Props) => {
 
@@ -75,9 +68,9 @@ const GlobalStats = ({ value, ...props }: Props) => {
                     <Name>
                         {strings[key]}
                     </Name>
-                    <Diff>+{Numbers.format(item.diff)} <Unit>{strings.units[key] || ''}</Unit></Diff> <Interval>{strings.lastWeek}</Interval>
+                    <StatDiff diff={item.diff} format={val => Units.format(val, units[key as keyof GlobalAggregatedStats])} /> <Interval>{strings.lastWeek}</Interval>
                     <Value>
-                        {Numbers.format(item.value)} <Unit>{strings.units[key] || ''}</Unit>
+                        {Units.format(item.value, units[key as keyof GlobalAggregatedStats])}
                     </Value>
                 </Item>
             ))}

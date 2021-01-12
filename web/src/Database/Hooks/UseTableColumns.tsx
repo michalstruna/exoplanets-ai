@@ -1,7 +1,6 @@
 import React from 'react'
 import Styled, { css } from 'styled-components'
 import Urls from 'url'
-import prettyBytes from 'pretty-bytes'
 import { pascalCase } from 'change-case'
 import { useDispatch } from 'react-redux'
 import Countries from 'emoji-flags'
@@ -16,7 +15,7 @@ import LifeType from '../Constants/LifeType'
 import * as Col from '../Utils/Col'
 import { Dataset, PlanetData, PlanetProperties, StarData } from '../types'
 import Detail from '../Components/TableItemDetail'
-import { Cursor, useStrings } from '../../Data'
+import { Cursor, Units, UnitType, useStrings } from '../../Data'
 import { Value, deleteDataset, useTable } from '../index'
 import PlanetStatus from '../Constants/PlanetStatus'
 import BodyType from '../Components/BodyType'
@@ -230,8 +229,8 @@ export default (): Structure => {
                                 { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.datasets.types[item.type]} />, width: 1.5, headerIcon: false },
 
                                 { name: 'planets', format: (val, item) => <Diff {...item.stats.planets} /> },
-                                { name: 'data', format: (val, item) => <ProgressBar range={item.size} value={[item.stats.items.value, item.stats.items.value - item.stats.items.diff]} label={<Diff {...item.stats.data} format={prettyBytes} />} title={`${Numbers.format(item.stats.items.value)} / ${Numbers.format(item.size)}`} />, width: 1.5 },
-                                { name: 'time', format: (val, item) => <Diff {...item.stats.time} format={val => Dates.formatDistance(strings, 0, val, Dates.Format.LONG) } />},
+                                { name: 'data', format: (val, item) => <ProgressBar range={item.size} value={[item.stats.items.value, item.stats.items.value - item.stats.items.diff]} label={<Diff {...item.stats.data} format={val => Units.format(val, UnitType.MEMORY)} />} title={`${Numbers.format(item.stats.items.value)} / ${Numbers.format(item.size)}`} />, width: 1.5 },
+                                { name: 'time', format: (val, item) => <Diff {...item.stats.time} format={val => Units.format(val, UnitType.TIME)} />},
 
                                 { name: 'size', format: Numbers.format },
                                 { name: 'created', format: val => <DateTime s={val} />, title: strings.properties.published },
@@ -259,8 +258,8 @@ export default (): Structure => {
                                 { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.users.roles[item.role]} />, width: 1.5, headerIcon: false },
                                 { name: 'planets', format: (val, item) => <Diff {...item.stats.planets} /> },
                                 { name: 'items', format: (val, item) => <Diff {...item.stats.items} /> },
-                                { name: 'data', format: (val, item) => <Diff {...item.stats.data} format={prettyBytes}  /> },
-                                { name: 'time', format: (val, item) => <Diff {...item.stats.data} format={val => Dates.formatDistance(strings, 0, item.stats.time.value, Dates.Format.LONG) } />},
+                                { name: 'data', format: (val, item) => <Diff {...item.stats.data} format={val => Units.format(val, UnitType.MEMORY)}  /> },
+                                { name: 'time', format: (val, item) => <Diff {...item.stats.time} format={val => Units.format(val, UnitType.TIME)} />},
                                 { name: 'created', format: (val, user) => <DateTime s={val} /> },
                                 { name: 'modified', format: (val, user) => Dates.formatDistance(strings, val) },
                                 { name: 'country', format: (val, user) => user.personal.country && (Countries.countryCode(user.personal.country).emoji + ' ' + user.personal.country) },

@@ -14,10 +14,10 @@ export interface StatsItem {
 export interface GlobalAggregatedStats {
     planets: StatsItem
     volunteers: StatsItem
-    hours: StatsItem
+    time: StatsItem
     stars: StatsItem
-    gibs: StatsItem
-    curves: StatsItem
+    data: StatsItem
+    items: StatsItem
 }
 
 export interface AggregatedStats {

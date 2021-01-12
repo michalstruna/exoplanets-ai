@@ -13,35 +13,41 @@ security_service = SecurityService()
 
 def aggregate_stats_pipeline(field="stats", days=7, fields=("data", "items", "planets", "time")):
     before = time.day(-days)
+    result = []
 
-    return [
-        {"$unwind": {"path": f"${field}", "preserveNullAndEmptyArrays": True}},
+    if field:
+        result.append({"$unwind": {"path": f"${field}", "preserveNullAndEmptyArrays": True}})
 
-        {"$group": {
-            "_id": "$_id",
-            f"{field}_data": {"$sum": f"${field}.data"},
-            f"{field}_items": {"$sum": f"${field}.items"},
-            f"{field}_planets": {"$sum": f"${field}.planets"},
-            f"{field}_time": {"$sum": f"${field}.time"},
-            f"{field}_data_diff": {"$sum": {"$cond": [{"$gt": [f"${field}.date", before]}, f"${field}.data", 0]}},
-            f"{field}_items_diff": {"$sum": {"$cond": [{"$gt": [f"${field}.date", before]}, f"${field}.items", 0]}},
-            f"{field}_planets_diff": {"$sum": {"$cond": [{"$gt": [f"${field}.date", before]}, f"${field}.planets", 0]}},
-            f"{field}_time_diff": {"$sum": {"$cond": [{"$gt": [f"${field}.date", before]}, f"${field}.time", 0]}},
+    path = f"{field}." if field else ""
+    target = f".{field}" if field else ""
+
+    result.append({"$group": {
+            "_id": "$_id" if field else None,
+            f"{field}_data": {"$sum": f"${path}data"},
+            f"{field}_items": {"$sum": f"${path}items"},
+            f"{field}_planets": {"$sum": f"${path}planets"},
+            f"{field}_time": {"$sum": f"${path}time"},
+            f"{field}_data_diff": {"$sum": {"$cond": [{"$gt": [f"${path}date", before]}, f"${path}data", 0]}},
+            f"{field}_items_diff": {"$sum": {"$cond": [{"$gt": [f"${path}date", before]}, f"${path}items", 0]}},
+            f"{field}_planets_diff": {"$sum": {"$cond": [{"$gt": [f"${path}date", before]}, f"${path}planets", 0]}},
+            f"{field}_time_diff": {"$sum": {"$cond": [{"$gt": [f"${path}date", before]}, f"${path}time", 0]}},
             "root": {"$first": "$$ROOT"}
-        }},
+        }})
 
-        {"$addFields": {"root.stats": {
+    result.append({"$addFields": {f"root{target}": {
             "data": {"value": f"${field}_data", "diff": f"${field}_data_diff"},
             "items": {"value": f"${field}_items", "diff": f"${field}_items_diff"},
             "planets": {"value": f"${field}_planets", "diff": f"${field}_planets_diff"},
             "time": {"value": f"${field}_time", "diff": f"${field}_time_diff"}
-        }}},
+    }}})
 
-        {"$replaceRoot": {"newRoot": "$root", }},
+    result.append({"$replaceRoot": {"newRoot": "$root", }})
 
-        {"$project": {"stats.date": 0}},
-        {"$sort": {"_id": 1}}
-    ]
+    result.append({"$project": {f"{path}date": 0}})
+
+    result.append({"$sort": {"_id": 1}})
+
+    return result
 
 
 class Dao:
@@ -110,8 +116,8 @@ class Dao:
     def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True, init_filter=None):
         pipeline = []
 
-        if self.stats:
-            pipeline += aggregate_stats_pipeline("stats")
+        if self.stats is not None:
+            pipeline += aggregate_stats_pipeline(self.stats)
 
         if init_filter:  # TODO: Remove global aggregated stats.
             pipeline.append({"$match": init_filter})
@@ -293,30 +299,16 @@ star_dao = Dao(Star, [
 ])
 
 
-class GlobalStatsItem(EmbeddedDocument):
-    planets = IntField(required=True, default=0)
-    stars = IntField(required=True, default=0)
-    hours = FloatField(required=True, default=0)
-    gibs = FloatField(required=True, default=0)
-    curves = IntField(required=True, default=0)
-
-
 class GlobalStats(BaseDocument):
     date = StringField(required=True)
-    stats = EmbeddedDocumentField(GlobalStatsItem, required=True)
+    planets = IntField(required=True, default=0)
+    stars = IntField(required=True, default=0)
+    time = FloatField(required=True, default=0)
+    data = FloatField(required=True, default=0)
+    items = IntField(required=True, default=0)
 
 
-global_stats_dao = Dao(GlobalStats, [
-    {"$group": {
-        "_id": 1,
-        "planets": {"$sum": "$stats.planets"},
-        "gibs": {"$sum": "$stats.gibs"},
-        "volunteers": {"$sum": "$stats.volunteers"},
-        "stars": {"$sum": "$stats.stars"},
-        "curves": {"$sum": "$stats.curves"},
-        "hours": {"$sum": "$stats.hours"}
-    }}
-])
+global_stats_dao = Dao(GlobalStats, stats="")
 
 
 class UserPersonal(EmbeddedDocument):

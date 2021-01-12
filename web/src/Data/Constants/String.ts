@@ -284,8 +284,8 @@ export default {
 
     stats: {
         units: {
-            hours: 'h',
-            gibs: 'GiB'
+            time: 'h',
+            data: 'GiB'
         },
         planets: {
             [CS]: 'Objevených planet',
@@ -295,7 +295,7 @@ export default {
             [CS]: 'Zpracováno hvězd',
             [EN]: 'Explored Stars'
         },
-        hours: {
+        time: {
             [CS]: 'Výpočetní čas',
             [EN]: 'Computing time'
         },
@@ -303,11 +303,11 @@ export default {
             [CS]: 'Dobrovolníků',
             [EN]: 'Volunteers'
         },
-        gibs: {
+        data: {
             [CS]: 'Zpracováno dat',
             [EN]: 'Processed data'
         },
-        curves: {
+        items: {
             [CS]: 'Zpracovano křivek',
             [EN]: 'Processed curves'
         },
