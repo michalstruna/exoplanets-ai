@@ -10,41 +10,35 @@ from service.Security import SecurityService
 
 security_service = SecurityService()
 
+stats_fields = ("data", "items", "planets", "time")
+global_stats_fields = (*stats_fields, "volunteers", "stars")
 
-def aggregate_stats_pipeline(field="stats", days=7, fields=("data", "items", "planets", "time")):
+
+def aggregate_stats_pipeline(days=7, global_stats=False):
     before = time.day(-days)
     result = []
 
-    if field:
-        result.append({"$unwind": {"path": f"${field}", "preserveNullAndEmptyArrays": True}})
+    if not global_stats:
+        result.append({"$unwind": {"path": f"$stats", "preserveNullAndEmptyArrays": True}})
 
-    path = f"{field}." if field else ""
-    target = f".{field}" if field else ""
+    path = f"" if global_stats else "stats."
+    target = f"" if global_stats else ".stats"
+    fields = global_stats_fields if global_stats else stats_fields
 
-    result.append({"$group": {
-            "_id": "$_id" if field else None,
-            f"{field}_data": {"$sum": f"${path}data"},
-            f"{field}_items": {"$sum": f"${path}items"},
-            f"{field}_planets": {"$sum": f"${path}planets"},
-            f"{field}_time": {"$sum": f"${path}time"},
-            f"{field}_data_diff": {"$sum": {"$cond": [{"$gt": [f"${path}date", before]}, f"${path}data", 0]}},
-            f"{field}_items_diff": {"$sum": {"$cond": [{"$gt": [f"${path}date", before]}, f"${path}items", 0]}},
-            f"{field}_planets_diff": {"$sum": {"$cond": [{"$gt": [f"${path}date", before]}, f"${path}planets", 0]}},
-            f"{field}_time_diff": {"$sum": {"$cond": [{"$gt": [f"${path}date", before]}, f"${path}time", 0]}},
-            "root": {"$first": "$$ROOT"}
-        }})
+    group, add = {"_id": None if global_stats else "$_id", "root": {"$first": "$$ROOT"}}, {}
 
-    result.append({"$addFields": {f"root{target}": {
-            "data": {"value": f"${field}_data", "diff": f"${field}_data_diff"},
-            "items": {"value": f"${field}_items", "diff": f"${field}_items_diff"},
-            "planets": {"value": f"${field}_planets", "diff": f"${field}_planets_diff"},
-            "time": {"value": f"${field}_time", "diff": f"${field}_time_diff"}
-    }}})
+    for field in fields:
+        group[f"stats_{field}"] = {"$sum": f"${path}{field}"}
+        group[f"stats_{field}_diff"] = {"$sum": {"$cond": [{"$gt": [f"${path}date", before]}, f"${path}{field}", 0]}}
+
+    for field in fields:
+        add[field] = {"value": f"$stats_{field}", "diff": f"$stats_{field}_diff"}
+
+    result.append({"$group": group})
+    result.append({"$addFields": {f"root{target}": add}})
 
     result.append({"$replaceRoot": {"newRoot": "$root", }})
-
     result.append({"$project": {f"{path}date": 0}})
-
     result.append({"$sort": {"_id": 1}})
 
     return result
@@ -60,8 +54,8 @@ class Dao:
     def get_by_id(self, id):
         return self.get({"_id": Dao.id(id)})
 
-    def get_all(self, init_filter=None, filter=None, sort=None, limit=None, offset=0, with_index=True):
-        return self.aggregate(self.pipeline, init_filter=init_filter, filter=filter, limit=limit, offset=offset, sort=sort, with_index=with_index)
+    def get_all(self, filter=None, sort=None, limit=None, offset=0, with_index=True):
+        return self.aggregate(self.pipeline, filter=filter, limit=limit, offset=offset, sort=sort, with_index=with_index)
 
     def get(self, filter):
         items = self.get_all(filter=filter, limit=1)
@@ -113,14 +107,11 @@ class Dao:
     def delete_all(self):
         pass
 
-    def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True, init_filter=None):
+    def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True):
         pipeline = []
 
         if self.stats is not None:
-            pipeline += aggregate_stats_pipeline(self.stats)
-
-        if init_filter:  # TODO: Remove global aggregated stats.
-            pipeline.append({"$match": init_filter})
+            pipeline += aggregate_stats_pipeline(global_stats=self.stats == "")
 
         pipeline += operations
 
@@ -301,6 +292,7 @@ star_dao = Dao(Star, [
 
 class GlobalStats(BaseDocument):
     date = StringField(required=True)
+    volunteers = IntField(required=True, default=0)
     planets = IntField(required=True, default=0)
     stars = IntField(required=True, default=0)
     time = FloatField(required=True, default=0)

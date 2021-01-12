@@ -8,6 +8,7 @@ from utils.exceptions import BadCredentials
 from .Base import Service
 from .Security import SecurityService
 import db
+from .Stats import GlobalStatsService
 
 
 class UserService(Service):
@@ -15,6 +16,7 @@ class UserService(Service):
     def __init__(self):
         super().__init__(db.user_dao)
         self.security_service = SecurityService()
+        self.stats_service = GlobalStatsService()
 
     def local_sign_up(self, credentials):
         self.add({
@@ -22,6 +24,8 @@ class UserService(Service):
             "name": credentials["name"],
             "password": credentials["password"]
         })
+
+        self.stats_service.add(volunteers=1)
 
         return self.local_login(credentials)
 
@@ -59,6 +63,8 @@ class UserService(Service):
                     "country": "CZ"  # TODO
                 }
             })
+
+            self.stats_service.add(volunteers=1)
 
         user = self.update(user["_id"], {"online": True})
         user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})

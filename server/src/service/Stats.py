@@ -9,12 +9,13 @@ class GlobalStatsService(Service):
         super().__init__(db.global_stats_dao)
 
     def get_aggregated(self):
-        return self.get_all()[0]
+        result = self.get_all(with_index=False)
+        return result[0] if len(result) > 0 else {}
 
     def add(self, **kwargs):
         updated = {}
 
         for prop in kwargs:
-            updated["inc__stats__" + prop] = kwargs[prop]
+            updated["inc__" + prop] = kwargs[prop]
 
         self.dao.update({"date": time.day()}, updated, upsert=True, with_return=False)

@@ -18,9 +18,8 @@ class DatasetService(Service):
         self.stats_service = GlobalStatsService()
 
     def add(self, dataset):
-        start = time.now()
+        stats, global_stats = {"time": time.now()}, {}
         items = pd.read_csv(dataset["items_getter"])
-        dataset["stats"] = [{"date": time.day()}]
         dataset["size"] = len(items.index)
         self.update_meta(dataset)
         items = self.standardize_dataset(dataset, items)
@@ -28,19 +27,19 @@ class DatasetService(Service):
         dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
-            dataset["stats"][0]["data"], dataset["stats"][0]["items"], dataset["items"] = items.memory_usage().sum(), len(items), []
+            stats["data"], stats["items"] = items.memory_usage().sum(), len(items)
             items["dataset"] = dataset["name"]
             stars = self.star_service.complete_stars(items.to_dict("records"))
-            tmp = self.star_service.upsert_all_by_name(stars)
-
-            self.stats_service.add(ms=time.now() - start, bytes=dataset["stats"][0]["data"], stars=tmp.upserted_count)
+            global_stats["stars"] = self.star_service.upsert_all_by_name(stars).upserted_count
         else:
             pass
 
-        end = time.now()
-        dataset["stats"][0]["time"] = end - start
+        stats["time"] = time.now() - stats["time"]  # Update local and global stats.
+        dataset["stats"] = [{"date": time.day(), **stats}]
+        result = self.dao.add(dataset)
+        self.stats_service.add(**stats, **global_stats)
 
-        return self.dao.add(dataset)
+        return result
 
 
     def add_processed(self, dataset, n_bytes):
