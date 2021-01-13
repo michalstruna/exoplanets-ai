@@ -83,7 +83,7 @@ class Response:
 
     @staticmethod
     def page_model(api, model):
-        return api.model("Page", {
+        return api.model("Page" + model.name, {
             "content": fields.List(fields.Nested(model)),
             "count": fields.Integer(min=0)
         })

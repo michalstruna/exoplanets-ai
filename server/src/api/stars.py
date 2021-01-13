@@ -134,13 +134,12 @@ class MergePlanets(Resource):
 class StarSelection(Resource):
 
     @api.ns.marshal_with(star, code=HTTPStatus.OK, description="Star was sucessfully deleted.")
-    @api.ns.response(HTTPStatus.NO_CONTENT, "Star selection was sucessfully deleted.")
     @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
     @api.ns.expect(star_selection)
     def delete(self, id):
         return Response.delete(lambda: star_service.delete_selection(id, request.get_json()), with_return=True)
 
-    @api.ns.response(HTTPStatus.NO_CONTENT, "Star selection was sucessfully reset.")
+    @api.ns.marshal_with(star, code=HTTPStatus.OK, description="Star was sucessfully reset.")
     @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
     @api.ns.expect(star_selection)
     def put(self, id):
