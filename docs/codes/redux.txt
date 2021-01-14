@@ -8,5 +8,5 @@ const reducer = (state = defaultState, action) => { // Reducer
 }
 
 const store = Redux.createStore(reducer) // Store
-const increment = val => ({ type: 'INC', val }) // Action
+const increment = val => ({ type: 'INC', val }) // Action creator
 store.dispatch(increment(7)) // Dispatch

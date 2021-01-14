@@ -1,4 +1,4 @@
-
+%
 % VYSOKOŠKOLSKÁ KVALIFIKAČNÍ PRÁCE
 % autor: Michal Struna
 % název: Umělá inteligence pro detekci exoplanet
@@ -953,7 +953,7 @@ Python (\url{https://www.python.org/doc}) je interpretovaný, dynamicky typovan�
 
 \subsubsection{Flask}
 
-Flask (\url{https://flask.palletsprojects.com}) je webový open-source microframework napsaný v~jazyce Python. Mikroframework poukazuje na minimalistické jádro, které lze rozšiřovat velkým počtem tzv. extensions.
+Flask (\url{https://flask.palletsprojects.com}) je webový open-source microframework napsaný v~jazyce Python. Mikroframework poukazuje na minimalistické jádro, které lze rozšiřovat velkým počtem rozšíření (extensions).
 
 \lstinputlisting[caption={Ukázka práce s~microframeworkem Flask}]{codes/flask.txt}
 
@@ -1005,7 +1005,7 @@ Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klie
 
 \subsection{Server}
 
-Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~jeho struktura se dělí na následující moduly:
+Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání a~načítání persistentních dat ve spolupráci s~databází a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~struktura jeho zdrojových kódů se dělí na následující moduly:
 
 \img[1]{Architektura serveru}{img/server.png}
 \draw
@@ -1013,14 +1013,14 @@ Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klie
 \begin{itemize}
 \item \textbf{api} -- Definice REST a~Socket API a~zpracování příchozích požadavků. To zahrnuje autentizaci a~autorizaci odesílatele a~následné provedení operace v~servisní vrstvě. 
 \item \textbf{config} -- Konfigurace serveru (např. připojení k~databázi). Základním konfiguračním souborem je \code{base.cfg}, který je použit automaticky. Bez nutnosti tento soubor měnit je možné vytvořit nový soubor (např. \code{test.cfg}) s~novou konfigurací a~pomocí argumentu při spuštění serveru nastavit, aby se použila tato konfigurace (\code{./src/main.py -{}-env test}). [TODO]
-\item \textbf{constants} -- Veškeré konstantní položky, ať už technického či fyzikálního typu.
+\item \textbf{constants} -- Veškeré konstantní hoenoty, ať už technického či fyzikálního typu.
 \item \textbf{service} -- Servisní vrstva obsahující logiku serveru a~manipulaci s~databází.
-\item \textbf{utils} -- Pomocné třídy uchovávající specifickou funkcionalitu.
+\item \textbf{utils} -- Pomocné třídy zapouzdřující specifické funkcionality.
 \end{itemize}
 
 \subsubsection{REST API}
 
-K~vytvoření rozhraní je nejdříve třeba nadefinovat příslušné struktury, které rozhraní bude očekávat nebo naopak vracet. Modul \code{fields} umožňuje určit složky jednotlivých struktur a~taktéž pro ně nastavit pravidla jako např. maximální délka, datový typ nebo seznam povolených hodnot.
+K~vytvoření rozhraní je nejdříve třeba nadefinovat příslušné struktury, které rozhraní bude očekávat nebo naopak vracet. Modul \code{fields} umožňuje určit složky jednotlivých struktur a~taktéž pro ně nastavit validační pravidla jako např. maximální délka, datový typ nebo seznam povolených hodnot.
 
 \lstinputlisting[caption={Vytvoření modelů v~REST API.}]{codes/api_model.txt}
 
@@ -1034,7 +1034,7 @@ Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nes
 
 \subsubsection{Socket.IO API}
 
-Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní HTTP poskytuje také rozhraní Socket.IO.
+Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní \textit{HTTP} poskytuje také rozhraní Socket.IO.
 
 \subsection{Webová aplikace}
 
@@ -1048,21 +1048,32 @@ Moduly z~vyšších vrstev mohou komunikovat pouze s~moduly ze stejné nebo z~ni
 \img[1]{Princip architektury Redux}{img/redux.png}
 \draw
 
-Ke správě dat je využita architektura a~knihovna Redux ukládající celý stav aplikace v~centralizovaném uložišti (store). Měnit stav tohoto uložiště může pouze funkce \textit{dispatch} jejímž argumentem je akce. Akce je prostý objekt obsahující povinnou položku \textit{type} a~libovolné další položky. Pro pohodlnější práci se akce často umisťuje do parametrizovatelné funkce zvané \textit{action creator}, která tuto akci vrací.
+Ke správě dat je využita architektura a~knihovna \textit{Redux} ukládající celý stav aplikace v~centralizovaném uložišti (store). Měnit stav tohoto uložiště může pouze funkce \textit{dispatch} jejímž argumentem je akce. Akce je prostý objekt obsahující povinnou položku \textit{type} a~libovolné další položky. Pro pohodlnější práci se akce často umisťuje do parametrizovatelné funkce zvané \textit{action creator}, která tuto akci vrací.
 
 Funkce \textit{dispatch} následně zjistí aktuální stav aplikace a~společně s~akcí v~argumentu zavolá funkci \textit{reducer}. Ten na základě aktuálního stavu a~akce vrátí stav nový. V~poslední řadě dojde k~překreslení všech komponent, které jsou napojené na právě změněnou část stavu aplikace~--~podoba UI je tak vždy aktuální.
 
-\lstinputlisting[caption={Ukázka použití knihovny Redux.}]{codes/redux.txt}
+\lstinputlisting[caption={Ukázka použití knihovny Redux.}]{codes/redux.txt}¨
 
 \subsection{Klientská aplikace}
 
 \img[1]{Stavy procesů a~přechody mezi nimi}{img/process_state.png}
 \draw
 
-\subsection{Neuronová síť}
+\subsection{Neuronové síť}
+
+\subsubsection{Klasifikace hvězdy}
+
+Na základě povrchové teploty 
+
+\img[2]{Klasifikace hvězdy~--~trénovací množina (vlevo) a~HR diagram (vpravo)}{img/hr_diagram.png}
+{\setstretch{0.8}\footnotetext[2]{Graf trénovací množiny vytvořen autorem, HR diagram převzat z~Wikimedia Commons pod licencí CC BY-SA 3.0 (\url{https://creativecommons.org/licenses/by-sa/3.0}), přidány popisky}}
+
+\subsubsection{Detekce tranzitů exoplanety}
 
 \img[1]{Trénovací množina}{img/train_set.png}
 TODO: Odebrat osy a popisky z obrázku.
+
+
 
 \subsection{Databáze}
 
@@ -1158,6 +1169,8 @@ Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nut
 
 K~zamezení toho, aby byly tyto položky vedeny jako dvě různé soustavy je nutno aplikaci poskytnout informace o~používaných názvech jednotlivých objektů. Právě k~tomu slouží tento typ datasetů.
 
+\subsection{Instalace a spuštění aplikace}
+
 \section{Rozvržení aplikace}
 
 \subsection{Přehled}
@@ -1216,6 +1229,22 @@ Komponenty řešící autentizaci uživatele nevyžadují samostatnou stránku, 
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
+
+{
+\tab[2]{Validace aplikace}{
+	\begin{tabular}{|p{0.3\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Kategorie & Pokusů & Úspěšnost \\	
+		\hline	
+		Klasifikace hvězd & 200 & 98,28 \% \\
+		\hline
+		Detekce tranzitů exoplanet & 30 & 86,31 \% \\
+		\hline
+		Výpočet vlastností planet & 30 & 92,36 \% \\
+		\hline
+	\end{tabular}
+}
 
 Potenciálními zlepšeními aplikace do budoucna by mohly být např.:
 
