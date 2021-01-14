@@ -1052,27 +1052,31 @@ Ke správě dat je využita architektura a~knihovna \textit{Redux} ukládající
 
 Funkce \textit{dispatch} následně zjistí aktuální stav aplikace a~společně s~akcí v~argumentu zavolá funkci \textit{reducer}. Ten na základě aktuálního stavu a~akce vrátí stav nový. V~poslední řadě dojde k~překreslení všech komponent, které jsou napojené na právě změněnou část stavu aplikace~--~podoba UI je tak vždy aktuální.
 
-\lstinputlisting[caption={Ukázka použití knihovny Redux.}]{codes/redux.txt}¨
+\lstinputlisting[caption={Ukázka použití knihovny Redux.}]{codes/redux.txt}
 
 \subsection{Klientská aplikace}
 
 \img[1]{Stavy procesů a~přechody mezi nimi}{img/process_state.png}
 \draw
 
-\subsection{Neuronové síť}
+\subsection{Neuronové sítě}
 
 \subsubsection{Klasifikace hvězdy}
 
-Na základě povrchové teploty 
-
 \img[2]{Klasifikace hvězdy~--~trénovací množina (vlevo) a~HR diagram (vpravo)}{img/hr_diagram.png}
-{\setstretch{0.8}\footnotetext[2]{Graf trénovací množiny vytvořen autorem, HR diagram převzat z~Wikimedia Commons pod licencí CC BY-SA 3.0 (\url{https://creativecommons.org/licenses/by-sa/3.0}), přidány popisky}}
+\footnotetext[2]{Graf trénovací množiny vytvořen autorem, HR diagram převzat z~Wikimedia Commons (public domain)}
 
-\subsubsection{Detekce tranzitů exoplanety}
+Na základě povrchové teploty a~absolutní hvězdné velikosti (magnitudy) lze jednotlivé hvězdy umístit dle Morganovy-Keenanovy klasifikace do jedné z~8 tříd svítivosti. Rozložení těchto tříd je ukázáno v~Hertzsprungovu–Russellovu diagramu (HR diagramu).
+
+\wrapimg[1]{Architektura neuronové sítě pro klasifikaci hvězd}{img/nn_stellar.pdf}{r}{15}
+
+Zatímco spektrální třída hvězdy je jednoznačně dána dle povrchové teploty hvězdy, třídy svítivosti se navzájem prolínají, a~proto je vhodné pro tento problém použít umělou neuronovou síť. Zdrojový kód pro vytvoření, natrénování a~otestování této sítě je umístěn v~Jupyter Notebooku \code{data/lum\_class/lum\_class.ipynb}.
+
 
 \img[1]{Trénovací množina}{img/train_set.png}
 TODO: Odebrat osy a popisky z obrázku.
 
+\subsubsection{Detekce tranzitů exoplanety}
 
 
 \subsection{Databáze}
