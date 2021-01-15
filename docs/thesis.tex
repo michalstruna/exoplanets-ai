@@ -1056,8 +1056,18 @@ Funkce \textit{dispatch} následně zjistí aktuální stav aplikace a~společn�
 
 \subsection{Klientská aplikace}
 
-\img[1]{Stavy procesů a~přechody mezi nimi}{img/process_state.png}
+Pro využití většího výpočetního potenciálu počítače není vhodné provádět analýzu dat na straně webové aplikace. Z~tohoto důvodu je ve webové aplikaci k~dispozici ke stažení klientská aplikace~--~jedná se o~spustitelný program napsaný v~jazyce \textit{Python} a~optimalizovaný pro zpracování dat.
+
+Po spuštění programu dojde k~otevření stránky webové aplikace, na které musí uživatel pod svým účtem spárovat webovou a klientskou aplikaci. Následně dojde pomocí \textit{Socket.io} k~navázání spojení klientské aplikace a~serveru, čímž z~pohledu uživatele vznikne nový proces ve stavu \textit{Čeká na spuštění}.
+
+\img[1]{Životní cyklus procesu klientské aplikace}{img/process_state.pdf}
 \draw
+
+V~případě, že jsou v~databázi některé dosud nezpracované položky z~datasetů, server jednu takovou položku přidělí klientské aplikace a~ta ji začne zpracovávat. Po dokončení je řešení odevzdáno serveru, jenž klientské aplikaci přidělí další položku ke zpracování. Tento cyklus se opakuje až do doby, kdy je klientská aplikace pozastavena či ukončena (uživatel tak může učinit z~UI webové aplikace). Do té doby běží program zcela samostatně a~uživatel nemusí do průběhu zpracování dat nijak zasahovat.
+
+\img[1]{Architektura klientské aplikace}{img/client.pdf}
+
+Uživatel může samozřejmě i~násilně ukončit aplikaci za běhu. V~takovém případě budou dosud zpracovaná data z~aktuální položky ztracena.
 
 \subsection{Neuronové sítě}
 
