@@ -1054,20 +1054,43 @@ Funkce \textit{dispatch} následně zjistí aktuální stav aplikace a~společn�
 
 \lstinputlisting[caption={Ukázka použití knihovny Redux.}]{codes/redux.txt}
 
+Jednotlivé moduly mají následující funkcionalitu:
+
+\begin{itemize}
+\item \textbf{Core}~--~Kořenová komponenta \code{<App />} a~router zobrazující dle URL příslušné stránky, dále Redux Store a~obstarávání základních funkcionalit aplikace.
+\item \textbf{Database}~--~Stránky týkající se výpisu/úpravy položek z~databáze (např. seznam objevených planet, přidané datasety, ...).
+\item \textbf{Discovery}~--~Umožňuje uživateli zapojit se do hledání a~sledovat své procesy.
+\item \textbf{User}~--~Stará se o~autentifikaci a~autorizaci a~také o veškerou uživatelskou činnost.
+\item \textbf{Form}~--~Skládání formulářů z~předpřipravených komponent s~automatickou validaci.
+\item \textbf{Stats}~--~Usnadňuje vykreslování grafů a~komponent se statistickými daty.
+\item \textbf{Layout}~--~Obsahuje nastylované a~funkční komponenty využívané v~celé aplikaci.
+\item \textbf{Routing}~--~Nabízí pomocné funkce pro práci se směrováním, URL a~query řetězci.
+\item \textbf{Async}~--~Zajišťuje asynchronní operace jako je komunikace se serverem přes \textit{REST} nebo \textit{Socket.io} API. Taktéž animuje \code{<Loader />} všude tam, kde je to třeba.
+\item \textbf{Style}~--~Fragmenty stylů využívaných na více místech, media queries pro responzivitu, a~konstanty (např. barvy, velikosti, parametry animací, ...).
+\item \textbf{Data}~--~Zprostředkovává jazykovou lokalizaci, řazení, filtrování a~stránkování dat a~také práci s~fyzikálními veličinami a~jednotkami.
+\item \textbf{Native}~--~Pomocné funkci pro práci s~datovými typy (pole, čísla, text, ...).
+\end{itemize}
+
+\vspace{-5pt}
+
 \subsection{Klientská aplikace}
+\vspace{-5pt}
+Pro využití většího výpočetního potenciálu počítače není vhodné provádět analýzu dat na straně webové aplikace. Ve webové aplikaci je k~dispozici ke stažení klientská aplikace~--~spustitelný program napsaný v~jazyce \textit{Python}~optimalizovaný pro zpracování dat.
 
-Pro využití většího výpočetního potenciálu počítače není vhodné provádět analýzu dat na straně webové aplikace. Z~tohoto důvodu je ve webové aplikaci k~dispozici ke stažení klientská aplikace~--~jedná se o~spustitelný program napsaný v~jazyce \textit{Python} a~optimalizovaný pro zpracování dat.
-
-Po spuštění programu dojde k~otevření stránky webové aplikace, na které musí uživatel pod svým účtem spárovat webovou a klientskou aplikaci. Následně dojde pomocí \textit{Socket.io} k~navázání spojení klientské aplikace a~serveru, čímž z~pohledu uživatele vznikne nový proces ve stavu \textit{Čeká na spuštění}.
+Po spuštění se otevře webová aplikace, ve které uživatel pod svým účtem provede spárování s~klientskou aplikaci. Následně dojde pomocí \textit{Socket.io} k~navázání spojení se serverem, čímž z~pohledu uživatele vznikne nový proces ve stavu \textit{Čeká na spuštění}.
 
 \img[1]{Životní cyklus procesu klientské aplikace}{img/process_state.pdf}
 \draw
 
-V~případě, že jsou v~databázi některé dosud nezpracované položky z~datasetů, server jednu takovou položku přidělí klientské aplikace a~ta ji začne zpracovávat. Po dokončení je řešení odevzdáno serveru, jenž klientské aplikaci přidělí další položku ke zpracování. Tento cyklus se opakuje až do doby, kdy je klientská aplikace pozastavena či ukončena (uživatel tak může učinit z~UI webové aplikace). Do té doby běží program zcela samostatně a~uživatel nemusí do průběhu zpracování dat nijak zasahovat.
+V~případě, že jsou v~databázi některé dosud nezpracované položky z~datasetů, server jednu takovou položku přidělí klientské aplikace a~ta ji začne zpracovávat. Po dokončení je řešení odevzdáno serveru, jenž klientské aplikaci přidělí další položku ke zpracování. Tento cyklus se opakuje až do doby, kdy je klientská aplikace pozastavena či ukončena (uživatel tak může učinit z~UI webové aplikace).
+
+Do té doby běží program zcela samostatně a~uživatel nemusí do průběhu zpracování dat nijak zasahovat. Uživatel může samozřejmě násilně ukončit aplikaci i~za běhu. V~takovém případě budou dosud zpracovaná data z~aktuální položky ztracena.
 
 \img[1]{Architektura klientské aplikace}{img/client.pdf}
 
-Uživatel může samozřejmě i~násilně ukončit aplikaci za běhu. V~takovém případě budou dosud zpracovaná data z~aktuální položky ztracena.
+Při komunikaci mezi serverem a~klientskou aplikací nedochází k~přenosu samotných dat ke zpracování (řádově MiB). Server klientovi posílá pouze metadata k~zadávané úloze (např. typ úlohy, adresu URL, ...). Samotná data ke zpracování si už stáhne klient přímo od poskytovatele dat (např. NASA Exoplanet Archive). Server tak není tolik zatížen a~stahování většího množství dat je delegováno na jednotlivé klienty.
+
+\lstinputlisting[caption={Příklad zpracování světelné křivky klientem}]{codes/client.txt}
 
 \subsection{Neuronové sítě}
 
@@ -1240,6 +1263,10 @@ Komponenty řešící autentizaci uživatele nevyžadují samostatnou stránku, 
 		\hline
 	\end{tabular}
 }
+
+TODO: Fotka klientské aplikace.
+
+\img[1]{Ukázka běžící klientské aplikace}{img/client_terminal.png}
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
