@@ -172,10 +172,10 @@
 	\end{figure}
 }
 
-\newcommand{\wrapimg}[5][]{    
-	\begin{wrapfigure}[#5]{#4}{0.45\textwidth}
+\newcommand{\wrapimg}[6][]{    
+	\begin{wrapfigure}[#5]{#4}{#6\textwidth}
 		\vspace{-10pt}
-		\centering\includegraphics[width=0.45\textwidth]{#3}
+		\centering\includegraphics[width=#6\textwidth]{#3}
 		\vspace{-25pt}
 		\caption[#2]{#2\ifx&#1&\else~\footnotemark[#1]\fi}
 	\end{wrapfigure}

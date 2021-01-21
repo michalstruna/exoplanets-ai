@@ -1,0 +1,3 @@
+nn = load_model("data/transit/transit.h5")  # Load NN from file.
+result = nn.predict([[bv, mag]])  # Predict class of star.
+lum_class = np.argmax(result[0])  # Get index of most likeli class.

@@ -393,7 +393,7 @@ Hlavní výhodou metody radiálních rychlostí oproti tranzitní metodě je mo�
 
 \subsection{Astrometrická metoda}
 
-\wrapimg[2]{Obíhání hvězdy a~planety kolem společného těžiště}{img/astrometry.pdf}{r}{11}
+\wrapimg[2]{Obíhání hvězdy a~planety kolem společného těžiště}{img/astrometry.pdf}{r}{11}{0.45}
 
 Astrometrická metoda využívá stejné vlastnosti vzájemného působení těles jako metoda radiálních rychlostí. Namísto zkoumání vlnové délky záření se však zaměřuje na polohu hvězdy. Hvězda, kolem níž obíhá dostatečně hmotné těleso, se bude v~důsledku jeho působení nepatrně vychylovat ze své pozice.~\cite{methods}
 
@@ -404,7 +404,7 @@ Pohyb hvězdy tak není přímočarý, ale vlnitý. Kolísání hvězdy je však
 
 \subsection{Přímé zobrazení}
 
-\wrapimg[1]{Hvězda GQ Lupi s~přímo pozorovanou exoplanetou}{img/imaging.jpg}{r}{11}
+\wrapimg[1]{Hvězda GQ Lupi s~přímo pozorovanou exoplanetou}{img/imaging.jpg}{r}{11}{0.45}
 \footnotetext[1]{Převzato z:~\cite{methods}.}
 
 Přímé pozorování planety v~okolí hvězd je velice náročnou technikou, protože záření, které hvězda emituje je mnohonásobně silnější, než záření, které planeta odráží. Např. u~Země a~Slunce je tento poměr řádově $10^{-9}$.~\cite{methods}
@@ -450,7 +450,7 @@ Nutno podotknout, že nás nezajímá rychlost pulzaru tak, jako u metody radiá
 \clearpage
 \subsection{Časování tranzitů}
 
-\wrapimg[1]{Nepravidelnosti v~tranzitech planety Kepler-46b}{img/ttv.png}{r}{16}
+\wrapimg[1]{Nepravidelnosti v~tranzitech planety Kepler-46b}{img/ttv.png}{r}{16}{0.45}
 \data{1}{nasadata}
 
 V~kapitole 1.1 byla popsána tranzitní metoda zkoumajíc pravidelné poklesy v~jasu hvězdy. Někdy ale tyto poklesy nemusí být zcela pravidelné a~v~jejich periodách mohou být mírné odchylky (TTV~--~transit time variation). Ty mohou být způsobeny další exoplanetou v~systému, která může nebo nemusí sama tranzitovat přes hvězdu, přesto však stále gravitačně ovlivňuje zbytek soustavy.~\cite{ttv}
@@ -1096,25 +1096,31 @@ Při komunikaci mezi serverem a~klientskou aplikací nedochází k~přenosu samo
 
 \subsubsection{Klasifikace hvězdy}
 
-\img[2]{Klasifikace hvězdy~--~trénovací množina (vlevo) a~HR diagram (vpravo)}{img/hr_diagram.png}
-\footnotetext[2]{Graf trénovací množiny vytvořen autorem, HR diagram převzat z~Wikimedia Commons (public domain)}
+\wrapimg[1]{Architektura neuronové sítě pro klasifikaci hvězd}{img/nn_stellar.pdf}{r}{10}{0.4}
+\draw
 
 Na základě povrchové teploty a~absolutní hvězdné velikosti (magnitudy) lze jednotlivé hvězdy umístit dle Morganovy-Keenanovy klasifikace do jedné z~8 tříd svítivosti. Rozložení těchto tříd je ukázáno v~Hertzsprungovu–Russellovu diagramu (HR diagramu).
 
-\wrapimg[1]{Architektura neuronové sítě pro klasifikaci hvězd}{img/nn_stellar.pdf}{r}{15}
+Zatímco spektrální třída hvězdy je jednoznačně dána dle povrchové teploty hvězdy, třídy svítivosti nejsou lehce separovatelné, a~proto je vhodné pro její rozpoznání použít umělou neuronovou síť. Zdrojový kód pro vytvoření, natrénování a~otestování této sítě je umístěn v~Jupyter Notebooku \code{data/lum\_class/lum\_class.ipynb}. Výstupem sítě je vektor o~8 prvcích, ve kterém největší hodnota značí příslušnost hvězdy do dané kategorie. Např. vektor na výstupu \break\code{(0, 0, 0, 0, 0, 1, 0, 0)} znamená 6. kategorii, tedy \textit{V} (trpaslík).
 
-Zatímco spektrální třída hvězdy je jednoznačně dána dle povrchové teploty hvězdy, třídy svítivosti se navzájem prolínají, a~proto je vhodné pro tento problém použít umělou neuronovou síť. Zdrojový kód pro vytvoření, natrénování a~otestování této sítě je umístěn v~Jupyter Notebooku \code{data/lum\_class/lum\_class.ipynb}.
+\img[2]{Klasifikace hvězdy~--~trénovací množina (vlevo) a~HR diagram (vpravo)}{img/hr_diagram.png}
+\footnotetext[2]{Graf trénovací množiny vytvořen autorem, HR diagram převzat z~Wikimedia Commons~--~public domain.}
 
-
-\img[1]{Trénovací množina}{img/train_set.png}
-TODO: Odebrat osy a popisky z obrázku.
+\lstinputlisting[caption={Použití sítě pro klasifikaci hvězdy}]{codes/nn_stellar.txt}
 
 \subsubsection{Detekce tranzitů exoplanety}
+
+V~momentě, kdy je nalezena periodická složka ve světelné křivce hvězdy, je třeba ověřit, zda se jedná o~tranzit obíhající exoplanety nebo o~jiný jev. To je opět problém vhodný pro neuronovou síť.
+
+Síť na vstupu přijme globální a~lokální pohled na potenciální tranzit. Výstupem sítě je číslo z~intervalu od 0 do 1, přičemž čím větší číslo je, tím s~větší jistotou síť považuje vstup za skutečný tranzit planety. Kompletní zdrojový kód sítě se nachází v~Jupyter Notebooku \code{data/transit/transit.ipynb}. Architektura sítě popsána v~příloze TODO.
+
+\img[1]{Část trénovací množiny pro detekci tranzitů exoplanet}{img/train_set.png}
+\data{1}{nasadata}
 
 
 \subsection{Databáze}
 
-K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~níž se na straně serveru přistupuje skrze ODM \textit{MongoEngine}.
+K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~níž se na straně serveru přistupuje skrze ODM \textit{MongoEngine}. Než dojde k~samotnému připojení, je třeba nadefinovat podobu databáze a~validační pravidla jednotlivých kolekcí, tak, jak je to ukázáno v~kapitole 5.2.5.
 
 \lstinputlisting[caption={Připojení k databázi.}]{codes/db_conn.txt}
 
@@ -1240,7 +1246,7 @@ Uživatelé si zde mohou stáhnout klientskou aplikaci a~zapojit se do hledání
 
 \subsection{Autentizace}
 
-\wrapimg{Přihlašovací formulář}{img/auth.png}{r}{11}
+\wrapimg{Přihlašovací formulář}{img/auth.png}{r}{11}{0.45}
 
 Komponenty řešící autentizaci uživatele nevyžadují samostatnou stránku, ale jsou kdykoliv dostupné v~pravém horním rohu aplikace, kde je lze kliknutím na tlačítko rozbalit. Vždy jsou viditelné pouze ty komponenty, které daná uživatelská role vyžaduje. Jejich kompletní výčet je uveden v~tabulce 13.
 
