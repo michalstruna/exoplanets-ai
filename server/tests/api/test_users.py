@@ -165,7 +165,34 @@ def test_cursor(client):
     pass
 
 
-def test_edit_profile(client):
+def test_edit_local_user(client):
+    cr1, cr2 = Creator.local_credentials(1, new=True), Creator.local_credentials(2, new=True)
+    usr1, usr2 = Res.created(client.post("/api/users/sign-up", json=cr1)).json, Res.created(client.post("/api/users/sign-up", json=cr2)).json
+
+    Res.list(client.get("/api/users"), [usr1, usr2])
+    Res.item(client.post("/api/users/login", json=cr1), usr1)  # Users can log in.
+    Res.item(client.post("/api/users/login", json=cr2), usr2)
+
+    personal1 = Creator.personal(1)
+    assert personal1 != usr1["personal"]
+    usr1_updated = Res.updated(client.put("/api/users/" + usr1["_id"], json={"personal": personal1}), {**usr1, "personal": personal1}).json
+
+    Res.list(client.get("/api/users"), [usr1_updated, usr2])  # Check updated user.
+    Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
+
+    cr1_updated = Creator.local_credentials(3)
+    Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated, "old_password": cr2["password"]}))
+    Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
+
+    Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": "short", "old_password": cr1["password"]}))
+    Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
+
+
+def test_edit_fb_user(client):
+    pass
+
+
+def test_edit_google_user(client):
     pass
 
 

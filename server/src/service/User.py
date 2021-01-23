@@ -3,8 +3,7 @@ from http import HTTPStatus
 from mongoengine.errors import DoesNotExist
 from datetime import datetime
 
-from constants.User import UserRole
-from utils.exceptions import BadCredentials
+from utils.exceptions import BadCredentials, Invalid
 from .Base import Service
 from .Security import SecurityService
 import db
@@ -69,3 +68,20 @@ class UserService(Service):
         user = self.update(user["_id"], {"online": True})
         user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})
         return user
+
+    def update(self, id, item, with_return=True):
+        if "password" in item and item["password"]:  # Verify old password if password changed.
+            user = self.get_by_id(id)
+
+            if "password" in user:
+                if "old_password" not in item or not self.security_service.verify_hash(user["password"], item["old_password"]):
+                    raise Invalid("Invalid password.")
+            else:
+                del item["password"]
+
+        if "old_password" in item:
+            del item["old_password"]
+
+        return super().update(id, item, with_return)
+
+

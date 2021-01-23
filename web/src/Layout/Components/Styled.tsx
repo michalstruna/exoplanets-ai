@@ -39,7 +39,8 @@ export const PrimaryButton = Styled.button`
 `
 
 export const MiniPrimaryButton = Styled(PrimaryButton)`
-    font-size: 90%;
+    display: inline-block;
+    font-size: 0.9rem;
     margin 0 !important;
     padding: 0.5rem !important;
     width: auto !important;

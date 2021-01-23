@@ -9,7 +9,7 @@ from api.errors import error
 from constants.Data import Relation
 from constants.Error import ErrorType
 from constants.User import UserRole
-from utils.exceptions import BadCredentials
+from utils.exceptions import BadCredentials, Invalid
 
 
 class Response:
@@ -41,7 +41,7 @@ class Response:
 
         try:
             return handler(), status
-        except ValidationError as e:
+        except (ValidationError, Invalid) as e:
             if "is not a valid ObjectId" in str(e):
                 Response.not_found(str(e))
             else:

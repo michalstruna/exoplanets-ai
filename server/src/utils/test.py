@@ -79,6 +79,7 @@ class Res:
 
     @staticmethod
     def invalid(res):
+        print(res.data)
         assert res.json["type"] == ErrorType.INVALID.value
         assert res.status_code == HTTPStatus.BAD_REQUEST
         return res
@@ -224,6 +225,10 @@ class Creator:
         return result
 
     @staticmethod
+    def personal(id=0):
+        return {"sex": id % 2 == 0, "country": f"Country{id}", "birth": id, "contact": f"mail{id}@user.cz", "text": f"aby{id}"}
+
+    @staticmethod
     def user(id=0, new=False, update=False, role=UserRole.AUTH, token=False, name=None, stats=None, personal=None, **kwargs):
         result = {
             **kwargs,
@@ -235,7 +240,7 @@ class Creator:
             result["stats"] = stats if stats is not None else Creator.stats(planets=0, items=0, time=0, data=0)
 
         if personal:
-            result["personal"] = {"sex": id % 2 == 0, "country": f"Country{id}", "birth": id, "contact": f"mail{id}@user.cz", "text": f"aby{id}"}
+            result["personal"] = Creator.personal(id)
 
         if token:
             result["token"] = token
@@ -255,7 +260,13 @@ class Creator:
 
     @staticmethod
     def save_user(**kwargs):
-        u = Creator.user(**kwargs, new=True, username=f"username@domain.cz{kwargs['id']}", password=f"password{kwargs['id']}")
+        if "username" not in kwargs:
+            kwargs["username"] = f"username@domain.cz{kwargs['id']}"
+
+        if "password" not in kwargs:
+            kwargs["password"] = f"password{kwargs['id']}"
+
+        u = Creator.user(new=True, **kwargs)
         return Creator._from_mongo(user_service.dao.add(u), ignore=["_cls", "fields_meta"])
 
     @staticmethod

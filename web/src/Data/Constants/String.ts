@@ -317,6 +317,7 @@ export default {
     auth: {
         email: 'Email',
         password: { [CS]: 'Heslo', [EN]: 'Password' },
+        oldPassword: { [CS]: 'Aktuální heslo', [EN]: 'Current password' },
         forgotPassword: { [CS]: 'Zapomenuté heslo?', [EN]: 'Forgot password?' },
         error: { [CS]: 'Špatné přihlašovací údaje.', [EN]: 'Bad credentials' },
         missingEmail: { [CS]: 'Napište svůj email', [EN]: 'Type your email' },
@@ -354,7 +355,15 @@ export default {
             [UserRole.AUTHENTICATED]: 'Uživatel',
             [UserRole.MODERATOR]: 'Moderátor',
             [UserRole.ADMIN]: 'Administrátor'
-        }
+        },
+
+        logout: { [CS]: 'Odhlásit se', [EN]: 'Logout' },
+        profile: { [CS]: 'Profil', [EN]: 'Profile' },
+        edit: { [CS]: 'Editace', [EN]: 'Edit' },
+        emptyText: { [CS]: 'Tento uživatel o sobě nic nenapsal.', [EN]: 'This user has not written anything about himself.' },
+        //birth: { [CS]: 'Narození', [EN]: 'Birth' },
+        emptyInput: { [CS]: 'Nechci uvést', [EN]: 'Don\'t want provide' },
+        text: { [CS]: 'Profilový text', [EN]: 'Profile text' }
     },
 
     discovery: {

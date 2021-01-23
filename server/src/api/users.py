@@ -49,6 +49,12 @@ user = api.ns.inherit("User", logged_item, {
     "index": fields.Integer(min=1)
 })
 
+updated_user = api.ns.model("UpdatedUser", {
+    "personal": fields.Nested(user_personal),
+    "password": fields.String,
+    "old_password": fields.String
+})
+
 identity = api.ns.inherit("Identity", user, {
     "token": fields.String(required=True, description="Authentication token.")
 })
@@ -106,7 +112,8 @@ class FacebookLogin(Resource):
 resource_type = {
     "get_all": {"role": UserRole.UNAUTH},
     "get": {"role": UserRole.UNAUTH},
-    "delete": {"role": UserRole.ADMIN}
+    "delete": {"role": UserRole.ADMIN},
+    "update": {"role": UserRole.MYSELF}
 }
 
-api.init(service=user_service, full_model=user, resource_type=resource_type, model_name="User", map_props=map_props)
+api.init(service=user_service, full_model=user, updated_model=updated_user, resource_type=resource_type, model_name="User", map_props=map_props)

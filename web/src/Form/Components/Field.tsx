@@ -24,8 +24,8 @@ interface Props extends Omit<Omit<Omit<React.ComponentPropsWithoutRef<'input'>, 
     invalid?: string
     required?: string
     validator?: (value: any) => string
-    options?: TextValue<string | number | TextValue<string | number>[]>[]
-    onChange?: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
+    options?: TextValue<string | number | boolean | TextValue<string | number | boolean>[]>[]
+    onChange?: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void
 }
 
 type LabelProps = {
@@ -141,7 +141,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
     const { register, errors, getValues } = useFormContext()
     const [value, setValue] = React.useState<string>(getValues(name) || '')
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setValue(event.target.value)
         props.onChange?.(event)
     }
@@ -184,6 +184,15 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                     </CheckContainer>
 
                 )
+            case FieldType.TEXTAREA:
+                return (
+                    <textarea
+                        {...props as any}
+                        name={name}
+                        placeholder={placeholder}
+                        ref={register(registerOptions)}
+                        onChange={handleChange} />
+                )
             default:
                 return (
                     <Input
@@ -193,7 +202,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                         type={type.name}
                         autoComplete='off'
                         ref={register(registerOptions)}
-                        data-empty={value === '' || undefined}
+                        data-empty={['date'].includes(type.name) ? undefined : (value === '' || undefined)}
                         onChange={handleChange} />
                 )
         }

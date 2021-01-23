@@ -88,7 +88,7 @@ const IconText = ({ icon, text, value, size, isActive, pathname, query, hash, ..
     }
 
     return (
-        <Root {...props as any} isButton={!!props.onClick} isActive={isActive} isSmall={!!value} as={!!props.onClick ? 'button' : undefined}>
+        <Root type='button' {...props as any} isButton={!!props.onClick} isActive={isActive} isSmall={!!value} as={!!props.onClick ? 'button' : undefined}>
             <Icon
                 style={{ backgroundImage: icon && `url(${/^http|^\//.test(icon) ? icon : '/img/' + icon})` }}
                 size={size || IconText.MEDIUM} />

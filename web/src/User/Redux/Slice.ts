@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 import { Cookie } from '../../Native'
 import { Cursor, Redux } from '../../Data'
 import UserRole from '../Constants/UserRole'
-import { Credentials, ExternalCredentials, Identity, RegistrationCredentials, User } from '../types'
+import { Credentials, EditedUser, ExternalCredentials, Identity, RegistrationCredentials, User } from '../types'
 import { Requests } from '../../Async'
 import { SegmentData } from '../../Database/types'
 import { Action } from '../../Data/Utils/Redux'
@@ -44,7 +44,8 @@ const Slice = Redux.slice(
     {
         users: Redux.async<User>(),
         identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name)),
-        onlineUsers: Redux.async<User[]>(onlineUsers)
+        onlineUsers: Redux.async<User[]>(onlineUsers),
+        editedUser: Redux.async<EditedUser>(),
     },
     ({ set, async, plain }) => ({
         getUsers: async<Cursor, SegmentData<User>>('users', cursor => Requests.get(`users`, undefined, cursor)),
@@ -60,9 +61,10 @@ const Slice = Redux.slice(
         logout: plain<void>(state => {
             state.identity.payload = null
             Cookies.remove(Cookie.IDENTITY.name)
-        })
+        }),
+        edit: async<[string, EditedUser], User>('editedUser', ([userId, user]) => Requests.put(`users/${userId}`, user))
     })
 )
 
 export default Slice.reducer
-export const { getUsers, signUp, login, logout, facebookLogin } = Slice.actions
+export const { getUsers, signUp, login, logout, facebookLogin, edit } = Slice.actions

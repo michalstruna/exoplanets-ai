@@ -14,7 +14,7 @@ export default {
 
     EMAIL: {
         name: 'email',
-        validator: Validator.isEmail
+        validator: (value: string) => !value || Validator.isEmail(value)
     },
 
     PASSWORD: {

@@ -2,17 +2,20 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 import Countries from 'emoji-flags'
 
-import { Diff, IconText } from '../../Layout'
+import { Diff, IconText, MiniPrimaryButton } from '../../Layout'
 import Auth from './Auth'
-import { User } from '../types'
+import { EditedUser, User } from '../types'
 import { Units, UnitType, useActions, useStrings } from '../../Data'
 import { image, dots, size } from '../../Style'
-import { logout } from '../Redux/Slice'
+import { logout, edit } from '../Redux/Slice'
 import Avatar from './Avatar'
-import { Dates, Numbers } from '../../Native'
+import { Dates } from '../../Native'
+import { Field, Form } from '../../Form'
+import { FormContextValues } from 'react-hook-form'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: User
+    toggle?: () => void
 }
 
 const Root = Styled.div`
@@ -22,6 +25,10 @@ const Root = Styled.div`
     
     ${Avatar.Root} {
         margin: 0.5rem auto;
+    }
+    
+    ${Field.Root} {
+        margin: 0.5rem 0;
     }
 `
 
@@ -52,9 +59,16 @@ const Left = Styled.div`
     }
 `
 
+const EditLeft = Styled(Left)`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 9rem;
+`
+
 const Right = Styled.div`
-    align-items:flex-start;
-    align-content:flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
     box-sizing: border-box;
     padding: 0.5rem;
     position: relative;
@@ -62,17 +76,23 @@ const Right = Styled.div`
     
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     
     & > * {
-        ${size('50%', 'auto')}
+        ${size('calc(50% - 0.25rem)', 'auto')}
         margin-bottom: 0.5rem;
     }
 `
 
+const EditRight = Styled(Right)`
+    width: 18rem;
+`
+
 const RightMenu = Styled.div`
+    align-items: center;
     bottom: 0;
     box-sizing: border-box;
-    font-size: 105%;
+    display: flex;
     left: 0;
     margin-bottom: 0;
     padding: 0.5rem;
@@ -80,10 +100,7 @@ const RightMenu = Styled.div`
     width: 100%;
     
     & > * {
-        display: inline-block;
-        float: left;
-        text-align: left;
-        width: 50%;
+        flex: 1 0 0;
     }
 `
 
@@ -142,6 +159,18 @@ const About = Styled.p`
     width: 100%;
 `
 
+const AboutEditContainer = Styled.div`
+    opacity: 0.8;
+    width: 100%;
+`
+
+const AboutEdit = Styled(Field)`
+    ${size('100%', '3rem')}
+    padding-left: 0;
+    padding-right: 0;
+    resize: none;
+`
+
 const Item: React.FC<ItemProps> = ({ title, value, icon, full }) => {
 
     return (
@@ -153,7 +182,7 @@ const Item: React.FC<ItemProps> = ({ title, value, icon, full }) => {
 
 }
 
-const UserPreview = ({ user, ...props }: Props) => {
+const Profile = ({ user, toggle, ...props }: Props) => {
 
     const country = user.personal.country ? (Countries as any).countryCode(user.personal.country) : null
     const actions = useActions({ logout })
@@ -170,15 +199,22 @@ const UserPreview = ({ user, ...props }: Props) => {
                     Planety <ItemValue><Diff {...user.stats.planets} /></ItemValue>
                 </Rank>
                 <Stats>
-                    <Item title='Data' value={<Diff {...user.stats.data} br={true} format={val => Units.format(val, UnitType.MEMORY)} />} />
-                    <Item title='Čas' value={<Diff {...user.stats.time} br={true} format={val => Units.format(val, UnitType.TIME)} />} />
+                    <Item title='Data' value={<Diff {...user.stats.data} br={true}
+                                                    format={val => Units.format(val, UnitType.MEMORY)} />} />
+                    <Item title='Čas' value={<Diff {...user.stats.time} br={true}
+                                                   format={val => Units.format(val, UnitType.TIME)} />} />
                     <Item title='Křivky' value={<Diff {...user.stats.items} br={true} />} />
                 </Stats>
             </Left>
             <Right>
-                <Item title='Aktivní' value={user.online ? 'Právě teď' : 'Před ' + Dates.formatDistance(strings, user.modified)} icon='Controls/Active.svg' />
-                <Item title='Členem' value={Dates.formatDistance(strings, user.created, new Date().getTime())} icon='User/Origin.svg' />
-                <IconText icon={typeof user.personal.sex === 'boolean' ? `User/${user.personal.sex ? 'Female' : 'Male'}.svg` : `User/Sex.svg`} text='23 let' />
+                <Item title='Aktivní'
+                      value={user.online ? 'Právě teď' : 'Před ' + Dates.formatDistance(strings, user.modified)}
+                      icon='Controls/Active.svg' />
+                <Item title='Členem' value={Dates.formatDistance(strings, user.created, new Date().getTime())}
+                      icon='User/Origin.svg' />
+                <IconText
+                    icon={typeof user.personal.sex === 'boolean' ? `User/${user.personal.sex ? 'Female' : 'Male'}.svg` : `User/Sex.svg`}
+                    text='23 let' />
                 {country && (
                     <Item title={country.code} icon={country.emoji} />
                 )}
@@ -189,18 +225,89 @@ const UserPreview = ({ user, ...props }: Props) => {
                     {user.personal.text || 'Tento uživatel o sobě nic nenapsal.'}
                 </About>
                 <RightMenu>
-                    <IconText icon='User/User.svg' text='Detail' size={IconText.SMALL} />
+                    <IconText
+                        onClick={toggle}
+                        icon='Controls/Edit.svg'
+                        text={strings.users.edit}
+                        size={IconText.SMALL} />
                     <Auth identityId={user._id} when={() => (
                         <IconText
                             icon='User/Logout.svg'
                             onClick={() => actions.logout()}
-                            text='Odhlásit se'
+                            text={strings.users.logout}
                             size={IconText.SMALL} />
                     )} />
                 </RightMenu>
             </Right>
         </Root>
     )
+
+}
+
+const UserForm = ({ user, toggle, ...props }: Props) => {
+
+    const actions = useActions({ edit })
+    const strings = useStrings()
+
+    const handleSubmit = async (values: EditedUser, form: FormContextValues<EditedUser>) => {
+        const action = await actions.edit([user._id, values])
+
+        if (action.error) {
+            form.setError(Form.GLOBAL_ERROR, strings.error)
+        }
+    }
+
+    return (
+        <Form onSubmit={handleSubmit}>
+            <Root {...props}>
+                <EditLeft>
+                    <Avatar user={user} size='7.4rem' />
+                    <Field name='old_password' type={Field.Type.PASSWORD} label={strings.auth.oldPassword} />
+                    <Field name='password' type={Field.Type.PASSWORD} label={strings.auth.password} />
+                </EditLeft>
+                <EditRight>
+                    <Field name='personal.birth' type={Field.Type.DATE} label={strings.users.birth} />
+                    <Field name='personal.sex' type={Field.Type.SELECT} label={strings.users.sex} options={[
+                        { text: strings.users.emptyInput, value: '' },
+                        { text: strings.users.male, value: false },
+                        { text: strings.users.female, value: true }
+                    ]} />
+                    <Field name='personal.country' type={Field.Type.SELECT} label={strings.users.country} options={[
+                        { text: strings.users.emptyInput, value: '' },
+                        { text: strings.users.male, value: false },
+                        { text: strings.users.female, value: true }
+                    ]} />
+                    <Field name='personal.contact' type={Field.Type.EMAIL} label={strings.users.contact} />
+                    <AboutEditContainer>
+                        <AboutEdit name='personal.text' type={Field.Type.TEXTAREA} label={strings.users.text} />
+                    </AboutEditContainer>
+                    <RightMenu>
+                        <Auth identityId={user._id} when={() => (
+                            <>
+                                <IconText
+                                    onClick={toggle}
+                                    icon='User/User.svg'
+                                    text={strings.users.profile}
+                                    size={IconText.SMALL} />
+                                <MiniPrimaryButton>
+                                    Uložit
+                                </MiniPrimaryButton>
+                            </>
+                        )} />
+                    </RightMenu>
+                </EditRight>
+            </Root>
+        </Form>
+    )
+
+}
+
+const UserPreview = ({ ...props }: Props) => {
+
+    const [isFormVisible, showForm] = React.useState(false)
+
+    return isFormVisible ? <UserForm {...props} toggle={() => showForm(false)} /> :
+        <Profile {...props} toggle={() => showForm(true)} />
 
 }
 

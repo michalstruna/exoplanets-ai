@@ -31,8 +31,6 @@ const Avatar = ({ user, size, ...props }: Props) => {
         url = `/img/User/Avatar/${sex}.svg`
     }
 
-    console.log(111, user)
-
     return (
         <Root {...props} size={size}>
             <Image src={url} />

@@ -327,6 +327,7 @@ class User(LogDocument):
     PASSWORD_MAX_LENGTH = 50
 
     def clean(self):
+        print("5" * 20)
         if not self.fb_id:  # If local user.
             if not self.password or len(self.password) < User.PASSWORD_MIN_LENGTH:
                 raise ValidationError(f"Minimum length of password is {User.PASSWORD_MIN_LENGTH}.")
@@ -340,7 +341,11 @@ class User(LogDocument):
             if not self.name:
                 raise ValidationError("Name is required.")
 
+            print("6" * 20, self.password)
+
             self.password = security_service.hash(self.password)
+
+            print("7" * 20, self.password)
 
 
 user_dao = Dao(User, stats="stats")
