@@ -175,17 +175,23 @@ def test_edit_local_user(client):
 
     personal1 = Creator.personal(1)
     assert personal1 != usr1["personal"]
-    usr1_updated = Res.updated(client.put("/api/users/" + usr1["_id"], json={"personal": personal1}), {**usr1, "personal": personal1}).json
+    usr1_updated = Res.updated(client.put("/api/users/" + usr1["_id"], json={"personal": personal1}), {**usr1, "personal": personal1}).json  # Change personal.
 
     Res.list(client.get("/api/users"), [usr1_updated, usr2])  # Check updated user.
     Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
 
-    cr1_updated = Creator.local_credentials(3)
-    Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated, "old_password": cr2["password"]}))
+    cr1_updated = {**cr1, "password": Creator.local_credentials(3)["password"]}
+    Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated, "old_password": cr2["password"]}))  # Change password with bad old password.
     Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
 
-    Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": "short", "old_password": cr1["password"]}))
+    Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": "short", "old_password": cr1["password"]}))  # Change password to invalid password.
     Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
+
+    Res.updated(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated["password"], "old_password": cr1["password"]}), usr1_updated)  # Change password.
+    Res.bad_credentials(client.post("/api/users/login", json=cr1))  # User cannot login with old password.
+    Res.item(client.post("/api/users/login", json=cr1_updated), usr1_updated)  # User can log in with new password.
+
+    Res.item(client.post("/api/users/login", json=cr2), usr2)  # User 2 still can log in with old credentials.
 
 
 def test_edit_fb_user(client):

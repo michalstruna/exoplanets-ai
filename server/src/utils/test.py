@@ -79,7 +79,6 @@ class Res:
 
     @staticmethod
     def invalid(res):
-        print(res.data)
         assert res.json["type"] == ErrorType.INVALID.value
         assert res.status_code == HTTPStatus.BAD_REQUEST
         return res

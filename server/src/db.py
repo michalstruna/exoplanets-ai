@@ -145,17 +145,26 @@ class Dao:
         if issubclass(self.collection, LogDocument):
             document["created"] = time.now()
 
+        self.collection.pre_add(document)
         return self.modified(document)
 
     def modified(self, document):
         if issubclass(self.collection, LogDocument):
             document["modified"] = time.now()
 
+        self.collection.pre_modify(document)
+
         return document
 
 
 class BaseDocument(Document):
     meta = {"allow_inheritance": True, "abstract": True}
+
+    def pre_add(self):
+        pass
+
+    def pre_modify(self):
+        pass
 
 
 class LogDocument(BaseDocument):
@@ -326,26 +335,30 @@ class User(LogDocument):
     PASSWORD_MIN_LENGTH = 6
     PASSWORD_MAX_LENGTH = 50
 
-    def clean(self):
-        print("5" * 20)
-        if not self.fb_id:  # If local user.
-            if not self.password or len(self.password) < User.PASSWORD_MIN_LENGTH:
-                raise ValidationError(f"Minimum length of password is {User.PASSWORD_MIN_LENGTH}.")
-
-            if not self.password or len(self.password) > User.PASSWORD_MAX_LENGTH:
-                raise ValidationError(f"Maximum length of password is {User.PASSWORD_MAX_LENGTH}.")
-
-            if not self.username:
+    def pre_add(self):
+        if "fb_id" in self and self["fb_id"]:
+            pass
+        elif "google_id" in self and self["google_id"]:
+            pass
+        elif "password" in self and self["password"]:
+            if "username" not in self or not self["username"]:
                 raise ValidationError("Username is required.")
 
-            if not self.name:
+            if "name" not in self or not self["name"]:
                 raise ValidationError("Name is required.")
+        else:
+            raise ValidationError("User must have credentials (local or external).")
 
-            print("6" * 20, self.password)
+    def pre_modify(self):
+        if "password" in self and self["password"]:
+            if "password" in self:
+                if not self["password"] or len(self["password"]) < User.PASSWORD_MIN_LENGTH:
+                    raise ValidationError(f"Minimum length of password is {User.PASSWORD_MIN_LENGTH}.")
 
-            self.password = security_service.hash(self.password)
+                if not self["password"] or len(self["password"]) > User.PASSWORD_MAX_LENGTH:
+                    raise ValidationError(f"Maximum length of password is {User.PASSWORD_MAX_LENGTH}.")
 
-            print("7" * 20, self.password)
+                self["password"] = security_service.hash(self["password"])
 
 
 user_dao = Dao(User, stats="stats")
