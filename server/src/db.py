@@ -145,14 +145,17 @@ class Dao:
         if issubclass(self.collection, LogDocument):
             document["created"] = time.now()
 
-        self.collection.pre_add(document)
+        if hasattr(self.collection, "pre_add"):
+            self.collection.pre_add(document)
+
         return self.modified(document)
 
     def modified(self, document):
         if issubclass(self.collection, LogDocument):
             document["modified"] = time.now()
 
-        self.collection.pre_modify(document)
+        if hasattr(self.collection, "pre_modify"):
+            self.collection.pre_modify(document)
 
         return document
 
@@ -284,7 +287,7 @@ class LightCurve(EmbeddedDocument):
     n_days = FloatField(required=True)
 
 
-class Star(Document):
+class Star(Document):  # TODO: BaseDocument - _cls is not working.
     properties = ListField(EmbeddedDocumentField(StarProperties), default=[])
     light_curves = ListField(EmbeddedDocumentField(LightCurve), default=[])
     planets = EmbeddedDocumentListField(Planet, default=[])
