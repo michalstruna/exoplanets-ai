@@ -1,9 +1,10 @@
 import UserRole from './Constants/UserRole'
 import { StatsObject } from '../Stats'
 import { LogObject } from '../Data'
+import Sex from './Constants/Sex'
 
 export type UserPersonal = {
-    sex?: boolean
+    sex?: Sex
     birth?: number
     country?: string
     contact?: string
@@ -26,7 +27,7 @@ export type User = LogObject & StatsObject & {
 export type EditedUser = {
     personal: UserPersonal
     avatar?: string
-    oldPassword?: string
+    old_password?: string
     password?: string
 }
 

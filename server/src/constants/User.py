@@ -8,3 +8,21 @@ class UserRole(Enum):
     ADMIN = 2
 
     MYSELF = -1
+
+
+class Sex(Enum):
+    MALE = "M"
+    FEMALE = "F"
+
+    @classmethod
+    def get_by_name(cls, name):
+        if type(name) != str:
+            return None
+
+        sex = name.lower()
+
+        if sex in ["f", "female"]:
+            return Sex.FEMALE.value
+
+        if sex in ["m", "male"]:
+            return Sex.MALE.value

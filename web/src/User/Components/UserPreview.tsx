@@ -4,7 +4,7 @@ import Countries from 'emoji-flags'
 
 import { Diff, IconText, MiniPrimaryButton } from '../../Layout'
 import Auth from './Auth'
-import { EditedUser, User } from '../types'
+import { EditedUser, User, UserPersonal } from '../types'
 import { Units, UnitType, useActions, useStrings } from '../../Data'
 import { image, dots, size } from '../../Style'
 import { logout, edit } from '../Redux/Slice'
@@ -212,9 +212,9 @@ const Profile = ({ user, toggle, ...props }: Props) => {
                       icon='Controls/Active.svg' />
                 <Item title='Členem' value={Dates.formatDistance(strings, user.created, new Date().getTime())}
                       icon='User/Origin.svg' />
-                <IconText
-                    icon={typeof user.personal.sex === 'boolean' ? `User/${user.personal.sex ? 'Female' : 'Male'}.svg` : `User/Sex.svg`}
-                    text='23 let' />
+                {user.personal.birth || user.personal.sex !== null ? <IconText
+                    icon={user.personal.sex ? `User/${{F: 'Female', M: 'Male'}[user.personal.sex]}.svg` : undefined}
+                    text={user.personal.birth ? Dates.formatDistance(strings, user.personal.birth) : ''} /> : null}
                 {country && (
                     <Item title={country.code} icon={country.emoji} />
                 )}
@@ -250,6 +250,24 @@ const UserForm = ({ user, toggle, ...props }: Props) => {
     const strings = useStrings()
 
     const handleSubmit = async (values: EditedUser, form: FormContextValues<EditedUser>) => {
+        for (const i in values.personal) {
+            if (!values.personal[i as keyof UserPersonal]) {
+                values.personal[i as keyof UserPersonal] = null as any
+            }
+        }
+
+        if (values.password === '') {
+            delete values.password
+        }
+
+        if (values.old_password === '') {
+            delete values.old_password
+        }
+
+        if (values.personal.birth) {
+            values.personal.birth = new Date(values.personal.birth).getTime()
+        }
+
         const action = await actions.edit([user._id, values])
 
         if (action.error) {
@@ -257,8 +275,18 @@ const UserForm = ({ user, toggle, ...props }: Props) => {
         }
     }
 
+    const defaultValues = React.useMemo(() => {
+        const result: User = JSON.parse(JSON.stringify(user))
+
+        if (result.personal.birth) {
+            result.personal.birth = Dates.getDate(result.personal.birth) as any  // Input must be in YYYY-MM-DD.
+        }
+
+        return result
+    }, [user])
+
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} defaultValues={defaultValues}>
             <Root {...props}>
                 <EditLeft>
                     <Avatar user={user} size='7.4rem' />
@@ -269,13 +297,13 @@ const UserForm = ({ user, toggle, ...props }: Props) => {
                     <Field name='personal.birth' type={Field.Type.DATE} label={strings.users.birth} />
                     <Field name='personal.sex' type={Field.Type.SELECT} label={strings.users.sex} options={[
                         { text: strings.users.emptyInput, value: '' },
-                        { text: strings.users.male, value: false },
-                        { text: strings.users.female, value: true }
+                        ...Object.entries(strings.users.sexName).map(([value, text]) => ({
+                            text, value
+                        }))
                     ]} />
                     <Field name='personal.country' type={Field.Type.SELECT} label={strings.users.country} options={[
                         { text: strings.users.emptyInput, value: '' },
-                        { text: strings.users.male, value: false },
-                        { text: strings.users.female, value: true }
+                        ...Countries.data.map(c => ({ text: c.emoji + ' ' + c.name, value: c.code }))
                     ]} />
                     <Field name='personal.contact' type={Field.Type.EMAIL} label={strings.users.contact} />
                     <AboutEditContainer>

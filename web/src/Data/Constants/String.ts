@@ -9,7 +9,7 @@ import DatasetPriority from '../../Database/Constants/DatasetPriority'
 import SpectralClass from '../../Database/Constants/SpectralClass'
 import LuminosityClass from '../../Database/Constants/LuminosityClass'
 import PlanetStatus from '../../Database/Constants/PlanetStatus'
-import { UserRole } from '../../User'
+import { Sex, UserRole } from '../../User'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -346,9 +346,10 @@ export default {
         birth: { [CS]: 'Věk', [EN]: 'Age' },
         contact: { [CS]: 'Kontakt', [EN]: 'Contact' },
 
-        male: { [CS]: 'Muž', [EN]: 'Male' },
-        female: { [CS]: 'Žena', [EN]: 'Female' },
-
+        sexName: {
+            [Sex.FEMALE]: { [CS]: 'Žena', [EN]: 'Female' },
+            [Sex.MALE]: { [CS]: 'Muž', [EN]: 'Male' }
+        },
 
         roles: {
             [UserRole.UNAUTHENTICATED]: 'Nepřihlášený',

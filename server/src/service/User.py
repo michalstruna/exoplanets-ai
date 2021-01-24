@@ -3,6 +3,7 @@ from http import HTTPStatus
 from mongoengine.errors import DoesNotExist
 from datetime import datetime
 
+from constants.User import Sex
 from utils.exceptions import BadCredentials, Invalid
 from .Base import Service
 from .Security import SecurityService
@@ -57,8 +58,8 @@ class UserService(Service):
                 "fb_id": identity["id"],
                 "avatar": identity["picture"]["data"]["url"],
                 "personal": {
-                    "sex": identity["gender"] == "female",
-                    "birth": datetime.timestamp(datetime.strptime(identity["birthday"], "%d/%m/%Y")),
+                    "sex": Sex.get_by_name(identity["gender"]),
+                    "birth": datetime.timestamp(datetime.strptime(identity["birthday"], "%d/%m/%Y")) * 1000,
                     "country": "CZ"  # TODO
                 }
             })

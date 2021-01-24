@@ -3,7 +3,7 @@ from flask import request
 from flask_restx._http import HTTPStatus
 
 from api.global_stats import stats_aggregated, logged_item
-from constants.User import UserRole
+from constants.User import UserRole, Sex
 from utils.http import Api, Response
 from service.User import UserService
 
@@ -31,7 +31,7 @@ def map_props(prop):
 
 
 user_personal = api.ns.model("UserPersonal", {
-    "sex": fields.Boolean(),
+    "sex": fields.String(enum=Sex),
     "country": fields.String(max_length=10),
     "birth": fields.Integer(),
     "contact": fields.String(),
