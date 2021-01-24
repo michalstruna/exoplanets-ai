@@ -2,6 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 import { User } from '../types'
 import { flexCenter, size } from '../../Style'
+import Sex from '../Constants/Sex'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: User
@@ -27,7 +28,7 @@ const Avatar = ({ user, size, ...props }: Props) => {
     let url = user.avatar
 
     if (!url) {
-        const sex = user.personal.sex === true ? 'Female' : 'Male'
+        const sex = user.personal.sex === Sex.FEMALE ? 'Female' : 'Male'
         url = `/img/User/Avatar/${sex}.svg`
     }
 

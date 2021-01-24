@@ -3,7 +3,7 @@ from bson.objectid import ObjectId
 
 from constants.Database import *
 from constants.Star import *
-from constants.User import UserRole
+from constants.User import UserRole, Sex
 from utils import time
 from service.Security import SecurityService
 
@@ -316,7 +316,7 @@ global_stats_dao = Dao(GlobalStats, stats="")
 
 
 class UserPersonal(EmbeddedDocument):
-    sex = BooleanField()
+    sex = StringField(enum=Sex)
     country = StringField(max_length=10)
     birth = LongField()
     contact = StringField(max_length=50)

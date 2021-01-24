@@ -7,6 +7,7 @@ import { Credentials, EditedUser, ExternalCredentials, Identity, RegistrationCre
 import { Requests } from '../../Async'
 import { SegmentData } from '../../Database/types'
 import { Action } from '../../Data/Utils/Redux'
+import Sex from '../Constants/Sex'
 
 const onlineUsers = [] as User[]
 
@@ -25,7 +26,7 @@ for (let i = 0; i < 38; i++) {
         personal: {
             country: 'CZ',
             birth: 456,
-            sex: true
+            sex: Sex.MALE
         },
         created: new Date().getTime(),
         modified: new Date().getTime(),
@@ -62,7 +63,13 @@ const Slice = Redux.slice(
             state.identity.payload = null
             Cookies.remove(Cookie.IDENTITY.name)
         }),
-        edit: async<[string, EditedUser], User>('editedUser', ([userId, user]) => Requests.put(`users/${userId}`, user))
+        edit: async<[string, EditedUser], User>('editedUser', ([userId, user]) => Requests.put(`users/${userId}`, user), {
+            onSuccess: (state, action) => {
+                const identity: Identity = { ...state.identity.payload!, ...action.payload }
+                state.identity.payload = identity
+                Cookies.set(Cookie.IDENTITY.name, identity, { expires: Cookie.IDENTITY.expiration })
+            }
+        })
     })
 )
 
