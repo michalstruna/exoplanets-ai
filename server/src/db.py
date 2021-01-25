@@ -1,4 +1,7 @@
-from mongoengine import *
+from mongoengine.fields import BinaryField, BooleanField, DictField, EmailField, EmbeddedDocumentField, EmbeddedDocumentListField, FloatField, ImageField, IntField, ListField, LongField, MapField, ReferenceField, StringField, URLField
+from mongoengine.errors import DoesNotExist, ValidationError
+from mongoengine.base import ObjectIdField
+from mongoengine.document import Document, EmbeddedDocument, EmbeddedDocumentList
 from bson.objectid import ObjectId
 
 from constants.Database import *
@@ -6,9 +9,10 @@ from constants.Star import *
 from constants.User import UserRole, Sex
 from utils import time
 from service.Security import SecurityService
-
+from service.File import FileService
 
 security_service = SecurityService()
+file_service = FileService()
 
 stats_fields = ("data", "items", "planets", "time")
 global_stats_fields = (*stats_fields, "volunteers", "stars")
@@ -95,9 +99,6 @@ class Dao:
         if with_return:
             return self.get(filter)
 
-    def update_all(self):
-        pass  # TODO
-
     def delete_by_id(self, id):
         return self.collection(id=id).delete()
 
@@ -158,7 +159,7 @@ class Dao:
             self.collection.pre_modify(document)
 
         return document
-
+        
 
 class BaseDocument(Document):
     meta = {"allow_inheritance": True, "abstract": True}
@@ -167,6 +168,9 @@ class BaseDocument(Document):
         pass
 
     def pre_modify(self):
+        pass
+
+    def post_modify(self, old):
         pass
 
 
@@ -330,7 +334,7 @@ class User(LogDocument):
     password = BinaryField(max_length=200)
     role = IntField(required=True, default=UserRole.AUTH.value, enum=UserRole.values())
     fb_id = StringField(max_length=200, unique=True, sparse=True)
-    avatar = ImageField(max_length=200)
+    avatar = StringField(max_length=50)
     personal = EmbeddedDocumentField(UserPersonal)
     stats = EmbeddedDocumentListField(Stats, default=[])
     online = BooleanField(required=True, default=False)
@@ -363,12 +367,16 @@ class User(LogDocument):
 
                 self["password"] = security_service.hash(self["password"])
 
+        if "avatar" in self:
+            if self["avatar"]:
+                self["avatar"] = file_service.save(self["avatar"], FileService.Type.AVATAR)
+
+    def post_modify(self, old):  # TODO: Call.
+        if (self is None and "avatar" is old and old["avatar"]) or "avatar" in self:  # Avatar changed
+            file_service.delete(old["avatar"], FileService.Type.AVATAR)
+
 
 user_dao = Dao(User, stats="stats")
 
-
 # TODO: Star aliases.
-# TODO: map_units dataset?
-# TODO: LocalDataset - upload file to DB.
-# TODO: Radial velocity datasets.
 # TODO: Star metalicity?
