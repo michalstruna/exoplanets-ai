@@ -63,7 +63,7 @@ const Slice = Redux.slice(
             state.identity.payload = null
             Cookies.remove(Cookie.IDENTITY.name)
         }),
-        edit: async<[string, EditedUser], User>('editedUser', ([userId, user]) => Requests.put(`users/${userId}`, user), {
+        edit: async<[string, FormData | EditedUser], User>('editedUser', ([userId, user]) => Requests.put(`users/${userId}`, user), {
             onSuccess: (state, action) => {
                 const identity: Identity = { ...state.identity.payload!, ...action.payload }
                 state.identity.payload = identity

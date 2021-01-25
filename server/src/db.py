@@ -330,7 +330,7 @@ class User(LogDocument):
     password = BinaryField(max_length=200)
     role = IntField(required=True, default=UserRole.AUTH.value, enum=UserRole.values())
     fb_id = StringField(max_length=200, unique=True, sparse=True)
-    avatar = StringField(max_length=200)
+    avatar = ImageField(max_length=200)
     personal = EmbeddedDocumentField(UserPersonal)
     stats = EmbeddedDocumentListField(Stats, default=[])
     online = BooleanField(required=True, default=False)

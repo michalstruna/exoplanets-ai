@@ -6,7 +6,7 @@ from _pytest.python_api import ApproxScalar
 from app_factory import create_app
 from constants.Dataset import DatasetPriority, DatasetType
 from constants.Error import ErrorType
-from constants.User import UserRole
+from constants.User import UserRole, Sex
 from service.Dataset import DatasetService
 from service.User import UserService
 from utils import time
@@ -225,7 +225,7 @@ class Creator:
 
     @staticmethod
     def personal(id=0):
-        return {"sex": id % 2 == 0, "country": f"Country{id}", "birth": id, "contact": f"mail{id}@user.cz", "text": f"aby{id}"}
+        return {"sex": [Sex.MALE.value, Sex.FEMALE.value][id % 2], "country": f"Country{id}", "birth": id, "contact": f"mail{id}@user.cz", "text": f"aby{id}"}
 
     @staticmethod
     def user(id=0, new=False, update=False, role=UserRole.AUTH, token=False, name=None, stats=None, personal=None, **kwargs):

@@ -5,6 +5,7 @@ import { useFormContext } from 'react-hook-form'
 import { Color, Duration, size } from '../../Style'
 import FieldType from '../Constants/FieldType'
 import { TextValue } from '../../Data'
+import ImageUpload from './ImageUpload'
 
 interface Option {
     text: string
@@ -138,7 +139,7 @@ const CheckContainer = Styled.div`
 
 const Field = ({ label, name, type, required, invalid, validator, placeholder, options, ...props }: Props) => {
 
-    const { register, errors, getValues } = useFormContext()
+    const { register, errors, getValues, setValue: setFormValue } = useFormContext()
     const [value, setValue] = React.useState<string>(getValues(name) || '')
 
     const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -192,6 +193,16 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                         placeholder={placeholder}
                         ref={register(registerOptions)}
                         onChange={handleChange} />
+                )
+            case FieldType.IMAGE:
+                return (
+                    <ImageUpload
+                        {...props as any}
+                        name={name}
+                        onChange={e => {
+                            setFormValue(e.target.files?.[0] as any)
+                            handleChange(e)
+                        }} />
                 )
             default:
                 return (

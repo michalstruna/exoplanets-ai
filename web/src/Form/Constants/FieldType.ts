@@ -40,6 +40,11 @@ export default {
     CHECKBOX: {
         name: 'checkbox',
         validator: () => true
+    },
+
+    IMAGE: {
+        name: 'file',
+        validator: () => true
     }
 
 }

@@ -10,7 +10,7 @@ import { image, dots, size } from '../../Style'
 import { logout, edit } from '../Redux/Slice'
 import Avatar from './Avatar'
 import { Dates } from '../../Native'
-import { Field, Form } from '../../Form'
+import { Field, Form, ImageUpload } from '../../Form'
 import { FormContextValues } from 'react-hook-form'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
@@ -248,6 +248,7 @@ const UserForm = ({ user, toggle, ...props }: Props) => {
 
     const actions = useActions({ edit })
     const strings = useStrings()
+    const [files, setFile] = React.useState({})
 
     const handleSubmit = async (values: EditedUser, form: FormContextValues<EditedUser>) => {
         for (const i in values.personal) {
@@ -268,7 +269,14 @@ const UserForm = ({ user, toggle, ...props }: Props) => {
             values.personal.birth = new Date(values.personal.birth).getTime()
         }
 
-        const action = await actions.edit([user._id, values])
+        values = { ...values, ...files }
+        const formData = new FormData()
+
+        Object.keys(values).forEach(key => {
+            formData.append(key, values[key as keyof EditedUser] as string | Blob)
+        })
+
+        const action = await actions.edit([user._id, formData])
 
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, strings.error)
@@ -289,7 +297,7 @@ const UserForm = ({ user, toggle, ...props }: Props) => {
         <Form onSubmit={handleSubmit} defaultValues={defaultValues}>
             <Root {...props}>
                 <EditLeft>
-                    <Avatar user={user} size='7.4rem' />
+                    <ImageUpload onChange={e => setFile({ ...files, avatar: e.target.files?.[0] })} />
                     <Field name='old_password' type={Field.Type.PASSWORD} label={strings.auth.oldPassword} />
                     <Field name='password' type={Field.Type.PASSWORD} label={strings.auth.password} />
                 </EditLeft>
