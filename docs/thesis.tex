@@ -1214,6 +1214,70 @@ K~zamezení toho, aby byly tyto položky vedeny jako dvě různé soustavy je nu
 
 \subsection{Instalace a spuštění aplikace}
 
+Běžící aplikace je dostupná na adrese \url{https://exoplanets.now.sh}, dokumentace REST API pak na \url{https://exoplanets-server.herokuapp.com/api-docs}. Pro spuštění aplikace na lokálním počítači je třeba:
+
+{
+\tab{Požadavky pro spuštění aplikace}{
+	\begin{tabular}{|l|l|}
+		\hline	
+		\rowcolor{lightgray}
+		Požadavek & Ke stažení \\	
+		\hline	
+		Python 3 & \url{https://www.python.org/downloads} \\
+		\hline
+		Node.js & \url{https://nodejs.org/en/download} \\
+		\hline
+		mongoDB & \url{https://www.mongodb.com/try/download/community} \\
+		\hline
+	\end{tabular}
+}
+
+Jakmile jsou všechny požadavky nainstalovány, je možné aplikaci sestavit. V~kořenovém adresáři projektu je spustitelný soubor \code{installer.sh}, popř. \code{installer.exe}, po jehož spuštění se nainstalují všechny závislosti a~dojde k~sestavení serveru, webové i~klientské aplikace. Server je následně možné spustit z~terminálu (\code{http://localhost:5000}).
+
+\lstinputlisting[caption={Spuštění serveru.}]{codes/run_server.txt}
+
+\vspace{-5pt}
+
+Sestavená webová aplikace je v~adresáři \code{web/build}. Lze ji umístit na  vlastní webový server s~přístupovým bodem \code{index.html} nebo tento soubor přímo spustit v~prohlížeči.
+
+\vspace{-5pt}
+
+\subsubsection{Konfigurace}
+
+Pokud není výchozí konfigurace vyhovující, můžeme před sestavením některé parametry serveru změnit v~souboru \code{server/config/base.cfg}.
+
+\lstinputlisting[caption={Výchozí konfigurace serveru.}]{codes/default_server_config.txt}
+
+\vspace{-10pt}
+
+Jestliže chceme mít více oddělených konfigurací pro různé režimy, můžeme vytvořit vlastní konfigurační soubory ve tvaru \code{server/config/my\_custom\_mode.cfg}. Pro využití této konfigurace je pak třeba před spuštěním serveru nastavit proměnnou prostředí \code{env} na příslušnou hodnotu.
+
+\lstinputlisting[caption={Spuštění serveru s vlastní konfigurací.}]{codes/run_server_custom_config.txt}
+
+V~souboru \code{web/src/Async/Constants/Config.ts} také můžeme upravit adresu serveru, se kterým bude komunikovat webová aplikace.
+
+\lstinputlisting[caption={Výchozí konfigurace webové aplikace.}]{codes/default_web_config.txt}
+
+\vspace{-25pt}
+
+\subsubsection{Vývoj}
+
+Postup výše nám umožní jednorázově sestavit a~spustit aplikaci. Pokud však chceme aplikaci dále vyvíjet, je vhodné ji spustit ve vývojovém režimu. To zajistí výpis všech chyb i~varování do konzole, automatický restart serveru při změně kódu a~taktéž oddělenou databázi od produkčních dat. Webová aplikace bude dostupná na adrese \url{http://localhost:3000}.
+
+\lstinputlisting[caption={Spuštění v~režimu pro vývoj.}]{codes/run_server_dev_config.txt}
+
+\vspace{-20pt}
+
+\subsubsection{Testování a~validace}
+
+Serverová část je otestována integračními testy s~využitím knihovny \code{pytest}. Tyto testy je možné spustit buď všechny zároveň, nebo vybrat pouze testy ze specifikovaného souboru. Výsledek jednotlivých testů bude zobrazen v~terminálu i~s~popisem případných chyb.
+
+\lstinputlisting[caption={Spuštění testů aplikace.}]{codes/test_server.txt}
+
+Stejně tak je možné i~otestovat úspěšnost aplikace při hledání exoplanet v~distribuovaném prostředí. V~tomto případě ale bude proces trvat několik desítek minut. Dojde ke stažení a~zpracování několika položek z~datasetu od NASA a~následně se porovnají dosažené výsledky s~těmi očekávanými. Výsledný report bude uložen do~souboru \code{server/test/validation.txt}.
+
+\lstinputlisting[caption={Spuštění validace aplikace.}]{codes/validate.txt}
+
 \section{Rozvržení aplikace}
 
 \subsection{Přehled}
