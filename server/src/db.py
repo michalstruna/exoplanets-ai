@@ -367,12 +367,8 @@ class User(LogDocument):
 
                 self["password"] = security_service.hash(self["password"])
 
-        if "avatar" in self:
-            if self["avatar"]:
-                self["avatar"] = file_service.save(self["avatar"], FileService.Type.AVATAR)
-
     def post_modify(self, old):  # TODO: Call.
-        if (self is None and "avatar" is old and old["avatar"]) or "avatar" in self:  # Avatar changed
+        if (self is None and "avatar" in old and old["avatar"]) or "avatar" in self:  # Avatar changed
             file_service.delete(old["avatar"], FileService.Type.AVATAR)
 
 

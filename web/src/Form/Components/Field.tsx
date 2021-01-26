@@ -5,12 +5,6 @@ import { useFormContext } from 'react-hook-form'
 import { Color, Duration, size } from '../../Style'
 import FieldType from '../Constants/FieldType'
 import { TextValue } from '../../Data'
-import ImageUpload from './ImageUpload'
-
-interface Option {
-    text: string
-    value: string | number
-}
 
 interface Type {
     name: string
@@ -193,16 +187,6 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                         placeholder={placeholder}
                         ref={register(registerOptions)}
                         onChange={handleChange} />
-                )
-            case FieldType.IMAGE:
-                return (
-                    <ImageUpload
-                        {...props as any}
-                        name={name}
-                        onChange={e => {
-                            setFormValue(e.target.files?.[0] as any)
-                            handleChange(e)
-                        }} />
                 )
             default:
                 return (

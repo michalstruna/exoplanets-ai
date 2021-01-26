@@ -9,6 +9,7 @@ from .Base import Service
 from .Security import SecurityService
 import db
 from .Stats import GlobalStatsService
+from service.File import FileService
 
 
 class UserService(Service):
@@ -17,6 +18,7 @@ class UserService(Service):
         super().__init__(db.user_dao)
         self.security_service = SecurityService()
         self.stats_service = GlobalStatsService()
+        self.file_service = FileService()
 
     def local_sign_up(self, credentials):
         self.add({
@@ -56,7 +58,7 @@ class UserService(Service):
             user = self.add({
                 "name": identity["name"],
                 "fb_id": identity["id"],
-                "avatar": identity["picture"]["data"]["url"],
+                "avatar": self.file_service.save_from_url(identity["picture"]["data"]["url"], FileService.Type.AVATAR),
                 "personal": {
                     "sex": Sex.get_by_name(identity["gender"]),
                     "birth": datetime.timestamp(datetime.strptime(identity["birthday"], "%d/%m/%Y")) * 1000,

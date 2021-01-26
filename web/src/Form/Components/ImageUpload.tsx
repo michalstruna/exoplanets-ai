@@ -1,10 +1,13 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Color, Duration, size } from '../../Style'
+
+import { Color, Duration, image, opacityHover, size } from '../../Style'
+import { Avatar } from '../../User'
 
 
-interface Props extends React.ComponentPropsWithoutRef<'input'> {
-
+interface Props extends Omit<React.ComponentPropsWithoutRef<'input'>, 'onChange'> {
+    defaultValue?: string
+    onChange?: (value: File | null) => void
 }
 
 interface RootProps {
@@ -28,26 +31,33 @@ const Input = Styled.input`
     visibility: hidden;
 `
 
-const Preview = Styled.img`
-    max-width: 100%;
-    max-height: 100%;
+const DeleteButton = Styled.button`
+    ${image('Controls/Delete.svg', 'auto 70%')}
+    ${size('1.5rem')}
+    ${opacityHover()}
+    background-color: ${Color.SEMITRANSPARENT_DARKEST};
+    position: absolute;
+    right: 0rem;
+    top: 0rem;
 `
 
-const ImageUpload = ({ ...props }: Props) => {
+const ImageUpload = ({ defaultValue, ...props }: Props) => {
 
-    const [preview, setPreview] = React.useState<string>()
+    const [preview, setPreview] = React.useState<string | undefined>(defaultValue)
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0]
-
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation()
+        event.preventDefault()
+        const file = (event.target as HTMLInputElement).files?.[0] || null
         setPreview(file ? URL.createObjectURL(file) : undefined)
-        props.onChange?.(event)
+        props.onChange?.(file)
     }
 
     return (
         <Root onClick={e => e.stopPropagation()}>
             <Input {...props} type='file' onChange={handleChange} />
-            {preview && <Preview src={preview} />}
+            {preview && <Avatar src={preview} size='100%' />}
+            {preview && <DeleteButton type='button' onClick={handleChange} />}
         </Root>
     )
 

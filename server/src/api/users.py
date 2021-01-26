@@ -31,7 +31,7 @@ def map_props(prop):
 
 
 user_personal = api.ns.model("UserPersonal", {
-    "sex": fields.String(enum=Sex),
+    "sex": fields.String(enum=Sex.values()),
     "country": fields.String(max_length=10),
     "birth": fields.Integer(),
     "contact": fields.String(),
@@ -51,6 +51,7 @@ user = api.ns.inherit("User", logged_item, {
 
 updated_user = api.ns.model("UpdatedUser", {
     "personal": fields.Nested(user_personal),
+    "avatar": fields.String,
     "password": fields.String,
     "old_password": fields.String
 })

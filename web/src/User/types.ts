@@ -14,7 +14,7 @@ export type UserPersonal = {
 export type User = LogObject & StatsObject & {
     _id: string
     name: string
-    avatar?: string,
+    avatar?: string
     role: UserRole
     online?: boolean  // TODO: Remove?
     personal: UserPersonal
@@ -26,7 +26,7 @@ export type User = LogObject & StatsObject & {
 
 export type EditedUser = {
     personal: UserPersonal
-    avatar?: string
+    avatar?: string | null
     old_password?: string
     password?: string
 }

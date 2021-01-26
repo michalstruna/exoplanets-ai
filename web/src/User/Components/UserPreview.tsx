@@ -5,7 +5,7 @@ import Countries from 'emoji-flags'
 import { Diff, IconText, MiniPrimaryButton } from '../../Layout'
 import Auth from './Auth'
 import { EditedUser, User, UserPersonal } from '../types'
-import { Units, UnitType, useActions, useStrings } from '../../Data'
+import { Units, UnitType, useActions, useStrings, uploadFile } from '../../Data'
 import { image, dots, size } from '../../Style'
 import { logout, edit } from '../Redux/Slice'
 import Avatar from './Avatar'
@@ -246,9 +246,9 @@ const Profile = ({ user, toggle, ...props }: Props) => {
 
 const UserForm = ({ user, toggle, ...props }: Props) => {
 
-    const actions = useActions({ edit })
+    const actions = useActions({ edit, uploadFile })
     const strings = useStrings()
-    const [files, setFile] = React.useState({})
+    const [avatar, setAvatar] = React.useState<File | null>()
 
     const handleSubmit = async (values: EditedUser, form: FormContextValues<EditedUser>) => {
         for (const i in values.personal) {
@@ -269,17 +269,22 @@ const UserForm = ({ user, toggle, ...props }: Props) => {
             values.personal.birth = new Date(values.personal.birth).getTime()
         }
 
-        values = { ...values, ...files }
-        const formData = new FormData()
+        if (avatar) {
+            const uploaded = await actions.uploadFile([avatar, 'avatar'])
 
-        Object.keys(values).forEach(key => {
-            formData.append(key, values[key as keyof EditedUser] as string | Blob)
-        })
+            if (!uploaded.error) {
+                values.avatar = uploaded.payload
+            }
+        } else if (avatar === null) {
+            values.avatar = avatar
+        }
 
-        const action = await actions.edit([user._id, formData])
+        const action = await actions.edit([user._id, values])
 
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, strings.error)
+        } else {
+            toggle?.()
         }
     }
 
@@ -297,7 +302,7 @@ const UserForm = ({ user, toggle, ...props }: Props) => {
         <Form onSubmit={handleSubmit} defaultValues={defaultValues}>
             <Root {...props}>
                 <EditLeft>
-                    <ImageUpload onChange={e => setFile({ ...files, avatar: e.target.files?.[0] })} />
+                    <ImageUpload onChange={setAvatar} defaultValue={user.avatar} />
                     <Field name='old_password' type={Field.Type.PASSWORD} label={strings.auth.oldPassword} />
                     <Field name='password' type={Field.Type.PASSWORD} label={strings.auth.password} />
                 </EditLeft>
