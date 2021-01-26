@@ -51,6 +51,10 @@ export const formatDistance = (strings: any, date1: number, date2?: number, form
                 if (val > 0) {
                     rest -= val * ms[i]
                     result.push(`${val} ${strings.units.time[units[i]]}`)
+
+                    if (result.length === 2) {
+                        break
+                    }
                 }
             }
         }

@@ -12,6 +12,7 @@ import Avatar from './Avatar'
 import { Dates } from '../../Native'
 import { Field, Form, ImageUpload } from '../../Form'
 import { FormContextValues } from 'react-hook-form'
+import { Format } from '../../Native/Utils/Dates'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: User
@@ -210,11 +211,11 @@ const Profile = ({ user, toggle, ...props }: Props) => {
                 <Item title='Aktivní'
                       value={user.online ? 'Právě teď' : 'Před ' + Dates.formatDistance(strings, user.modified)}
                       icon='Controls/Active.svg' />
-                <Item title='Členem' value={Dates.formatDistance(strings, user.created, new Date().getTime())}
+                <Item title='Členem' value={Dates.formatDistance(strings, user.created, undefined, Format.EXACT)}
                       icon='User/Origin.svg' />
                 {user.personal.birth || user.personal.sex !== null ? <IconText
                     icon={user.personal.sex ? `User/${{F: 'Female', M: 'Male'}[user.personal.sex]}.svg` : undefined}
-                    text={user.personal.birth ? Dates.formatDistance(strings, user.personal.birth) : ''} /> : null}
+                    text={user.personal.birth ? Dates.formatDistance(strings, user.personal.birth, undefined, Format.EXACT) : ''} /> : null}
                 {country && (
                     <Item title={country.code} icon={country.emoji} />
                 )}
