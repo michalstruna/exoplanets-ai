@@ -343,8 +343,9 @@ export default {
         time: { [CS]: 'Výpoč. čas', [EN]: 'Comput. time' },
         country: { [CS]: 'Země', [EN]: 'Country' },
         sex: { [CS]: 'Pohlaví', [EN]: 'Sex' },
-        birth: { [CS]: 'Věk', [EN]: 'Age' },
+        birth: { [CS]: 'Narození', [EN]: 'Birth' },
         contact: { [CS]: 'Kontakt', [EN]: 'Contact' },
+        age: { [CS]: 'Věk', [EN]: 'Age' },
 
         sexName: {
             [Sex.FEMALE]: { [CS]: 'Žena', [EN]: 'Female' },

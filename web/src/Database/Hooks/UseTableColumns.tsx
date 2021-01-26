@@ -9,23 +9,24 @@ import DbTable from '../Constants/DbTable'
 import { Fraction, IconText, Level, ProgressBar } from '../../Layout'
 import { Curve } from '../../Stats'
 import { Color, Duration, image, size } from '../../Style'
-import { getDatasets, getStars, deleteStar, getPlanets, resetDataset } from '../Redux/Slice'
+import { deleteStar, getDatasets, getPlanets, getStars, resetDataset } from '../Redux/Slice'
 import { Dates, Numbers } from '../../Native'
 import LifeType from '../Constants/LifeType'
 import * as Col from '../Utils/Col'
+import { MultiValue } from '../Utils/Col'
 import { Dataset, PlanetData, PlanetProperties, StarData } from '../types'
 import Detail from '../Components/TableItemDetail'
 import { Cursor, Units, UnitType, useStrings } from '../../Data'
-import { Value, deleteDataset, useTable } from '../index'
+import { deleteDataset, useTable, Value } from '../index'
 import PlanetStatus from '../Constants/PlanetStatus'
 import BodyType from '../Components/BodyType'
 import { Link, Url } from '../../Routing'
-import { MultiValue } from '../Utils/Col'
 import DatasetForm from '../Components/DatasetForm'
 import DatasetsSelectionForm from '../Components/DatasetsSelectionForm'
 import { getUsers, User } from '../../User'
 import Diff from '../../Layout/Components/Diff'
 import Avatar from '../../User/Components/Avatar'
+import Sex from '../../User/Constants/Sex'
 
 const DateTime = ({ s }: { s: number }) => (
     <>
@@ -263,8 +264,8 @@ export default (): Structure => {
                                 { name: 'created', format: (val, user) => <DateTime s={val} /> },
                                 { name: 'modified', format: (val, user) => Dates.formatDistance(strings, val) },
                                 { name: 'country', format: (val, user) => user.personal.country && (Countries.countryCode(user.personal.country).emoji + ' ' + user.personal.country) },
-                                { name: 'sex', format: (val, user) => typeof user.personal.sex === 'boolean' && (user.personal.sex ? <IconText icon='User/Female.svg' text={users.female} />  : <IconText icon='User/Male.svg' text={users.male} />) },
-                                { name: 'birth', format: (val, user) => user.personal.birth && Dates.formatDistance(strings, user.personal.birth * 1000) },
+                                { name: 'sex', format: (val, user) => user.personal.sex && <IconText icon={`User/${user.personal.sex === Sex.FEMALE ? 'Female' : 'Male'}.svg`} text={users.sexName[user.personal.sex!]} /> },
+                                { name: 'birth', title: users.age, format: (val, user) => user.personal.birth && Dates.formatDistance(strings, user.personal.birth) },
                                 { name: 'contact', format: (val, user) => <TextLink pathname={user.personal.contact}>{user.personal.contact}</TextLink>, width: 1.75 },
                             ], {
                                 strings: users,
