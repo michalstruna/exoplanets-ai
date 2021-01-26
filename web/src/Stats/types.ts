@@ -6,22 +6,29 @@ export interface Stats {
     lcs: number
 }
 
-export interface ExtendedStats extends Stats {
-    volunteers: number
-}
-
-export interface AggregatedStatsItem {
+export interface StatsItem {
     value: number
     diff: number
 }
 
+export interface GlobalAggregatedStats {
+    planets: StatsItem
+    volunteers: StatsItem
+    time: StatsItem
+    stars: StatsItem
+    data: StatsItem
+    items: StatsItem
+}
+
 export interface AggregatedStats {
-    planets: AggregatedStatsItem
-    volunteers: AggregatedStatsItem
-    hours: AggregatedStatsItem
-    stars: AggregatedStatsItem
-    gibs: AggregatedStatsItem
-    curves: AggregatedStatsItem
+    planets: StatsItem
+    time: StatsItem
+    data: StatsItem
+    items: StatsItem
+}
+
+export type StatsObject = {
+    stats: AggregatedStats
 }
 
 export interface PlotAxis {

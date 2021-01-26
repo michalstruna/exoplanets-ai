@@ -119,16 +119,16 @@ for (let i = 0; i < 11; i++) {
             avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png',
             name: ('Michal Struna ' + i).repeat(Math.floor(Math.random() * 2 + 1)),
             role: UserRole.AUTHENTICATED,
-            score: {
-                rank: 193,
-                planets: 216,
-                stars: 512,
-                time: 337
+            stats: {
+                planets: { value: 0, diff: 0 },
+                items: { value: 0, diff: 0 },
+                time: { value: 0, diff: 0 },
+                data: { value: 0, diff: 0 }
             },
             personal: {
                 country: 'CZ',
                 birth: 456,
-                isMale: true
+                sex: false
             }
         }
     })

@@ -1,1 +1,4 @@
+bcrypt
+
 pytest-flask
+pytest-pythonpath

@@ -17,20 +17,17 @@ const setCoords = () => ({ x: window.innerWidth - 70, y: 25 })
 const AuthControl = ({  }: Props) => {
 
     const identity = useIdentity()
+    const isLoggedIn = !!identity.payload
 
     return (
-        <Auth
-            role={UserRole.UNAUTHENTICATED}
-            when={() => (
-                <Tooltip render={() => <AuthForm />} setCoords={setCoords}>
-                    <IconText icon='User/User.svg' text='Přihlášení' onClick={() => null} />
-                </Tooltip>
-            )}
-            otherwise={() => (
-                <Tooltip render={() => <UserPreview user={identity.payload} />} setCoords={setCoords}>
-                    <IconText icon='User/User.svg' text={identity.payload.name} onClick={() => null} />
-                </Tooltip>
-            )} />
+        <Tooltip id='login'
+            render={() => isLoggedIn ? <UserPreview user={identity.payload} /> : <AuthForm />}
+            setCoords={setCoords}>
+            <IconText
+                icon='User/User.svg'
+                text={isLoggedIn ? identity.payload.name : 'Přihlášení'}
+                onClick={() => null} />
+        </Tooltip>
     )
 
 }

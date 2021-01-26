@@ -1,28 +1,32 @@
 import React from 'react'
-import Styled from 'styled-components'
+import Styled, { css } from 'styled-components'
 import Urls from 'url'
-import prettyBytes from 'pretty-bytes'
 import { pascalCase } from 'change-case'
 import { useDispatch } from 'react-redux'
+import Countries from 'emoji-flags'
 
 import DbTable from '../Constants/DbTable'
 import { Fraction, IconText, Level, ProgressBar } from '../../Layout'
 import { Curve } from '../../Stats'
 import { Color, Duration, image, size } from '../../Style'
-import { getDatasets, getStars, deleteStar, getPlanets, resetDataset } from '../Redux/Slice'
+import { deleteStar, getDatasets, getPlanets, getStars, resetDataset } from '../Redux/Slice'
 import { Dates, Numbers } from '../../Native'
 import LifeType from '../Constants/LifeType'
 import * as Col from '../Utils/Col'
+import { MultiValue } from '../Utils/Col'
 import { Dataset, PlanetData, PlanetProperties, StarData } from '../types'
 import Detail from '../Components/TableItemDetail'
-import { Cursor, useStrings } from '../../Data'
-import { Value, deleteDataset, useTable } from '../index'
+import { Cursor, Units, UnitType, useStrings } from '../../Data'
+import { deleteDataset, useTable, Value } from '../index'
 import PlanetStatus from '../Constants/PlanetStatus'
 import BodyType from '../Components/BodyType'
 import { Link, Url } from '../../Routing'
-import { MultiValue } from '../Utils/Col'
 import DatasetForm from '../Components/DatasetForm'
 import DatasetsSelectionForm from '../Components/DatasetsSelectionForm'
+import { getUsers, User } from '../../User'
+import Diff from '../../Layout/Components/Diff'
+import Avatar from '../../User/Components/Avatar'
+import Sex from '../../User/Constants/Sex'
 
 const DateTime = ({ s }: { s: number }) => (
     <>
@@ -88,7 +92,7 @@ export default (): Structure => {
     const dispatch = useDispatch()
     const table = useTable()
     const strings = useStrings()
-    const { stars, planets, datasets } = strings
+    const { stars, planets, datasets, users } = strings
 
     return React.useMemo(() => {
         switch (table) {
@@ -224,9 +228,12 @@ export default (): Structure => {
                             columns: Col.list<Dataset>([
                                 { name: 'type', format: val => <ItemImage image={`Database/Dataset/${pascalCase(val)}.svg`} />, width: '4rem', headerIcon: false },
                                 { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.datasets.types[item.type]} />, width: 1.5, headerIcon: false },
-                                { name: 'total_size', format: Numbers.format },
-                                { name: 'processed', format: (val, item) => <ProgressBar range={item.total_size} value={item.total_size - item.current_size} label={prettyBytes(item.processed || 0)} title={`${Numbers.format(item.total_size - item.current_size)} / ${Numbers.format(item.total_size)}`} /> },
-                                { name: 'time', format: val => Dates.formatDistance(strings, 0, val, Dates.Format.LONG) },
+
+                                { name: 'planets', format: (val, item) => <Diff {...item.stats.planets} /> },
+                                { name: 'data', format: (val, item) => <ProgressBar range={item.size} value={[item.stats.items.value, item.stats.items.value - item.stats.items.diff]} label={<Diff {...item.stats.data} format={val => Units.format(val, UnitType.MEMORY)} />} title={`${Numbers.format(item.stats.items.value)} / ${Numbers.format(item.size)}`} />, width: 1.5 },
+                                { name: 'time', format: (val, item) => <Diff {...item.stats.time} format={val => Units.format(val, UnitType.TIME)} />},
+
+                                { name: 'size', format: Numbers.format },
                                 { name: 'created', format: val => <DateTime s={val} />, title: strings.properties.published },
                                 { name: 'modified', format: val => Dates.formatDistance(strings, val) },
                                 { name: 'priority', format: val => strings.datasets.priorities[val], styleMap: priorityStyle },
@@ -241,6 +248,32 @@ export default (): Structure => {
                         }
                     ],
                     getter: getDatasets,
+                    rowHeight: () => 72
+                }
+            case DbTable.USERS:
+                return {
+                    levels: [
+                        {
+                            columns: Col.list<User>([
+                                { name: 'role', format: (val, item) => <Avatar user={item} size='3.5rem' />, width: '5rem', headerIcon: false },
+                                { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.users.roles[item.role]} />, width: 1.5, headerIcon: false },
+                                { name: 'planets', format: (val, item) => <Diff {...item.stats.planets} /> },
+                                { name: 'items', format: (val, item) => <Diff {...item.stats.items} /> },
+                                { name: 'data', format: (val, item) => <Diff {...item.stats.data} format={val => Units.format(val, UnitType.MEMORY)}  /> },
+                                { name: 'time', format: (val, item) => <Diff {...item.stats.time} format={val => Units.format(val, UnitType.TIME)} />},
+                                { name: 'created', format: (val, user) => <DateTime s={val} /> },
+                                { name: 'modified', format: (val, user) => Dates.formatDistance(strings, val) },
+                                { name: 'country', format: (val, user) => user.personal.country && (Countries.countryCode(user.personal.country).emoji + ' ' + user.personal.country) },
+                                { name: 'sex', format: (val, user) => user.personal.sex && <IconText icon={`User/${user.personal.sex === Sex.FEMALE ? 'Female' : 'Male'}.svg`} text={users.sexName[user.personal.sex!]} /> },
+                                { name: 'birth', title: users.age, format: (val, user) => user.personal.birth && Dates.formatDistance(strings, user.personal.birth) },
+                                { name: 'contact', format: (val, user) => <TextLink pathname={user.personal.contact}>{user.personal.contact}</TextLink>, width: 1.75 },
+                            ], {
+                                strings: users,
+                                indexColumnName: 'index'
+                            })
+                        }
+                    ],
+                    getter: getUsers,
                     rowHeight: () => 72
                 }
         }
@@ -264,6 +297,12 @@ interface ItemImageProps {
 
 const ItemImage = Styled.div<ItemImageProps>`
     ${props => size(props.large ? '4rem' : '2.5rem')}
-    ${props => image(props.image)}
+    
+    ${props => props.image.startsWith('http') ? css`
+        ${image()}
+        background-image: url(${props.image});
+    ` : css`
+        ${image(props.image)}
+    `}
     display: inline - block
 `

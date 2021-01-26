@@ -1,24 +1,38 @@
 import uuid
+import requests
+import os
+from mimetypes import guess_extension
 
+from constants.File import FileType
 
 class FileService:
 
-    def generate_name(self, ext="png"):
-        return str(uuid.uuid4()) + "." + ext
+    Type = FileType
 
-    def save(self, data, dir):
-        name = self.generate_name()
+    def generate_name(self, ext):
+        return str(uuid.uuid4()) + ext
 
-        with open(dir + name, "wb") as f:
-            f.write(data)
+    def save_from_storage(self, storage, tag):
+        name = self.save(storage.read(), tag, storage.content_type)
+        storage.close()
+        return name
+
+    def save_from_url(self, url, tag):
+        res = requests.get(url)
+        return self.save(res.content, tag, res.headers["Content-Type"])
+
+    def save(self, file, tag, content_type):
+        extension = guess_extension(content_type)
+        name = self.generate_name(extension)
+        path = os.path.join("public", tag if type(tag) == str else tag.value, name)
+
+        with open(path, "wb") as f:
+            f.write(file)
+
+        f.close()
 
         return name
 
-    def save_lc(self, lc):
-        return self.save(lc, "public/lc/")
-
-    def save_lv(self, lc):
-        return self.save(lc, "public/lv/")
-
-    def save_gv(self, lc):
-        return self.save(lc, "public/gv/")
+    def delete(self, name, tag):
+        path = os.path.join("public", tag.value, name)
+        os.remove(path)

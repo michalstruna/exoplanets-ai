@@ -1,39 +1,15 @@
 import Cookies from 'js-cookie'
 
 import { Cookie } from '../../Native'
-import { Redux } from '../../Data'
+import { Cursor, Redux } from '../../Data'
 import UserRole from '../Constants/UserRole'
-import { Credentials, ExternalCredentials, Identity, UserSimple } from '../types'
+import { Credentials, EditedUser, ExternalCredentials, Identity, RegistrationCredentials, User } from '../types'
 import { Requests } from '../../Async'
+import { SegmentData } from '../../Database/types'
+import { Action } from '../../Data/Utils/Redux'
+import Sex from '../Constants/Sex'
 
-const demoIdentity: Identity = {
-    _id: 'abc',
-    token: 'def',
-    name: 'Michal Struna',
-    avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/1200px-Google_Earth_icon.svg.png',
-    role: UserRole.ADMIN,
-    score: {
-        rank: 193,
-        planets: 216,
-        stars: 512,
-        time: 337
-    },
-    personal: {
-        country: 'CZ',
-        birth: 456,
-        isMale: true
-    },
-    activity: {
-        devices: {
-            count: 3,
-            power: 2317
-        },
-        isOnline: true,
-        last: new Date().getTime()
-    }
-}
-
-const onlineUsers = [] as UserSimple[]
+const onlineUsers = [] as User[]
 
 for (let i = 0; i < 38; i++) {
     onlineUsers.push({
@@ -41,59 +17,61 @@ for (let i = 0; i < 38; i++) {
         avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png',
         name: ('Michal Struna ' + i).repeat(Math.floor(Math.random() * 2 + 1)),
         role: UserRole.AUTHENTICATED,
-        score: {
-            rank: 193,
-            planets: 213,
-            stars: 512,
-            time: 337
+        stats: {
+            planets: { value: 0, diff: 0 },
+            items: { value: 0, diff: 0 },
+            time: { value: 0, diff: 0 },
+            data: { value: 0, diff: 0 }
         },
         personal: {
             country: 'CZ',
             birth: 456,
-            isMale: true
+            sex: Sex.MALE
         },
-        activity: {
-            isOnline: true,
-            last: new Date().getTime(),
-            devices: {
-                count: 3,
-                power: 456781
-            }
-        }
+        created: new Date().getTime(),
+        modified: new Date().getTime(),
+        online: true,
+        devices: { count: 3, power: 456781 }
     })
+}
+
+const handleLogin = (state: any, action: Action<Identity>) => {
+    state.identity.payload = action.payload
+    Cookies.set(Cookie.IDENTITY.name, action.payload, { expires: Cookie.IDENTITY.expiration })
 }
 
 const Slice = Redux.slice(
     'user',
     {
+        users: Redux.async<User>(),
         identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name)),
-        onlineUsers: Redux.async<UserSimple[]>(onlineUsers)
+        onlineUsers: Redux.async<User[]>(onlineUsers),
+        editedUser: Redux.async<EditedUser>(),
     },
     ({ set, async, plain }) => ({
-        login: async<Credentials, Identity>('identity', ({ email, password }) => new Promise((resolve, reject) => {
-            // TODO: Cookies
-            setTimeout(() => {
-                if (email === 'm@m.cz' && password === '123') {
-                    resolve(demoIdentity)
-                    Cookies.set(Cookie.IDENTITY.name, demoIdentity, { expires: Cookie.IDENTITY.expiration })
-                } else {
-                    reject('Bad identity.')
-                }
-            }, 1000)
-        })),
+        getUsers: async<Cursor, SegmentData<User>>('users', cursor => Requests.get(`users`, undefined, cursor)),
+        login: async<Credentials, Identity>('identity', credentials => Requests.post(`users/login`, credentials), {
+            onSuccess: handleLogin
+        }),
+        signUp: async<RegistrationCredentials, Identity>('identity', credentials => Requests.post(`users/sign-up`, credentials), {
+            onSuccess: handleLogin
+        }),
         facebookLogin: async<ExternalCredentials, Identity>('identity', credentials => Requests.post(`users/login/facebook`, credentials), {
-                onSuccess: (state, action) => {
-                    state.identity.payload = action.payload
-                    Cookies.set(Cookie.IDENTITY.name, action.payload, { expires: Cookie.IDENTITY.expiration })
-                }
-            }
-        ),
+            onSuccess: handleLogin
+        }),
         logout: plain<void>(state => {
             state.identity.payload = null
             Cookies.remove(Cookie.IDENTITY.name)
+        }),
+        edit: async<[string, FormData | EditedUser], User>('editedUser', ([userId, user]) => Requests.put(`users/${userId}`, user), {
+            onSuccess: (state, action) => {
+                const identity: Identity = { ...state.identity.payload!, ...action.payload }
+                state.identity.payload = identity
+                Cookies.set(Cookie.IDENTITY.name, identity, { expires: Cookie.IDENTITY.expiration })
+            }
         })
     })
 )
 
 export default Slice.reducer
-export const { login, logout, facebookLogin } = Slice.actions
+export const { getUsers, signUp, login, logout, facebookLogin, edit } = Slice.actions

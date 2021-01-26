@@ -2,6 +2,7 @@ from flask_restx import fields, Resource
 from flask_restx._http import HTTPStatus
 
 from api.errors import error
+from api.global_stats import logged_item, stats_aggregated
 from service.Dataset import DatasetService
 from utils.http import Api, Response
 from constants.Dataset import DatasetType
@@ -13,7 +14,10 @@ def map_props(prop):
     if prop in ["type", "name", "priority", "items_getter", "item_getter"]:
         return prop, str
 
-    if prop in ["total_size", "processed", "priority", "created", "modified", "time"]:
+    if prop in [""]:
+        return f"stats.{prop}", int
+
+    if prop in ["size", "priority", "created", "modified", "time"]:
         return prop, float
 
 
@@ -27,20 +31,16 @@ dataset_fields = api.ns.model("DatasetFields", {
     "*": fields.Wildcard(fields.String())
 })
 
-dataset = api.ns.model("Dataset", {
+dataset = api.ns.inherit("Dataset", logged_item, {
     "_id": fields.String(requred=True, description="Dataset unique identifier."),
     "name": fields.String(required=True, description="Name of dataset."),
     "fields": fields.Nested(dataset_fields, required=True, description="Info about dataset fields (columns)."),
     "items_getter": fields.String(required=True, max_length=500, description="URL for obtaining all item names.", example="https://dataset.org?select=name"),
     "type": fields.String(required=True, description="Type of dataset.", enum=DatasetType._member_names_),
-    "total_size": fields.Integer(required=True, description="Count of all items in dataset."),
-    "current_size": fields.Integer(required=True, description="Count of not yet processed items in dataset."),
-    "processed": fields.Integer(required=True, description="Count of processed bytes from dataset."),
-    "created": fields.Integer(required=True, description="Timestamp of dataset publication [ms]."),
-    "modified": fields.Integer(required=True, description="Timestamp of last dataset change [ms]."),
-    "time": fields.Integer(required=True, description="Total process time in dataset [ms]."),
+    "size": fields.Integer(required=True, description="Count of all items in dataset."),
     "priority": fields.Integer(required=True, min=1, max=5, default=3, description="1 = lowest, 2 = low, 3 = normal, 4 = high, 5 = highest. More prioritized datasets will be processed first."),
     "deleted_items": fields.List(fields.String(required=True), default=[]),
+    "stats": fields.Nested(stats_aggregated, required=True, description="Stats of dataset."),
     "index": fields.Integer(min=1)
 })
 

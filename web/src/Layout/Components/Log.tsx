@@ -3,12 +3,12 @@ import Styled from 'styled-components'
 
 import { Dates } from '../../Native'
 import { Color } from '../../Style'
-import { UserSimple } from '../../User'
+import { User } from '../../User'
 
 interface Message {
     text: string
     time?: number
-    user?: UserSimple
+    user?: User
 }
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {

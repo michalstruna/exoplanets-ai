@@ -5,7 +5,6 @@ import { Color, Dimension, size } from '../../Style'
 import { Block, Table } from '../../Layout'
 import { UsersBlock } from '../../User'
 import PlanetsRank from '../Components/PlanetsRank'
-import Chat from '../../User/Components/Chat'
 import GlobalStatsPanel from '../Components/GlobalStats/GlobalStatsPanel'
 
 interface Props {

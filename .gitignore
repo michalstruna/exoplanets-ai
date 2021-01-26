@@ -9,3 +9,7 @@ node_modules
 __pycache__
 .pytest_cache
 .ipynb_checkpoints
+.vscode
+*.pyc
+*.code-workspace
+public

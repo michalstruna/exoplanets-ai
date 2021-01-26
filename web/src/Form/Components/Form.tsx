@@ -14,6 +14,8 @@ interface Props<Values> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'on
 }
 
 const Root = Styled.form`
+    overflow: hidden;
+
     button:not([type]) {
         display: block;
         font-weight: bold;

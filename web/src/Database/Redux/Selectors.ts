@@ -12,11 +12,9 @@ export const useCursor = () => useSelector((state: any): Cursor => ({
     filter: state.database.filter
 }))
 
-export const useUsersRank = () => useSelector((state: any) => state.database.usersRank)
-
 export const useTable = () => useRouter<any>().match.params.table
 
-export const useItems = (table: DbTable) => useSelector(({ database }: any) => {
+export const useItems = (table: DbTable) => useSelector(({ database, user }: any) => {
     switch (table) {
         case DbTable.BODIES:
             return database.stars
@@ -26,6 +24,8 @@ export const useItems = (table: DbTable) => useSelector(({ database }: any) => {
             return database.planets
         case DbTable.DATASETS:
             return database.datasets
+        case DbTable.USERS:
+            return user.users
     }
 })
 

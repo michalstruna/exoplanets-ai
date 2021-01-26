@@ -14,7 +14,7 @@ export default {
 
     EMAIL: {
         name: 'email',
-        validator: Validator.isEmail
+        validator: (value: string) => !value || Validator.isEmail(value)
     },
 
     PASSWORD: {
@@ -39,6 +39,11 @@ export default {
 
     CHECKBOX: {
         name: 'checkbox',
+        validator: () => true
+    },
+
+    IMAGE: {
+        name: 'file',
         validator: () => true
     }
 

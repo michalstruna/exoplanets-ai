@@ -7,7 +7,9 @@ from flask_restx._http import HTTPStatus
 
 from api.errors import error
 from constants.Data import Relation
+from constants.Error import ErrorType
 from constants.User import UserRole
+from utils.exceptions import BadCredentials, Invalid
 
 
 class Response:
@@ -36,9 +38,10 @@ class Response:
     @staticmethod
     def _process(handler, delete=False, create=False):
         status = HTTPStatus.CREATED if create else (HTTPStatus.NO_CONTENT if delete else HTTPStatus.OK)
+
         try:
             return handler(), status
-        except ValidationError as e:
+        except (ValidationError, Invalid) as e:
             if "is not a valid ObjectId" in str(e):
                 Response.not_found(str(e))
             else:
@@ -49,28 +52,30 @@ class Response:
             Response.duplicate(str(e))
         except DoesNotExist as e:
             Response.not_found(str(e))
+        except BadCredentials as e:
+            Response.bad_credentials(str(e))
         except Exception as e:
             Response.bad_request(str(e))
 
     @staticmethod
     def not_found(message=""):
-        abort(HTTPStatus.NOT_FOUND, type="NOT_FOUND", message=message)
+        abort(HTTPStatus.NOT_FOUND, type=ErrorType.NOT_FOUND.value, message=message)
 
     @staticmethod
     def invalid(message=""):
-        abort(HTTPStatus.UNPROCESSABLE_ENTITY, type="INVALID", message=message)
+        abort(HTTPStatus.BAD_REQUEST, type=ErrorType.INVALID.value, message=message)
 
     @staticmethod
     def duplicate(message=""):
-        abort(HTTPStatus.CONFLICT, type="DUPLICATE", message=message)
+        abort(HTTPStatus.CONFLICT, type=ErrorType.DUPLICATE.value, message=message)
 
     @staticmethod
     def bad_credentials(message=""):
-        abort(HTTPStatus.BAD_REQUEST, type="BAD_CREDENTIALS", message=message)
+        abort(HTTPStatus.BAD_REQUEST, type=ErrorType.BAD_CREDENTIALS.value, message=message)
 
     @staticmethod
     def bad_request(message=""):
-        abort(HTTPStatus.BAD_REQUEST, type="BAD_REQUEST", message=message)
+        abort(HTTPStatus.BAD_REQUEST, type=ErrorType.BAD_REQUEST.value, message=message)
 
     @staticmethod
     def ok(body):
@@ -78,7 +83,7 @@ class Response:
 
     @staticmethod
     def page_model(api, model):
-        return api.model("Page", {
+        return api.model("Page" + model.name, {
             "content": fields.List(fields.Nested(model)),
             "count": fields.Integer(min=0)
         })
@@ -203,7 +208,7 @@ class Api:
 
     def __init__(self, name, description=None):
         self.ns = Namespace(name, description=description)
-        self.service, self.full_model, self.new_model, self.updated_model, self.model_name, self.map_sort = None, None, None, None, None, None
+        self.service, self.full_model, self.new_model, self.updated_model, self.model_name, self.map_props, self.resource_type = None, None, None, None, None, None, None
 
     def init(self, full_model=None, new_model=None, updated_model=None, service=None, model_name=None, map_props=None, resource_type=UNSECURED_RESOURCE):
         self.service = service

@@ -130,13 +130,13 @@ class SocketService(metaclass=patterns.Singleton):
         """
         Finish task by client.  # TODO: Another task types?
         """
-        lc_plot = self.file_service.save_lc(task["solution"]["light_curve"]["plot"])
+        lc_plot = self.file_service.save(task["solution"]["light_curve"]["plot"], FileService.Type.LC)
         task["solution"]["light_curve"]["plot"] = lc_plot
 
         for transit in task["solution"]["transits"]:
-            lv_plot = self.file_service.save_lv(transit["local_view"]["plot"])
+            lv_plot = self.file_service.save(transit["local_view"]["plot"], FileService.Type.LV)
             transit["local_view"]["plot"] = lv_plot
-            gv_plot = self.file_service.save_gv(transit["global_view"]["plot"])
+            gv_plot = self.file_service.save(transit["global_view"]["plot"], FileService.Type.GV)
             transit["global_view"]["plot"] = gv_plot
 
         ms = time.now() - task["meta"]["created"]

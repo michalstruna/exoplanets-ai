@@ -1,0 +1,2 @@
+pytest server // Run all tests for server.
+pytest server/test/api/test_users.py // Run specified test file.

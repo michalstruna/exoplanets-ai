@@ -14,22 +14,14 @@ class Service(ABC):
     def get(self, filter):
         return self.dao.get(filter)
 
-    def get_all(self, filter=None, sort=None, limit=None, offset=None):
-        return self.aggregate(self.dao.pipeline, filter=filter, limit=limit, skip=offset, sort=sort, with_index=True)
+    def get_all(self, filter=None, sort=None, limit=None, offset=None, with_index=True):
+        return self.aggregate(self.dao.pipeline, filter=filter, limit=limit, skip=offset, sort=sort, with_index=with_index)
 
     def get_count(self, filter={}, **kwargs):
         return self.dao.get_count(self.dao.pipeline, filter=filter)
 
     def aggregate(self, operations, filter=None, limit=None, skip=None, sort=None, with_index=False):
-        result = self.dao.aggregate(operations, filter, limit, skip, sort)  # TODO: init_filter.
-        if with_index and False:
-            index = skip + 1 if skip is not None else 1
-
-            for item in result:
-                item["index"] = index
-                index += 1
-
-        return result
+        return self.dao.aggregate(operations, filter, limit, skip, sort, with_index)
 
     def add(self, item, with_return=True):
         return self.dao.add(item, with_return=with_return)

@@ -1,13 +1,13 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { UserSimple } from '../types'
+import { User } from '../types'
 import UserPreview from './UserPreview'
 import Tooltip from '../../Layout/Components/Tooltip'
 import { IconText } from '../../Layout'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    user: UserSimple
+    user: User
 }
 
 const Root = Styled(IconText)`

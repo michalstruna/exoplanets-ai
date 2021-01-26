@@ -14,6 +14,8 @@ export type TextValue<TValue = any> = {
     value: TValue
 }
 
+export type SimpleTextValue<Value = any> = [string, Value]
+
 /**
  * Possible values can be:
  * - Type constructor (String, Number, Date),
@@ -55,3 +57,11 @@ export type Cursor = {
 }
 
 export type Strings = any
+
+
+export type LogObject = {
+    created: number
+    modified: number
+}
+
+export type UnitTypeData = SimpleTextValue<number>[]

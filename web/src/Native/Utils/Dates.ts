@@ -72,3 +72,7 @@ export const formatDistance = (strings: any, date1: number, date2?: number, form
 export const daysToMs = (days: number) => { // TODO: convert(10, Unit.DAY, UNIT.MS)
     return days * 86400 * 1000
 }
+
+export const getDate = (date: number) => {
+    return new Date(date).toISOString().split('T')[0]
+}

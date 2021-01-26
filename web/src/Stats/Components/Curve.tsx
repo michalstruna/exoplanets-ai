@@ -1,5 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
+import { Config } from '../../Async'
 import { LightCurve } from '../../Database/types'
 import { Color, size } from '../../Style'
 
@@ -124,7 +125,7 @@ const Curve = ({ data, simple, type, title, ...props }: Props) => {
                         <VGrid>
                             {simple ? null : new Array(simple ? 4 : 10).fill(null).map((_, i) => <VLine key={i} />)}
                         </VGrid>
-                        <Image src={`http://localhost:5000/public/${type}/${data.plot}`} />
+                        <Image src={`${Config.serverUrl}/public/${type}/${data.plot}`} />
                     </Plot>
                     {!simple && (
                         <XAxis>

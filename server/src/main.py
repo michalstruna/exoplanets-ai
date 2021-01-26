@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
+import os
+
 from app_factory import create_app
 
-# TODO: Dev vs prod env variable.
-app, api, sio = create_app("dev")
+app, api, sio = create_app(os.getenv("ENV"))
 
 sio.run(app)

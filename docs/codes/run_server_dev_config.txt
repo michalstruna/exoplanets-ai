@@ -1,0 +1,5 @@
+mongod                  // Run database.
+env=dev
+python3 server/main.py  // Run server in development mode.
+cd web
+npm start               // Run web app in development mode.

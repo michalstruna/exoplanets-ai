@@ -1,33 +1,37 @@
 import UserRole from './Constants/UserRole'
+import { StatsObject } from '../Stats'
+import { LogObject } from '../Data'
+import Sex from './Constants/Sex'
 
-export type UserSimple = {
+export type UserPersonal = {
+    sex?: Sex
+    birth?: number
+    country?: string
+    contact?: string
+    text?: string
+}
+
+export type User = LogObject & StatsObject & {
     _id: string
     name: string
-    avatar?: string,
+    avatar?: string
     role: UserRole
-    score: {
-        rank: number
-        time: number
-        stars: number
-        planets: number
-    }
-    personal: {
-        isMale?: boolean
-        birth?: number
-        country?: string
-        text?: string
-    }
-    activity: {
-        isOnline: boolean,
-        last: number,
-        devices: {
-            count: number,
-            power: number
-        }
+    online?: boolean  // TODO: Remove?
+    personal: UserPersonal
+    devices: {
+        count: number,
+        power: number
     }
 }
 
-export type Identity = UserSimple & {
+export type EditedUser = {
+    personal: UserPersonal
+    avatar?: string | null
+    old_password?: string
+    password?: string
+}
+
+export type Identity = User & {
     token: string
 }
 
@@ -36,7 +40,7 @@ export type Credentials = {
     password: string
 }
 
-export type RegistrationData = Credentials & {
+export type RegistrationCredentials = Credentials & {
     name: string
 }
 

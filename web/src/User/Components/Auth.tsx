@@ -19,7 +19,7 @@ const Auth = ({ role, noRole, when, otherwise, identityId }: Props) => {
 
     return (
         <>
-            {isRoleOk && isIdentityOk ? (when as any)() : (otherwise as any)()}
+            {isRoleOk && isIdentityOk ? when?.() : otherwise?.()}
         </>
     )
 

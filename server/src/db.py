@@ -1,22 +1,65 @@
-from mongoengine import *
+from mongoengine.fields import BinaryField, BooleanField, DictField, EmailField, EmbeddedDocumentField, EmbeddedDocumentListField, FloatField, ImageField, IntField, ListField, LongField, MapField, ReferenceField, StringField, URLField
+from mongoengine.errors import DoesNotExist, ValidationError
+from mongoengine.base import ObjectIdField
+from mongoengine.document import Document, EmbeddedDocument, EmbeddedDocumentList
 from bson.objectid import ObjectId
 
 from constants.Database import *
 from constants.Star import *
+from constants.User import UserRole, Sex
 from utils import time
+from service.Security import SecurityService
+from service.File import FileService
+
+security_service = SecurityService()
+file_service = FileService()
+
+stats_fields = ("data", "items", "planets", "time")
+global_stats_fields = (*stats_fields, "volunteers", "stars")
+
+
+def aggregate_stats_pipeline(days=7, global_stats=False):
+    before = time.day(-days)
+    result = []
+
+    if not global_stats:
+        result.append({"$unwind": {"path": f"$stats", "preserveNullAndEmptyArrays": True}})
+
+    path = f"" if global_stats else "stats."
+    target = f"" if global_stats else ".stats"
+    fields = global_stats_fields if global_stats else stats_fields
+
+    group, add = {"_id": None if global_stats else "$_id", "root": {"$first": "$$ROOT"}}, {}
+
+    for field in fields:
+        group[f"stats_{field}"] = {"$sum": f"${path}{field}"}
+        group[f"stats_{field}_diff"] = {"$sum": {"$cond": [{"$gt": [f"${path}date", before]}, f"${path}{field}", 0]}}
+
+    for field in fields:
+        add[field] = {"value": f"$stats_{field}", "diff": f"$stats_{field}_diff"}
+
+    result.append({"$group": group})
+    result.append({"$addFields": {f"root{target}": add}})
+
+    result.append({"$replaceRoot": {"newRoot": "$root", }})
+    result.append({"$project": {f"{path}date": 0}})
+    result.append({"$sort": {"_id": 1}})
+
+    return result
 
 
 class Dao:
 
-    def __init__(self, collection, pipeline=[]):
+    def __init__(self, collection, pipeline=[], stats=None):
         self.collection = collection
         self.pipeline = pipeline
+        self.stats = stats
 
     def get_by_id(self, id):
         return self.get({"_id": Dao.id(id)})
 
-    def get_all(self, init_filter=None, filter=None, sort=None, limit=None, offset=0, with_index=True):
-        return self.aggregate(self.pipeline, init_filter=init_filter, filter=filter, limit=limit, offset=offset, sort=sort, with_index=with_index)
+    def get_all(self, filter=None, sort=None, limit=None, offset=0, with_index=True):
+        return self.aggregate(self.pipeline, filter=filter, limit=limit, offset=offset, sort=sort, with_index=with_index)
 
     def get(self, filter):
         items = self.get_all(filter=filter, limit=1)
@@ -56,9 +99,6 @@ class Dao:
         if with_return:
             return self.get(filter)
 
-    def update_all(self):
-        pass  # TODO
-
     def delete_by_id(self, id):
         return self.collection(id=id).delete()
 
@@ -68,11 +108,11 @@ class Dao:
     def delete_all(self):
         pass
 
-    def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True, init_filter=None):
+    def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True):
         pipeline = []
 
-        if init_filter:
-            pipeline.append({"$match": init_filter})
+        if self.stats is not None:
+            pipeline += aggregate_stats_pipeline(global_stats=self.stats == "")
 
         pipeline += operations
 
@@ -106,17 +146,32 @@ class Dao:
         if issubclass(self.collection, LogDocument):
             document["created"] = time.now()
 
+        if hasattr(self.collection, "pre_add"):
+            self.collection.pre_add(document)
+
         return self.modified(document)
 
     def modified(self, document):
         if issubclass(self.collection, LogDocument):
             document["modified"] = time.now()
 
-        return document
+        if hasattr(self.collection, "pre_modify"):
+            self.collection.pre_modify(document)
 
+        return document
+        
 
 class BaseDocument(Document):
     meta = {"allow_inheritance": True, "abstract": True}
+
+    def pre_add(self):
+        pass
+
+    def pre_modify(self):
+        pass
+
+    def post_modify(self, old):
+        pass
 
 
 class LogDocument(BaseDocument):
@@ -126,6 +181,14 @@ class LogDocument(BaseDocument):
     modified = LongField(required=True)
 
 
+class Stats(EmbeddedDocument):
+    date = StringField(required=True)
+    planets = LongField(required=True, default=0, min_value=0)  # N of planets.
+    time = LongField(required=True, default=0, min_value=0)  # N of seconds.
+    data = LongField(required=True, default=0, min_value=0)  # N of bytes.
+    items = LongField(required=True, default=0, min_value=0)  # N of processed items.
+
+
 class Dataset(LogDocument):
     name = StringField(max_length=50, required=True, unique=True)
     fields = MapField(StringField(), required=True)
@@ -133,18 +196,14 @@ class Dataset(LogDocument):
     items_getter = URLField(max_length=500)
     items = ListField(StringField(max_length=50, default=[], required=True))
     deleted_items = ListField(StringField(max_length=50, default=[], required=True))
-    total_size = IntField(min_value=0, required=True)
-    processed = LongField(min_value=0, default=0, required=True)
+    size = IntField(min_value=0, required=True)
     type = StringField(max_length=50, required=True)
-    time = LongField(min_value=0, default=0, required=True)
     priority = IntField(min_value=1, max_value=5, default=3, required=True)
+    stats = EmbeddedDocumentListField(Stats, default=[])
     fields_meta = DictField()
 
 
-dataset_dao = Dao(Dataset, [
-    {"$addFields": {"current_size": {"$size": "$items"}}},
-    {"$project": {"items": 0}}
-])
+dataset_dao = Dao(Dataset, [{"$project": {"items": 0}}], stats="stats")
 
 
 class StarType(EmbeddedDocument):
@@ -232,7 +291,7 @@ class LightCurve(EmbeddedDocument):
     n_days = FloatField(required=True)
 
 
-class Star(Document):
+class Star(Document):  # TODO: BaseDocument - _cls is not working.
     properties = ListField(EmbeddedDocumentField(StarProperties), default=[])
     light_curves = ListField(EmbeddedDocumentField(LightCurve), default=[])
     planets = EmbeddedDocumentListField(Planet, default=[])
@@ -247,53 +306,69 @@ star_dao = Dao(Star, [
 ])
 
 
-class GlobalStatsItem(EmbeddedDocument):
-    planets = IntField(required=True, default=0)
-    volunteers = IntField(required=True, default=0)
-    hours = FloatField(required=True, default=0)
-    stars = IntField(required=True, default=0)
-    gibs = FloatField(required=True, default=0)
-    curves = IntField(required=True, default=0)
-
-
 class GlobalStats(BaseDocument):
     date = StringField(required=True)
-    stats = EmbeddedDocumentField(GlobalStatsItem, required=True)
+    volunteers = IntField(required=True, default=0)
+    planets = IntField(required=True, default=0)
+    stars = IntField(required=True, default=0)
+    time = FloatField(required=True, default=0)
+    data = FloatField(required=True, default=0)
+    items = IntField(required=True, default=0)
 
 
-global_stats_dao = Dao(GlobalStats, [
-    {"$group": {
-        "_id": 1,
-        "planets": {"$sum": "$stats.planets"},
-        "gibs": {"$sum": "$stats.gibs"},
-        "volunteers": {"$sum": "$stats.volunteers"},
-        "stars": {"$sum": "$stats.stars"},
-        "curves": {"$sum": "$stats.curves"},
-        "hours": {"$sum": "$stats.hours"}
-    }}
-])
+global_stats_dao = Dao(GlobalStats, stats="")
 
 
 class UserPersonal(EmbeddedDocument):
-    is_male = BooleanField()
+    sex = StringField(enum=Sex)
     country = StringField(max_length=10)
     birth = LongField()
+    contact = StringField(max_length=50)
+    text = StringField(max_length=100)
 
 
 class User(LogDocument):
-    name = StringField(required=True, max_length=50)
-    email = EmailField(max_length=200, unique=True, sparse=True)
-    password = StringField(max_length=200)
+
+    name = StringField(required=True, unique=True, sparse=True, max_length=20)
+    username = EmailField(max_length=200, unique=True, sparse=True)
+    password = BinaryField(max_length=200)
+    role = IntField(required=True, default=UserRole.AUTH.value, enum=UserRole.values())
     fb_id = StringField(max_length=200, unique=True, sparse=True)
-    avatar = StringField(max_length=200)
-    personal = EmbeddedDocumentField(UserPersonal, default={})
+    avatar = StringField(max_length=50)
+    personal = EmbeddedDocumentField(UserPersonal)
+    stats = EmbeddedDocumentListField(Stats, default=[])
+    online = BooleanField(required=True, default=False)
+
+    PASSWORD_MIN_LENGTH = 6
+    PASSWORD_MAX_LENGTH = 50
+
+    def pre_add(self):
+        if "fb_id" in self and self["fb_id"]:
+            pass
+        elif "google_id" in self and self["google_id"]:
+            pass
+        elif "password" in self and self["password"]:
+            if "username" not in self or not self["username"]:
+                raise ValidationError("Username is required.")
+
+            if "name" not in self or not self["name"]:
+                raise ValidationError("Name is required.")
+        else:
+            raise ValidationError("User must have credentials (local or external).")
+
+    def pre_modify(self):
+        if "password" in self and self["password"]:
+            if "password" in self:
+                if not self["password"] or len(self["password"]) < User.PASSWORD_MIN_LENGTH:
+                    raise ValidationError(f"Minimum length of password is {User.PASSWORD_MIN_LENGTH}.")
+
+                if not self["password"] or len(self["password"]) > User.PASSWORD_MAX_LENGTH:
+                    raise ValidationError(f"Maximum length of password is {User.PASSWORD_MAX_LENGTH}.")
+
+                self["password"] = security_service.hash(self["password"])
 
 
-user_dao = Dao(User)
-
+user_dao = Dao(User, stats="stats")
 
 # TODO: Star aliases.
-# TODO: map_units dataset?
-# TODO: LocalDataset - upload file to DB.
-# TODO: Radial velocity datasets.
 # TODO: Star metalicity?

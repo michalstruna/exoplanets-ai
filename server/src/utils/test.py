@@ -1,34 +1,45 @@
 from http import HTTPStatus
 from uuid import uuid4
 import pytest
+from _pytest.python_api import ApproxScalar
 
 from app_factory import create_app
 from constants.Dataset import DatasetPriority, DatasetType
 from constants.Error import ErrorType
+from constants.User import UserRole, Sex
 from service.Dataset import DatasetService
+from service.User import UserService
+from utils import time
 
 dataset_service = DatasetService()
+user_service = UserService()
+
+default_ignore = ["index", "token", "modified"]
 
 
 class Res:
 
     @staticmethod
-    def item(res, expected=None, ignore=["index"]):
+    def item(res, expected=None, ignore=default_ignore):
         assert res.status_code == HTTPStatus.OK
 
         if expected:
             Comparator.is_in(res.json, expected, ignore=ignore)
 
+        return res
+
     @staticmethod
-    def list(res, expected, ignore=["index"]):
+    def list(res, expected=None, ignore=default_ignore):
         assert res.json["count"] == len(res.json["content"])
         assert res.status_code == HTTPStatus.OK
 
         if expected:
             Comparator.is_in(res.json["content"], expected, ignore=ignore)
 
+        return res
+
     @staticmethod
-    def created(res, expected=None, ignore=["index"]):
+    def created(res, expected=None, ignore=default_ignore):
         assert res.data != b""
         assert res.status_code == HTTPStatus.CREATED
 
@@ -38,7 +49,7 @@ class Res:
         return res
 
     @staticmethod
-    def updated(res, expected=None, ignore=["index"]):
+    def updated(res, expected=None, ignore=default_ignore):
         assert res.status_code == HTTPStatus.OK
 
         if expected:
@@ -47,7 +58,7 @@ class Res:
         return res
 
     @staticmethod
-    def deleted(res, expected=None, ignore=["index"], body=False):
+    def deleted(res, expected=None, ignore=default_ignore, body=False):
         if body or expected:
             assert res.data != b""
             assert res.status_code == HTTPStatus.OK
@@ -64,6 +75,31 @@ class Res:
     def not_found(res):
         assert res.json["type"] == ErrorType.NOT_FOUND.value
         assert res.status_code == HTTPStatus.NOT_FOUND
+        return res
+
+    @staticmethod
+    def invalid(res):
+        assert res.json["type"] == ErrorType.INVALID.value
+        assert res.status_code == HTTPStatus.BAD_REQUEST
+        return res
+
+    @staticmethod
+    def bad_request(res):
+        assert res.json["type"] == ErrorType.BAD_REQUEST.value
+        assert res.status_code == HTTPStatus.BAD_REQUEST
+        return res
+
+    @staticmethod
+    def bad_credentials(res):
+        assert res.json["type"] == ErrorType.BAD_CREDENTIALS.value
+        assert res.status_code == HTTPStatus.BAD_REQUEST
+        return res
+
+    @staticmethod
+    def duplicate(res):
+        assert res.json["type"] == ErrorType.DUPLICATE.value
+        assert res.status_code == HTTPStatus.CONFLICT
+        return res
 
 
 KEPIDS = ["10000800", "11904151", "10874614"]
@@ -85,9 +121,11 @@ class Comparator:
     # Recursively check if all values in expected are also in actual.
     # Path is list of keys for better orientation in nested objects and arrays.
     @staticmethod
-    def is_in(actual, expected, path=[], ignore=[]):
+    def is_in(actual, expected, path=[], ignore=default_ignore):
         #assert type(actual) == type(expected)  # TODO: bson.int64 is not int
 
+        #if isinstance(expected, ApproxScalar):
+        #    assert actual == expected
         if isinstance(expected, dict):
             for i in expected:
                 if i not in ignore:
@@ -107,26 +145,35 @@ class Comparator:
 class Creator:
 
     @staticmethod
+    def stats(box=False, **kwargs):
+        result = {}
+
+        for stat in kwargs:
+            val = kwargs[stat] if (type(kwargs[stat]) == int or type(kwargs[stat]) == ApproxScalar) else kwargs[stat][0]
+            diff = kwargs[stat] if (type(kwargs[stat]) == int or type(kwargs[stat]) == ApproxScalar) else kwargs[stat][1]
+            result[stat] = {"value": val, "diff": diff}
+
+        return {"stats": result} if box else result
+
+    @staticmethod
+    def stats_item(days=999, **kwargs):
+        return {"date": time.day(-days), **kwargs}
+
+    @staticmethod
     def rand_str(length=10):
         return uuid4().hex[:length]
 
-    """@staticmethod
-    def star(new=False, properties=None, datasets=[], planets=[], light_curves=[]):
-        result = {}
+    @staticmethod
+    def local_credentials(id=1, new=False, username=None, password=None, name=None):
+        result = {
+            "username": username if username is not None else f"test_{id}@example.com",
+            "password": password if password is not None else f"p4s$w0rd{id}!"
+        }
 
-        if properties:
-            result["properties"] = properties
-        else:
-            result["properties"] = []
+        if new:
+            result["name"] = name if name is not None else f"User{id}"
 
-            for i in range(len(datasets)):
-                result["properties"][i] = {
-                    ""
-                    "dataset": datasets[i]
-                }
-
-        result["planets"] = planets
-        result["light_curves"] = light_curves"""
+        return result
 
     @staticmethod
     def dataset(new=False, update=False, name=None, type=DatasetType.STAR_PROPERTIES, priority=DatasetPriority.NORMAL, kepids=[KEPIDS[0], KEPIDS[1]], fields=FIELDS):
@@ -139,14 +186,14 @@ class Creator:
                 "name": name,
                 "fields": fields,
                 "items": [],
-                "total_size": len(kepids),
+                "size": len(kepids),
                 "priority": priority.value,
                 "items_getter": "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=q1_q17_dr25_stellar&select=kepid,teff,radius,mass,ra,dec,dist,kepmag,feh&where=kepid%20like%20%27" + url_filter + "%27",
                 "type": type.value
             }
 
             if new or update:
-                for key in ["_id", "total_size", "items", "index"]:
+                for key in ["_id", "size", "items", "index"]:
                     if key in result:
                         del result[key]
 
@@ -175,6 +222,51 @@ class Creator:
             result.append(Creator.add_dataset(client, **kwargs))
 
         return result
+
+    @staticmethod
+    def personal(id=0):
+        return {"sex": [Sex.MALE.value, Sex.FEMALE.value][id % 2], "country": f"Country{id}", "birth": id, "contact": f"mail{id}@user.cz", "text": f"aby{id}"}
+
+    @staticmethod
+    def user(id=0, new=False, update=False, role=UserRole.AUTH, token=False, name=None, stats=None, personal=None, **kwargs):
+        result = {
+            **kwargs,
+            "name": name if name is not None else f"User{id}",
+            "role": role.value
+        }
+
+        if stats or (not new and not update):
+            result["stats"] = stats if stats is not None else Creator.stats(planets=0, items=0, time=0, data=0)
+
+        if personal:
+            result["personal"] = Creator.personal(id)
+
+        if token:
+            result["token"] = token
+
+        if new or update:
+            for key in ["_id", "index"]:
+                if key in result:
+                    del result[key]
+
+        if new:
+            pass
+
+        if update:
+            pass
+
+        return result
+
+    @staticmethod
+    def save_user(**kwargs):
+        if "username" not in kwargs:
+            kwargs["username"] = f"username@domain.cz{kwargs['id']}"
+
+        if "password" not in kwargs:
+            kwargs["password"] = f"password{kwargs['id']}"
+
+        u = Creator.user(new=True, **kwargs)
+        return Creator._from_mongo(user_service.dao.add(u), ignore=["_cls", "fields_meta"])
 
     @staticmethod
     def _from_mongo(item, ignore=["_cls"]):

@@ -5,13 +5,9 @@ from utils.http import Api
 
 api = Api("global_stats", description="Global statistics.")
 
-global_stats_item = api.ns.model("GlobalStatsItem", {
-    "planets": fields.Integer(required=True, min=0, default=0, description="Count of discovered planets."),
-    "volunteers": fields.Integer(required=True, min=0, default=0, description="Count of registered volunteers."),
-    "hours": fields.Float(required=True, min=0, default=0, description="Count of hours."),
-    "stars": fields.Integer(required=True, min=0, default=0, description="Count of processed stars."),
-    "gibs": fields.Float(required=True, min=0, default=0, description="Count of processed GiB."),
-    "curves": fields.Integer(required=True, min=0, default=0, description="Count of processed curves."),
+logged_item = api.ns.model("LoggedItem", {
+    "created": fields.Integer(description="Timestamp of creation."),
+    "modified": fields.Integer(description="Timestamp of last update.")
 })
 
 stat_int_item = api.ns.model("StatIntItem", {
@@ -24,13 +20,16 @@ stat_float_item = api.ns.model("StatFloatItem", {
     "diff": fields.Float(required=True, default=0, description="Change of statistic."),
 })
 
-global_stats_aggregated = api.ns.model("GlobalStatsAggregatedItem", {
+stats_aggregated = api.ns.model("StatsAggregated", {
     "planets": fields.Nested(stat_int_item, required=True),
+    "time": fields.Nested(stat_float_item, required=True),
+    "data": fields.Nested(stat_float_item, required=True),
+    "items": fields.Nested(stat_int_item, required=True)
+})
+
+global_stats_aggregated = api.ns.inherit("GlobalStatsAggregated", stats_aggregated, {
     "volunteers": fields.Nested(stat_int_item, required=True),
-    "hours": fields.Nested(stat_float_item, required=True),
-    "stars": fields.Nested(stat_int_item, required=True),
-    "gibs": fields.Nested(stat_float_item, required=True),
-    "curves": fields.Nested(stat_int_item, required=True)
+    "stars": fields.Nested(stat_int_item, required=True)
 })
 
 axis = api.ns.model("ChartAxis", {
@@ -59,6 +58,7 @@ plots_stats = api.ns.model("PlotsStats", {
     "distance_count": fields.Nested(chart, required=True),
     "progress": fields.Nested(chart, required=True)
 })
+
 
 @api.ns.route("/aggregated")
 class AggregatedGlobalStats(Resource):

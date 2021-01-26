@@ -1,4 +1,4 @@
-
+%
 % VYSOKOŠKOLSKÁ KVALIFIKAČNÍ PRÁCE
 % autor: Michal Struna
 % název: Umělá inteligence pro detekci exoplanet
@@ -393,7 +393,7 @@ Hlavní výhodou metody radiálních rychlostí oproti tranzitní metodě je mo�
 
 \subsection{Astrometrická metoda}
 
-\wrapimg[2]{Obíhání hvězdy a~planety kolem společného těžiště}{img/astrometry.pdf}{r}{11}
+\wrapimg[2]{Obíhání hvězdy a~planety kolem společného těžiště}{img/astrometry.pdf}{r}{11}{0.45}
 
 Astrometrická metoda využívá stejné vlastnosti vzájemného působení těles jako metoda radiálních rychlostí. Namísto zkoumání vlnové délky záření se však zaměřuje na polohu hvězdy. Hvězda, kolem níž obíhá dostatečně hmotné těleso, se bude v~důsledku jeho působení nepatrně vychylovat ze své pozice.~\cite{methods}
 
@@ -404,7 +404,7 @@ Pohyb hvězdy tak není přímočarý, ale vlnitý. Kolísání hvězdy je však
 
 \subsection{Přímé zobrazení}
 
-\wrapimg[1]{Hvězda GQ Lupi s~přímo pozorovanou exoplanetou}{img/imaging.jpg}{r}{11}
+\wrapimg[1]{Hvězda GQ Lupi s~přímo pozorovanou exoplanetou}{img/imaging.jpg}{r}{11}{0.45}
 \footnotetext[1]{Převzato z:~\cite{methods}.}
 
 Přímé pozorování planety v~okolí hvězd je velice náročnou technikou, protože záření, které hvězda emituje je mnohonásobně silnější, než záření, které planeta odráží. Např. u~Země a~Slunce je tento poměr řádově $10^{-9}$.~\cite{methods}
@@ -450,7 +450,7 @@ Nutno podotknout, že nás nezajímá rychlost pulzaru tak, jako u metody radiá
 \clearpage
 \subsection{Časování tranzitů}
 
-\wrapimg[1]{Nepravidelnosti v~tranzitech planety Kepler-46b}{img/ttv.png}{r}{16}
+\wrapimg[1]{Nepravidelnosti v~tranzitech planety Kepler-46b}{img/ttv.png}{r}{16}{0.45}
 \data{1}{nasadata}
 
 V~kapitole 1.1 byla popsána tranzitní metoda zkoumajíc pravidelné poklesy v~jasu hvězdy. Někdy ale tyto poklesy nemusí být zcela pravidelné a~v~jejich periodách mohou být mírné odchylky (TTV~--~transit time variation). Ty mohou být způsobeny další exoplanetou v~systému, která může nebo nemusí sama tranzitovat přes hvězdu, přesto však stále gravitačně ovlivňuje zbytek soustavy.~\cite{ttv}
@@ -953,7 +953,7 @@ Python (\url{https://www.python.org/doc}) je interpretovaný, dynamicky typovan�
 
 \subsubsection{Flask}
 
-Flask (\url{https://flask.palletsprojects.com}) je webový open-source microframework napsaný v~jazyce Python. Mikroframework poukazuje na minimalistické jádro, které lze rozšiřovat velkým počtem tzv. extensions.
+Flask (\url{https://flask.palletsprojects.com}) je webový open-source microframework napsaný v~jazyce Python. Mikroframework poukazuje na minimalistické jádro, které lze rozšiřovat velkým počtem rozšíření (extensions).
 
 \lstinputlisting[caption={Ukázka práce s~microframeworkem Flask}]{codes/flask.txt}
 
@@ -1005,7 +1005,7 @@ Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klie
 
 \subsection{Server}
 
-Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání persistentních dat do databáze a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~jeho struktura se dělí na následující moduly:
+Úkolem serveru je přidělování výpočetních úloh připojeným klientským aplikacím, ukládání a~načítání persistentních dat ve spolupráci s~databází a~komunikace s~uživatelem skrze webovou aplikaci. Je naprogramován ve webovém frameworku Flask v~jazyce Python a~struktura jeho zdrojových kódů se dělí na následující moduly:
 
 \img[1]{Architektura serveru}{img/server.png}
 \draw
@@ -1013,14 +1013,14 @@ Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klie
 \begin{itemize}
 \item \textbf{api} -- Definice REST a~Socket API a~zpracování příchozích požadavků. To zahrnuje autentizaci a~autorizaci odesílatele a~následné provedení operace v~servisní vrstvě. 
 \item \textbf{config} -- Konfigurace serveru (např. připojení k~databázi). Základním konfiguračním souborem je \code{base.cfg}, který je použit automaticky. Bez nutnosti tento soubor měnit je možné vytvořit nový soubor (např. \code{test.cfg}) s~novou konfigurací a~pomocí argumentu při spuštění serveru nastavit, aby se použila tato konfigurace (\code{./src/main.py -{}-env test}). [TODO]
-\item \textbf{constants} -- Veškeré konstantní položky, ať už technického či fyzikálního typu.
+\item \textbf{constants} -- Veškeré konstantní hoenoty, ať už technického či fyzikálního typu.
 \item \textbf{service} -- Servisní vrstva obsahující logiku serveru a~manipulaci s~databází.
-\item \textbf{utils} -- Pomocné třídy uchovávající specifickou funkcionalitu.
+\item \textbf{utils} -- Pomocné třídy zapouzdřující specifické funkcionality.
 \end{itemize}
 
 \subsubsection{REST API}
 
-K~vytvoření rozhraní je nejdříve třeba nadefinovat příslušné struktury, které rozhraní bude očekávat nebo naopak vracet. Modul \code{fields} umožňuje určit složky jednotlivých struktur a~taktéž pro ně nastavit pravidla jako např. maximální délka, datový typ nebo seznam povolených hodnot.
+K~vytvoření rozhraní je nejdříve třeba nadefinovat příslušné struktury, které rozhraní bude očekávat nebo naopak vracet. Modul \code{fields} umožňuje určit složky jednotlivých struktur a~taktéž pro ně nastavit validační pravidla jako např. maximální délka, datový typ nebo seznam povolených hodnot.
 
 \lstinputlisting[caption={Vytvoření modelů v~REST API.}]{codes/api_model.txt}
 
@@ -1034,7 +1034,7 @@ Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nes
 
 \subsubsection{Socket.IO API}
 
-Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní HTTP poskytuje také rozhraní Socket.IO.
+Protože je třeba v~reálném čase synchronizovat webovou a~klientskou aplikaci a~umožnit serveru iniciovat s~těmito aplikacemi komunikaci, server kromě rozhraní \textit{HTTP} poskytuje také rozhraní Socket.IO.
 
 \subsection{Webová aplikace}
 
@@ -1048,25 +1048,79 @@ Moduly z~vyšších vrstev mohou komunikovat pouze s~moduly ze stejné nebo z~ni
 \img[1]{Princip architektury Redux}{img/redux.png}
 \draw
 
-Ke správě dat je využita architektura a~knihovna Redux ukládající celý stav aplikace v~centralizovaném uložišti (store). Měnit stav tohoto uložiště může pouze funkce \textit{dispatch} jejímž argumentem je akce. Akce je prostý objekt obsahující povinnou položku \textit{type} a~libovolné další položky. Pro pohodlnější práci se akce často umisťuje do parametrizovatelné funkce zvané \textit{action creator}, která tuto akci vrací.
+Ke správě dat je využita architektura a~knihovna \textit{Redux} ukládající celý stav aplikace v~centralizovaném uložišti (store). Měnit stav tohoto uložiště může pouze funkce \textit{dispatch} jejímž argumentem je akce. Akce je prostý objekt obsahující povinnou položku \textit{type} a~libovolné další položky. Pro pohodlnější práci se akce často umisťuje do parametrizovatelné funkce zvané \textit{action creator}, která tuto akci vrací.
 
 Funkce \textit{dispatch} následně zjistí aktuální stav aplikace a~společně s~akcí v~argumentu zavolá funkci \textit{reducer}. Ten na základě aktuálního stavu a~akce vrátí stav nový. V~poslední řadě dojde k~překreslení všech komponent, které jsou napojené na právě změněnou část stavu aplikace~--~podoba UI je tak vždy aktuální.
 
 \lstinputlisting[caption={Ukázka použití knihovny Redux.}]{codes/redux.txt}
 
-\subsection{Klientská aplikace}
+Jednotlivé moduly mají následující funkcionalitu:
 
-\img[1]{Stavy procesů a~přechody mezi nimi}{img/process_state.png}
+\begin{itemize}
+\item \textbf{Core}~--~Kořenová komponenta \code{<App />} a~router zobrazující dle URL příslušné stránky, dále Redux Store a~obstarávání základních funkcionalit aplikace.
+\item \textbf{Database}~--~Stránky týkající se výpisu/úpravy položek z~databáze (např. seznam objevených planet, přidané datasety, ...).
+\item \textbf{Discovery}~--~Umožňuje uživateli zapojit se do hledání a~sledovat své procesy.
+\item \textbf{User}~--~Stará se o~autentifikaci a~autorizaci a~také o veškerou uživatelskou činnost.
+\item \textbf{Form}~--~Skládání formulářů z~předpřipravených komponent s~automatickou validaci.
+\item \textbf{Stats}~--~Usnadňuje vykreslování grafů a~komponent se statistickými daty.
+\item \textbf{Layout}~--~Obsahuje nastylované a~funkční komponenty využívané v~celé aplikaci.
+\item \textbf{Routing}~--~Nabízí pomocné funkce pro práci se směrováním, URL a~query řetězci.
+\item \textbf{Async}~--~Zajišťuje asynchronní operace jako je komunikace se serverem přes \textit{REST} nebo \textit{Socket.io} API. Taktéž animuje \code{<Loader />} všude tam, kde je to třeba.
+\item \textbf{Style}~--~Fragmenty stylů využívaných na více místech, media queries pro responzivitu, a~konstanty (např. barvy, velikosti, parametry animací, ...).
+\item \textbf{Data}~--~Zprostředkovává jazykovou lokalizaci, řazení, filtrování a~stránkování dat a~také práci s~fyzikálními veličinami a~jednotkami.
+\item \textbf{Native}~--~Pomocné funkci pro práci s~datovými typy (pole, čísla, text, ...).
+\end{itemize}
+
+\vspace{-5pt}
+
+\subsection{Klientská aplikace}
+\vspace{-5pt}
+Pro využití většího výpočetního potenciálu počítače není vhodné provádět analýzu dat na straně webové aplikace. Ve webové aplikaci je k~dispozici ke stažení klientská aplikace~--~spustitelný program napsaný v~jazyce \textit{Python}~optimalizovaný pro zpracování dat.
+
+Po spuštění se otevře webová aplikace, ve které uživatel pod svým účtem provede spárování s~klientskou aplikaci. Následně dojde pomocí \textit{Socket.io} k~navázání spojení se serverem, čímž z~pohledu uživatele vznikne nový proces ve stavu \textit{Čeká na spuštění}.
+
+\img[1]{Životní cyklus procesu klientské aplikace}{img/process_state.pdf}
 \draw
 
-\subsection{Neuronová síť}
+V~případě, že jsou v~databázi některé dosud nezpracované položky z~datasetů, server jednu takovou položku přidělí klientské aplikace a~ta ji začne zpracovávat. Po dokončení je řešení odevzdáno serveru, jenž klientské aplikaci přidělí další položku ke zpracování. Tento cyklus se opakuje až do doby, kdy je klientská aplikace pozastavena či ukončena (uživatel tak může učinit z~UI webové aplikace).
 
-\img[1]{Trénovací množina}{img/train_set.png}
-TODO: Odebrat osy a popisky z obrázku.
+Do té doby běží program zcela samostatně a~uživatel nemusí do průběhu zpracování dat nijak zasahovat. Uživatel může samozřejmě násilně ukončit aplikaci i~za běhu. V~takovém případě budou dosud zpracovaná data z~aktuální položky ztracena.
+
+\img[1]{Architektura klientské aplikace}{img/client.pdf}
+
+Při komunikaci mezi serverem a~klientskou aplikací nedochází k~přenosu samotných dat ke zpracování (řádově MiB). Server klientovi posílá pouze metadata k~zadávané úloze (např. typ úlohy, adresu URL, ...). Samotná data ke zpracování si už stáhne klient přímo od poskytovatele dat (např. NASA Exoplanet Archive). Server tak není tolik zatížen a~stahování většího množství dat je delegováno na jednotlivé klienty.
+
+\lstinputlisting[caption={Příklad zpracování světelné křivky klientem}]{codes/client.txt}
+
+\subsection{Neuronové sítě}
+
+\subsubsection{Klasifikace hvězdy}
+
+\wrapimg[1]{Architektura neuronové sítě pro klasifikaci hvězd}{img/nn_stellar.pdf}{r}{10}{0.4}
+\draw
+
+Na základě povrchové teploty a~absolutní hvězdné velikosti (magnitudy) lze jednotlivé hvězdy umístit dle Morganovy-Keenanovy klasifikace do jedné z~8 tříd svítivosti. Rozložení těchto tříd je ukázáno v~Hertzsprungovu–Russellovu diagramu (HR diagramu).
+
+Zatímco spektrální třída hvězdy je jednoznačně dána dle povrchové teploty hvězdy, třídy svítivosti nejsou lehce separovatelné, a~proto je vhodné pro její rozpoznání použít umělou neuronovou síť. Zdrojový kód pro vytvoření, natrénování a~otestování této sítě je umístěn v~Jupyter Notebooku \code{data/lum\_class/lum\_class.ipynb}. Výstupem sítě je vektor o~8 prvcích, ve kterém největší hodnota značí příslušnost hvězdy do dané kategorie. Např. vektor na výstupu \break\code{(0, 0, 0, 0, 0, 1, 0, 0)} znamená 6. kategorii, tedy \textit{V} (trpaslík).
+
+\img[2]{Klasifikace hvězdy~--~trénovací množina (vlevo) a~HR diagram (vpravo)}{img/hr_diagram.png}
+\footnotetext[2]{Graf trénovací množiny vytvořen autorem, HR diagram převzat z~Wikimedia Commons~--~public domain.}
+
+\lstinputlisting[caption={Použití sítě pro klasifikaci hvězdy}]{codes/nn_stellar.txt}
+
+\subsubsection{Detekce tranzitů exoplanety}
+
+V~momentě, kdy je nalezena periodická složka ve světelné křivce hvězdy, je třeba ověřit, zda se jedná o~tranzit obíhající exoplanety nebo o~jiný jev. To je opět problém vhodný pro neuronovou síť.
+
+Síť na vstupu přijme globální a~lokální pohled na potenciální tranzit. Výstupem sítě je číslo z~intervalu od 0 do 1, přičemž čím větší číslo je, tím s~větší jistotou síť považuje vstup za skutečný tranzit planety. Kompletní zdrojový kód sítě se nachází v~Jupyter Notebooku \code{data/transit/transit.ipynb}. Architektura sítě popsána v~příloze TODO.
+
+\img[1]{Část trénovací množiny pro detekci tranzitů exoplanet}{img/train_set.png}
+\data{1}{nasadata}
+
 
 \subsection{Databáze}
 
-K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~níž se na straně serveru přistupuje skrze ODM \textit{MongoEngine}.
+K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~níž se na straně serveru přistupuje skrze ODM \textit{MongoEngine}. Než dojde k~samotnému připojení, je třeba nadefinovat podobu databáze a~validační pravidla jednotlivých kolekcí, tak, jak je to ukázáno v~kapitole 5.2.5.
 
 \lstinputlisting[caption={Připojení k databázi.}]{codes/db_conn.txt}
 
@@ -1158,6 +1212,72 @@ Opět se jedná o~datasety nejčastěji ve formátu \code{csv}, které není nut
 
 K~zamezení toho, aby byly tyto položky vedeny jako dvě různé soustavy je nutno aplikaci poskytnout informace o~používaných názvech jednotlivých objektů. Právě k~tomu slouží tento typ datasetů.
 
+\subsection{Instalace a spuštění aplikace}
+
+Běžící aplikace je dostupná na adrese \url{https://exoplanets.now.sh}, dokumentace REST API pak na \url{https://exoplanets-server.herokuapp.com/api-docs}. Pro spuštění aplikace na lokálním počítači je třeba:
+
+{
+\tab{Požadavky pro spuštění aplikace}{
+	\begin{tabular}{|l|l|}
+		\hline	
+		\rowcolor{lightgray}
+		Požadavek & Ke stažení \\	
+		\hline	
+		Python 3 & \url{https://www.python.org/downloads} \\
+		\hline
+		Node.js & \url{https://nodejs.org/en/download} \\
+		\hline
+		mongoDB & \url{https://www.mongodb.com/try/download/community} \\
+		\hline
+	\end{tabular}
+}
+
+Jakmile jsou všechny požadavky nainstalovány, je možné aplikaci sestavit. V~kořenovém adresáři projektu je spustitelný soubor \code{installer.sh}, popř. \code{installer.exe}, po jehož spuštění se nainstalují všechny závislosti a~dojde k~sestavení serveru, webové i~klientské aplikace. Server je následně možné spustit z~terminálu (\code{http://localhost:5000}).
+
+\lstinputlisting[caption={Spuštění serveru.}]{codes/run_server.txt}
+
+\vspace{-5pt}
+
+Sestavená webová aplikace je v~adresáři \code{web/build}. Lze ji umístit na  vlastní webový server s~přístupovým bodem \code{index.html} nebo tento soubor přímo spustit v~prohlížeči.
+
+\vspace{-5pt}
+
+\subsubsection{Konfigurace}
+
+Pokud není výchozí konfigurace vyhovující, můžeme před sestavením některé parametry serveru změnit v~souboru \code{server/config/base.cfg}.
+
+\lstinputlisting[caption={Výchozí konfigurace serveru.}]{codes/default_server_config.txt}
+
+\vspace{-10pt}
+
+Jestliže chceme mít více oddělených konfigurací pro různé režimy, můžeme vytvořit vlastní konfigurační soubory ve tvaru \code{server/config/my\_custom\_mode.cfg}. Pro využití této konfigurace je pak třeba před spuštěním serveru nastavit proměnnou prostředí \code{env} na příslušnou hodnotu.
+
+\lstinputlisting[caption={Spuštění serveru s vlastní konfigurací.}]{codes/run_server_custom_config.txt}
+
+V~souboru \code{web/src/Async/Constants/Config.ts} také můžeme upravit adresu serveru, se kterým bude komunikovat webová aplikace.
+
+\lstinputlisting[caption={Výchozí konfigurace webové aplikace.}]{codes/default_web_config.txt}
+
+\vspace{-25pt}
+
+\subsubsection{Vývoj}
+
+Postup výše nám umožní jednorázově sestavit a~spustit aplikaci. Pokud však chceme aplikaci dále vyvíjet, je vhodné ji spustit ve vývojovém režimu. To zajistí výpis všech chyb i~varování do konzole, automatický restart serveru při změně kódu a~taktéž oddělenou databázi od produkčních dat. Webová aplikace bude dostupná na adrese \url{http://localhost:3000}.
+
+\lstinputlisting[caption={Spuštění v~režimu pro vývoj.}]{codes/run_server_dev_config.txt}
+
+\vspace{-20pt}
+
+\subsubsection{Testování a~validace}
+
+Serverová část je otestována integračními testy s~využitím knihovny \code{pytest}. Tyto testy je možné spustit buď všechny zároveň, nebo vybrat pouze testy ze specifikovaného souboru. Výsledek jednotlivých testů bude zobrazen v~terminálu i~s~popisem případných chyb.
+
+\lstinputlisting[caption={Spuštění testů aplikace.}]{codes/test_server.txt}
+
+Stejně tak je možné i~otestovat úspěšnost aplikace při hledání exoplanet v~distribuovaném prostředí. V~tomto případě ale bude proces trvat několik desítek minut. Dojde ke stažení a~zpracování několika položek z~datasetu od NASA a~následně se porovnají dosažené výsledky s~těmi očekávanými. Výsledný report bude uložen do~souboru \code{server/test/validation.txt}.
+
+\lstinputlisting[caption={Spuštění validace aplikace.}]{codes/validate.txt}
+
 \section{Rozvržení aplikace}
 
 \subsection{Přehled}
@@ -1190,7 +1310,7 @@ Uživatelé si zde mohou stáhnout klientskou aplikaci a~zapojit se do hledání
 
 \subsection{Autentizace}
 
-\wrapimg{Přihlašovací formulář}{img/auth.png}{r}{11}
+\wrapimg{Přihlašovací formulář}{img/auth.png}{r}{11}{0.45}
 
 Komponenty řešící autentizaci uživatele nevyžadují samostatnou stránku, ale jsou kdykoliv dostupné v~pravém horním rohu aplikace, kde je lze kliknutím na tlačítko rozbalit. Vždy jsou viditelné pouze ty komponenty, které daná uživatelská role vyžaduje. Jejich kompletní výčet je uveden v~tabulce 13.
 
@@ -1214,8 +1334,28 @@ Komponenty řešící autentizaci uživatele nevyžadují samostatnou stránku, 
 	\end{tabular}
 }
 
+TODO: Fotka klientské aplikace.
+
+\img[1]{Ukázka běžící klientské aplikace}{img/client_terminal.png}
+
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
+
+{
+\tab[2]{Validace aplikace}{
+	\begin{tabular}{|p{0.3\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|}
+		\hline	
+		\rowcolor{lightgray}
+		Kategorie & Pokusů & Úspěšnost \\	
+		\hline	
+		Klasifikace hvězd & 200 & 98,28 \% \\
+		\hline
+		Detekce tranzitů exoplanet & 30 & 86,31 \% \\
+		\hline
+		Výpočet vlastností planet & 30 & 92,36 \% \\
+		\hline
+	\end{tabular}
+}
 
 Potenciálními zlepšeními aplikace do budoucna by mohly být např.:
 

@@ -6,11 +6,6 @@ import { Color, Duration, size } from '../../Style'
 import FieldType from '../Constants/FieldType'
 import { TextValue } from '../../Data'
 
-interface Option {
-    text: string
-    value: string | number
-}
-
 interface Type {
     name: string
     validator: (value: any) => boolean
@@ -24,8 +19,8 @@ interface Props extends Omit<Omit<Omit<React.ComponentPropsWithoutRef<'input'>, 
     invalid?: string
     required?: string
     validator?: (value: any) => string
-    options?: TextValue<string | number | TextValue<string | number>[]>[]
-    onChange?: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
+    options?: TextValue<string | number | boolean | TextValue<string | number | boolean>[]>[]
+    onChange?: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void
 }
 
 type LabelProps = {
@@ -34,7 +29,7 @@ type LabelProps = {
 
 const Root = Styled.label`
     display: block;
-    margin: 0.5rem 0;
+    margin: 1rem 0;
     position: relative;
     text-align: left;
 `
@@ -138,10 +133,10 @@ const CheckContainer = Styled.div`
 
 const Field = ({ label, name, type, required, invalid, validator, placeholder, options, ...props }: Props) => {
 
-    const { register, errors, getValues } = useFormContext()
+    const { register, errors, getValues, setValue: setFormValue } = useFormContext()
     const [value, setValue] = React.useState<string>(getValues(name) || '')
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setValue(event.target.value)
         props.onChange?.(event)
     }
@@ -184,6 +179,15 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                     </CheckContainer>
 
                 )
+            case FieldType.TEXTAREA:
+                return (
+                    <textarea
+                        {...props as any}
+                        name={name}
+                        placeholder={placeholder}
+                        ref={register(registerOptions)}
+                        onChange={handleChange} />
+                )
             default:
                 return (
                     <Input
@@ -193,7 +197,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                         type={type.name}
                         autoComplete='off'
                         ref={register(registerOptions)}
-                        data-empty={value === '' || undefined}
+                        data-empty={['date'].includes(type.name) ? undefined : (value === '' || undefined)}
                         onChange={handleChange} />
                 )
         }
@@ -217,6 +221,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
 
 }
 
+Field.Root = Root
 Field.Type = FieldType
 
 export default Field

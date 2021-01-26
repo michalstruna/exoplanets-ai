@@ -1,0 +1,12 @@
+tps = lc_service.download_tps(task["item"])  # Download target pixel.
+lc = lc_service.tps_to_lc(tps)  # Convert target pixel to light curve.
+pd, peaks = lc_service.get_pd(lc)  # Find periods using periodogram.
+transits = []  # List of all found transits.
+
+for peak in peaks:  # For each peak from periodogram.
+    item = get_planet_transit(lc, peak)
+
+    if is_planet_transit(item):  # Check if it is planet's transit.
+        transits.append(item)  # Add transit to solution.
+
+submit({"solution": {"transits": transits}})  # Submit solution.

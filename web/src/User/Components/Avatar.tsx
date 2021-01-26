@@ -1,10 +1,13 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { UserSimple } from '../types'
+import { User } from '../types'
 import { flexCenter, size } from '../../Style'
+import Sex from '../Constants/Sex'
+import { Config } from '../../Async'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    user: UserSimple
+    user?: User
+    src?: string
     size: string
 }
 
@@ -22,13 +25,15 @@ const Image = Styled.img`
     max-width: 100%;
 `
 
-const Avatar = ({ user, size, ...props }: Props) => {
+const Avatar = ({ user, src, size, ...props }: Props) => {
 
-    let url = user.avatar
+    let url = user?.avatar ?? src!
 
     if (!url) {
-        const sex = user.personal.isMale === false ? 'Female' : 'Male'
+        const sex = user!.personal.sex === Sex.FEMALE ? 'Female' : 'Male'
         url = `/img/User/Avatar/${sex}.svg`
+    } else if (!url.includes('http')) {
+        url = `${Config.serverUrl}/public/avatar/${url}`
     }
 
     return (

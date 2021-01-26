@@ -21,7 +21,7 @@ export default (): TextEnumValue[] => {
 
     const table = useTable()
     const strings = useStrings()
-    const { stars, planets, datasets } = strings
+    const { stars, planets, datasets, users } = strings
 
     return React.useMemo(() => {
         switch (table) {
@@ -104,13 +104,17 @@ export default (): TextEnumValue[] => {
                 return fields(datasets, [
                     ['name', String],
                     ['type', Object.values(DatasetType).map(value => ({ text: datasets.types[value], value }))],
-                    ['total_size', Number],
+                    ['size', Number],
                     ['processed', Number, 'B'],
                     ['time', Number, 's'], // TODO: Hours?
                     ['created', Number],
                     ['modified', Number],
                     ['priority', Object.values(DatasetPriority).filter(value => typeof value === 'number').map(value => ({ text: datasets.priorities[value], value }))],
                     ['url', String]
+                ])
+            case DbTable.USERS:
+                return fields(users, [
+                    ['name', String]
                 ])
         }
 

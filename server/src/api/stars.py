@@ -17,7 +17,7 @@ def map_props(prop):
     if prop.startswith("planet_"):
         prop = prop[7:]
 
-        if prop in ["diameter", "mass", "density", "surface_temperature", "semi_major_axis", "orbital_period", "transit_depth", "surface_gravity", "orbital_velocity"]:
+        if prop in ["diameter", "mass", "density", "surface_temperature", "semi_major_axis", "orbital_period", "transit_depth", "surface_gravity", "orbital_velocity", "dataset"]:
             return f"planets.properties.{prop}", float
 
         if prop in ["life_conditions", "status", "type"]:
@@ -29,7 +29,7 @@ def map_props(prop):
         if prop == "name":
             return [f"properties.{prop}", f"light_curves.{prop}"], str
 
-        if prop in ["type", "life_conditions", "semi_major_axis", "transit_depth", "dataset"]:
+        if prop in ["type", "dataset"]:
             return f"properties.{prop}", str
 
         if prop in ["diameter", "mass", "density", "surface_temperature", "distance", "luminosity", "transit_depth", "planets", "surface_gravity", "absolute_magnitude", "apparent_magnitude", "metallicity", "datasets", "ra", "dec"]:
@@ -134,13 +134,12 @@ class MergePlanets(Resource):
 class StarSelection(Resource):
 
     @api.ns.marshal_with(star, code=HTTPStatus.OK, description="Star was sucessfully deleted.")
-    @api.ns.response(HTTPStatus.NO_CONTENT, "Star selection was sucessfully deleted.")
     @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
     @api.ns.expect(star_selection)
     def delete(self, id):
         return Response.delete(lambda: star_service.delete_selection(id, request.get_json()), with_return=True)
 
-    @api.ns.response(HTTPStatus.NO_CONTENT, "Star selection was sucessfully reset.")
+    @api.ns.marshal_with(star, code=HTTPStatus.OK, description="Star was sucessfully reset.")
     @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
     @api.ns.expect(star_selection)
     def put(self, id):

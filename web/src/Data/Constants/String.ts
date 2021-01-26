@@ -9,6 +9,7 @@ import DatasetPriority from '../../Database/Constants/DatasetPriority'
 import SpectralClass from '../../Database/Constants/SpectralClass'
 import LuminosityClass from '../../Database/Constants/LuminosityClass'
 import PlanetStatus from '../../Database/Constants/PlanetStatus'
+import { Sex, UserRole } from '../../User'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -51,7 +52,7 @@ export default {
         name: { [CS]: 'Název', [EN]: 'Name' },
 
         // Datasets
-        totalSize: { [CS]: 'Objektů', [EN]: 'Objects' },
+        size: { [CS]: 'Položek', [EN]: 'Items' },
         processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
         date: { [CS]: 'Datum', [EN]: 'Date' },
         published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
@@ -128,19 +129,23 @@ export default {
         type: { [CS]: 'Typ', [EN]: 'Type' },
         name: { [CS]: 'Název', [EN]: 'Name' },
         missingName: { [CS]: 'Zadejte název', [EN]: 'Type name' },
-        totalSize: { [CS]: 'Objektů', [EN]: 'Objects' },
+        size: { [CS]: 'Položek', [EN]: 'Items' },
+
+        planets: { [CS]: 'Planet', [EN]: 'Planets' },
+        items: { [CS]: 'Křivek', [EN]: 'Curves' },
+        data: { [CS]: 'Zpracováno', [EN]: 'Processed' },
+        time: { [CS]: 'Výpoč. čas', [EN]: 'Comput. time' },
+
         processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
         date: { [CS]: 'Datum', [EN]: 'Date' },
         published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
         url: 'URL',
-        time: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
-        modified: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
+        modified: { [CS]: 'Aktivní', [EN]: 'Active' },
         priority: { [CS]: 'Priorita', [EN]: 'Priority' },
 
         new: { [CS]: 'Nový dataset', [EN]: 'New dataset' },
         add: { [CS]: 'Přidat dataset', [EN]: 'Add dataset' },
         edit: { [CS]: 'Upravit dataset', [EN]: 'Edit dataset' },
-        data: { [CS]: 'Údaje', [EN]: 'Data' },
         fields: { [CS]: 'Pole', [EN]: 'Fields' },
         modification: { [CS]: 'Modifikace', [EN]: 'Modification' },
 
@@ -279,8 +284,8 @@ export default {
 
     stats: {
         units: {
-            hours: 'h',
-            gibs: 'GiB'
+            time: 'h',
+            data: 'GiB'
         },
         planets: {
             [CS]: 'Objevených planet',
@@ -290,7 +295,7 @@ export default {
             [CS]: 'Zpracováno hvězd',
             [EN]: 'Explored Stars'
         },
-        hours: {
+        time: {
             [CS]: 'Výpočetní čas',
             [EN]: 'Computing time'
         },
@@ -298,11 +303,11 @@ export default {
             [CS]: 'Dobrovolníků',
             [EN]: 'Volunteers'
         },
-        gibs: {
+        data: {
             [CS]: 'Zpracováno dat',
             [EN]: 'Processed data'
         },
-        curves: {
+        items: {
             [CS]: 'Zpracovano křivek',
             [EN]: 'Processed curves'
         },
@@ -312,6 +317,7 @@ export default {
     auth: {
         email: 'Email',
         password: { [CS]: 'Heslo', [EN]: 'Password' },
+        oldPassword: { [CS]: 'Aktuální heslo', [EN]: 'Current password' },
         forgotPassword: { [CS]: 'Zapomenuté heslo?', [EN]: 'Forgot password?' },
         error: { [CS]: 'Špatné přihlašovací údaje.', [EN]: 'Bad credentials' },
         missingEmail: { [CS]: 'Napište svůj email', [EN]: 'Type your email' },
@@ -323,6 +329,43 @@ export default {
         signUp: { [CS]: 'Zaregistrovat se', [EN]: 'Sign up' },
         resetPassword: { [CS]: 'Resetovat heslo', [EN]: 'Reset password' },
         signUpToLogin: { [CS]: 'Již máte účet?', [EN]: 'Already have account?' }
+    },
+
+    users: {
+        name: { [CS]: 'Jméno', [EN]: 'Name' },
+        role: 'Role',
+        created: { [CS]: 'Registrace', [EN]: 'Registration' },
+        modified: { [CS]: 'Aktivní', [EN]: 'Active' },
+        rank: { [CS]: 'Umístění', [EN]: 'Rank' },  // TODO: Remove.
+        planets: { [CS]: 'Planet', [EN]: 'Planets' },
+        items: { [CS]: 'Křivek', [EN]: 'Curves' },
+        data: { [CS]: 'Zpracováno', [EN]: 'Processed' },
+        time: { [CS]: 'Výpoč. čas', [EN]: 'Comput. time' },
+        country: { [CS]: 'Země', [EN]: 'Country' },
+        sex: { [CS]: 'Pohlaví', [EN]: 'Sex' },
+        birth: { [CS]: 'Narození', [EN]: 'Birth' },
+        contact: { [CS]: 'Kontakt', [EN]: 'Contact' },
+        age: { [CS]: 'Věk', [EN]: 'Age' },
+
+        sexName: {
+            [Sex.FEMALE]: { [CS]: 'Žena', [EN]: 'Female' },
+            [Sex.MALE]: { [CS]: 'Muž', [EN]: 'Male' }
+        },
+
+        roles: {
+            [UserRole.UNAUTHENTICATED]: 'Nepřihlášený',
+            [UserRole.AUTHENTICATED]: 'Uživatel',
+            [UserRole.MODERATOR]: 'Moderátor',
+            [UserRole.ADMIN]: 'Administrátor'
+        },
+
+        logout: { [CS]: 'Odhlásit se', [EN]: 'Logout' },
+        profile: { [CS]: 'Profil', [EN]: 'Profile' },
+        edit: { [CS]: 'Editace', [EN]: 'Edit' },
+        emptyText: { [CS]: 'Tento uživatel o sobě nic nenapsal.', [EN]: 'This user has not written anything about himself.' },
+        //birth: { [CS]: 'Narození', [EN]: 'Birth' },
+        emptyInput: { [CS]: 'Nechci uvést', [EN]: 'Don\'t want provide' },
+        text: { [CS]: 'Profilový text', [EN]: 'Profile text' }
     },
 
     discovery: {

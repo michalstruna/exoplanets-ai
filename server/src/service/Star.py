@@ -77,7 +77,6 @@ class StarService(Service):
         operations = []
 
         for star in stars:
-            x = star
             star = self.dao.collection(properties=[star])
             star.validate()
             star = star.to_mongo()  # TODO: Remove?
