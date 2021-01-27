@@ -10,15 +10,13 @@ import { Async } from '../../Async'
 import { Paginator, Units, UnitType, UnitTypeData, useStrings } from '../../Data'
 import { AggregatedStats } from '../../Stats'
 import DbTable from '../../Database/Constants/DbTable'
-import Auth from './Auth'
-import UserRole from '../Constants/UserRole'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
 
 interface NavLinkProps {
-    isActive: boolean
+    isActive?: boolean
 }
 
 const Root = Styled.div`
@@ -119,6 +117,15 @@ const DetailLink = Styled(Link)`
     vertical-align: middle;
 `
 
+const Unauth = Styled.p`
+    font-size: 90%;
+    font-style: italic;
+    line-height: 2.5rem;
+    opacity: 0.5;
+    text-align: center;
+    transform: translateY(-100%);
+`
+
 const PAGE_SIZE = 10
 const ranks: [string, UnitTypeData][] = [['planets', UnitType.SCALAR], ['items', UnitType.SCALAR], ['data', UnitType.MEMORY], ['time', UnitType.TIME]]
 
@@ -144,6 +151,8 @@ const UsersRank = ({ ...props }: Props) => {
         getUsers({ segment: { index: page, size: PAGE_SIZE }, sort: { columnName: rank[0] + sortSuffix, isAsc: false, level: 0 } })
     ), [rank, sortSuffix, page])
 
+    const items = [...users.payload?.content || [], identity.payload]
+
     return (
         <Root {...props}>
             <Title>
@@ -152,23 +161,33 @@ const UsersRank = ({ ...props }: Props) => {
             </Title>
             <Inner>
                 <UsersTable
-                    items={users.payload?.content || []}
+                    items={items}
                     withHeader={false}
+                    rowHeight={() => 37.8}
                     columns={[
-                        { accessor: (user, i: number) => (i + 1) + '.', width: '1rem' },
                         {
-                            accessor: (user: User) => user.name,
-                            render: (name, user) => <UserName user={user} />,
+                            accessor: (user, i: number) => ((i + 1) + '.'),
+                            width: '1rem',
+                            render: (v, user) => user && v
+                        },
+                        {
+                            accessor: (user: User) => user && user.name,
+                            render: (name, user) => user ? <UserName user={user} /> : '',
                             width: 2
                         },
                         {
-                            accessor: (user: User) => user.stats[rank[0] as keyof AggregatedStats],
+                            accessor: (user: User) => user && user.stats[rank[0] as keyof AggregatedStats],
                             width: 1.2,
-                            render: v => <Diff {...v} format={v => Units.format(v, rank[1])} />
+                            render: (v, user) => user && <Diff {...v} format={v => Units.format(v, rank[1])} />
                         },
                     ]}
                     renderBody={body => (
-                        <Async data={[users, usersGetter, [usersGetter]]} success={() => body} />
+                        <Async data={[users, usersGetter, [usersGetter]]} success={() => (
+                            <>
+                                {body}
+                                {!identity.payload && <Unauth>{strings.unauth}</Unauth>}
+                            </>
+                        )} />
                     )} />
                 <Nav>
                     <NavMenu>
@@ -184,15 +203,6 @@ const UsersRank = ({ ...props }: Props) => {
                             surrounding={false} />
                     </NavMenu>
                     {renderedLinks}
-                    <Auth
-                        role={UserRole.UNAUTHENTICATED}
-                        when={() => (
-                            null
-                        )}
-                        otherwise={() => (
-                            null
-                        )}
-                    />
                 </Nav>
             </Inner>
         </Root>
