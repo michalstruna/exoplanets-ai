@@ -33,7 +33,7 @@ const Avatar = ({ user, src, size, ...props }: Props) => {
         const sex = user!.personal.sex === Sex.FEMALE ? 'Female' : 'Male'
         url = `/img/User/Avatar/${sex}.svg`
     } else if (!url.includes('http')) {
-        url = `${Config.serverUrl}/public/avatar/${url}`
+        url = Avatar.getUrl(url)
     }
 
     return (
@@ -43,6 +43,8 @@ const Avatar = ({ user, src, size, ...props }: Props) => {
     )
 
 }
+
+Avatar.getUrl = (name?: string): string => name ? `${Config.serverUrl}/public/avatar/${name}` : ''
 
 Avatar.Root = Root
 Avatar.Image = Image

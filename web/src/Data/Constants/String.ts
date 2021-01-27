@@ -346,6 +346,7 @@ export default {
         birth: { [CS]: 'Narození', [EN]: 'Birth' },
         contact: { [CS]: 'Kontakt', [EN]: 'Contact' },
         age: { [CS]: 'Věk', [EN]: 'Age' },
+        volunteersRank: { [CS]: 'Žebříček dobrovolníků', [EN]: 'Volunteers rank' },
 
         sexName: {
             [Sex.FEMALE]: { [CS]: 'Žena', [EN]: 'Female' },

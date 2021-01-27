@@ -13,3 +13,4 @@ __pycache__
 *.pyc
 *.code-workspace
 public
+*.map

@@ -11,6 +11,7 @@ interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> 
     onChange: (segment: Segment) => void
     itemsCount: number
     freeze?: boolean
+    stats?: boolean
 }
 
 const PAGE = 'paginator__page'
@@ -92,7 +93,7 @@ const PerPage = Styled.select`
     text-align: center;
 `
 
-const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
+const Paginator = ({ onChange, page, itemsCount, freeze, stats, ...props }: Props) => {
 
     const getPagesCount = React.useCallback(() => Math.ceil(itemsCount / page.size), [itemsCount, page.size])
     const getCache = () => ({ pages: getPagesCount(), itemsCount })
@@ -140,7 +141,7 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
                     previousClassName={EDGE}
                     previousLabel='<' />
             </Row>
-            <Row>
+            {stats && <Row>
                 <Stats>
                     <Line>
                     Zobrazeno {page.index * page.size + 1}-{Math.min(cache.itemsCount, (page.index + 1) * page.size)} z {Numbers.format(cache.itemsCount)}.
@@ -157,14 +158,17 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
                 )}.
                         </Line>
                 </Stats>
-            </Row>
+            </Row>}
         </Root>
     )
 
 }
 
+Paginator.Row = Row
+
 Paginator.defaultProps = {
-    freeze: false
+    freeze: false,
+    stats: false
 }
 
 export default Paginator
