@@ -2,14 +2,16 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Color, Duration, image, opacityHover, size } from '../../Style'
-import { Diff, HierarchicalTable, MinorSectionTitle, Table } from '../../Layout'
-import { getUsers, useUsers, User } from '..'
+import { Diff, HierarchicalTable, MinorSectionTitle } from '../../Layout'
+import { getUsers, useIdentity, User, useUsers } from '..'
 import { Link, Url } from '../../Routing'
 import UserName from './UserName'
 import { Async } from '../../Async'
 import { Paginator, Units, UnitType, UnitTypeData, useStrings } from '../../Data'
 import { AggregatedStats } from '../../Stats'
 import DbTable from '../../Database/Constants/DbTable'
+import Auth from './Auth'
+import UserRole from '../Constants/UserRole'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -124,9 +126,11 @@ const UsersRank = ({ ...props }: Props) => {
 
     const users = useUsers()
     const strings = useStrings().users
+    const identity = useIdentity()
 
     const [rank, setRank] = React.useState(ranks[0])
-    const [page, setPage] = React.useState(0) 
+    const [page, setPage] = React.useState(0)
+    const [sortSuffix, setSortSuffix] = React.useState('_diff')
 
     const renderedLinks = React.useMemo(() => (
         ranks.map((r, i) => (
@@ -137,8 +141,8 @@ const UsersRank = ({ ...props }: Props) => {
     ), [rank])
 
     const usersGetter = React.useCallback(() => (
-        getUsers({ segment: { index: 0, size: PAGE_SIZE }, sort: { columnName: rank[0], isAsc: false, level: 0 } })
-    ), [rank])
+        getUsers({ segment: { index: page, size: PAGE_SIZE }, sort: { columnName: rank[0] + sortSuffix, isAsc: false, level: 0 } })
+    ), [rank, sortSuffix, page])
 
     return (
         <Root {...props}>
@@ -159,7 +163,7 @@ const UsersRank = ({ ...props }: Props) => {
                         },
                         {
                             accessor: (user: User) => user.stats[rank[0] as keyof AggregatedStats],
-                            width: 1,
+                            width: 1.2,
                             render: v => <Diff {...v} format={v => Units.format(v, rank[1])} />
                         },
                     ]}
@@ -168,17 +172,27 @@ const UsersRank = ({ ...props }: Props) => {
                     )} />
                 <Nav>
                     <NavMenu>
-                        <select>
-                            <option>Poslední týden</option>
-                            <option>Celkem</option>
+                        <select onChange={e => setSortSuffix(e.target.value)}>
+                            <option value='_diff'>{strings.lastWeek}</option>
+                            <option value=''>{strings.total}</option>
                         </select>
                         <Paginator
                             page={{ index: page, size: PAGE_SIZE }}
                             onChange={segment => setPage(segment.index)}
-                            itemsCount={users.payload?.count || 0} 
-                            freeze={users.isSent} /> 
+                            itemsCount={users.payload?.count || 0}
+                            freeze={users.pending}
+                            surrounding={false} />
                     </NavMenu>
                     {renderedLinks}
+                    <Auth
+                        role={UserRole.UNAUTHENTICATED}
+                        when={() => (
+                            null
+                        )}
+                        otherwise={() => (
+                            null
+                        )}
+                    />
                 </Nav>
             </Inner>
         </Root>

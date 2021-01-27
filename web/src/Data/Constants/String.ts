@@ -347,6 +347,8 @@ export default {
         contact: { [CS]: 'Kontakt', [EN]: 'Contact' },
         age: { [CS]: 'Věk', [EN]: 'Age' },
         volunteersRank: { [CS]: 'Žebříček dobrovolníků', [EN]: 'Volunteers rank' },
+        lastWeek: { [CS]: 'Poslední týden', [EN]: 'Last week' },
+        total: { [CS]: 'Celkem', [EN]: 'Total' },
 
         sexName: {
             [Sex.FEMALE]: { [CS]: 'Žena', [EN]: 'Female' },

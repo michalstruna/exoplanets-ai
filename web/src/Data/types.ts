@@ -1,7 +1,7 @@
 import { Validator } from '../Native'
 
 export type AsyncData<TData, TError = string | number | Error> = {
-    isSent?: boolean
+    pending?: boolean
     payload?: TData
     error?: TError
 }

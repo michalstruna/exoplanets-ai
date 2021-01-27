@@ -156,6 +156,8 @@ def test_sort(client):
     Res.list(client.get("/api/users?sort=birth,asc"), [usr1, usr2, usr3, usr4])
     Res.list(client.get("/api/users?sort=birth,desc"), [usr4, usr3, usr2, usr1])
 
+    Res.list(client.get("/api/users?sort=planets_diff,desc"), [usr1, usr2, usr4, usr3])
+
 
 def test_filter(client):
     pass

@@ -15,7 +15,7 @@ def map_props(prop):
         return f"stats.{prop}.value", str
 
     if prop in ["planets_diff", "items_diff", "time_diff", "data_diff"]:
-        return f"stats.{prop}.diff", str
+        return f"stats.{prop[:-5]}.diff", str
 
     if prop in ["created", "modified", "role"]:
         return prop, int

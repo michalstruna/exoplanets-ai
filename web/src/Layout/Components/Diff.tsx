@@ -28,7 +28,7 @@ const Root = Styled.div`
 const DiffVal = Styled.span<DiffProps>`
     color: ${props => props.color};
     font-size: 90%;
-    vertical-align: top;
+    vertical-align: middle;
 
     &:before {
         content: "${props => (props.bracket ? '(' : '') + props.prefix}";
