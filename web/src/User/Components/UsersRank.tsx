@@ -1,12 +1,13 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Color, Duration, size, image, opacityHover } from '../../Style'
-import { MinorSectionTitle, Table } from '../../Layout'
-import UserRole from '../Constants/UserRole'
-import { useIdentity } from '..'
+import { Color, Duration, image, opacityHover, size } from '../../Style'
+import { Diff, HierarchicalTable, MinorSectionTitle, Table } from '../../Layout'
+import { getUsers, useUsers, User } from '..'
 import { Link, Url } from '../../Routing'
 import UserName from './UserName'
+import { Async } from '../../Async'
+import { Units, UnitType, UnitTypeData, useStrings } from '../../Data'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -23,7 +24,7 @@ const Root = Styled.div`
 `
 
 const Title = Styled(MinorSectionTitle)`
-    background: ${Color.MEDIUM_DARK};
+    background-color: ${Color.MEDIUM_DARK};
     align-items: center;
     display: flex;
     justify-content: space-between;
@@ -39,6 +40,7 @@ const Title = Styled(MinorSectionTitle)`
 
 const Inner = Styled.div`
     ${size()}
+    display: flex;
     overflow: hidden;
 `
 
@@ -46,7 +48,6 @@ const Nav = Styled.nav`
     ${size('8rem', '100%')}
     display: flex;
     flex-direction: column;
-    float: left;
 `
 
 const NavLink = Styled.button<NavLinkProps>`
@@ -65,10 +66,10 @@ const NavLink = Styled.button<NavLinkProps>`
     `}
 `
 
-const UsersTable = Styled(Table)`
+const UsersTable = Styled(HierarchicalTable)`
     ${size('calc(100% - 8rem)', '100%')}
-    background: ${Color.MEDIUM_DARK};
-    float: left;
+    background-color: ${Color.MEDIUM_DARK};
+    position: relative;
 
     ${Table.Cell} {
         padding: 0 0.5rem;
@@ -101,90 +102,57 @@ const DetailLink = Styled(Link)`
     vertical-align: middle;
 `
 
-const links = ['Objevené planety', 'Prozkoumané hvězdy', 'Výpočetní čas', 'Výpočetní čas', 'Objevené planety', 'Výpočetní čas']
-
-const data = {
-    list: [], me: {
-        value: Math.round(Math.random() * 5000),
-        change: Math.round(Math.random() * 500)
-    }
-} as any
-
-for (let i = 0; i < 11; i++) {
-    data.list.push({
-        value: Math.round(Math.random() * 5000),
-        change: Math.round(Math.random() * 500),
-        user: {
-            id: 'abc' + i,
-            avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png',
-            name: ('Michal Struna ' + i).repeat(Math.floor(Math.random() * 2 + 1)),
-            role: UserRole.AUTHENTICATED,
-            stats: {
-                planets: { value: 0, diff: 0 },
-                items: { value: 0, diff: 0 },
-                time: { value: 0, diff: 0 },
-                data: { value: 0, diff: 0 }
-            },
-            personal: {
-                country: 'CZ',
-                birth: 456,
-                sex: false
-            }
-        }
-    })
-}
-
-
-const columns = [
-    { accessor: (user: any, index: any) => (user.position || (index + 1)) + '.' },
-    {
-        accessor: (user: any) => user.user.name,
-        render: (name: any, user: any) => <UserName user={user.user} />,
-        width: 6
-    },
-    { accessor: (user: any) => user.value, width: 2 },
-    { accessor: (user: any) => user.change, render: (change: any) => change > 0 ? change : '', width: 2 }
-]
-
+const PAGE_SIZE = 10
+const ranks: [string, UnitTypeData][] = [['planets', UnitType.SCALAR], ['items', UnitType.SCALAR], ['data', UnitType.MEMORY], ['time', UnitType.TIME]]
 
 const UsersRank = ({ ...props }: Props) => {
 
-    const [rank, setRank] = React.useState(0)
-    const identity = useIdentity()
+    const users = useUsers()
+    const strings = useStrings().users
+
+    const [rank, setRank] = React.useState(ranks[0])
 
     const renderedLinks = React.useMemo(() => (
-        links.map((link, i) => (
-            <NavLink key={i} onClick={() => setRank(i)} isActive={i === rank}>
-                {link}
+        ranks.map((r, i) => (
+            <NavLink key={i} onClick={() => setRank(ranks[i])} isActive={r === rank}>
+                {strings[r[0]]}
             </NavLink>
         ))
     ), [rank])
 
-    const users = React.useMemo(() => {
-        const result = [...data.list]
-
-        if (identity.payload) {
-            result.push({ ...data.me, user: identity.payload })
-        }
-
-        return result
-    }, [identity])
+    const usersGetter = React.useCallback(() => (
+        getUsers({ segment: { index: 0, size: PAGE_SIZE }, sort: { columnName: 'items_diff', isAsc: false, level: 0 } })
+    ), [])
 
     return (
         <Root {...props}>
             <Title>
                 Žebříček dobrovolníků
                 <select>
-                    <option>Za poslední den</option>
-                    <option>Za poslední týden</option>
-                    <option>Za poslední měsíc</option>
-                    <option>Za poslední rok</option>
+                    <option>Poslední týden</option>
                     <option>Celkem</option>
                 </select>
                 <DetailLink pathname={Url.DATABASE} />
             </Title>
             <Inner>
-                <UsersTable items={users} columns={columns} withHeader={false} />
+                <Async data={[users, usersGetter]} success={() => (
+                    <UsersTable
+                        items={users.payload!.content}
+                        withHeader={false}
+                        columns={[
+                            { accessor: (user, i: number) => (i + 1) + '.', width: '1rem' },
+                            {
+                                accessor: (user: User) => user.name,
+                                render: (name, user) => <UserName user={user} />,
+                                width: 2
+                            },
+                            {
+                                accessor: (user: User) => user.stats.items,
+                                width: 1,
+                                render: v => <Diff {...v} format={v => Units.format(v, rank[1])} />
+                            },
+                        ]} />
+                )} />
                 <Nav>
                     {renderedLinks}
                 </Nav>

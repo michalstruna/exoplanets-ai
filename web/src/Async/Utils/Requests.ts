@@ -67,7 +67,7 @@ export default class Requests {
             }
 
             if (cursor.filter && cursor.filter.attribute) {
-                finalQuery.filter = cursor.filter.attribute.map((attr, i) => `${attr},${cursor.filter.relation[i]},${cursor.filter.value[i]}`)
+                finalQuery.filter = cursor.filter.attribute.map((attr, i) => `${attr},${cursor.filter!.relation[i]},${cursor.filter!.value[i]}`)
             }
 
             if (cursor.segment) {

@@ -2,18 +2,12 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { size, dots } from '../../Style'
+import { Column } from '../types'
 
 interface Props<Item> extends React.ComponentPropsWithoutRef<'div'> {
     items: Item[]
-    columns: Column<Item>[]
+    columns: Column<Item, any>[]
     withHeader?: boolean
-}
-
-interface Column<Item> {
-    accessor: (item: Item, index: number) => any
-    render?: (value: any, item: Item, index: number) => React.ReactNode
-    title?: React.ReactNode
-    width?: number
 }
 
 const Root = Styled.div`
@@ -65,6 +59,14 @@ const Table = <Item extends any>({ columns, items, withHeader, ...props }: Props
             ))}
         </HeaderRow>
     ), [columns, withHeader])
+
+    const getWidth = (width?: number | string) => {
+        if (typeof width === 'string') {
+            return { width: `${width}` }
+        } else {
+            return { width: `${(width ?? 1) * 10}rem` }
+        }
+    }
 
     const renderedItems = React.useMemo(() => (
         items.map((item, i) => (

@@ -39,7 +39,7 @@ export type FilterData<TValue = string | number> = {
 }
 
 export type Sort = {
-    column: number
+    column?: number
     columnName?: string
     isAsc: boolean
     level: number
@@ -51,9 +51,9 @@ export type Segment = {
 }
 
 export type Cursor = {
-    filter: FilterData
-    sort: Sort
-    segment: Segment
+    filter?: FilterData
+    sort?: Sort
+    segment?: Segment
 }
 
 export type Strings = any
