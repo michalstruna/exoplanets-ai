@@ -58,8 +58,8 @@ class Dao:
     def get_by_id(self, id):
         return self.get({"_id": Dao.id(id)})
 
-    def get_all(self, filter=None, sort=None, limit=None, offset=0, with_index=True):
-        return self.aggregate(self.pipeline, filter=filter, limit=limit, offset=offset, sort=sort, with_index=with_index)
+    def get_all(self, filter=None, sort=None, limit=None, offset=0, with_index=True, last_filter=None):
+        return self.aggregate(self.pipeline, filter=filter, limit=limit, offset=offset, sort=sort, with_index=with_index, last_filter=last_filter)
 
     def get(self, filter):
         items = self.get_all(filter=filter, limit=1)
@@ -108,7 +108,7 @@ class Dao:
     def delete_all(self):
         pass
 
-    def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True):
+    def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True, last_filter=None):
         pipeline = []
 
         if self.stats is not None:
@@ -135,6 +135,9 @@ class Dao:
                 {"$replaceRoot": {"newRoot": "$items"}},
                 {"$addFields": {"index": {"$add": ["$index", (offset if offset else 0) + 1]}}}
             ]
+
+        if last_filter:
+            pipeline.append({"$match": last_filter})
 
         return list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
 

@@ -8,3 +8,8 @@ error = ns.model("Error", {
     "type": fields.String(required=True, description="Type of error.", enum=ErrorType.values()),
     "message": fields.String()
 })
+
+
+int_value = ns.model("IntValue", {
+    "value": fields.Integer(required=True, default=0)
+})

@@ -5,7 +5,7 @@ from flask_restx import Namespace, Resource, fields, abort
 from flask import request
 from flask_restx._http import HTTPStatus
 
-from api.errors import error
+from api.errors import error, int_value
 from constants.Data import Relation
 from constants.Error import ErrorType
 from constants.User import UserRole
@@ -104,13 +104,18 @@ class Response:
 class Request:
 
     @staticmethod
+    def sort_parser():
+        parser = RequestParser()
+        parser.add_argument("sort", type=str, action="append", default=[], help="Sort items by comma separated pairs property,order where order is asc or desc.")
+        return parser
+
+    @staticmethod
     def cursor_parser():
         parser = RequestParser()
         parser.add_argument("limit", type=int, default=100, help="Max count of returned items.")
         parser.add_argument("offset", type=int, default=0, help="Skip first n items.")
         parser.add_argument("filter", type=str, action="append", default=[], help="Filter result by comma separated strings property,relation,value. Relation could be one of eq, cont, gt, gte, lt, lte, starts or ends. Nested property should be separated by dot. Example: 'article.name,cont,Abc'.")
         parser.add_argument("sort", type=str, action="append", default=[], help="Sort items by comma separated pairs property,order where order is asc or desc.")
-
         return parser
 
     @staticmethod
@@ -221,6 +226,7 @@ class Api:
 
         self.all_resources()
         self.single_resource()
+        self.rank()
 
     def model(self, name, model):
         return self.ns.model(name, model)
@@ -283,6 +289,28 @@ class Api:
                 return Response.put(lambda: self.service.update(id, request.get_json()))
 
             methods["put"] = put
+
+        Endpoint = type(str(Api._endpoint_uid), (Resource,), methods)
+        Api._endpoint_uid += 1
+        self.ns.add_resource(Endpoint, path)
+
+    def rank(self, path="/<string:id>/rank"):
+        methods = {}
+
+        if "rank" in self.resource_type:
+            @self.ns.marshal_with(int_value, description="Successfully get item rank.")
+            @self.ns.response(HTTPStatus.BAD_REQUEST, "Invalid sort.")
+            @self.ns.response(HTTPStatus.NOT_FOUND, "Item with specified ID was not found.")
+            @self.ns.expect(Request.sort_parser())
+            def get(_self, id):
+                def get_rank():
+                    cursor = Request.cursor(self.map_props)
+                    rank = self.service.get_rank(id, cursor["sort"])
+                    return {"value": rank}
+                    
+                return Response.get(get_rank)
+
+            methods["get"] = get
 
         Endpoint = type(str(Api._endpoint_uid), (Resource,), methods)
         Api._endpoint_uid += 1
