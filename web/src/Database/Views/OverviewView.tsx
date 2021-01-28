@@ -18,12 +18,13 @@ const Root = Styled.div`
 `
 
 const Center = Styled.div`
-    ${size('32rem', '100%')}
+    flex: 1 0 0;
     margin: 0 1.5rem;
+    min-width: 28rem;
 `
 
 const Right = Styled.div`
-    ${size('calc(100vw - 40rem - 32rem)', '100%')}
+    flex: 1.5 0 0;
     margin-right: 1rem;
 `
 
