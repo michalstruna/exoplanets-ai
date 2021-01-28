@@ -226,17 +226,19 @@ const Profile = ({ user, toggle, ...props }: Props) => {
                     {user.personal.text || 'Tento uživatel o sobě nic nenapsal.'}
                 </About>
                 <RightMenu>
-                    <IconText
-                        onClick={toggle}
-                        icon='Controls/Edit.svg'
-                        text={strings.users.edit}
-                        size={IconText.SMALL} />
                     <Auth identityId={user._id} when={() => (
-                        <IconText
-                            icon='User/Logout.svg'
-                            onClick={() => actions.logout()}
-                            text={strings.users.logout}
-                            size={IconText.SMALL} />
+                        <>
+                            <IconText
+                                onClick={toggle}
+                                icon='Controls/Edit.svg'
+                                text={strings.users.edit}
+                                size={IconText.SMALL} />
+                            <IconText
+                                icon='User/Logout.svg'
+                                onClick={() => actions.logout()}
+                                text={strings.users.logout}
+                                size={IconText.SMALL} />
+                        </>
                     )} />
                 </RightMenu>
             </Right>

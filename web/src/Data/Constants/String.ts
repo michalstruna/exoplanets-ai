@@ -346,6 +346,10 @@ export default {
         birth: { [CS]: 'Narození', [EN]: 'Birth' },
         contact: { [CS]: 'Kontakt', [EN]: 'Contact' },
         age: { [CS]: 'Věk', [EN]: 'Age' },
+        volunteersRank: { [CS]: 'Žebříček dobrovolníků', [EN]: 'Volunteers rank' },
+        lastWeek: { [CS]: 'Poslední týden', [EN]: 'Last week' },
+        total: { [CS]: 'Celkem', [EN]: 'Total' },
+        unauth: { [CS]: 'Nejste přihlášený', [EN]: 'You are not logged in' },
 
         sexName: {
             [Sex.FEMALE]: { [CS]: 'Žena', [EN]: 'Female' },

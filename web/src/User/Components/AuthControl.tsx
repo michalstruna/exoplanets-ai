@@ -1,7 +1,5 @@
 import React from 'react'
 
-import Auth from './Auth'
-import UserRole from '../Constants/UserRole'
 import { IconText } from '../../Layout'
 import { useIdentity } from '../index'
 import UserPreview from './UserPreview'

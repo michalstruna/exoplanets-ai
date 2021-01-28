@@ -28,7 +28,7 @@ const Root = Styled.div`
 const DiffVal = Styled.span<DiffProps>`
     color: ${props => props.color};
     font-size: 90%;
-    vertical-align: middle;
+    vertical-align: text-top;
 
     &:before {
         content: "${props => (props.bracket ? '(' : '') + props.prefix}";
@@ -46,7 +46,7 @@ const Diff = ({ value, diff, format, br, ...props }: Props) => {
     if (value !== undefined) {
         return (
             <Root {...props}>
-                {format!(value)} {br && <br />}<DiffVal {...currentMeta} bracket={!br}>{format!(diff)}</DiffVal>
+                {format!(value)} {br && <br />}<DiffVal {...currentMeta} bracket={false}>{format!(diff)}</DiffVal>
             </Root>
         )
     } else {

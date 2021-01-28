@@ -73,10 +73,11 @@ const DatabaseSelector = ({ ...props }: Props) => {
                 onChange={() => null}
                 onSubmit={actions.setFilter} />
             <Page
-                page={segment}
+                page={segment!}
                 itemsCount={items.payload ? items.payload.count : 0}
                 onChange={actions.setSegment}
-                freeze={items.pending} />
+                freeze={items.pending}
+                stats={true} />
         </Root>
     )
 

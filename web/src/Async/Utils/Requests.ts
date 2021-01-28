@@ -62,12 +62,24 @@ export default class Requests {
         const finalQuery = {...query}
 
         if (cursor) {
-            if (cursor.sort && cursor.sort.columnName) {
-                finalQuery.sort = (cursor.sort.level === 1 ? 'planet_' : '') + cursor.sort.columnName + ',' + ( cursor.sort.isAsc ? 'asc' : 'desc')
+
+            if (cursor.sort) {
+                const sort = Array.isArray(cursor.sort) ? cursor.sort : [cursor.sort]
+                finalQuery.sort = ''
+
+                for (const { isAsc, level, columnName } of sort) {
+                    if (columnName) {
+                        finalQuery.sort = (level === 1 ? 'planet_' : '') + columnName + ',' + (isAsc ? 'asc' : 'desc')
+                    }
+                }
+
+                finalQuery.sort = finalQuery.sort || undefined
             }
 
+            console.log(finalQuery.sort)
+
             if (cursor.filter && cursor.filter.attribute) {
-                finalQuery.filter = cursor.filter.attribute.map((attr, i) => `${attr},${cursor.filter.relation[i]},${cursor.filter.value[i]}`)
+                finalQuery.filter = cursor.filter.attribute.map((attr, i) => `${attr},${cursor.filter!.relation[i]},${cursor.filter!.value[i]}`)
             }
 
             if (cursor.segment) {

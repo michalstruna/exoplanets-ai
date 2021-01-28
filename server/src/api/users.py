@@ -4,7 +4,7 @@ from flask_restx._http import HTTPStatus
 
 from api.global_stats import stats_aggregated, logged_item
 from constants.User import UserRole, Sex
-from utils.http import Api, Response
+from utils.http import Api, Response, Request
 from service.User import UserService
 
 api = Api("users", "Users and authentication.")
@@ -15,7 +15,7 @@ def map_props(prop):
         return f"stats.{prop}.value", str
 
     if prop in ["planets_diff", "items_diff", "time_diff", "data_diff"]:
-        return f"stats.{prop}.diff", str
+        return f"stats.{prop[:-5]}.diff", str
 
     if prop in ["created", "modified", "role"]:
         return prop, int
@@ -101,7 +101,7 @@ class Login(Resource):
 class FacebookLogin(Resource):
 
     @api.ns.marshal_with(identity, description="Successfully login user.")
-    @api.ns.response(400, "Invalid credentials.")
+    @api.ns.response(HTTPStatus.BAD_REQUEST, "Invalid credentials.")
     @api.ns.expect(external_credentials)
     def post(self):
         if identity:
@@ -114,7 +114,8 @@ resource_type = {
     "get_all": {"role": UserRole.UNAUTH},
     "get": {"role": UserRole.UNAUTH},
     "delete": {"role": UserRole.ADMIN},
-    "update": {"role": UserRole.MYSELF}
+    "update": {"role": UserRole.MYSELF},
+    "rank": {"role": UserRole.UNAUTH}
 }
 
 api.init(service=user_service, full_model=user, updated_model=updated_user, resource_type=resource_type, model_name="User", map_props=map_props)

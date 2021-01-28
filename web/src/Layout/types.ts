@@ -9,7 +9,7 @@ export type TooltipData = {
 }
 
 export interface Column<TItem, TValue> {
-    title: React.ReactNode
+    title?: React.ReactNode
     accessor: (item: TItem, index: number) => React.ReactNode
     render?: (value: TValue, item: TItem, index: number) => React.ReactNode
     icon?: string

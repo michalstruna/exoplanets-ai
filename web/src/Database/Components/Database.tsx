@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useActions, useStrings, Sort } from '../../Data'
+import { useActions, Sort } from '../../Data'
 import { useDrag, useElement } from '../../Native'
 import { image, size, ZIndex } from '../../Style'
 import { HierarchicalTable, PrimaryButton } from '../../Layout'
@@ -11,7 +11,6 @@ import DbTable from '../Constants/DbTable'
 import TableItemDetail from './TableItemDetail'
 import Tooltip from '../../Layout/Components/Tooltip'
 import DatasetForm from './DatasetForm'
-import { useDispatch } from 'react-redux'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -142,7 +141,7 @@ const Database = ({ ...props }: Props) => {
     const { levels, rowHeight, getter } = useTableColumns()
 
     const handleSort = (newSort: Partial<Sort>) => {
-        if (newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level || newSort.columnName !== sort.columnName) {
+        if (!sort || !sort[0] || newSort.column !== sort[0].column || newSort.isAsc !== sort[0].isAsc || newSort.level !== sort[0].level || newSort.columnName !== sort[0].columnName) {
             actions.setSort(newSort)
         }
     }
@@ -157,15 +156,17 @@ const Database = ({ ...props }: Props) => {
             <Table
                 className={`table--${table}`}
                 items={items.payload?.content ?? []}
-                levels={levels}
+                columns={levels}
                 onSort={handleSort}
-                defaultSort={sort}
+                defaultSort={sort?.[0]}
                 rowHeight={rowHeight}
+                virtualized={true}
+                fixedWidth={false}
                 renderBody={body => (
-                    <Async
-                        data={[items, () => getter({ sort, filter, segment }), [sort, filter, segment, table]]}
+                    <Async 
+                        data={[items, () => getter({ sort, filter, segment }), [sort?.[0], filter, segment, table]]}
                         success={() => body}
-                        active={() => sort.column === undefined || sort.columnName} />
+                        active={() => sort && (sort[0].column === undefined || sort[0].columnName)} />
                 )} />
                 <Add>
                     <Tooltip render={() => <DatasetForm />} setCoords={addSetCoords}>

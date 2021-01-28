@@ -156,6 +156,15 @@ def test_sort(client):
     Res.list(client.get("/api/users?sort=birth,asc"), [usr1, usr2, usr3, usr4])
     Res.list(client.get("/api/users?sort=birth,desc"), [usr4, usr3, usr2, usr1])
 
+    Res.list(client.get("/api/users?sort=planets_diff,desc"), [usr1, usr2, usr4, usr3])
+    Res.list(client.get("/api/users?sort=planets_diff,asc"), [usr4, usr4, usr3, usr1])  # TODO: Fix order.
+    Res.list(client.get("/api/users?sort=items_diff,desc"), [usr2, usr1, usr4, usr3])
+    Res.list(client.get("/api/users?sort=items_diff,asc"), [usr3, usr4, usr1, usr2])
+    Res.list(client.get("/api/users?sort=time_diff,desc"), [usr4, usr3, usr1, usr2])
+    Res.list(client.get("/api/users?sort=time_diff,asc"), [usr2, usr1, usr3, usr4])
+    Res.list(client.get("/api/users?sort=data_diff,desc"), [usr3, usr1, usr4, usr2])
+    Res.list(client.get("/api/users?sort=data_diff,asc"), [usr2, usr4, usr1, usr3])
+
 
 def test_filter(client):
     pass
@@ -204,3 +213,7 @@ def test_edit_google_user(client):
 
 def test_admin_edit(client):
     pass
+
+
+def test_rank(client):
+    pass  # TODO

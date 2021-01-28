@@ -1,9 +1,13 @@
 import { Validator } from '../Native'
 
 export type AsyncData<TData, TError = string | number | Error> = {
-    isSent?: boolean
+    pending?: boolean
     payload?: TData
     error?: TError
+}
+
+export type Value<TValue> = {
+    value: TValue
 }
 
 /**
@@ -39,7 +43,7 @@ export type FilterData<TValue = string | number> = {
 }
 
 export type Sort = {
-    column: number
+    column?: number
     columnName?: string
     isAsc: boolean
     level: number
@@ -51,9 +55,9 @@ export type Segment = {
 }
 
 export type Cursor = {
-    filter: FilterData
-    sort: Sort
-    segment: Segment
+    filter?: FilterData
+    sort?: Sort[]
+    segment?: Segment
 }
 
 export type Strings = any

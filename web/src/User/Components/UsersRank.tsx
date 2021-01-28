@@ -1,19 +1,23 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Color, Duration, size, image, opacityHover } from '../../Style'
-import { MinorSectionTitle, Table } from '../../Layout'
-import UserRole from '../Constants/UserRole'
-import { useIdentity } from '..'
+import { Color, Duration, image, opacityHover, size } from '../../Style'
+import { Diff, HierarchicalTable, MinorSectionTitle } from '../../Layout'
+import { getUsers, useIdentity, User, useUsers, getUserRank } from '..'
 import { Link, Url } from '../../Routing'
 import UserName from './UserName'
+import { Async } from '../../Async'
+import { Paginator, Sort, Units, UnitType, UnitTypeData, useStrings } from '../../Data'
+import { AggregatedStats } from '../../Stats'
+import DbTable from '../../Database/Constants/DbTable'
+import { useSelector } from 'react-redux'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 }
 
 interface NavLinkProps {
-    isActive: boolean
+    isActive?: boolean
 }
 
 const Root = Styled.div`
@@ -23,7 +27,7 @@ const Root = Styled.div`
 `
 
 const Title = Styled(MinorSectionTitle)`
-    background: ${Color.MEDIUM_DARK};
+    background-color: ${Color.MEDIUM_DARK};
     align-items: center;
     display: flex;
     justify-content: space-between;
@@ -39,6 +43,7 @@ const Title = Styled(MinorSectionTitle)`
 
 const Inner = Styled.div`
     ${size()}
+    display: flex;
     overflow: hidden;
 `
 
@@ -46,7 +51,6 @@ const Nav = Styled.nav`
     ${size('8rem', '100%')}
     display: flex;
     flex-direction: column;
-    float: left;
 `
 
 const NavLink = Styled.button<NavLinkProps>`
@@ -56,7 +60,6 @@ const NavLink = Styled.button<NavLinkProps>`
     padding: 0.5rem;
     text-align: left;
     transition: background-color ${Duration.MEDIUM}, opacity ${Duration.MEDIUM};
-    word-spacing: 9999999px;
     
     ${props => props.isActive && `
         background-color: ${Color.MEDIUM_DARK};
@@ -65,30 +68,47 @@ const NavLink = Styled.button<NavLinkProps>`
     `}
 `
 
-const UsersTable = Styled(Table)`
-    ${size('calc(100% - 8rem)', '100%')}
-    background: ${Color.MEDIUM_DARK};
-    float: left;
+const NavMenu = Styled.div`
+    background-color: ${Color.MEDIUM_DARK};
+    box-sizing: border-box;
+    padding: 0 0.5rem;
+    width: 100%;
 
-    ${Table.Cell} {
-        padding: 0 0.5rem;
-            
-        &:nth-of-type(4) {
-            color: ${Color.GREEN};
-            font-size: 90%;
-            
-            &:not(:empty):before {
-                content: "+";
-            }
+    select {
+        height: 3.5rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        white-space: normal;
+    }
+
+    ${Paginator.Row} {
+        margin-bottom: 2rem;
+        padding: 0;
+
+        li {
+            min-width: 2.3rem;
         }
-        
-        & > * {
-            padding: 0.5rem 0;
+
+        ul {
+            text-align: center;
         }
     }
+`
+
+const UsersTable = Styled(HierarchicalTable)`
+    ${size('calc(100% - 8rem)', '100%')}
+    background-color: ${Color.MEDIUM_DARK};
+    position: relative;
+
+    ${HierarchicalTable.Cell} {
+        background-color: transparent !important;
+    }
     
-    ${Table.Row} {
-        &:last-of-type {
+    & > *:last-child:not(:first-child) {
+        background-color: rgba(255, 255, 0, 0.08);
+
+        &, button {
+            color: #EEC;
             font-weight: bold;
         }
     }
@@ -101,91 +121,111 @@ const DetailLink = Styled(Link)`
     vertical-align: middle;
 `
 
-const links = ['Objevené planety', 'Prozkoumané hvězdy', 'Výpočetní čas', 'Výpočetní čas', 'Objevené planety', 'Výpočetní čas']
+const Unauth = Styled.p`
+    font-size: 90%;
+    font-style: italic;
+    font-weight: normal !important;
+    line-height: 2.3rem;
+    opacity: 0.5;
+    text-align: center;
+`
 
-const data = {
-    list: [], me: {
-        value: Math.round(Math.random() * 5000),
-        change: Math.round(Math.random() * 500)
-    }
-} as any
-
-for (let i = 0; i < 11; i++) {
-    data.list.push({
-        value: Math.round(Math.random() * 5000),
-        change: Math.round(Math.random() * 500),
-        user: {
-            id: 'abc' + i,
-            avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png',
-            name: ('Michal Struna ' + i).repeat(Math.floor(Math.random() * 2 + 1)),
-            role: UserRole.AUTHENTICATED,
-            stats: {
-                planets: { value: 0, diff: 0 },
-                items: { value: 0, diff: 0 },
-                time: { value: 0, diff: 0 },
-                data: { value: 0, diff: 0 }
-            },
-            personal: {
-                country: 'CZ',
-                birth: 456,
-                sex: false
-            }
-        }
-    })
-}
-
-
-const columns = [
-    { accessor: (user: any, index: any) => (user.position || (index + 1)) + '.' },
-    {
-        accessor: (user: any) => user.user.name,
-        render: (name: any, user: any) => <UserName user={user.user} />,
-        width: 6
-    },
-    { accessor: (user: any) => user.value, width: 2 },
-    { accessor: (user: any) => user.change, render: (change: any) => change > 0 ? change : '', width: 2 }
-]
-
+const PAGE_SIZE = 10
+const ranks: [string, UnitTypeData][] = [['planets', UnitType.SCALAR], ['items', UnitType.SCALAR], ['data', UnitType.MEMORY], ['time', UnitType.TIME]]
 
 const UsersRank = ({ ...props }: Props) => {
 
-    const [rank, setRank] = React.useState(0)
+    const users = useUsers()
+    const strings = useStrings().users
     const identity = useIdentity()
+    const { userRank } = useSelector<any, any>(state => state.user)
+
+    const [rank, setRank] = React.useState(ranks[0])
+    const [page, setPage] = React.useState(0)
+    const [sortSuffix, setSortSuffix] = React.useState('_diff')
 
     const renderedLinks = React.useMemo(() => (
-        links.map((link, i) => (
-            <NavLink key={i} onClick={() => setRank(i)} isActive={i === rank}>
-                {link}
+        ranks.map((r, i) => (
+            <NavLink key={i} onClick={() => setRank(ranks[i])} isActive={r === rank}>
+                {strings[r[0]]}
             </NavLink>
         ))
     ), [rank])
 
-    const users = React.useMemo(() => {
-        const result = [...data.list]
+    const sort = [{ columnName: rank[0] + sortSuffix, isAsc: false, level: 0 }, { columnName: 'name', isAsc: true, level: 0 }]
 
-        if (identity.payload) {
-            result.push({ ...data.me, user: identity.payload })
+    const usersGetter = React.useCallback(() => (
+        getUsers({ segment: { index: page, size: PAGE_SIZE }, sort })
+    ), [rank, sortSuffix, page])
+
+    const userRankGetter = React.useCallback(() => (
+        getUserRank([identity.payload?._id, sort])
+    ), [identity])
+
+    const items = React.useMemo(() => {
+        const result = [...(users.payload?.content || [])]
+
+        if (identity.payload && userRank.payload) {
+            result.push({ ...identity.payload, rank: userRank.payload.value })
         }
 
         return result
-    }, [identity])
+    }, [users, identity, userRank])
 
     return (
         <Root {...props}>
             <Title>
-                Žebříček dobrovolníků
-                <select>
-                    <option>Za poslední den</option>
-                    <option>Za poslední týden</option>
-                    <option>Za poslední měsíc</option>
-                    <option>Za poslední rok</option>
-                    <option>Celkem</option>
-                </select>
-                <DetailLink pathname={Url.DATABASE} />
+                {strings.volunteersRank}
+                <DetailLink pathname={Url.DATABASE + '/' + DbTable.USERS} />
             </Title>
             <Inner>
-                <UsersTable items={users} columns={columns} withHeader={false} />
+                <UsersTable
+                    items={items}
+                    withHeader={false}
+                    rowHeight={() => 37.8}
+                    columns={[
+                        {
+                            accessor: (user, i: number) => ((user.rank ?? ((page * PAGE_SIZE) + i + 1)) + '.'),
+                            width: '1rem',
+                            render: (v, user) => user && v
+                        },
+                        {
+                            accessor: (user: User) => user.name,
+                            render: (name, user) => <UserName user={user} />,
+                            width: 2
+                        },
+                        {
+                            accessor: (user: User) => user.stats[rank[0] as keyof AggregatedStats],
+                            width: 1.2,
+                            render: (v, user) => <Diff {...v} format={v => Units.format(v, rank[1])} />
+                        },
+                    ]}
+                    renderBody={body => (
+                        <Async
+                            data={[
+                                [users, usersGetter, [usersGetter]],
+                                [userRank, userRankGetter, [userRankGetter]]
+                            ]}
+                            success={() => (
+                                <>
+                                    {body}
+                                    {!identity.payload && <Unauth>{strings.unauth}</Unauth>}
+                                </>
+                            )} />
+                    )} />
                 <Nav>
+                    <NavMenu>
+                        <select onChange={e => setSortSuffix(e.target.value)}>
+                            <option value='_diff'>{strings.lastWeek}</option>
+                            <option value=''>{strings.total}</option>
+                        </select>
+                        <Paginator
+                            page={{ index: page, size: PAGE_SIZE }}
+                            onChange={segment => setPage(segment.index)}
+                            itemsCount={users.payload?.count || 0}
+                            freeze={users.pending}
+                            surrounding={false} />
+                    </NavMenu>
                     {renderedLinks}
                 </Nav>
             </Inner>

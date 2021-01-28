@@ -11,12 +11,15 @@ import IconText from './IconText'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     items: any[]
-    levels: Level[]
+    columns: Column<any, any>[] | Level[]
     onSort?: (sort: Partial<Sort>) => void
-    defaultSort?: { column: number, isAsc: boolean, level: number }
+    defaultSort?: Partial<Sort>
     renderBody?: (body: React.ReactNode) => React.ReactNode
     renderHeader?: (header: React.ReactNode) => React.ReactNode
     rowHeight?: (row: number, level: number) => number
+    withHeader?: boolean
+    virtualized?: boolean
+    fixedWidth?: boolean
 }
 
 const Root = Styled.div`
@@ -25,10 +28,12 @@ const Root = Styled.div`
 
 interface RowProps {
     isOdd?: boolean
+    flex?: boolean
 }
 
 const Row = Styled.div<RowProps>`    
     align-items: stretch;
+    ${props => props.flex ? 'display: flex;' : null}
     white-space: nowrap;
     min-width: 100%;
     
@@ -45,7 +50,6 @@ const Cell = Styled.div<CellProps>`
     align-items: center;
     box-sizing: border-box;
     display: inline-flex;
-    flex: 1 1 0;
     height: 100%;
     padding: 0.5rem 1rem;
     position: relative;
@@ -133,8 +137,21 @@ const HeaderRow = Styled(Row)`
 `
 
 // TODO: Generic types. Current = level == 0 ? T1 : T2?
-const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, renderHeader, rowHeight, ...props }: Props) => {
+const HierarchicalTable = ({
+                               columns,
+                               withHeader,
+                               virtualized,
+                               items,
+                               onSort,
+                               defaultSort,
+                               renderBody,
+                               renderHeader,
+                               rowHeight,
+                               fixedWidth,
+                               ...props
+                           }: Props) => {
 
+    const levels: Level[] = 'columns' in columns[0] ? columns as Level[] : [{ columns: (columns as Column<any, any>[]) }]
     const { sort, sortedLevel, sortedColumn, isAsc } = useSort((defaultSort as any).column, (defaultSort as any).isAsc, (defaultSort as any).level)
     const { app } = useElement()
 
@@ -142,7 +159,7 @@ const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, ren
         if (typeof width === 'string') {
             return { width: `${width}` }
         } else {
-            return { width: `${(width ?? 1) * 10}rem` }
+            return fixedWidth ? { flex: width ?? 1, width: '100%' } : { width: `${(width ?? 1) * 10}rem` }
         }
     }
 
@@ -161,7 +178,7 @@ const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, ren
     const renderedHeader = React.useMemo(() => {
         const renderHeader = (levelIndex: number): React.ReactNode => (
             <>
-                <HeaderRow>
+                <HeaderRow flex={fixedWidth}>
                     {levels[levelIndex].columns.map((column: Column<any, any>, i) => (
                         <Cell
                             style={getWidth(column.width)}
@@ -208,9 +225,11 @@ const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, ren
         const { item, level } = rows[index]
 
         return (
-            <Row key={index} style={{ ...style, height: rowHeight!(index, level) + 'px' }} isOdd={index % 2 === 1} data-is-odd={index % 2 === 1}>
+            <Row key={index} style={{ ...style, height: rowHeight!(index, level) + 'px' }} isOdd={index % 2 === 1} flex={fixedWidth}
+                 data-is-odd={index % 2 === 1}>
                 {levels[level].columns.map((column, j) => (
-                    <Cell key={j} icon={column.icon} data-level={level} style={getWidth(column.width)} data-sorted={sortedLevel === level && sortedColumn === j ? (isAsc ? 'asc' : 'desc') : undefined}>
+                    <Cell key={j} icon={column.icon} data-level={level} style={getWidth(column.width)}
+                          data-sorted={sortedLevel === level && sortedColumn === j ? (isAsc ? 'asc' : 'desc') : undefined}>
                         {column.render ? column.render(column.accessor(item, index), item, index) : column.accessor(item, index)}
                     </Cell>
                 ))}
@@ -223,14 +242,14 @@ const HierarchicalTable = ({ levels, items, onSort, defaultSort, renderBody, ren
 
     return (
         <Root {...props}>
-            {headerRenderer(renderedHeader)}
-            {bodyRenderer(
+            {withHeader && headerRenderer(renderedHeader)}
+            {bodyRenderer(virtualized ? (
                 <VirtualizedList
                     itemsCount={rows.length}
                     itemRenderer={renderRow}
-                    itemHeight={index => rowHeight!(index, rows[index].level)}
+                    itemHeight={i => rowHeight!(i, rows[i].level)}
                     scrollable={app} />
-            )}
+            ) : rows.map((row: any, index: number) => renderRow({ row, index })))}
         </Root>
     )
 
@@ -242,7 +261,10 @@ HierarchicalTable.Row = Row
 
 HierarchicalTable.defaultProps = {
     defaultSort: { column: 0, isAsc: true, level: 0 },
-    rowHeight: () => 40
+    rowHeight: () => 40,
+    withHeader: true,
+    virtualized: false,
+    fixedWidth: true
 }
 
 export default HierarchicalTable

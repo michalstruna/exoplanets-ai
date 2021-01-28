@@ -4,10 +4,10 @@ import useRouter from 'use-react-router'
 import { Cursor } from '../../Data'
 import DbTable from '../Constants/DbTable'
 
-export const useSort = () => useSelector((state: any) => state.database.sort)
+export const useSort = () => useSelector((state: any) => [state.database.sort])
 
 export const useCursor = () => useSelector((state: any): Cursor => ({
-    sort: state.database.sort,
+    sort: [state.database.sort],
     segment: state.database.segment,
     filter: state.database.filter
 }))

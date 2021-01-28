@@ -1,5 +1,5 @@
 import React from 'react'
-import Styled from 'styled-components'
+import Styled, { css } from 'styled-components'
 import Paginate from 'react-paginate'
 
 import { size, Color, Duration } from '../../Style'
@@ -11,6 +11,8 @@ interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> 
     onChange: (segment: Segment) => void
     itemsCount: number
     freeze?: boolean
+    stats?: boolean
+    surrounding?: boolean
 }
 
 const PAGE = 'paginator__page'
@@ -18,8 +20,14 @@ const BREAK = 'paginator__page--break'
 const ACTIVE = 'paginator__page--active'
 const EDGE = 'paginator__page--edge'
 
-const Root = Styled.div`
+interface RootProps {
+    surrounding: boolean
+}
+
+const Root = Styled.div<RootProps>`
      user-select: none;
+     
+     surrounding
      
      li, ul {
         margin: 0;
@@ -64,6 +72,12 @@ const Root = Styled.div`
     .${EDGE} {
     
     }
+    
+    ${props => !props.surrounding && css`
+        .${BREAK}, .${PAGE}:not(.${ACTIVE}):not(.${EDGE}) {
+            display: none;
+        }
+    `}
 `
 
 const Row = Styled.div`
@@ -92,7 +106,7 @@ const PerPage = Styled.select`
     text-align: center;
 `
 
-const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
+const Paginator = ({ onChange, page, itemsCount, freeze, stats, surrounding, ...props }: Props) => {
 
     const getPagesCount = React.useCallback(() => Math.ceil(itemsCount / page.size), [itemsCount, page.size])
     const getCache = () => ({ pages: getPagesCount(), itemsCount })
@@ -123,7 +137,7 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
     // TODO: Use icons instead of < and >.
 
     return (
-        <Root {...props}>
+        <Root {...props} surrounding={surrounding!}>
             <Row>
                 <Paginate
                     activeClassName={ACTIVE}
@@ -140,7 +154,7 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
                     previousClassName={EDGE}
                     previousLabel='<' />
             </Row>
-            <Row>
+            {stats && <Row>
                 <Stats>
                     <Line>
                     Zobrazeno {page.index * page.size + 1}-{Math.min(cache.itemsCount, (page.index + 1) * page.size)} z {Numbers.format(cache.itemsCount)}.
@@ -157,14 +171,18 @@ const Paginator = ({ onChange, page, itemsCount, freeze, ...props }: Props) => {
                 )}.
                         </Line>
                 </Stats>
-            </Row>
+            </Row>}
         </Root>
     )
 
 }
 
+Paginator.Row = Row
+
 Paginator.defaultProps = {
-    freeze: false
+    freeze: false,
+    stats: false,
+    surrounding: true
 }
 
 export default Paginator
