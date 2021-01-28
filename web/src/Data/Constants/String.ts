@@ -260,7 +260,11 @@ export default {
             [PlanetStatus.CANDIDATE]: { [CS]: 'Kandidát', [EN]: 'Candidate' },
             [PlanetStatus.CONFIRMED]: { [CS]: 'Potvrzena', [EN]: 'Confirmed' },
             [PlanetStatus.REJECTED]: { [CS]: 'Zamítnuta', [EN]: 'Rejected' }
-        }
+        },
+
+        last: { [CS]: 'Poslední objevené exoplanety', [EN]: 'Last discovered exoplanets' },
+        mostSimilar: { [CS]: 'Zemi nejpodobnější exoplanety', [EN]: 'Most simular exoplanets to Earth' },
+        nearest: { [CS]: 'Nejbližší exoplanety', [EN]: 'Nearest planets' }
     },
 
     system: {

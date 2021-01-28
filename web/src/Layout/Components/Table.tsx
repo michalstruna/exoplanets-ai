@@ -60,14 +60,6 @@ const Table = <Item extends any>({ columns, items, withHeader, ...props }: Props
         </HeaderRow>
     ), [columns, withHeader])
 
-    const getWidth = (width?: number | string) => {
-        if (typeof width === 'string') {
-            return { width: `${width}` }
-        } else {
-            return { width: `${(width ?? 1) * 10}rem` }
-        }
-    }
-
     const renderedItems = React.useMemo(() => (
         items.map((item, i) => (
             <Row key={i}>

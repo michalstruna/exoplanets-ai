@@ -84,14 +84,12 @@ const Cell = Styled.div<CellProps>`
 `
 
 const Header = Styled.div`
-    background-color: ${Color.DARKEST};
     position: sticky;
     top: 0;
     z-index: ${ZIndex.TABLE_HEADER};
 `
 
 const HeaderRow = Styled(Row)`
-    background-color: ${Color.DARKEST};
     position: sticky;
     top: 0;
     z-index: ${ZIndex.TABLE_HEADER};

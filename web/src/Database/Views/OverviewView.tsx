@@ -2,7 +2,7 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Color, Dimension, size } from '../../Style'
-import { Block, Table } from '../../Layout'
+import { Block } from '../../Layout'
 import { UsersBlock } from '../../User'
 import PlanetsRank from '../Components/PlanetsRank'
 import GlobalStatsPanel from '../Components/GlobalStats/GlobalStatsPanel'
@@ -17,38 +17,42 @@ const Root = Styled.div`
     display: flex;
 `
 
-const Center = Styled.div`
+const Right = Styled.div`   
+    box-sizing: border-box;
+    display: flex;
     flex: 1 0 0;
-    margin: 0 1.5rem;
-    min-width: 28rem;
+    flex-direction: column;
+    padding: 1.5rem;
+    padding-top: 0;
 `
 
-const Right = Styled.div`
-    flex: 1.5 0 0;
-    margin-right: 1rem;
+const Top = Styled.div`
+    flex: 1 0 0;
+`
+
+const Bottom = Styled.div`
+    box-sizing: border-box;
+    flex: 0 0 32rem;
+    display: flex;
+    padding-top: 1.5rem;
+    width: 100%;
 `
 
 const Todo = Styled(Block)`
-    ${size('100%', `calc(100% - 35rem)`)}
+    ${size()}
 `
 
 const OverviewUsersBlock = Styled(UsersBlock)`
     ${size('100%', `32rem`)}
-    margin-top: 1.5rem;
-`
-
-const ChatBlock = Styled(Block)`
-    ${size('100%', `calc(100% - 32.5rem)`)}
+    flex: 1 0 0;
+    margin-right: 1.5rem;
+    min-width: 28rem;
 `
 
 const PlanetsRankBlock = Styled(PlanetsRank)`
-    ${size('100%', '29.5rem')}
-    margin-top: 1.5rem;
+    ${size('100%', '32rem')}
+    flex: 1.5 0 0;
     padding: 0;
-    
-    ${Table.Root} {
-        width: calc(100% - 3rem);
-    }
 `
 
 const randomPlanets = [] as any
@@ -66,13 +70,14 @@ const OverviewView = ({ ...props }: Props) => {
     return (
         <Root {...props}>
             <GlobalStatsPanel />
-            <Center>
-                <Todo />
-                <OverviewUsersBlock />
-            </Center>
             <Right>
-                <ChatBlock />
-                <PlanetsRankBlock />
+                <Top>
+                    <Todo />
+                </Top>
+                <Bottom>
+                    <OverviewUsersBlock />
+                    <PlanetsRankBlock />
+                </Bottom>
             </Right>
         </Root>
     )

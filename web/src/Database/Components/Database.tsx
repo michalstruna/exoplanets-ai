@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 
 import { useActions, Sort } from '../../Data'
 import { useDrag, useElement } from '../../Native'
-import { image, size, ZIndex } from '../../Style'
+import { Color, image, size, ZIndex } from '../../Style'
 import { HierarchicalTable, PrimaryButton } from '../../Layout'
 import { setSort, useCursor, useItems, useTable, useTableColumns } from '..'
 import { Async } from '../../Async'
@@ -20,7 +20,11 @@ const Root = Styled.div`
     user-select: none;
 `
 
-const Table = Styled(HierarchicalTable)`    
+const Table = Styled(HierarchicalTable)`
+    ${HierarchicalTable.Header} {
+        background-color: ${Color.DARKEST};
+    }
+
     ${HierarchicalTable.Cell} {
         min-width: 10rem;
         
