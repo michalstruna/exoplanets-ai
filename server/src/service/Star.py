@@ -47,7 +47,7 @@ class StarService(Service):
 
         return list(result)
 
-    def aggregate(self, operations, filter={}, limit=None, skip=None, sort=None, with_index=False):
+    def aggregate(self, operations, filter={}, limit=None, skip=None, sort=None, with_index=False, last_filter=None):
         pipeline = [{"$unwind": "$planets"}, {"$match": filter}, *self.get_sort(sort), {"$limit": limit}, {"$skip": skip}]
 
         if sort:
@@ -69,7 +69,7 @@ class StarService(Service):
 
             result = self.dao.aggregate(pipeline, with_index=False)
         else:
-            result = self.dao.aggregate(operations, filter, limit, skip, sort, with_index=with_index)
+            result = self.dao.aggregate(operations, filter, limit, skip, sort, with_index=with_index, last_filter=last_filter)
 
         return result
 

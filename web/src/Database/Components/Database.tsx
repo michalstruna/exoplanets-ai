@@ -163,8 +163,8 @@ const Database = ({ ...props }: Props) => {
                 virtualized={true}
                 fixedWidth={false}
                 renderBody={body => (
-                    <Async
-                        data={[items, () => getter({ sort, filter, segment }), [sort, filter, segment, table]]}
+                    <Async 
+                        data={[items, () => getter({ sort, filter, segment }), [sort?.[0], filter, segment, table]]}
                         success={() => body}
                         active={() => sort && (sort[0].column === undefined || sort[0].columnName)} />
                 )} />

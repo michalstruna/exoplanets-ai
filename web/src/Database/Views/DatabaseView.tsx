@@ -1,5 +1,4 @@
 import React from 'react'
-import Styled from 'styled-components'
 
 import Database from '../Components/Database'
 import DatabaseSelector from '../Components/DatabaseSelector'

@@ -104,8 +104,11 @@ const UsersTable = Styled(HierarchicalTable)`
         background-color: transparent !important;
     }
     
-    & > *:last-child {
+    & > *:last-child:not(:first-child) {
+        background-color: rgba(255, 255, 0, 0.08);
+
         &, button {
+            color: #EEC;
             font-weight: bold;
         }
     }
@@ -182,7 +185,7 @@ const UsersRank = ({ ...props }: Props) => {
                     rowHeight={() => 37.8}
                     columns={[
                         {
-                            accessor: (user, i: number) => ((user.rank ?? (i + 1)) + '.'),
+                            accessor: (user, i: number) => ((user.rank ?? ((page * PAGE_SIZE) + i + 1)) + '.'),
                             width: '1rem',
                             render: (v, user) => user && v
                         },
