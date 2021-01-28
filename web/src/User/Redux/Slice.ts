@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 
 import { Cookie } from '../../Native'
-import { Cursor, Redux } from '../../Data'
+import { Cursor, Redux, Sort, Value } from '../../Data'
 import UserRole from '../Constants/UserRole'
 import { Credentials, EditedUser, ExternalCredentials, Identity, RegistrationCredentials, User } from '../types'
 import { Requests } from '../../Async'
@@ -47,6 +47,7 @@ const Slice = Redux.slice(
         identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name)),
         onlineUsers: Redux.async<User[]>(onlineUsers),
         editedUser: Redux.async<EditedUser>(),
+        userRank: Redux.async<Value<number>>()
     },
     ({ set, async, plain }) => ({
         getUsers: async<Cursor, SegmentData<User>>('users', cursor => Requests.get(`users`, undefined, cursor)),
@@ -69,9 +70,16 @@ const Slice = Redux.slice(
                 state.identity.payload = identity
                 Cookies.set(Cookie.IDENTITY.name, identity, { expires: Cookie.IDENTITY.expiration })
             }
+        }),
+        getUserRank: async<[string, Sort[]], Value<number>>('userRank', ([userId, sort]) => {
+            if (!userId) {
+                return Promise.resolve({ value: 0 })
+            }
+
+            return Requests.get(`users/${userId}/rank`, undefined, { sort })
         })
     })
 )
 
 export default Slice.reducer
-export const { getUsers, signUp, login, logout, facebookLogin, edit } = Slice.actions
+export const { getUsers, signUp, login, logout, facebookLogin, edit, getUserRank } = Slice.actions

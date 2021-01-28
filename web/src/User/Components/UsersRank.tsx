@@ -3,13 +3,14 @@ import Styled from 'styled-components'
 
 import { Color, Duration, image, opacityHover, size } from '../../Style'
 import { Diff, HierarchicalTable, MinorSectionTitle } from '../../Layout'
-import { getUsers, useIdentity, User, useUsers } from '..'
+import { getUsers, useIdentity, User, useUsers, getUserRank } from '..'
 import { Link, Url } from '../../Routing'
 import UserName from './UserName'
 import { Async } from '../../Async'
-import { Paginator, Units, UnitType, UnitTypeData, useStrings } from '../../Data'
+import { Paginator, Sort, Units, UnitType, UnitTypeData, useStrings } from '../../Data'
 import { AggregatedStats } from '../../Stats'
 import DbTable from '../../Database/Constants/DbTable'
+import { useSelector } from 'react-redux'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -103,8 +104,8 @@ const UsersTable = Styled(HierarchicalTable)`
         background-color: transparent !important;
     }
     
-    ${HierarchicalTable.Row} {
-        &:last-of-type {
+    & > *:last-child {
+        &, button {
             font-weight: bold;
         }
     }
@@ -120,10 +121,10 @@ const DetailLink = Styled(Link)`
 const Unauth = Styled.p`
     font-size: 90%;
     font-style: italic;
-    line-height: 2.5rem;
+    font-weight: normal !important;
+    line-height: 2.3rem;
     opacity: 0.5;
     text-align: center;
-    transform: translateY(-100%);
 `
 
 const PAGE_SIZE = 10
@@ -134,6 +135,7 @@ const UsersRank = ({ ...props }: Props) => {
     const users = useUsers()
     const strings = useStrings().users
     const identity = useIdentity()
+    const { userRank } = useSelector<any, any>(state => state.user)
 
     const [rank, setRank] = React.useState(ranks[0])
     const [page, setPage] = React.useState(0)
@@ -147,11 +149,25 @@ const UsersRank = ({ ...props }: Props) => {
         ))
     ), [rank])
 
+    const sort = [{ columnName: rank[0] + sortSuffix, isAsc: false, level: 0 }, { columnName: 'name', isAsc: true, level: 0 }]
+
     const usersGetter = React.useCallback(() => (
-        getUsers({ segment: { index: page, size: PAGE_SIZE }, sort: { columnName: rank[0] + sortSuffix, isAsc: false, level: 0 } })
+        getUsers({ segment: { index: page, size: PAGE_SIZE }, sort })
     ), [rank, sortSuffix, page])
 
-    const items = [...users.payload?.content || [], identity.payload]
+    const userRankGetter = React.useCallback(() => (
+        getUserRank([identity.payload?._id, sort])
+    ), [identity])
+
+    const items = React.useMemo(() => {
+        const result = [...(users.payload?.content || [])]
+
+        if (identity.payload && userRank.payload) {
+            result.push({ ...identity.payload, rank: userRank.payload.value })
+        }
+
+        return result
+    }, [users, identity, userRank])
 
     return (
         <Root {...props}>
@@ -166,28 +182,33 @@ const UsersRank = ({ ...props }: Props) => {
                     rowHeight={() => 37.8}
                     columns={[
                         {
-                            accessor: (user, i: number) => ((i + 1) + '.'),
+                            accessor: (user, i: number) => ((user.rank ?? (i + 1)) + '.'),
                             width: '1rem',
                             render: (v, user) => user && v
                         },
                         {
-                            accessor: (user: User) => user && user.name,
-                            render: (name, user) => user ? <UserName user={user} /> : '',
+                            accessor: (user: User) => user.name,
+                            render: (name, user) => <UserName user={user} />,
                             width: 2
                         },
                         {
-                            accessor: (user: User) => user && user.stats[rank[0] as keyof AggregatedStats],
+                            accessor: (user: User) => user.stats[rank[0] as keyof AggregatedStats],
                             width: 1.2,
-                            render: (v, user) => user && <Diff {...v} format={v => Units.format(v, rank[1])} />
+                            render: (v, user) => <Diff {...v} format={v => Units.format(v, rank[1])} />
                         },
                     ]}
                     renderBody={body => (
-                        <Async data={[users, usersGetter, [usersGetter]]} success={() => (
-                            <>
-                                {body}
-                                {!identity.payload && <Unauth>{strings.unauth}</Unauth>}
-                            </>
-                        )} />
+                        <Async
+                            data={[
+                                [users, usersGetter, [usersGetter]],
+                                [userRank, userRankGetter, [userRankGetter]]
+                            ]}
+                            success={() => (
+                                <>
+                                    {body}
+                                    {!identity.payload && <Unauth>{strings.unauth}</Unauth>}
+                                </>
+                            )} />
                     )} />
                 <Nav>
                     <NavMenu>

@@ -6,6 +6,10 @@ export type AsyncData<TData, TError = string | number | Error> = {
     error?: TError
 }
 
+export type Value<TValue> = {
+    value: TValue
+}
+
 /**
  * Object pair with properties text and value.
  */
@@ -52,7 +56,7 @@ export type Segment = {
 
 export type Cursor = {
     filter?: FilterData
-    sort?: Sort
+    sort?: Sort[]
     segment?: Segment
 }
 

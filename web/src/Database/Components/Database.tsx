@@ -141,7 +141,7 @@ const Database = ({ ...props }: Props) => {
     const { levels, rowHeight, getter } = useTableColumns()
 
     const handleSort = (newSort: Partial<Sort>) => {
-        if (!sort || newSort.column !== sort.column || newSort.isAsc !== sort.isAsc || newSort.level !== sort.level || newSort.columnName !== sort.columnName) {
+        if (!sort || !sort[0] || newSort.column !== sort[0].column || newSort.isAsc !== sort[0].isAsc || newSort.level !== sort[0].level || newSort.columnName !== sort[0].columnName) {
             actions.setSort(newSort)
         }
     }
@@ -158,7 +158,7 @@ const Database = ({ ...props }: Props) => {
                 items={items.payload?.content ?? []}
                 columns={levels}
                 onSort={handleSort}
-                defaultSort={sort}
+                defaultSort={sort?.[0]}
                 rowHeight={rowHeight}
                 virtualized={true}
                 fixedWidth={false}
@@ -166,7 +166,7 @@ const Database = ({ ...props }: Props) => {
                     <Async
                         data={[items, () => getter({ sort, filter, segment }), [sort, filter, segment, table]]}
                         success={() => body}
-                        active={() => sort && (sort.column === undefined || sort.columnName)} />
+                        active={() => sort && (sort[0].column === undefined || sort[0].columnName)} />
                 )} />
                 <Add>
                     <Tooltip render={() => <DatasetForm />} setCoords={addSetCoords}>
