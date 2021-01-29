@@ -1071,11 +1071,16 @@ Jednotlivé moduly mají následující funkcionalitu:
 \item \textbf{Native}~--~Pomocné funkci pro práci s~datovými typy (pole, čísla, text, ...).
 \end{itemize}
 
-\vspace{-5pt}
+\vspace{-10pt}
 
 \subsection{Klientská aplikace}
 \vspace{-5pt}
 Pro využití většího výpočetního potenciálu počítače není vhodné provádět analýzu dat na straně webové aplikace. Ve webové aplikaci je k~dispozici ke stažení klientská aplikace~--~spustitelný program napsaný v~jazyce \textit{Python}~optimalizovaný pro zpracování dat.
+
+\vspace{-5pt}
+
+\img[1]{Navázání spojení klientské aplikace}{img/client_timeline.pdf}
+\draw
 
 Po spuštění se otevře webová aplikace, ve které uživatel pod svým účtem provede spárování s~klientskou aplikaci. Následně dojde pomocí \textit{Socket.io} k~navázání spojení se serverem, čímž z~pohledu uživatele vznikne nový proces ve stavu \textit{Čeká na spuštění}.
 

@@ -9,6 +9,9 @@ import { PageTitle, PrimaryButton } from '../../Layout'
 import { useIdentity, logout } from '..'
 import UserName from '../Components/UserName'
 import { useActions, useStrings } from '../../Data'
+import { Form } from '../../Form'
+import useRouter from 'use-react-router'
+import { Socket } from '../../Async'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -59,11 +62,20 @@ const LogoutButton = Styled.button`
     width: 100%;
 `
 
+const Title = Styled(PageTitle)`
+    font-size: 150%;
+`
+
 const SyncView = ({ ...props }: Props) => {
 
     const identity = useIdentity()
     const strings = useStrings().sync
     const actions = useActions({ logout })
+    const { match } = useRouter<any>()
+
+    const handleSync = () => {
+        Socket.emit('client_sync', match.params.clientId)
+    }
 
     return (
         <Root {...props}>
@@ -71,24 +83,26 @@ const SyncView = ({ ...props }: Props) => {
                 role={UserRole.UNAUTHENTICATED}
                 when={() => (
                     <Inner>
-                        <PageTitle>
+                        <Title>
                             {strings.login}
-                        </PageTitle>
+                        </Title>
                         <LoginForm />
                     </Inner>
                 )}
                 otherwise={() => (
                     <Inner>
                         <Inner>
-                            <Description>
-                                {strings.confirm} <UserName user={identity.payload} />?
-                            </Description>
-                            <Submit>
-                                {strings.submit}
-                            </Submit>
-                            <LogoutButton onClick={() => actions.logout()}>
-                                {strings.changeIdentity}
-                            </LogoutButton>
+                            <Form onSubmit={handleSync}>
+                                <Description>
+                                    {strings.confirm} <UserName user={identity.payload} />?
+                                </Description>
+                                <Submit>
+                                    {strings.submit}
+                                </Submit>
+                                <LogoutButton onClick={() => actions.logout()} type='button'>
+                                    {strings.changeIdentity}
+                                </LogoutButton>
+                            </Form>
                         </Inner>
                     </Inner>
                 )}/>

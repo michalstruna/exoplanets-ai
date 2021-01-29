@@ -27,20 +27,46 @@ class SocketService(metaclass=patterns.Singleton):
 
         @sio.on("client_connect")
         def client_connect(client):
-            client = self.add_client(client, "user_id")
+            client_id = request.sid
+            self.clients[client_id] = {"id": client_id, **client}
 
-            self.emit_client("connected", id=request.sid)
-            self.emit_web("client_connect", client, user="user_id")
+        @sio.on("web_connect")
+        def web_connect():
+            web_id = request.sid
+            self.webs[web_id] = {"id": web_id}
 
-            sio.sleep(1)  # TODO: Sleep not working.
-            self.add_task(client["id"])
+            #clients = list(map(lambda client_id: self.clients[client_id]["data"], self.users["user_id"]["clients"]))
+            #self.emit_web("clients_update", clients, user="user_id")
+
+        @sio.on("client_auth")
+        def client_auth(client_id):
+            if client_id in self.clients and "user_id" not in self.clients["client_id"]:
+                web_id = request.sid
+                pass
+            else:
+                pass  # TODO: Error - there is no unauthenticated client with specified ID.
+
+            #self.emit_client("connected", id=request.sid)
+            #self.emit_web("client_connect", client, user="user_id")
+
+            #sio.sleep(1)  # TODO: Sleep not working.
+            #self.add_task(client["id"])
 
         @sio.on("disconnect")
         def disconnect():
             id = request.sid
 
-            if id in self.clients:
+            if id in self.clients:  # Client disconnected.
                 client = self.clients[id]
+
+                if "user_id" in client:  # Client was already authenticated.
+                    pass
+                else:  # Client was not authenticated yet.
+                    pass
+
+                del self.clients[id]
+
+                """
                 user_id, client = client["user_id"], client["data"]
 
                 if not client["pause_start"]:
@@ -53,14 +79,9 @@ class SocketService(metaclass=patterns.Singleton):
                 leave_room(self._get_room_name(user_id, "clients"))
                 self.users[user_id]["clients"].remove(id)
                 del self.clients[id]
-            elif id in self.webs:
+                """
+            elif id in self.webs:  # Web disconnected.
                 pass  # TODO
-
-        @sio.on("web_connect")
-        def web_connect():
-            self.add_web("user_id")
-            clients = list(map(lambda client_id: self.clients[client_id]["data"], self.users["user_id"]["clients"]))
-            self.emit_web("clients_update", clients, user="user_id")
 
         @sio.on("web_pause_client")
         def web_pause_client(client_id):

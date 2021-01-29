@@ -26,7 +26,7 @@ ReactDOM.render(
                     <Redirect path={Url.SYSTEM} to={{ pathname: Url.DATABASE }} />
 
                     <Route path={Url.DISCOVERY} component={DiscoveryView} />
-                    <Route path={Url.SYNC} component={SyncView} />
+                    <Route path={Url.SYNC + '/:clientId'} component={SyncView} />
                     <Redirect to={{ pathname: Url.HOME}} />
                 </Switch>
             </App>

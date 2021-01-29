@@ -1,11 +1,8 @@
 #!/usr/bin/python3
 
 import webbrowser
-import service.Socket as x
+from service import Socket
 
-y = x.sio
+sio = Socket.sio
 
-
-#socket = SocketService()
-#key = socket.init()
-#webbrowser.open("https://exoplanets.now.sh/discovery")
+webbrowser.open(f"http://localhost:3000/sync/{sio.eio.sid}")  # TODO: From config.
