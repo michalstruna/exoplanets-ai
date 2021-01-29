@@ -2,9 +2,9 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Color, size } from '../../Style'
-import { Table } from '../../Layout'
+import { HierarchicalTable, Table } from '../../Layout'
 import UserName from './UserName'
-import { useOnlineUsers } from '..'
+import { useOnlineUsers, User } from '..'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -39,18 +39,17 @@ const OnlineUsers = ({ ...props }: Props) => {
 
     const users = useOnlineUsers()
 
-    const renderedTable = React.useMemo(() => users.payload && (
-        <Table
+    const renderedTable = React.useMemo(() => (
+        <HierarchicalTable
             columns={[
-                { accessor: user => user.stats.planets, title: 'Rank', render: rank => rank + '.' },
                 {
-                    accessor: user => user.name, title: 'Jméno',
-                    render: (name, user) => <UserName user={user} />,
+                    accessor: (user: User) => user.name, title: 'Jméno',
+                    render: (name: string, user: User) => <UserName user={user} />,
                     width: 5
                 },
-                { accessor: user => 5/*user.activity.devices.power*/, title: 'Výkon', width: 2 }
+                { accessor: (user: User) => 5/*user.activity.devices.power*/, title: 'Výkon', width: 2 }
             ]}
-            items={users.payload} />
+            items={users} />
     ), [])
 
     return (

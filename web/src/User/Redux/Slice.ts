@@ -4,7 +4,7 @@ import { Cookie } from '../../Native'
 import { Cursor, Redux, Sort, Value } from '../../Data'
 import UserRole from '../Constants/UserRole'
 import { Credentials, EditedUser, ExternalCredentials, Identity, RegistrationCredentials, User } from '../types'
-import { Requests } from '../../Async'
+import { Requests, Socket } from '../../Async'
 import { SegmentData } from '../../Database/types'
 import { Action } from '../../Data/Utils/Redux'
 import Sex from '../Constants/Sex'
@@ -31,13 +31,14 @@ for (let i = 0; i < 38; i++) {
         created: new Date().getTime(),
         modified: new Date().getTime(),
         online: true,
-        devices: { count: 3, power: 456781 }
+        devices: { count: 3, power: 456781 },
     })
 }
 
 const handleLogin = (state: any, action: Action<Identity>) => {
     state.identity.payload = action.payload
     Cookies.set(Cookie.IDENTITY.name, action.payload, { expires: Cookie.IDENTITY.expiration })
+    Socket.emit('web_auth', action.payload._id)
 }
 
 const Slice = Redux.slice(
@@ -45,7 +46,7 @@ const Slice = Redux.slice(
     {
         users: Redux.async<User>(),
         identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name)),
-        onlineUsers: Redux.async<User[]>(onlineUsers),
+        onlineUsers: Redux.empty<User[]>([]),
         editedUser: Redux.async<EditedUser>(),
         userRank: Redux.async<Value<number>>()
     },
@@ -63,6 +64,7 @@ const Slice = Redux.slice(
         logout: plain<void>(state => {
             state.identity.payload = null
             Cookies.remove(Cookie.IDENTITY.name)
+            Socket.emit('web_unauth')
         }),
         edit: async<[string, FormData | EditedUser], User>('editedUser', ([userId, user]) => Requests.put(`users/${userId}`, user), {
             onSuccess: (state, action) => {
@@ -77,9 +79,21 @@ const Slice = Redux.slice(
             }
 
             return Requests.get(`users/${userId}/rank`, undefined, { sort })
+        }),
+
+        setOnlineUsers: set<User[]>('onlineUsers'),
+        addOnlineUser: plain<User>((state, action) => {
+            state.onlineUsers.push(action.payload)
+        }),
+        removeOnlineUser: plain<string>((state, action) => {
+            state.onlineUsers = state.onlineUsers.filter(user => user._id !== action.payload)
         })
     })
 )
 
 export default Slice.reducer
-export const { getUsers, signUp, login, logout, facebookLogin, edit, getUserRank } = Slice.actions
+
+export const {
+    getUsers, signUp, login, logout, facebookLogin, edit, getUserRank,
+    setOnlineUsers, addOnlineUser, removeOnlineUser
+} = Slice.actions

@@ -6,6 +6,7 @@ import { useElement } from '../../Native'
 import Header from './Header'
 import Tooltip from '../../Layout/Components/Tooltip'
 import { Sockets } from '../index'
+import { useIdentity } from '../../User'
 
 interface Props extends React.ComponentPropsWithoutRef<any> {
 
@@ -14,9 +15,10 @@ interface Props extends React.ComponentPropsWithoutRef<any> {
 const App = ({ children }: Props) => {
 
     const { nav } = useElement()
+    const identity = useIdentity()
 
     React.useEffect(() => {
-        Sockets.init()
+        Sockets.init(identity.payload)
     }, [])
 
     return (
