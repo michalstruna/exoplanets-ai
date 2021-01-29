@@ -10,9 +10,9 @@ import VirtualizedList from './VirtualizedList'
 import IconText from './IconText'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-    items: any[]
-    columns: Column<any, any>[] | Level[]
-    onSort?: (sort: Partial<Sort>) => void
+    items: any[] // List of rendered items.
+    columns: Column<any, any>[] | Level[] // Simple list of columns or list of columns in separated levels.
+    onSort?: (sort: Partial<Sort>) => void // Handler for sort.
     defaultSort?: Partial<Sort>
     renderBody?: (body: React.ReactNode) => React.ReactNode
     renderHeader?: (header: React.ReactNode) => React.ReactNode
@@ -134,6 +134,14 @@ const HeaderRow = Styled(Row)`
      }
 `
 
+const getWidth = (width?: number | string, fixedWidth?: boolean) => {
+    if (typeof width === 'string') {
+        return { width: `${width}` }
+    } else {
+        return fixedWidth ? { flex: width ?? 1, width: '100%' } : { width: `${(width ?? 1) * 10}rem` }
+    }
+}
+
 // TODO: Generic types. Current = level == 0 ? T1 : T2?
 const HierarchicalTable = ({
                                columns,
@@ -150,56 +158,34 @@ const HierarchicalTable = ({
                            }: Props) => {
 
     const levels: Level[] = 'columns' in columns[0] ? columns as Level[] : [{ columns: (columns as Column<any, any>[]) }]
-    const { sort, sortedLevel, sortedColumn, isAsc } = useSort((defaultSort as any).column, (defaultSort as any).isAsc, (defaultSort as any).level)
+    const { sort, sortedLevel, sortedColumn, isAsc } = useSort(defaultSort?.column, defaultSort?.isAsc, defaultSort?.level)
     const { app } = useElement()
 
-    const getWidth = (width?: number | string) => {
-        if (typeof width === 'string') {
-            return { width: `${width}` }
-        } else {
-            return fixedWidth ? { flex: width ?? 1, width: '100%' } : { width: `${(width ?? 1) * 10}rem` }
-        }
-    }
-
-    React.useEffect(() => {
+    React.useEffect(() => { // Update sort.
         if (onSort && levels[sortedLevel!] && levels[sortedLevel!].columns[sortedColumn!]) {
-            onSort({
-                column: sortedColumn, isAsc, level: sortedLevel,
-                columnName: levels[sortedLevel!].columns[sortedColumn!].name
-            })
+            onSort({ column: sortedColumn, isAsc, level: sortedLevel, columnName: levels[sortedLevel!].columns[sortedColumn!].name })
         } else if (onSort && sortedLevel === undefined && sortedColumn === undefined && isAsc === undefined) {
             onSort({})
         }
-
     }, [sortedLevel, sortedColumn, isAsc, items, onSort, levels])
 
     const renderedHeader = React.useMemo(() => {
-        const renderHeader = (levelIndex: number): React.ReactNode => (
-            <>
-                <HeaderRow flex={fixedWidth}>
-                    {levels[levelIndex].columns.map((column: Column<any, any>, i) => (
-                        <Cell
-                            style={getWidth(column.width)}
-                            key={i}
-                            icon={column.headerIcon || column.icon}
-                            data-level={levelIndex}
-                            data-header
-                            data-sorted={sortedLevel === levelIndex && sortedColumn === i ? (isAsc ? 'asc' : 'desc') : undefined}
-                            onClick={() => sort(i, levelIndex)}>
-                            {column.title}
-                        </Cell>
-                    ))}
-                </HeaderRow>
-                {levelIndex < levels.length - 1 && renderHeader(levelIndex + 1)}
-            </>
-        )
-
         return (
             <Header>
-                {renderHeader(0)}
+                {levels.map((level, levelIndex) => (
+                    <HeaderRow flex={fixedWidth} key={levelIndex}>
+                        {level.columns.map((column: Column<any, any>, i) => (
+                            <Cell key={i} style={getWidth(column.width, fixedWidth)} icon={column.headerIcon || column.icon}
+                                data-level={levelIndex} data-header onClick={() => sort(i, levelIndex)}
+                                data-sorted={onSort && sortedLevel === levelIndex && sortedColumn === i ? (isAsc ? 'asc' : 'desc') : undefined}>
+                                {column.title}
+                            </Cell>
+                        ))}
+                    </HeaderRow>
+                ))}
             </Header>
         )
-    }, [sort, isAsc, levels, sortedColumn, sortedLevel])
+    }, [sort, isAsc, levels, sortedColumn, sortedLevel, fixedWidth, getWidth])
 
     const rows = React.useMemo(() => {
         const rows = [] as any
@@ -221,13 +207,14 @@ const HierarchicalTable = ({
 
     const renderRow = ({ index, style }: any) => {
         const { item, level } = rows[index]
+        const styles = style || rowHeight ? { ...style, height: rowHeight && (rowHeight!(index, level) + 'px') } : undefined
+        const isOdd = index % 2 === 1
 
         return (
-            <Row key={index} style={{ ...style, height: rowHeight!(index, level) + 'px' }} isOdd={index % 2 === 1} flex={fixedWidth}
-                 data-is-odd={index % 2 === 1}>
+            <Row key={index} style={styles} isOdd={isOdd} flex={fixedWidth} data-is-odd={isOdd || undefined}>
                 {levels[level].columns.map((column, j) => (
-                    <Cell key={j} icon={column.icon} data-level={level} style={getWidth(column.width)}
-                          data-sorted={sortedLevel === level && sortedColumn === j ? (isAsc ? 'asc' : 'desc') : undefined}>
+                    <Cell key={j} icon={column.icon} data-level={level} style={getWidth(column.width, fixedWidth)}
+                          data-sorted={onSort && sortedLevel === level && sortedColumn === j ? (isAsc ? 'asc' : 'desc') : undefined}>
                         {column.render ? column.render(column.accessor(item, index), item, index) : column.accessor(item, index)}
                     </Cell>
                 ))}
@@ -259,7 +246,6 @@ HierarchicalTable.Row = Row
 
 HierarchicalTable.defaultProps = {
     defaultSort: { column: 0, isAsc: true, level: 0 },
-    rowHeight: () => 40,
     withHeader: true,
     virtualized: false,
     fixedWidth: true

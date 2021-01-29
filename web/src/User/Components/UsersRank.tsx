@@ -182,7 +182,6 @@ const UsersRank = ({ ...props }: Props) => {
                 <UsersTable
                     items={items}
                     withHeader={false}
-                    rowHeight={() => 37.8}
                     columns={[
                         {
                             accessor: (user, i: number) => ((user.rank ?? ((page * PAGE_SIZE) + i + 1)) + '.'),

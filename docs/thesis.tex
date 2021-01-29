@@ -105,7 +105,7 @@ Na počátku 90. let minulého století byla objevena první exoplaneta v~okolí
 \img[1]{Četnost objevů exoplanet v~jednotlivých letech}{stats/count_by_year.png}
 \data{1}{nasadata}
 
-Cestovat k~jiným hvězdám a~posílat sondy k~exoplanetám je však naprosto mimo možnosti naší současné technologie. Dokonce i~přímé pozorování exoplanet teleskopem je ve většině případů nemožné. Téměř veškerá pozorování se tak provádí skrze nepřímé metody. Ty využívají skutečnosti, že i~když není možné spatřit exoplanetu samotnou, je možné detekovat její působení na své okolí (např. na mateřskou hvězdu).
+Cestovat k~jiným hvězdám a~posílat sondy k~exoplanetám je však naprosto mimo možnosti naší současné technologie. Dokonce i~přímé pozorování exoplanet teleskopem je ve většině případů nemožné. Téměř veškeré objevy se tak provádí skrze nepřímé metody. Ty využívají skutečnosti, že i~když není možné spatřit exoplanetu samotnou, je možné detekovat její působení na své okolí (např. na mateřskou hvězdu).
 
 Jednotlivé metody budou popsány v~následujících podkapitolách. Zdaleka nejvýznamnější je tranzitní metoda, kterou byla objevena většina exoplanet. Velké množství planet bylo objeveno taktéž metodou radiálních rychlostí.~\cite{nasadata}
 
@@ -747,7 +747,7 @@ Obdobně k~vrstvě Max-Pooling existuje např. i~Min-Pooling nebo Average-Poolin
 
 \subsubsection{Vrstva Flatten}
 
-Konvoluční vrstvy umí pracovat s~vícerozměrnými vstupy, vrstvy typu FC však očekávají pouze jednorozměrný vektor vstupních hodnot. Protože např. v~konvolučních sítích je třeba oba typy vrstev kombinovat, je nutné nějakým způsobem převést n-rozměrný tenzor na vektor. Právě k~tomu slouží vrstva Flatten.~\cite{keras}
+Konvoluční vrstvy umí pracovat s~vícerozměrnými vstupy. Vrstvy některých jiných typů však často očekávají pouze jednorozměrný vektor vstupních hodnot. Je proto nutné nějakým způsobem převést n-rozměrný tenzor na vektor. Právě k~tomu slouží vrstva Flatten.~\cite{keras}
 
 \img[1]{Příklad fungování vrsty Flatten}{img/flatten.png}
 \drawgimp
@@ -1243,7 +1243,7 @@ Jakmile jsou všechny požadavky nainstalovány, je možné aplikaci sestavit. V
 
 \vspace{-5pt}
 
-Sestavená webová aplikace je v~adresáři \code{web/build}. Lze ji umístit na  vlastní webový server s~přístupovým bodem \code{index.html} nebo tento soubor přímo spustit v~prohlížeči.
+Sestavená webová aplikace je v~adresáři \code{web/build}. Lze ji umístit na  vlastní webový server s~přístupovým bodem \code{index.html} nebo tento soubor přímo otevřít v~prohlížeči.
 
 \vspace{-5pt}
 
@@ -1263,7 +1263,7 @@ V~souboru \code{web/src/Async/Constants/Config.ts} také můžeme upravit adresu
 
 \lstinputlisting[caption={Výchozí konfigurace webové aplikace.}]{codes/default_web_config.txt}
 
-\vspace{-25pt}
+Stejným způsobem můžeme upravit i~konfigurační soubor \code{client/constants/config.py} pro klientskou aplikaci.
 
 \subsubsection{Vývoj}
 

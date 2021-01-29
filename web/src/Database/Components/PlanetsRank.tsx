@@ -31,10 +31,6 @@ const Root = Styled.div`
 
     ${HierarchicalTable.Cell} {
         background-color: transparent !important;
-
-        &:after {
-            display: none;
-        }
     }
 `
 
@@ -54,7 +50,7 @@ const PlanetsRank = ({ ...props }: Props) => {
     const strings = useStrings().planets
 
     const earthLike = (
-        <HierarchicalTable items={planets} rowHeight={() => 52.5} columns={[
+        <HierarchicalTable items={planets} columns={[
             { accessor: (planet: PlanetData, i: number) => i + 1, title: '#', render: i => i + '.', width: '2.5rem' },
             { accessor: (planet: PlanetData, i: number) => 'Abcbcd', title: strings.planet, render: name => <IconText text={name} icon={icons[Math.floor(Math.random() * 2)]} size='2.35rem' />, width: 10 },
             { accessor: (planet: PlanetData) => 32333, render: v => Units.format(v, UnitType.KM), title: strings.diameter, width: '9rem' },
