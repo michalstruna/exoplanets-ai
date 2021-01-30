@@ -119,7 +119,7 @@ def connect_error():
     print("CONNECT_ERROR")
 
 @sio.event
-def disconnect():
+def disconnect(
     print("DISCONNECT")
 
 @sio.event

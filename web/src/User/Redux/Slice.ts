@@ -3,7 +3,15 @@ import Cookies from 'js-cookie'
 import { Cookie } from '../../Native'
 import { Cursor, Redux, Sort, Value } from '../../Data'
 import UserRole from '../Constants/UserRole'
-import { Credentials, EditedUser, ExternalCredentials, Identity, RegistrationCredentials, User } from '../types'
+import {
+    Credentials,
+    EditedUser,
+    ExternalCredentials,
+    Identity,
+    OnlineUser,
+    RegistrationCredentials,
+    User
+} from '../types'
 import { Requests, Socket } from '../../Async'
 import { SegmentData } from '../../Database/types'
 import { Action } from '../../Data/Utils/Redux'
@@ -46,7 +54,7 @@ const Slice = Redux.slice(
     {
         users: Redux.async<User>(),
         identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name)),
-        onlineUsers: Redux.empty<User[]>([]),
+        onlineUsers: Redux.empty<OnlineUser[]>([]),
         editedUser: Redux.async<EditedUser>(),
         userRank: Redux.async<Value<number>>()
     },
@@ -81,8 +89,8 @@ const Slice = Redux.slice(
             return Requests.get(`users/${userId}/rank`, undefined, { sort })
         }),
 
-        setOnlineUsers: set<User[]>('onlineUsers'),
-        addOnlineUser: plain<User>((state, action) => {
+        setOnlineUsers: set<OnlineUser[]>('onlineUsers'),
+        addOnlineUser: plain<OnlineUser>((state, action) => {
             state.onlineUsers.push(action.payload)
         }),
         removeOnlineUser: plain<string>((state, action) => {

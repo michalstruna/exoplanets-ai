@@ -1,7 +1,7 @@
 import Store from '../Redux/Store'
 import { ProcessData, addProcess, setProcesses, updateProcess, logProcess, ProcessLog } from '../../Discovery'
 import { Socket } from '../../Async'
-import { addOnlineUser, Identity, removeOnlineUser, setOnlineUsers, User } from '../../User'
+import { addOnlineUser, Identity, OnlineUser, removeOnlineUser, setOnlineUsers, User } from '../../User'
 
 export const init = (identity?: Identity) => {
     Socket.emit('web_connect')
@@ -33,11 +33,11 @@ export const init = (identity?: Identity) => {
 
 
     /** ONLINE USERS */
-    Socket.on('set_online_users', (users: User[]) => {
+    Socket.on('set_online_users', (users: OnlineUser[]) => {
         Store.dispatch(setOnlineUsers(users))
     })
 
-    Socket.on('add_online_user', (user: User) => {
+    Socket.on('add_online_user', (user: OnlineUser) => {
         Store.dispatch(addOnlineUser(user))
     })
 

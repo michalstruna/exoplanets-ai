@@ -31,12 +31,7 @@ class SocketService(metaclass=patterns.Singleton):
         def web_connect():
             self.webs[request.sid] = {"id": request.sid}  # Create new web.
 
-            users_data = []
-
-            for k, v in self.users.items():
-                users_data.append(v["data"])
-
-            self.emit_web("set_online_users", users_data, id=request.sid)
+            self.emit_web("set_online_users", list(self.users.values()), id=request.sid)
 
             join_room(self._get_room_name(None, "webs"))  # Join to room with all webs.
             # TODO: self.emit_web("chat_messages", chat)
@@ -240,7 +235,7 @@ class SocketService(metaclass=patterns.Singleton):
     def _add_user(self, user_id):
         if user_id not in self.users:
             user = self.user_service.get_by_id(user_id)
-            user = {**user, "_id": str(user["_id"])}
+            user = {**user, "_id": str(user["_id"]), "since": time.now()}
             self.users[user_id] = {"clients": set(), "webs": set(), "id": user_id, "data": user}
             self.emit_web("add_online_user", user)
 

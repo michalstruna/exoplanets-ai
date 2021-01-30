@@ -373,7 +373,8 @@ export default {
         emptyText: { [CS]: 'Tento uživatel o sobě nic nenapsal.', [EN]: 'This user has not written anything about himself.' },
         //birth: { [CS]: 'Narození', [EN]: 'Birth' },
         emptyInput: { [CS]: 'Nechci uvést', [EN]: 'Don\'t want provide' },
-        text: { [CS]: 'Profilový text', [EN]: 'Profile text' }
+        text: { [CS]: 'Profilový text', [EN]: 'Profile text' },
+        noOnlineUsers: { [CS]: 'Nikdo není online.', [EN]: 'Nobody is online.' }
     },
 
     discovery: {
