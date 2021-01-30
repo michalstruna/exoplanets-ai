@@ -24,6 +24,11 @@ export type User = LogObject & StatsObject & {
     }
 }
 
+export type OnlineUser = User & {
+    webs: string[]
+    clients: string[]
+}
+
 export type EditedUser = {
     personal: UserPersonal
     avatar?: string | null

@@ -49,6 +49,12 @@ const Table = Styled(HierarchicalTable)`
                 }
             }
         }
+
+        &:not([data-header]) {
+            &:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3) {
+                background-color: ${Color.MEDIUM_DARK};
+            }
+        }
         
         &[data-header] {
             height: 2.5rem;

@@ -5,6 +5,7 @@ import { IconText } from '../../Layout'
 import UsersRank from './UsersRank'
 import OnlineUsers from './OnlineUsers'
 import Chat from './Chat'
+import { useOnlineUsers } from '../Redux/Selectors'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -28,17 +29,18 @@ const Content = Styled.div`
     ${size('100%', 'calc(100% - 2.5rem)')}
 `
 
-const links = [
-    { icon: 'Database/RealTime/Volunteers.svg', text: 'Dobrovolníci' },
-    { icon: 'Controls/Active.svg', text: 'Online (451)' },
-    { icon: 'Database/RealTime/Discussion.svg', text: 'Diskuse (2)' }
-]
-
 const tabs = [() => <UsersRank />, () => <OnlineUsers />, () => <Chat />]
 
 const UsersBlock = ({ ...props }: Props) => {
 
     const [tab, setTab] = React.useState(0)
+    const onlineUsers = useOnlineUsers()
+
+    const links = [
+        { icon: 'Database/RealTime/Volunteers.svg', text: 'Dobrovolníci' },
+        { icon: 'Controls/Active.svg', text: `Online (${onlineUsers.length})` },
+        { icon: 'Database/RealTime/Discussion.svg', text: 'Diskuse (2)' }
+    ]
 
     const renderedLinks = React.useMemo(() => (
         links.map((link, i) => (
@@ -49,7 +51,7 @@ const UsersBlock = ({ ...props }: Props) => {
                 icon={link.icon}
                 text={link.text} />
         ))
-    ), [tab])
+    ), [tab, onlineUsers])
 
     const renderedContent = React.useMemo(tabs[tab], [tab])
 

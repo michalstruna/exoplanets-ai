@@ -7,4 +7,4 @@ export const useIdentity = (): any => useSelector<any>(state => state.user.ident
 
 export const useUsers = () => useSelector<any>(state => state.user.users) as AsyncData<SegmentData<User>>
 
-export const useOnlineUsers = () => useSelector<any>(state => state.user.onlineUsers) as AsyncData<User[]>
+export const useOnlineUsers = () => useSelector<any>(state => state.user.onlineUsers) as User[]

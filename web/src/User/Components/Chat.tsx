@@ -87,7 +87,9 @@ const Chat = ({ ...props }: Props) => {
         </Input>
     )
 
-    const user = users.payload?.[4]
+    return null
+
+    const user = users[4]
 
     return (
         <Root {...props}>
