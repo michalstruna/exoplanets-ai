@@ -10,6 +10,7 @@ from service.Planet import PlanetService
 from service.Star import StarService
 from service.File import FileService
 from service.User import UserService
+from service.Message import MessageService
 
 
 class SocketService(metaclass=patterns.Singleton):
@@ -26,6 +27,8 @@ class SocketService(metaclass=patterns.Singleton):
         self.tasks = {}
         self.file_service = FileService()
         self.stats_service = GlobalStatsService()
+        self.message_service = MessageService()
+        self.messages = self.message_service.get_all(limit=50)
 
         @sio.on("web_connect")
         def web_connect():
@@ -34,7 +37,7 @@ class SocketService(metaclass=patterns.Singleton):
             self.emit_web("set_online_users", list(self.users.values()), id=request.sid)
 
             join_room(self._get_room_name(None, "webs"))  # Join to room with all webs.
-            # TODO: self.emit_web("chat_messages", chat)
+            self.emit_web("set_messages", self.messages)
 
         @sio.on("client_connect")
         def client_connect(client):
@@ -91,6 +94,19 @@ class SocketService(metaclass=patterns.Singleton):
 
                 del self.webs[id]  # Remove web.
                 leave_room(self._get_room_name(None, "webs"))  # Leave room of all webs.
+
+        @sio.on("new_message")
+        def new_message(message):
+            user = self.users[self.webs[request.sid]["user_id"]]
+            message = self.message_service.add({"user_id": user["_id"], "text": message})
+            message["_id"] = str(message["_id"])  # TODO: toString in DB layer.
+
+            if "user" in message:
+                message["user"]["_id"] = str(message["user"]["_id"])
+
+            self.messages.append(message)
+            self.messages = self.messages[:-50]
+            self.emit_web("new_message", message)
 
         @sio.on("web_pause_client")
         def web_pause_client(client_id):

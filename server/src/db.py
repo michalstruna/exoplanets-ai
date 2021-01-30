@@ -331,7 +331,6 @@ class UserPersonal(EmbeddedDocument):
 
 
 class User(LogDocument):
-
     name = StringField(required=True, unique=True, sparse=True, max_length=20)
     username = EmailField(max_length=200, unique=True, sparse=True)
     password = BinaryField(max_length=200)
@@ -372,6 +371,18 @@ class User(LogDocument):
 
 
 user_dao = Dao(User, stats="stats")
+
+
+class Message(LogDocument):
+    user_id = ReferenceField(User)
+    text = StringField(required=True)
+
+
+message_dao = Dao(Message, [
+    {"$lookup": {
+        "from": "user", "localField": "user_id", "foreignField": "_id", "as": "user"
+    }}
+])
 
 # TODO: Star aliases.
 # TODO: Star metalicity?

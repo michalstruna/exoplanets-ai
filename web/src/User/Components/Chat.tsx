@@ -1,8 +1,13 @@
 import React from 'react'
 import Styled from 'styled-components'
+import { useSelector } from 'react-redux'
+import { FormContextValues } from 'react-hook-form'
+
 import { Color, image, opacityHover, size } from '../../Style'
 import { Field, Form } from '../../Form'
-import { useOnlineUsers } from '..'
+import { Message } from '../types'
+import { useStrings } from '../../Data'
+import { Socket } from '../../Async'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -47,7 +52,7 @@ const Messages = Styled.div`
     padding: 1rem;
 `
 
-const Message = Styled.div`
+const MessageBlock = Styled.div`
     display: flex;
     margin-top: 1rem;
 `
@@ -72,43 +77,43 @@ const MessageText = Styled.div`
     margin-top: 0.0rem;
 `
 
+type Values = {
+    text: string
+}
+
 const Chat = ({ ...props }: Props) => {
 
-    const users = useOnlineUsers()
+    const messages = useSelector<any, Message[]>(state => state.user.messages)
+    const strings = useStrings().users
 
-    const handleSend = () => {
-
+    const handleSend = (values: Values, form: FormContextValues<Values>) => {
+        if (values.text) {
+            Socket.emit('new_message', values.text)
+            form.reset()
+        }
     }
-
-    const renderedInput = (
-        <Input defaultValues={{ message: '' }} onSubmit={handleSend}>
-            <Field name='message' type={Field.Type.TEXT} label={'Napište něco...'} />
-            <button />
-        </Input>
-    )
-
-    return null
-
-    const user = users[4]
 
     return (
         <Root {...props}>
             <Messages>
-                {user && new Array(30).fill(null).map(() => (
-                    <Message>
-                        <MessageImage style={{ backgroundImage: `url(${user.avatar})` }} />
+                {messages.map((message, i) => (
+                    <MessageBlock key={i}>
+                        <MessageImage style={{ backgroundImage: `url(${message.user?.avatar})` }} />
                         <MessageContent>
                             <MessageAuthor>
-                                {user.name}
+                                {message.user?.name}
                             </MessageAuthor>
                             <MessageText>
                                 {'abc ab hdd'.repeat(Math.floor(Math.random() * 10))}
                             </MessageText>
                         </MessageContent>
-                    </Message>
+                    </MessageBlock>
                 ))}
             </Messages>
-            {renderedInput}
+            <Input defaultValues={{ text: '' }} onSubmit={handleSend}>
+                <Field name='text' type={Field.Type.TEXT} label={strings.type} required={strings.type} />
+                <button />
+            </Input>
         </Root>
     )
 

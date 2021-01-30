@@ -371,10 +371,12 @@ export default {
         profile: { [CS]: 'Profil', [EN]: 'Profile' },
         edit: { [CS]: 'Editace', [EN]: 'Edit' },
         emptyText: { [CS]: 'Tento uživatel o sobě nic nenapsal.', [EN]: 'This user has not written anything about himself.' },
-        //birth: { [CS]: 'Narození', [EN]: 'Birth' },
         emptyInput: { [CS]: 'Nechci uvést', [EN]: 'Don\'t want provide' },
         text: { [CS]: 'Profilový text', [EN]: 'Profile text' },
-        noOnlineUsers: { [CS]: 'Nikdo není online.', [EN]: 'Nobody is online.' }
+        noOnlineUsers: { [CS]: 'Nikdo není online.', [EN]: 'Nobody is online.' },
+        volunteers: { [CS]: 'Dobrovolníci', [EN]: 'Volunteers' },
+        discussion: { [CS]: 'Diskuse', [EN]: 'Discussion' },
+        type: { [CS]: 'Napište něco', [EN]: 'Type anything' }
     },
 
     discovery: {

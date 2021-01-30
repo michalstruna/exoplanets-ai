@@ -6,6 +6,8 @@ import UsersRank from './UsersRank'
 import OnlineUsers from './OnlineUsers'
 import Chat from './Chat'
 import { useOnlineUsers } from '../Redux/Selectors'
+import { stringifyUrl } from 'query-string'
+import { useStrings } from '../../Data'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -35,11 +37,12 @@ const UsersBlock = ({ ...props }: Props) => {
 
     const [tab, setTab] = React.useState(0)
     const onlineUsers = useOnlineUsers()
+    const strings = useStrings().users
 
     const links = [
-        { icon: 'Database/RealTime/Volunteers.svg', text: 'Dobrovolníci' },
+        { icon: 'Database/RealTime/Volunteers.svg', text: strings.volunteers },
         { icon: 'Controls/Active.svg', text: `Online (${onlineUsers.length})` },
-        { icon: 'Database/RealTime/Discussion.svg', text: 'Diskuse (2)' }
+        { icon: 'Database/RealTime/Discussion.svg', text: strings.discussion }
     ]
 
     const renderedLinks = React.useMemo(() => (

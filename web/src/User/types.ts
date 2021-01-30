@@ -56,3 +56,8 @@ export type ForgotPasswordData = {
 export type ExternalCredentials = {
     token: string
 }
+
+export type Message = LogObject & {
+    user?: User
+    text: string
+}
