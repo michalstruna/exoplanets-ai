@@ -58,8 +58,8 @@ const OnlineUsers = ({ ...props }: Props) => {
                     { accessor: (user: OnlineUser) => {
                         return (
                             <>
-                                <IconText icon='User/Platform/Web.svg' title='Web' />
-                                {user.clients?.map((_, i) => <IconText key={i} icon='User/Platform/Client.svg' title='Client' />)}
+                                <IconText icon='User/Source/Web.svg' title='Web' />
+                                {user.clients?.map((_, i) => <IconText key={i} icon='User/Source/Client.svg' title='Client' />)}
                             </>
                         )
                         }, width: 3 },

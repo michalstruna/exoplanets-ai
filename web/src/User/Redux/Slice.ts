@@ -95,6 +95,9 @@ const Slice = Redux.slice(
         }),
         removeOnlineUser: plain<string>((state, action) => {
             state.onlineUsers = state.onlineUsers.filter(user => user._id !== action.payload)
+        }),
+        updateOnlineUser: plain<[string, OnlineUser]>((state, action) => {
+            state.onlineUsers = state.onlineUsers.map(user => user._id === action.payload[0] ? { ...user, ...action.payload[1] } : user)
         })
     })
 )
@@ -103,5 +106,5 @@ export default Slice.reducer
 
 export const {
     getUsers, signUp, login, logout, facebookLogin, edit, getUserRank,
-    setOnlineUsers, addOnlineUser, removeOnlineUser
+    setOnlineUsers, addOnlineUser, removeOnlineUser, updateOnlineUser
 } = Slice.actions

@@ -56,7 +56,7 @@ const Cell = Styled.div<CellProps>`
     vertical-align: middle;
     transition: background-color ${Duration.MEDIUM};
     
-    &:not(:first-of-type):not([data-header]):nth-of-type(2n + 1) {
+    &:not([data-header]):nth-of-type(2n + 1) {
         background-color: rgba(0, 0, 0, 0.07);
     }
         

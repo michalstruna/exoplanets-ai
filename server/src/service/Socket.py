@@ -49,10 +49,9 @@ class SocketService(metaclass=patterns.Singleton):
             web["user_id"] = user_id  # Assign user to web.
 
             if user_id not in self.users:  # If user does not exist.
-                self._add_user(user_id)  # Create user.
+                self._add_user(user_id, webs=request.sid)  # Create user.
 
             user = self.users[user_id]
-            user["webs"].add(request.sid)  # Assign web to user.
 
             self.emit_web("clients_update", list(user["clients"]), id=request.sid)  # Send info to new web about all connected clients of user.
             join_room(self._get_room_name(user_id, "webs"))  # Join web to room with user's webs and all webs.
@@ -64,19 +63,12 @@ class SocketService(metaclass=patterns.Singleton):
             else:
                 pass  # TODO: Error - there is no unauthenticated client with specified ID.
 
-            #self.emit_client("connected", id=request.sid)
-            #self.emit_web("client_connect", client, user="user_id")
-
-            #sio.sleep(1)  # TODO: Sleep not working.
-            #self.add_task(client["id"])
-
         @sio.on("web_unauth")
         def web_unauth():
             web = self.webs[request.sid]
             user = self.users[web["user_id"]]
-            user["webs"].remove(web["id"])  # Remove web from user.
             leave_room(self._get_room_name(user["id"], "webs"))  # Leave room of user's webs.
-            self._remove_user_if_empty(user["id"])
+            self._remove_user_if_empty(user["id"], webs=web["id"])
 
         @sio.on("web_disconnect")
         def web_disconnect():  # TODO: Split web and client.
@@ -91,27 +83,11 @@ class SocketService(metaclass=patterns.Singleton):
                     pass
 
                 del self.clients[id]
-
-                """
-                user_id, client = client["user_id"], client["data"]
-
-                if not client["pause_start"]:
-                    client["pause_start"] = time.now()
-
-                client["state"] = ProcessState.TERMINATED.value
-                self.update_client(id)
-
-                leave_room(self._get_room_name(None, "clients"))
-                leave_room(self._get_room_name(user_id, "clients"))
-                self.users[user_id]["clients"].remove(id)
-                del self.clients[id]
-                """
             elif id in self.webs:  # Web disconnected.
                 web = self.webs[id]
 
                 if "user_id" in web:  # If it is authenticated web.
-                    self.users[web["user_id"]]["webs"].remove(id)
-                    self._remove_user_if_empty(web["user_id"])
+                    self._remove_user_if_empty(web["user_id"], webs=id)
 
                 del self.webs[id]  # Remove web.
                 leave_room(self._get_room_name(None, "webs"))  # Leave room of all webs.
@@ -180,12 +156,17 @@ class SocketService(metaclass=patterns.Singleton):
         except:
             pass
 
-    def _remove_user_if_empty(self, user_id):
+    def _remove_user_if_empty(self, user_id, **kwargs):
         user = self.users[user_id]
+
+        for k in kwargs:
+            user[k].remove(kwargs[k])
 
         if not user["webs"] and not user["clients"]:
             del self.users[user_id]
             self.emit_web("remove_online_user", user_id)
+        else:
+            self.emit_web("update_online_user", user)
 
     def finish_task(self, task):
         """
@@ -232,12 +213,22 @@ class SocketService(metaclass=patterns.Singleton):
             stars=stars
         )
 
-    def _add_user(self, user_id):
+    def _add_user(self, user_id, **kwargs):
         if user_id not in self.users:
             user = self.user_service.get_by_id(user_id)
             user = {**user, "_id": str(user["_id"]), "since": time.now()}
-            self.users[user_id] = {"clients": set(), "webs": set(), "id": user_id, "data": user}
+            user = {"clients": [], "webs": [], "id": user_id, **user}
+            self.users[user_id] = user
+
+            for k in kwargs:
+                user[k].append(kwargs[k])
+
             self.emit_web("add_online_user", user)
+        else:
+            for k in kwargs:
+                user[k].append(kwargs[k])
+
+            self.emit_web("update_online_user", user["id"], user)
 
     def _get_room_name(self, user_id, target):
         return (user_id if user_id else "") + "/" + target
@@ -246,8 +237,7 @@ class SocketService(metaclass=patterns.Singleton):
         client_id = request.sid
         client = {"id": client_id, **client}
 
-        self._add_user(user_id)
-        self.users[user_id]["clients"].append(client_id)
+        self._add_user(user_id, clients=client_id)
         self.clients[client_id] = {"data": client, "user_id": user_id}
         join_room(self._get_room_name(user_id, "clients"))
         join_room(self._get_room_name(None, "clients"))
@@ -262,8 +252,7 @@ class SocketService(metaclass=patterns.Singleton):
 
         return self.webs[web_id]
 
-        self._add_user(user_id)
-        self.users[user_id]["webs"].append(web_id)
+        self._add_user(user_id, webs=web_id)
         self.webs[web_id] = {"user_id": user_id}
         join_room(self._get_room_name(user_id, "webs"))
         join_room(self._get_room_name(None, "webs"))
