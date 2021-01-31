@@ -11,7 +11,7 @@ import { logout, edit } from '../Redux/Slice'
 import Avatar from './Avatar'
 import { Dates } from '../../Native'
 import { Field, Form, ImageUpload } from '../../Form'
-import { FormContextValues } from 'react-hook-form'
+import { UseFormMethods } from 'react-hook-form'
 import { Format } from '../../Native/Utils/Dates'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
@@ -253,7 +253,7 @@ const UserForm = ({ user, toggle, ...props }: Props) => {
     const strings = useStrings()
     const [avatar, setAvatar] = React.useState<File | null>()
 
-    const handleSubmit = async (values: EditedUser, form: FormContextValues<EditedUser>) => {
+    const handleSubmit = async (values: EditedUser, form: UseFormMethods<EditedUser>) => {
         for (const i in values.personal) {
             if (!values.personal[i as keyof UserPersonal]) {
                 values.personal[i as keyof UserPersonal] = null as any

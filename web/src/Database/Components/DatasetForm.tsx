@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { FormContextValues, useForm } from 'react-hook-form'
+import { UseFormMethods, useForm } from 'react-hook-form'
 import { camelCase } from 'change-case'
 
 import { Field, Form, FormGroup } from '../../Form'
@@ -39,12 +39,12 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
     const form = useForm<DatasetNew>({ defaultValues: dataset ?? defaultValues })
     const values = form.watch()
 
-    const handleSubmit = async (values: DatasetNew, form: FormContextValues<DatasetNew>) => {
+    const handleSubmit = async (values: DatasetNew, form: UseFormMethods<DatasetNew>) => {
         const { type, ...updateValues } = values
         let action = await (dataset ? actions.updateDataset([dataset._id, updateValues]) : actions.addDataset(values))
 
         if (action.error) {
-            form.setError(Form.GLOBAL_ERROR, 'Chyba')
+            form.setError(Form.GLOBAL_ERROR, { type: action.error })
         } else {
             form.reset(dataset ? values : undefined)
             actions.hideTooltip()

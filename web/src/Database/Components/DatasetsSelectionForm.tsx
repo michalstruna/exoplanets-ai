@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { FormContextValues, useForm } from 'react-hook-form'
+import { UseFormMethods, useForm } from 'react-hook-form'
 
 import { Field, FieldType, Form, FormGroup, ResetFormButton } from '../../Form'
 import { useActions, useStrings } from '../../Data'
@@ -15,7 +15,7 @@ type Category<T> = [keyof T, any, string?]
 type Values<T> = Record<string, Record<string, boolean>>
 
 interface Props<T> extends Omit<Omit<React.ComponentPropsWithoutRef<'div'>, 'onSubmit'>, 'title'> {
-    item: T
+    item: any // TODO: T.
     categories: Category<T>[]
     onSubmit: (values: DatasetSelection<T>) => Action<any>
     title?: React.ReactNode
@@ -65,18 +65,18 @@ const DatasetsSelectionForm = <T extends any>({ item, categories, onSubmit, titl
     }, [item, categories])
 
     const form = useForm({ defaultValues })
-    const values = form.watch({ nest: true })
+    const values = form.watch()
 
     const nSelected = Object.values(values).reduce((prev, curr) => prev + Object.values(curr).filter(c => !!c).length, 0)
 
     const strings = useStrings().datasets.selection
     const actions = useActions({ addDataset, updateDataset, hideTooltip: Tooltip.hide })
 
-    const handleSubmit = async (values: Values<T>, form: FormContextValues<Values<T>>) => {
+    const handleSubmit = async (values: Values<T>, form: UseFormMethods<Values<T>>) => {
         let action = await onSubmit(getFormValuesToOutput(values))
 
         if (action.error) {
-            form.setError(Form.GLOBAL_ERROR, 'Chyba')
+            form.setError(Form.GLOBAL_ERROR, { type: 'Chyba' }) // TODO: Fix error.
         } else {
             form.reset()
             actions.hideTooltip()

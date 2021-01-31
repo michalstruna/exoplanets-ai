@@ -6,7 +6,6 @@ import UsersRank from './UsersRank'
 import OnlineUsers from './OnlineUsers'
 import Chat from './Chat'
 import { useOnlineUsers } from '../Redux/Selectors'
-import { stringifyUrl } from 'query-string'
 import { useStrings } from '../../Data'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {

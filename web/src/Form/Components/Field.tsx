@@ -24,7 +24,7 @@ interface Props extends Omit<Omit<Omit<React.ComponentPropsWithoutRef<'input'>, 
 }
 
 type LabelProps = {
-    error?: any
+    bad?: any
 }
 
 const Root = Styled.label`
@@ -64,7 +64,7 @@ const Text = Styled.section`
 `
 
 const Label = Styled.p<LabelProps>`
-    color: ${props => props.error ? Color.RED : Color.LIGHTEST};
+    color: ${props => props.bad ? Color.RED : Color.LIGHTEST} !important;
     margin: 0;
 `
 
@@ -133,7 +133,7 @@ const CheckContainer = Styled.div`
 
 const Field = ({ label, name, type, required, invalid, validator, placeholder, options, ...props }: Props) => {
 
-    const { register, errors, getValues, setValue: setFormValue } = useFormContext()
+    const { register, errors, getValues } = useFormContext()
     const [value, setValue] = React.useState<string>(getValues(name) || '')
 
     const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -207,13 +207,8 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
         <Root>
             {renderComponent(register)}
             <Text>
-                {errors[name] && (
-                    <Label error={true}>
-                        {errors[name].message || errors[name].type}
-                    </Label>
-                )}
-                <Label>
-                    {label}
+                <Label bad={errors[name]}>
+                    {errors[name] ? (errors[name].message || errors[name].type) : label}
                 </Label>
             </Text>
         </Root>

@@ -7,7 +7,6 @@ import { Field, Form } from '../../Form'
 import { Duration, image, opacityHover, size } from '../../Style'
 import { Validator } from '../../Native'
 import { useStrings } from '..'
-import DbTable from '../../Database/Constants/DbTable'
 
 interface Props extends Omit<Omit<React.ComponentPropsWithoutRef<'form'>, 'onChange'>, 'onSubmit'> {
     attributes: TextEnumValue[]
@@ -36,10 +35,6 @@ const fromInternal = <T extends any>(filter: InternalFilterData<T>): FilterData<
     relation: filter.map(v => v.relation),
     value: filter.map(v => v.value)
 })
-
-const Root = Styled(Form)`
-    
-`
 
 const Delete = Styled.button.attrs({ type: 'button' })`
     ${image('Database/Filter/Delete.svg', '60%')}
@@ -241,7 +236,7 @@ const Filter = ({ attributes, groupAttributes, onChange, initialValues, onSubmit
     }, [attributes, groupAttributes])
 
     return (
-        <Root {...props} onSubmit={handleSubmit} form={form}>
+        <Form {...props} onSubmit={handleSubmit} form={form}>
             {values.map((value, i) => {
                 const attr = getAttrByName(value.attribute)
 
@@ -282,7 +277,7 @@ const Filter = ({ attributes, groupAttributes, onChange, initialValues, onSubmit
                     </Row>
                 )
             })}
-        </Root>
+        </Form>
     )
 
 }

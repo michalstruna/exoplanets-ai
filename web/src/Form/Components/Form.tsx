@@ -1,15 +1,15 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { useForm, FormContextValues, FormContext } from 'react-hook-form'
+import { useForm, UseFormMethods, FormProvider, FieldValues, DefaultValues } from 'react-hook-form'
 
-import { Color, opacityHover } from '../../Style'
+import { Color } from '../../Style'
 import { Loader } from '../../Async'
 import { SecondaryButton } from '../../Layout'
 
-interface Props<Values> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
-    defaultValues?: Values
-    onSubmit: (values: Values, form: FormContextValues<Values>) => void
-    form?: FormContextValues<Values>
+interface Props<Values extends FieldValues> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
+    defaultValues?: DefaultValues<Values>
+    onSubmit: (values: Values, form: UseFormMethods<Values>) => void
+    form?: UseFormMethods<Values>
     buttons?: [(() => void) | undefined, string][]
 }
 
@@ -54,36 +54,37 @@ const Buttons = Styled.div<ButtonsProps>`
     margin-top: 1rem;
 `
 
-const Form = <Values extends any = any>({ defaultValues, onSubmit, children, form: outerForm, buttons, ...props }: Props<Values>) => {
+const Form = <Values extends FieldValues>({ defaultValues, onSubmit, children, form: outerForm, buttons, ...props }: Props<Values>) => {
 
     const localForm = useForm<Values>({ defaultValues })
     const form = outerForm || localForm
 
     return (
-        <Root
-            {...props}
-            noValidate={true}
-            data-invalid={/*!(form.formState.isValid || !form.formState.isSubmitted) || */undefined}
-            onSubmit={form.handleSubmit(values => onSubmit(values, form))}>
-            <FormContext {...form}>
+        <FormProvider {...form}>
+            <Root
+                {...props}
+                noValidate={true}
+                onSubmit={form.handleSubmit(values => onSubmit(values, form))}>
                 {children}
-            </FormContext>
-            {(form.errors as any)[Form.GLOBAL_ERROR] && <ErrorContainer>{(form.errors as any)[Form.GLOBAL_ERROR].type}</ErrorContainer>}
-            {form.formState.isSubmitting && <FormLoader />}
-            {buttons && (
-                <Buttons single={buttons.length === 1}>
-                    {buttons.map(([handler, text], i) => handler && text && (
-                        <SecondaryButton onClick={handler} key={i} type='button'>
-                            {text}
-                        </SecondaryButton>
-                    ))}
-                </Buttons>
-            )}
-        </Root>
+                {form.errors[Form.GLOBAL_ERROR] && <ErrorContainer>{(form.errors as any)[Form.GLOBAL_ERROR].type}</ErrorContainer>}
+                {form.formState.isSubmitting && <FormLoader />}
+                {buttons && (
+                    <Buttons single={buttons.length === 1}>
+                        {buttons.map(([handler, text], i) => handler && text && (
+                            <SecondaryButton onClick={handler} key={i} type='button'>
+                                {text}
+                            </SecondaryButton>
+                        ))}
+                    </Buttons>
+                )}
+            </Root>
+        </FormProvider>
+
     )
 
 }
 
+Form.Root = Root
 Form.GLOBAL_ERROR = '__global__' as any
 
 export default Form

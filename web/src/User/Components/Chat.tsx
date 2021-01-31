@@ -1,13 +1,14 @@
 import React from 'react'
 import Styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { FormContextValues } from 'react-hook-form'
+import { UseFormMethods } from 'react-hook-form'
 
 import { Color, image, opacityHover, size } from '../../Style'
 import { Field, Form } from '../../Form'
 import { Message } from '../types'
 import { useStrings } from '../../Data'
 import { Socket } from '../../Async'
+import { useIdentity } from '..'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -16,32 +17,31 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 const Root = Styled.div`
     ${size()}
     background-color: ${Color.MEDIUM_DARK};
-`
 
-const Input = Styled(Form)`
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 0.25rem;
-    padding: 0.5rem;
+    ${Form.Root} {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.25rem;
+        padding: 0.5rem;
 
-    label {
-        margin: 0;
-        width: calc(100% - 4rem);
-        
-        p {
-            color: ${Color.MEDIUM_LIGHT};
+        label {
+            margin: 0;
+            width: calc(100% - 4rem);
+            
+            p {
+                color: ${Color.MEDIUM_LIGHT};
+            }
+        }
+
+        button:not([type]) {
+            ${image('User/Chat/Send.svg', '70%')}
+            ${size('2.5rem')}
+            ${opacityHover()}
+            background-color: transparent !important;
+            margin: 0;
         }
     }
-
-    button:not([type]) {
-        ${image('User/Chat/Send.svg', '70%')}
-        ${size('2.5rem')}
-        ${opacityHover()}
-        background-color: transparent !important;
-        margin: 0;
-    }
-
 `
 
 const Messages = Styled.div`
@@ -85,17 +85,29 @@ const Chat = ({ ...props }: Props) => {
 
     const messages = useSelector<any, Message[]>(state => state.user.messages)
     const strings = useStrings().users
+    const identity = useIdentity()
+    const scrollable = React.useRef<HTMLDivElement>(null)
 
-    const handleSend = (values: Values, form: FormContextValues<Values>) => {
-        if (values.text) {
+    const handleSend = (values: Values, form: UseFormMethods<Values>) => {
+        if (!identity.payload) {
+            form.setError('text', { message: strings.unauth })
+        } else if (values.text) {
             Socket.emit('new_message', values.text)
             form.reset()
         }
     }
 
+    React.useEffect(() => {
+        const el = scrollable.current
+
+        if (el) {
+            el.scrollTop = el.scrollHeight
+        }
+    }, [scrollable, messages])
+
     return (
         <Root {...props}>
-            <Messages>
+            <Messages ref={scrollable}>
                 {messages.map((message, i) => (
                     <MessageBlock key={i}>
                         <MessageImage style={{ backgroundImage: `url(${message.user?.avatar})` }} />
@@ -104,16 +116,16 @@ const Chat = ({ ...props }: Props) => {
                                 {message.user?.name}
                             </MessageAuthor>
                             <MessageText>
-                                {'abc ab hdd'.repeat(Math.floor(Math.random() * 10))}
+                                {message.text}
                             </MessageText>
                         </MessageContent>
                     </MessageBlock>
                 ))}
             </Messages>
-            <Input defaultValues={{ text: '' }} onSubmit={handleSend}>
+            <Form defaultValues={{ text: '' }} onSubmit={handleSend}>
                 <Field name='text' type={Field.Type.TEXT} label={strings.type} required={strings.type} />
                 <button />
-            </Input>
+            </Form>
         </Root>
     )
 

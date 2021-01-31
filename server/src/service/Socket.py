@@ -29,13 +29,11 @@ class SocketService(metaclass=patterns.Singleton):
         self.stats_service = GlobalStatsService()
         self.message_service = MessageService()
         self.messages = self.message_service.get_all(limit=50)
-
+        
         @sio.on("web_connect")
         def web_connect():
             self.webs[request.sid] = {"id": request.sid}  # Create new web.
-
             self.emit_web("set_online_users", list(self.users.values()), id=request.sid)
-
             join_room(self._get_room_name(None, "webs"))  # Join to room with all webs.
             self.emit_web("set_messages", self.messages)
 
@@ -99,14 +97,9 @@ class SocketService(metaclass=patterns.Singleton):
         def new_message(message):
             user = self.users[self.webs[request.sid]["user_id"]]
             message = self.message_service.add({"user_id": user["_id"], "text": message})
-            message["_id"] = str(message["_id"])  # TODO: toString in DB layer.
-
-            if "user" in message:
-                message["user"]["_id"] = str(message["user"]["_id"])
-
             self.messages.append(message)
-            self.messages = self.messages[:-50]
-            self.emit_web("new_message", message)
+            self.messages = self.messages[-50:]
+            self.emit_web("add_message", message)
 
         @sio.on("web_pause_client")
         def web_pause_client(client_id):
@@ -232,7 +225,6 @@ class SocketService(metaclass=patterns.Singleton):
     def _add_user(self, user_id, **kwargs):
         if user_id not in self.users:
             user = self.user_service.get_by_id(user_id)
-            user = {**user, "_id": str(user["_id"]), "since": time.now()}
             user = {"clients": [], "webs": [], "id": user_id, **user}
             self.users[user_id] = user
 

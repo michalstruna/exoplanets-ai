@@ -139,6 +139,8 @@ class Dao:
         if last_filter:
             pipeline.append({"$match": last_filter})
 
+        pipeline.append({"$set": {"_id": {"$toString": "$_id"}}})
+
         return list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
 
     @staticmethod
@@ -381,7 +383,10 @@ class Message(LogDocument):
 message_dao = Dao(Message, [
     {"$lookup": {
         "from": "user", "localField": "user_id", "foreignField": "_id", "as": "user"
-    }}
+    }},
+    {"$unwind": "$user"},
+    {"$set": {"user._id": {"$toString": "$user._id"}}},
+    {"$project": {"user_id": 0}}
 ])
 
 # TODO: Star aliases.
