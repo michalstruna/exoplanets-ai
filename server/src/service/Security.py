@@ -13,5 +13,8 @@ class SecurityService:
     def tokenize(self, data):
         return create_access_token(identity=data)
 
-    def get_request_identity(self):
-        return get_jwt_identity()
+    def get_req_identity(self):
+        identity = get_jwt_identity()
+
+        if identity:
+            return identity["_id"]

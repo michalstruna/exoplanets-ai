@@ -376,15 +376,23 @@ user_dao = Dao(User, stats="stats")
 
 
 class Message(LogDocument):
+    text = StringField(required=True, min_length=1, max_length=300)
     user_id = ReferenceField(User)
-    text = StringField(required=True)
+    tag = StringField()
+
+    def pre_add(self):
+        if "tag" not in self and "user_id" not in self:
+            raise ValidationError("Message must have valid owner.")
+
+        if "tag" in self and "user_id" in self:
+            raise ValidationError("Notification must not have owner.")
 
 
 message_dao = Dao(Message, [
     {"$lookup": {
         "from": "user", "localField": "user_id", "foreignField": "_id", "as": "user"
     }},
-    {"$unwind": "$user"},
+    {"$unwind": {"path": "$user", "preserveNullAndEmptyArrays": True}},
     {"$set": {"user._id": {"$toString": "$user._id"}}},
     {"$project": {"user_id": 0}}
 ])

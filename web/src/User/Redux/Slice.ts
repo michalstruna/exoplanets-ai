@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 
 import { Cookie } from '../../Native'
-import { Cursor, Redux, Sort, Value } from '../../Data'
+import { Cursor, Redux, Segment, Sort, Value } from '../../Data'
 import UserRole from '../Constants/UserRole'
 import {
     Credentials,
@@ -9,6 +9,7 @@ import {
     ExternalCredentials,
     Identity,
     Message,
+    NewMessage,
     OnlineUser,
     RegistrationCredentials,
     User
@@ -16,6 +17,7 @@ import {
 import { Requests, Socket } from '../../Async'
 import { SegmentData } from '../../Database/types'
 import { Action } from '../../Data/Utils/Redux'
+import { MessageSelection } from '..'
 
 const handleLogin = (state: any, action: Action<Identity>) => {
     state.identity.payload = action.payload
@@ -31,7 +33,9 @@ const Slice = Redux.slice(
         onlineUsers: Redux.empty<OnlineUser[]>([]),
         editedUser: Redux.async<EditedUser>(),
         userRank: Redux.async<Value<number>>(),
-        messages: Redux.empty<Message[]>([])
+        messages: Redux.async<SegmentData<Message>>(),
+        newMessage: Redux.async<Message>(),
+        messageSelection: Redux.empty<MessageSelection>(MessageSelection.ALL)
     },
     ({ set, async, plain }) => ({
         getUsers: async<Cursor, SegmentData<User>>('users', cursor => Requests.get(`users`, undefined, cursor)),
@@ -74,10 +78,11 @@ const Slice = Redux.slice(
         updateOnlineUser: plain<[string, OnlineUser]>((state, action) => {
             state.onlineUsers = state.onlineUsers.map(user => user._id === action.payload[0] ? { ...user, ...action.payload[1] } : user)
         }),
-        setMessages: set<Message[]>('messages'),
-        addMessage: plain<Message>((state, action) => {
-            state.messages.push(action.payload) // TODO:  slice(-50)
-        })
+
+        getMessages: async<Cursor, SegmentData<Message>>('messages', cursor => Requests.get(`messages`, undefined, cursor)),
+        addMessage: async<NewMessage, Message>('newMessage', message => Requests.post(`messages`, message)),
+        addLocalMessage: plain<Message>(Redux.addToSegment('messages')),
+        setMessageSelection: set<MessageSelection>('messageSelection')
     })
 )
 
@@ -86,5 +91,5 @@ export default Slice.reducer
 export const {
     getUsers, signUp, login, logout, facebookLogin, edit, getUserRank,
     setOnlineUsers, addOnlineUser, removeOnlineUser, updateOnlineUser,
-    setMessages, addMessage
+    getMessages, addMessage, addLocalMessage, setMessageSelection
 } = Slice.actions

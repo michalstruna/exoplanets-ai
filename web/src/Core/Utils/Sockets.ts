@@ -1,7 +1,7 @@
 import Store from '../Redux/Store'
 import { ProcessData, addProcess, setProcesses, updateProcess, logProcess } from '../../Discovery'
 import { Socket } from '../../Async'
-import { addMessage, addOnlineUser, Identity, Message, OnlineUser, removeOnlineUser, setMessages, setOnlineUsers, updateOnlineUser } from '../../User'
+import { addLocalMessage, addOnlineUser, Identity, Message, OnlineUser, removeOnlineUser, setOnlineUsers, updateOnlineUser } from '../../User'
 
 export const init = (identity?: Identity) => {
     Socket.emit('web_connect')
@@ -49,12 +49,8 @@ export const init = (identity?: Identity) => {
         Store.dispatch(updateOnlineUser([userId, user]))
     })
 
-    Socket.on('set_messages', (messages: Message[]) => {
-        Store.dispatch(setMessages(messages))
-    })
-
-    Socket.on('add_message', (message: Message) => {
-        Store.dispatch(addMessage(message))
+    Socket.on('new_message', (message: Message) => {
+        Store.dispatch(addLocalMessage(message))
     })
     
 }

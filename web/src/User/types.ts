@@ -2,6 +2,7 @@ import UserRole from './Constants/UserRole'
 import { StatsObject } from '../Stats'
 import { LogObject } from '../Data'
 import Sex from './Constants/Sex'
+import { MessageTag } from '.'
 
 export type UserPersonal = {
     sex?: Sex
@@ -57,7 +58,12 @@ export type ExternalCredentials = {
     token: string
 }
 
-export type Message = LogObject & {
-    user?: User
+export type NewMessage = {
     text: string
+}
+
+export type Message = LogObject & NewMessage & {
+    user?: User
+    tag?: MessageTag
+    created: number
 }

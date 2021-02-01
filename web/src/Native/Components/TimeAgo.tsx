@@ -9,7 +9,8 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
     time: number
     refTime?: number
     exact?: boolean
-    frequency?: number
+    frequency?: number,
+    format?: Dates.Format
 }
 
 const Root = Styled.div`
@@ -17,17 +18,17 @@ const Root = Styled.div`
     vertical-align: middle;
 `
 
-const TimeAgo = ({ time, frequency, exact, refTime, ...props }: Props) => {
+const TimeAgo = ({ time, frequency, exact, refTime, format, ...props }: Props) => {
 
     const strings = useStrings()
-    const [ago, setAgo] = React.useState(Dates.formatDistance(strings, time, refTime, Dates.Format.LONG))
+    const [ago, setAgo] = React.useState(Dates.formatDistance(strings, time, refTime, format))
 
     UseInterval(() => {
-        setAgo(Dates.formatDistance(strings, time, refTime, Dates.Format.LONG))
+        setAgo(Dates.formatDistance(strings, time, refTime, format))
     }, frequency!)
 
     return (
-        <Root title={Dates.formatDate(time)} {...props}>
+        <Root title={Dates.formatDateTime(time)} {...props}>
             {ago}
         </Root>
     )
@@ -36,7 +37,8 @@ const TimeAgo = ({ time, frequency, exact, refTime, ...props }: Props) => {
 
 TimeAgo.defaultProps = {
     exact: false,
-    frequency: 1000,
+    frequency: 60000,
+    format: Dates.Format.LONG
 }
 
 export default TimeAgo

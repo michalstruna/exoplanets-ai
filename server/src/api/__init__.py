@@ -7,6 +7,7 @@ from api.stars import api as stars_api
 from api.global_stats import api as global_stats_api
 from api.users import api as users_api
 from api.files import api as files_api
+from api.messages import api as messages_api
 
 api = Api(
     title='Exoplanets',
@@ -23,3 +24,4 @@ api.add_namespace(planets_api.ns)
 api.add_namespace(global_stats_api.ns)
 api.add_namespace(users_api.ns)
 api.add_namespace(files_api.ns)
+api.add_namespace(messages_api.ns)

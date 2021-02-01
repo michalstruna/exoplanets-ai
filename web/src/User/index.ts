@@ -1,5 +1,7 @@
 export { default as UserRole } from './Constants/UserRole'
 export { default as Sex } from './Constants/Sex'
+export { default as MessageTag } from './Constants/MessageTag'
+export { default as MessageSelection } from './Constants/MessageSelection'
 
 export { default as Auth } from './Components/Auth'
 export { default as UsersBlock } from './Components/UsersBlock'

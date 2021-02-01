@@ -9,6 +9,7 @@ import Avatar from './Avatar'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: User
+    size?: string
 }
 
 const Root = Styled(IconText)`

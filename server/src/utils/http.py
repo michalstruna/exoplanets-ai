@@ -4,13 +4,18 @@ from flask_restx.reqparse import RequestParser
 from flask_restx import Namespace, Resource, fields, abort
 from flask import request
 from flask_restx._http import HTTPStatus
+from flask_jwt_extended import jwt_required
 
 from api.errors import error, int_value
 from constants.Data import Relation
 from constants.Error import ErrorType
 from constants.User import UserRole
 from utils.exceptions import BadCredentials, Invalid
+from service.Security import SecurityService
+from utils.patterns import cond_dec
 
+
+security_service = SecurityService()
 
 class Response:
 
@@ -162,8 +167,8 @@ class Request:
 
             if rel not in Relation._value2member_map_:
                 raise Exception(f"'{rel}' is not valid relation.")
-
-            final_prop, type = map_props(prop) if map_props else prop
+            
+            final_prop, type = map_props(prop) if map_props else prop, str
 
             if not final_prop:
                 raise Exception(f"Items are not filerable by '{prop}' prop.")
@@ -238,21 +243,32 @@ class Api:
         methods = {}
 
         if "get_all" in self.resource_type:
+            res_type = self.resource_type["get_all"]
+
             @self.ns.marshal_with(Response.page_model(self.ns, self.full_model), code=HTTPStatus.OK, description=f"Successfully get {self.model_name}s.", )
             @self.ns.response(HTTPStatus.BAD_REQUEST, "Invalid query parameters.", error)
             @self.ns.expect(Request.cursor_parser())
+            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
             def get(_self):
                 return Response.page(self.service, self.map_props)
 
             methods["get"] = get
 
         if "add" in self.resource_type:
+            res_type = self.resource_type["add"]
+
             @self.ns.marshal_with(self.full_model, code=HTTPStatus.CREATED, description=f"{self.model_name} was successfully created.")
             @self.ns.response(HTTPStatus.BAD_REQUEST, f"{self.model_name} is invalid.", error)
             @self.ns.response(HTTPStatus.CONFLICT, f"{self.model_name} is duplicate.", error)
             @self.ns.expect(self.new_model)
+            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
             def post(_self):
-                return Response.post(lambda: self.service.add(request.get_json()))
+                data = request.get_json()
+
+                if "author" in res_type:
+                    data[res_type["author"]] = security_service.get_req_identity()
+
+                return Response.post(lambda: self.service.add(data))
 
             methods["post"] = post
 
@@ -264,29 +280,43 @@ class Api:
         methods = {}
 
         if "get" in self.resource_type:
+            res_type = self.resource_type["get"]
+
             @self.ns.marshal_with(self.full_model, code=HTTPStatus.OK, description=f"Successfully get {self.model_name}.")
             @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
+            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
             def get(_self, id):
                 return Response.get(lambda: self.service.get_by_id(id))
 
             methods["get"] = get
 
         if "delete" in self.resource_type:
+            res_type = self.resource_type["delete"]
+
             @self.ns.response(HTTPStatus.NO_CONTENT, description=f"{self.model_name} was successfully deleted.")
             @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
+            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
             def delete(_self, id):
                 return Response.delete(lambda: self.service.delete(id))
 
             methods["delete"] = delete
 
         if "update" in self.resource_type:
+            res_type = self.resource_type["update"]
+
             @self.ns.marshal_with(self.full_model, code=HTTPStatus.OK, description=f"Successfully get {self.model_name}.")
             @self.ns.response(HTTPStatus.BAD_REQUEST, f"{self.model_name} is invalid.", error)
             @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
             @self.ns.response(HTTPStatus.CONFLICT, f"{self.model_name} is duplicate.", error)
             @self.ns.expect(self.updated_model)
+            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
             def put(_self, id):
-                return Response.put(lambda: self.service.update(id, request.get_json()))
+                data = request.get_json()
+
+                if "author" in res_type:
+                    data[res_type["author"]] = security_service.get_req_identity()
+
+                return Response.put(lambda: self.service.update(id, data))
 
             methods["put"] = put
 
@@ -298,10 +328,13 @@ class Api:
         methods = {}
 
         if "rank" in self.resource_type:
+            res_type = self.resource_type["rank"]
+
             @self.ns.marshal_with(int_value, description="Successfully get item rank.")
             @self.ns.response(HTTPStatus.BAD_REQUEST, "Invalid sort.")
             @self.ns.response(HTTPStatus.NOT_FOUND, "Item with specified ID was not found.")
             @self.ns.expect(Request.sort_parser())
+            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
             def get(_self, id):
                 def get_rank():
                     cursor = Request.cursor(self.map_props)

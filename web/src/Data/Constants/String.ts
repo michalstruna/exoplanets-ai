@@ -9,7 +9,7 @@ import DatasetPriority from '../../Database/Constants/DatasetPriority'
 import SpectralClass from '../../Database/Constants/SpectralClass'
 import LuminosityClass from '../../Database/Constants/LuminosityClass'
 import PlanetStatus from '../../Database/Constants/PlanetStatus'
-import { Sex, UserRole } from '../../User'
+import { MessageSelection, Sex, UserRole } from '../../User'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -312,7 +312,7 @@ export default {
             [EN]: 'Processed data'
         },
         items: {
-            [CS]: 'Zpracovano křivek',
+            [CS]: 'Zpracováno křivek',
             [EN]: 'Processed curves'
         },
         lastWeek: { [CS]: 'poslední týden', [EN]: 'Last week' }
@@ -376,7 +376,16 @@ export default {
         noOnlineUsers: { [CS]: 'Nikdo není online.', [EN]: 'Nobody is online.' },
         volunteers: { [CS]: 'Dobrovolníci', [EN]: 'Volunteers' },
         discussion: { [CS]: 'Diskuse', [EN]: 'Discussion' },
-        type: { [CS]: 'Napište něco', [EN]: 'Type anything' }
+        type: { [CS]: 'Napište něco', [EN]: 'Type anything' },
+
+        messageSelection: {
+            [MessageSelection.ALL]: { [CS]: 'Vše', [EN]: 'All' },
+            [MessageSelection.MESSAGES]: { [CS]: 'Zprávy', [EN]: 'Messages' },
+            [MessageSelection.NOTIFICATIONS]: { [CS]: 'Oznámení', [EN]: 'Notification' },
+            [MessageSelection.DATASETS]: { [CS]: 'Datasety', [EN]: 'Datasets' },
+            [MessageSelection.PLANETS]: { [CS]: 'Planety', [EN]: 'Planets' },
+            [MessageSelection.USERS]: { [CS]: 'Uživatelé', [EN]: 'Users' }
+        }
     },
 
     discovery: {

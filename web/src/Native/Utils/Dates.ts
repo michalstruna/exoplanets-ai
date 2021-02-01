@@ -28,11 +28,16 @@ export const formatDate = (date: number): string => {
     return `${obj.getDate()}. ${obj.getMonth() + 1}. ${obj.getFullYear()}`
 }
 
+export const formatDateTime = (date: number) => {
+    return formatDate(date) + ' ' + formatTime(date)
+}
+
 
 export enum Format {
     SHORT,
     EXACT,
-    LONG
+    LONG,
+    SHORT_NATURE
 }
 
 export const formatDistance = (strings: any, date1: number, date2?: number, format: Format = Format.SHORT): string => {
@@ -65,7 +70,15 @@ export const formatDistance = (strings: any, date1: number, date2?: number, form
             const val = diff / ms[i]
 
             if (diff / ms[i] >= 1) {
-                return (format === Format.EXACT ? Numbers.format(val) : Math.floor(val)) + ' ' + strings.units.time[units[i]]
+                if (format === Format.EXACT) {
+                    return Numbers.format(val)+ ' ' + strings.units.time[units[i]]
+                } else if (format === Format.SHORT) {
+                    return Math.floor(val) + ' ' + strings.units.time[units[i]]
+                } else if (format === Format.SHORT_NATURE) {
+                    return parseInt(i) === units.length - 1 ? 'Teď' : Math.floor(val) + ' ' + strings.units.time[units[i]]
+                }
+
+                return ''
             }
         }
     }
