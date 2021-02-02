@@ -214,7 +214,7 @@ class Sockets(metaclass=Singleton):
 
     def _add_user(self, user_id, **kwargs):
         if user_id not in self.users:
-            user = self.user_service.get_by_id(user_id)
+            user = self.user_service.update(user_id, {"online": True})
             user = {"clients": [], "webs": [], "id": user_id, **user}
             self.users[user_id] = user
 
@@ -302,6 +302,7 @@ class Sockets(metaclass=Singleton):
 
         if not user["webs"] and not user["clients"]:
             del self.users[user_id]
+            user = self.user_service.update(user_id, {"online": False})
             self.socket_service.emit_web("remove_online_user", user_id)
         else:
             self.socket_service.emit_web("update_online_user", user)

@@ -209,8 +209,8 @@ const Profile = ({ user, toggle, ...props }: Props) => {
             </Left>
             <Right>
                 <Item title='Aktivní'
-                      value={user.online ? 'Právě teď' : 'Před ' + Dates.formatDistance(strings, user.modified)}
-                      icon='Controls/Active.svg' />
+                      value={user.online ? strings.units.now : strings.units.before.prefix + Dates.formatDistance(strings, user.modified) + strings.units.before.suffix}
+                      icon={`Controls/${user.online ? 'Active' : 'Inactive'}.svg`} />
                 <Item title='Členem' value={Dates.formatDistance(strings, user.created, undefined, Format.EXACT)}
                       icon='User/Origin.svg' />
                 {user.personal.birth || user.personal.sex !== null ? <IconText
