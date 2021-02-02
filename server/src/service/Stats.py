@@ -19,3 +19,5 @@ class GlobalStatsService(Service):
             updated["inc__" + prop] = kwargs[prop]
 
         self.dao.update({"date": time.day()}, updated, upsert=True, with_return=False)
+
+    

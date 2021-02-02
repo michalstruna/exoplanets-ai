@@ -10,6 +10,8 @@ from .Security import SecurityService
 import db
 from .Stats import GlobalStatsService
 from service.File import FileService
+from constants.Message import MessageTag
+from service.Message import MessageService
 
 
 class UserService(Service):
@@ -19,15 +21,20 @@ class UserService(Service):
         self.security_service = SecurityService()
         self.stats_service = GlobalStatsService()
         self.file_service = FileService()
+        self.message_service = MessageService()
+
+    def after_add(self, user):
+        self.stats_service.add(volunteers=1)
+        self.message_service.add({"user_id": user["_id"], "text": user["name"], "tag": MessageTag.NEW_VOLUNTEER.value})
 
     def local_sign_up(self, credentials):
-        self.add({
+        user = self.add({
             "username": credentials["username"],
             "name": credentials["name"],
             "password": credentials["password"]
         })
 
-        self.stats_service.add(volunteers=1)
+        self.after_add(user)
 
         return self.local_login(credentials)
 
@@ -66,7 +73,7 @@ class UserService(Service):
                 }
             })
 
-            self.stats_service.add(volunteers=1)
+            self.after_add(user)
 
         user = self.update(user["_id"], {"online": True})
         user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})

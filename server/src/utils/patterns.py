@@ -15,3 +15,11 @@ class Enum(NativeEnum):
     @classmethod
     def values(cls):
         return list(map(lambda c: c.value, cls))
+
+
+def cond_dec(dec, condition):
+    def decorator(func):
+        if not condition:
+            return func
+        return dec(func)
+    return decorator

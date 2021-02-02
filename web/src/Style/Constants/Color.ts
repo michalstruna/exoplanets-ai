@@ -9,8 +9,9 @@ enum Color {
     RED = '#D00',
     LIGHT_RED = '#EBB',
     GREEN = '#3C3',
-    DARK_GREEN = '#383',
+    DARK_GREEN = '#262',
     BLUE = '#9EF',
+    DARK_BLUE = '#148',
 
     BACKGROUND = '#252A25',
 

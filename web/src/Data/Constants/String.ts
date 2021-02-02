@@ -9,7 +9,7 @@ import DatasetPriority from '../../Database/Constants/DatasetPriority'
 import SpectralClass from '../../Database/Constants/SpectralClass'
 import LuminosityClass from '../../Database/Constants/LuminosityClass'
 import PlanetStatus from '../../Database/Constants/PlanetStatus'
-import { Sex, UserRole } from '../../User'
+import { MessageSelection, MessageTag, Sex, UserRole } from '../../User'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -93,6 +93,11 @@ export default {
     },
 
     units: {
+        now: { [CS]: 'Teď', [EN]: 'Now' },
+        before: {
+            prefix: { [CS]: 'Před ', [EN]: '' },
+            suffix: { [CS]: '', [EN]: ' ago' }
+        },
         time: {
             second: 's', minute: 'm', hour: 'h', day: 'd', year: { [CS]: 'r', [EN]: 'y' }, millisecond: 'ms'
         }
@@ -312,7 +317,7 @@ export default {
             [EN]: 'Processed data'
         },
         items: {
-            [CS]: 'Zpracovano křivek',
+            [CS]: 'Zpracováno křivek',
             [EN]: 'Processed curves'
         },
         lastWeek: { [CS]: 'poslední týden', [EN]: 'Last week' }
@@ -371,10 +376,26 @@ export default {
         profile: { [CS]: 'Profil', [EN]: 'Profile' },
         edit: { [CS]: 'Editace', [EN]: 'Edit' },
         emptyText: { [CS]: 'Tento uživatel o sobě nic nenapsal.', [EN]: 'This user has not written anything about himself.' },
-        //birth: { [CS]: 'Narození', [EN]: 'Birth' },
         emptyInput: { [CS]: 'Nechci uvést', [EN]: 'Don\'t want provide' },
         text: { [CS]: 'Profilový text', [EN]: 'Profile text' },
-        noOnlineUsers: { [CS]: 'Nikdo není online.', [EN]: 'Nobody is online.' }
+        noOnlineUsers: { [CS]: 'Nikdo není online.', [EN]: 'Nobody is online.' },
+        volunteers: { [CS]: 'Dobrovolníci', [EN]: 'Volunteers' },
+        discussion: { [CS]: 'Diskuse', [EN]: 'Discussion' },
+        type: { [CS]: 'Napište něco', [EN]: 'Type anything' },
+
+        messageSelection: {
+            [MessageSelection.ALL]: { [CS]: 'Vše', [EN]: 'All' },
+            [MessageSelection.MESSAGES]: { [CS]: 'Zprávy', [EN]: 'Messages' },
+            [MessageSelection.NOTIFICATIONS]: { [CS]: 'Oznámení', [EN]: 'Notification' },
+            [MessageSelection.DATASETS]: { [CS]: 'Datasety', [EN]: 'Datasets' },
+            [MessageSelection.PLANETS]: { [CS]: 'Planety', [EN]: 'Planets' },
+            [MessageSelection.USERS]: { [CS]: 'Uživatelé', [EN]: 'Users' }
+        },
+
+        messageTag: {
+            [MessageTag.NEW_VOLUNTEER]: { [CS]: 'Nový dobrovolník', [EN]: 'New volunteer' },
+            [MessageTag.NEW_DATASET]: { [CS]: 'Nový dataset', [EN]: 'New dataset' }
+        }
     },
 
     discovery: {

@@ -102,6 +102,15 @@ const UsersTable = Styled(HierarchicalTable)`
 
     ${HierarchicalTable.Cell} {
         background-color: transparent !important;
+        overflow: hidden;
+
+        &:nth-of-type(2) {
+            padding: 0.25rem 0.5rem;
+        }
+
+        &:nth-of-type(3) {
+            padding: 0.5rem;
+        }
     }
     
     & > *:last-child:not(:first-child) {
@@ -185,7 +194,7 @@ const UsersRank = ({ ...props }: Props) => {
                     columns={[
                         {
                             accessor: (user, i: number) => ((user.rank ?? ((page * PAGE_SIZE) + i + 1)) + '.'),
-                            width: '1rem',
+                            width: '2.5rem',
                             render: (v, user) => user && v
                         },
                         {

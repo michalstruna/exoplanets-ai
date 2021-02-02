@@ -76,8 +76,6 @@ export default class Requests {
                 finalQuery.sort = finalQuery.sort || undefined
             }
 
-            console.log(finalQuery.sort)
-
             if (cursor.filter && cursor.filter.attribute) {
                 finalQuery.filter = cursor.filter.attribute.map((attr, i) => `${attr},${cursor.filter!.relation[i]},${cursor.filter!.value[i]}`)
             }

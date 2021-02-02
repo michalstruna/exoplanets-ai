@@ -49,12 +49,6 @@ const Table = Styled(HierarchicalTable)`
                 }
             }
         }
-
-        &:not([data-header]) {
-            &:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3) {
-                background-color: ${Color.MEDIUM_DARK};
-            }
-        }
         
         &[data-header] {
             height: 2.5rem;
@@ -62,15 +56,19 @@ const Table = Styled(HierarchicalTable)`
     }
 
     ${HierarchicalTable.Row} {
-        &[data-is-odd="true"] {
-            ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
-                background-color: #2F2F2F;
+        &[data-is-odd] {
+            ${HierarchicalTable.Cell}:not([data-header]) {
+                &:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3) {
+                    background-color: #333;
+                }
             }
         }
     
-        &[data-is-odd="false"] {
-            ${HierarchicalTable.Cell}:nth-of-type(3):not([data-header]) {
-                background-color: #383838;
+        &:not([data-is-odd]) {
+            ${HierarchicalTable.Cell}:not([data-header]) {
+                &:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3) {
+                    background-color: ${Color.MEDIUM_DARK};
+                }
             }
         }
     }
@@ -86,12 +84,6 @@ const Table = Styled(HierarchicalTable)`
     
     &.table--${DbTable.BODIES} {     
         ${HierarchicalTable.Cell} {                    
-            &:nth-of-type(10) {            
-                &:not([data-header])[data-level="0"] {
-
-                }
-            }
-            
             &[data-level="1"] {
                 &:nth-of-type(2) {
                     margin-left: 3rem;

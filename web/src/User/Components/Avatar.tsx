@@ -18,6 +18,8 @@ interface RootProps {
 const Root = Styled.div<RootProps>`
     ${props => size(props.size)}
     ${flexCenter()}
+    border-radius: ${props => props.size};
+    overflow: hidden;
 `
 
 const Image = Styled.img`

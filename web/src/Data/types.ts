@@ -36,7 +36,7 @@ export type TextEnumValue<TValue = any> =  TextValue<TValue> & {
 }
 
 
-export type FilterData<TValue = string | number> = {
+export type FilterData<TValue = string | number | null> = {
     attribute: string[]
     relation: Validator.Relation[]
     value: TValue[]

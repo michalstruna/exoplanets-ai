@@ -1,13 +1,15 @@
 import Cookies from 'js-cookie'
 
 import { Cookie } from '../../Native'
-import { Cursor, Redux, Sort, Value } from '../../Data'
+import { Cursor, Redux, Segment, Sort, Value } from '../../Data'
 import UserRole from '../Constants/UserRole'
 import {
     Credentials,
     EditedUser,
     ExternalCredentials,
     Identity,
+    Message,
+    NewMessage,
     OnlineUser,
     RegistrationCredentials,
     User
@@ -15,33 +17,7 @@ import {
 import { Requests, Socket } from '../../Async'
 import { SegmentData } from '../../Database/types'
 import { Action } from '../../Data/Utils/Redux'
-import Sex from '../Constants/Sex'
-
-const onlineUsers = [] as User[]
-
-for (let i = 0; i < 38; i++) {
-    onlineUsers.push({
-        _id: 'abc' + i,
-        avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Google_Earth_icon.svg/200px-Google_Earth_icon.svg.png',
-        name: ('Michal Struna ' + i).repeat(Math.floor(Math.random() * 2 + 1)),
-        role: UserRole.AUTHENTICATED,
-        stats: {
-            planets: { value: 0, diff: 0 },
-            items: { value: 0, diff: 0 },
-            time: { value: 0, diff: 0 },
-            data: { value: 0, diff: 0 }
-        },
-        personal: {
-            country: 'CZ',
-            birth: 456,
-            sex: Sex.MALE
-        },
-        created: new Date().getTime(),
-        modified: new Date().getTime(),
-        online: true,
-        devices: { count: 3, power: 456781 },
-    })
-}
+import { MessageSelection } from '..'
 
 const handleLogin = (state: any, action: Action<Identity>) => {
     state.identity.payload = action.payload
@@ -56,7 +32,10 @@ const Slice = Redux.slice(
         identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name)),
         onlineUsers: Redux.empty<OnlineUser[]>([]),
         editedUser: Redux.async<EditedUser>(),
-        userRank: Redux.async<Value<number>>()
+        userRank: Redux.async<Value<number>>(),
+        messages: Redux.async<SegmentData<Message>>(),
+        newMessage: Redux.async<Message>(),
+        messageSelection: Redux.empty<MessageSelection>(MessageSelection.ALL)
     },
     ({ set, async, plain }) => ({
         getUsers: async<Cursor, SegmentData<User>>('users', cursor => Requests.get(`users`, undefined, cursor)),
@@ -98,7 +77,12 @@ const Slice = Redux.slice(
         }),
         updateOnlineUser: plain<[string, OnlineUser]>((state, action) => {
             state.onlineUsers = state.onlineUsers.map(user => user._id === action.payload[0] ? { ...user, ...action.payload[1] } : user)
-        })
+        }),
+
+        getMessages: async<Cursor, SegmentData<Message>>('messages', cursor => Requests.get(`messages`, undefined, cursor)),
+        addMessage: async<NewMessage, Message>('newMessage', message => Requests.post(`messages`, message)),
+        addLocalMessage: plain<Message>(Redux.addToSegment('messages', 50)),
+        setMessageSelection: set<MessageSelection>('messageSelection')
     })
 )
 
@@ -106,5 +90,6 @@ export default Slice.reducer
 
 export const {
     getUsers, signUp, login, logout, facebookLogin, edit, getUserRank,
-    setOnlineUsers, addOnlineUser, removeOnlineUser, updateOnlineUser
+    setOnlineUsers, addOnlineUser, removeOnlineUser, updateOnlineUser,
+    getMessages, addMessage, addLocalMessage, setMessageSelection
 } = Slice.actions

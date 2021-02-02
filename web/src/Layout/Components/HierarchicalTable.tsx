@@ -38,7 +38,7 @@ const Row = Styled.div<RowProps>`
     min-width: 100%;
     
     ${props => props.isOdd && `
-        background-color: rgba(0, 0, 0, 0.15);
+        background-color: #333;
     `}
 `
 
@@ -138,7 +138,7 @@ const getWidth = (width?: number | string, fixedWidth?: boolean) => {
     if (typeof width === 'string') {
         return { width: `${width}` }
     } else {
-        return fixedWidth ? { flex: width ?? 1, width: '100%' } : { width: `${(width ?? 1) * 10}rem` }
+        return fixedWidth ? { flex: width ?? 1, width: '0' } : { width: `${(width ?? 1) * 10}rem` }
     }
 }
 

@@ -10,6 +10,7 @@ from constants.User import UserRole, Sex
 from utils import time
 from service.Security import SecurityService
 from service.File import FileService
+from constants.Message import MessageTag
 
 security_service = SecurityService()
 file_service = FileService()
@@ -18,16 +19,17 @@ stats_fields = ("data", "items", "planets", "time")
 global_stats_fields = (*stats_fields, "volunteers", "stars")
 
 
-def aggregate_stats_pipeline(days=7, global_stats=False):
+def aggregate_stats_pipeline(field="", days=7):
+    global_stats = field == ""
     before = time.day(-days)
     result = []
 
-    if not global_stats:
-        result.append({"$unwind": {"path": f"$stats", "preserveNullAndEmptyArrays": True}})
-
-    path = f"" if global_stats else "stats."
+    path = f"" if global_stats else field + "."
     target = f"" if global_stats else ".stats"
     fields = global_stats_fields if global_stats else stats_fields
+
+    if not global_stats:
+        result.append({"$unwind": {"path": f"$" + path[:-1], "preserveNullAndEmptyArrays": True}})
 
     group, add = {"_id": None if global_stats else "$_id", "root": {"$first": "$$ROOT"}}, {}
 
@@ -111,9 +113,6 @@ class Dao:
     def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True, last_filter=None):
         pipeline = []
 
-        if self.stats is not None:
-            pipeline += aggregate_stats_pipeline(global_stats=self.stats == "")
-
         pipeline += operations
 
         if filter:
@@ -138,6 +137,8 @@ class Dao:
 
         if last_filter:
             pipeline.append({"$match": last_filter})
+
+        pipeline.append({"$set": {"_id": {"$toString": "$_id"}}})
 
         return list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
 
@@ -206,7 +207,10 @@ class Dataset(LogDocument):
     fields_meta = DictField()
 
 
-dataset_dao = Dao(Dataset, [{"$project": {"items": 0}}], stats="stats")
+dataset_dao = Dao(Dataset, [
+    *aggregate_stats_pipeline("stats"),
+    {"$project": {"items": 0}}
+])
 
 
 class StarType(EmbeddedDocument):
@@ -319,7 +323,7 @@ class GlobalStats(BaseDocument):
     items = IntField(required=True, default=0)
 
 
-global_stats_dao = Dao(GlobalStats, stats="")
+global_stats_dao = Dao(GlobalStats, aggregate_stats_pipeline(""))
 
 
 class UserPersonal(EmbeddedDocument):
@@ -331,7 +335,6 @@ class UserPersonal(EmbeddedDocument):
 
 
 class User(LogDocument):
-
     name = StringField(required=True, unique=True, sparse=True, max_length=20)
     username = EmailField(max_length=200, unique=True, sparse=True)
     password = BinaryField(max_length=200)
@@ -371,7 +374,24 @@ class User(LogDocument):
                 self["password"] = security_service.hash(self["password"])
 
 
-user_dao = Dao(User, stats="stats")
+user_dao = Dao(User, aggregate_stats_pipeline("stats"))
+
+
+class Message(LogDocument):
+    text = StringField(required=True, min_length=1, max_length=300)
+    user_id = ReferenceField(User)
+    tag = StringField(required=True, default=MessageTag.MESSAGE.value)
+
+
+message_dao = Dao(Message, [
+    {"$lookup": {
+        "from": "user", "localField": "user_id", "foreignField": "_id", "as": "user"
+    }},
+    {"$unwind": {"path": "$user", "preserveNullAndEmptyArrays": True}},
+    {"$set": {"user._id": {"$toString": "$user._id"}}},
+    {"$project": {"user_id": 0}},
+    *aggregate_stats_pipeline(field="user.stats")
+])
 
 # TODO: Star aliases.
 # TODO: Star metalicity?
