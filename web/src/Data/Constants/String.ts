@@ -9,7 +9,7 @@ import DatasetPriority from '../../Database/Constants/DatasetPriority'
 import SpectralClass from '../../Database/Constants/SpectralClass'
 import LuminosityClass from '../../Database/Constants/LuminosityClass'
 import PlanetStatus from '../../Database/Constants/PlanetStatus'
-import { MessageSelection, Sex, UserRole } from '../../User'
+import { MessageSelection, MessageTag, Sex, UserRole } from '../../User'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -385,6 +385,10 @@ export default {
             [MessageSelection.DATASETS]: { [CS]: 'Datasety', [EN]: 'Datasets' },
             [MessageSelection.PLANETS]: { [CS]: 'Planety', [EN]: 'Planets' },
             [MessageSelection.USERS]: { [CS]: 'Uživatelé', [EN]: 'Users' }
+        },
+
+        messageTag: {
+            [MessageTag.NEW_VOLUNTEER]: { [CS]: 'Nový dobrovolník', [EN]: 'New volunteer' }
         }
     },
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import Styled from 'styled-components'
+import Styled, { css } from 'styled-components'
 import { useSelector } from 'react-redux'
 import { UseFormMethods } from 'react-hook-form'
 
@@ -8,7 +8,7 @@ import { Field, Form } from '../../Form'
 import { Message } from '../types'
 import { AsyncData, useActions, useStrings } from '../../Data'
 import { Async } from '../../Async'
-import { addMessage, MessageSelection, useIdentity, setMessageSelection, UserName } from '..'
+import { addMessage, MessageSelection, useIdentity, setMessageSelection, UserName, MessageTag } from '..'
 import { SegmentData } from '../../Database/types'
 import { Dates } from '../../Native'
 import { IconText } from '../../Layout'
@@ -20,6 +20,10 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 interface MessageBlockProps {
     own?: boolean
+}
+
+interface NotificationBlokProps {
+    tag: MessageTag
 }
 
 const Root = Styled.div`
@@ -60,6 +64,7 @@ const Messages = Styled.div`
     overflow: hidden;
     overflow-y: auto;
     padding: 1rem;
+    text-align: center;
 `
 
 const MessageContent = Styled.div`
@@ -96,9 +101,9 @@ const MessageBlock = Styled.div<MessageBlockProps>`
     margin-top: 0.7rem;
     position: relative;
     min-height: 3rem;
+    text-align: left;
 
     ${IconText.Icon} {
-        border-radius: 100%;
         margin-right: 0;
     }
 
@@ -139,14 +144,39 @@ const MessageBlock = Styled.div<MessageBlockProps>`
     `}
 `
 
+const NotificationBlok = Styled(MessageText)<NotificationBlokProps>`
+    background-color: ${Color.DARKEST};
+    border-radius: 0.5rem;
+    margin: 0 auto;
+    margin-top: 0.7rem;
+
+    ${MessageHeader} {
+        display: inline-flex;
+        margin-bottom: 0.5rem;
+        visibility: visible;
+    }
+
+    ${props => props.tag === MessageTag.NEW_VOLUNTEER && css`
+        ${MessageHeader} {
+            margin-left: 2.35rem;
+            margin-bottom: 0
+        }
+
+        ${IconText.Root} {
+            margin-top: -0.8rem;
+        }
+
+        ${IconText.Text} {
+            vertical-align: bottom;
+        }
+    `}
+`
+
 const Selection = Styled.select`
     background-color: ${Color.MEDIUM_DARK};
     box-shadow: 0 0 0.25rem ${Color.DARKEST};
     border: none;
-    position: absolute;
-    left: 50%;
-    top: 1rem;
-    transform: translateX(-50%);
+    margin-right: 0.5rem;
 `
 
 type Values = {
@@ -187,36 +217,48 @@ const Chat = ({ ...props }: Props) => {
         }
     }, [scrollable, messages])
 
+    const renderNotification = (message: Message) => {
+        switch (message.tag) {
+            case MessageTag.NEW_VOLUNTEER:
+                return <UserName user={message.user!} />
+        }
+    } 
+
     return (
         <Root {...props}>
             <Messages ref={scrollable}>
                 <Async data={messages} success={() => (
-                    messages.payload?.content.map((message, i) => message.user ? (
-                        <MessageBlock key={i} own={Math.random() > 0.5}>
-                            <UserName user={message.user} size='3rem' />
+                    messages.payload?.content.map((message, i) => message.tag ? (
+                        <NotificationBlok key={i} tag={message.tag}>
+                            <MessageHeader>
+                                {strings.messageTag[message.tag]} <MessageDate time={message.created} format={Dates.Format.SHORT_NATURE} />
+                            </MessageHeader>
+                            {renderNotification(message)}
+                        </NotificationBlok>
+                    ) : (
+                        <MessageBlock key={i} own={identity.payload && identity.payload._id === message.user!._id && i % 2 === 0}>
+                            <UserName user={message.user!} size='3rem' />
                             <MessageContent>
                                 <MessageHeader>
-                                    {message.user.name} <MessageDate time={message.created} format={Dates.Format.SHORT} />
+                                    {message.user!.name} <MessageDate time={message.created} format={Dates.Format.SHORT_NATURE} />
                                 </MessageHeader>
                                 <MessageText>
                                     {message.text}
                                 </MessageText>
                             </MessageContent>
                         </MessageBlock>
-                    ) : (
-                        null
                     ))
                 )} />
             </Messages>
             <Form defaultValues={{ text: '' }} onSubmit={handleSend}>
+                <Selection onChange={e => actions.setMessageSelection(e.target.value as MessageSelection)}>
+                    {Object.values(MessageSelection).map((selection, i) => (
+                        <option value={selection} key={i}>{strings.messageSelection[selection]}</option>
+                    ))}
+                </Selection>
                 <Field name='text' type={Field.Type.TEXT} label={strings.type} required={strings.type} maxLength={300} />
                 <button />
             </Form>
-            <Selection onChange={e => actions.setMessageSelection(e.target.value as MessageSelection)}>
-                {Object.values(MessageSelection).map((selection, i) => (
-                    <option value={selection} key={i}>{strings.messageSelection[selection]}</option>
-                ))}
-            </Selection>
         </Root>
     )
 

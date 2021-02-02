@@ -66,7 +66,7 @@ const Icon = Styled.div<IconProps>`
 `
 
 const Text = Styled.div`
-    display: inline-block;
+    display: inline;
     vertical-align: middle;
 `
 
@@ -81,7 +81,7 @@ const IconText = ({ icon, text, value, size, isActive, pathname, query, hash, ..
             <RootLink {...props as any} pathname={pathname} query={query} hash={hash}>
                 <Icon
                     style={{ backgroundImage: icon && `url(${/^http|^\//.test(icon) ? icon : '/img/' + icon})` }}
-                    size={size || IconText.MEDIUM} />
+                    size={size || IconText.SMALL} />
                 {text}
             </RootLink>
         )
@@ -91,18 +91,17 @@ const IconText = ({ icon, text, value, size, isActive, pathname, query, hash, ..
         <Root type='button' {...props as any} isButton={!!props.onClick} isActive={isActive} isSmall={!!value} as={!!props.onClick ? 'button' : undefined}>
             <Icon
                 style={{ backgroundImage: icon && `url(${/^http|^\//.test(icon) ? icon : '/img/' + icon})` }}
-                size={size || IconText.MEDIUM} />
-                <Text>
-                    {text}
-                    {value && <Value>{value}</Value>}
-                </Text>
+                size={size || IconText.SMALL} />
+            <Text>{text}</Text>
+            {value && <Value>{value}</Value>}
+
         </Root>
     )
 
 }
 
-IconText.SMALL = '1rem'
-IconText.MEDIUM = '1.35rem'
+IconText.SMALL = '1.35rem'
+IconText.MEDIUM = '1.88rem'
 IconText.LARGE = '2.5rem'
 
 IconText.Root = Root

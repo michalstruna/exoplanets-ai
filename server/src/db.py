@@ -18,16 +18,17 @@ stats_fields = ("data", "items", "planets", "time")
 global_stats_fields = (*stats_fields, "volunteers", "stars")
 
 
-def aggregate_stats_pipeline(days=7, global_stats=False):
+def aggregate_stats_pipeline(days=7, field=""):
+    global_stats = field == ""
     before = time.day(-days)
     result = []
 
-    if not global_stats:
-        result.append({"$unwind": {"path": f"$stats", "preserveNullAndEmptyArrays": True}})
-
-    path = f"" if global_stats else "stats."
+    path = f"" if global_stats else field + "."
     target = f"" if global_stats else ".stats"
     fields = global_stats_fields if global_stats else stats_fields
+
+    if not global_stats:
+        result.append({"$unwind": {"path": f"$" + path[:-1], "preserveNullAndEmptyArrays": True}})
 
     group, add = {"_id": None if global_stats else "$_id", "root": {"$first": "$$ROOT"}}, {}
 
@@ -112,7 +113,7 @@ class Dao:
         pipeline = []
 
         if self.stats is not None:
-            pipeline += aggregate_stats_pipeline(global_stats=self.stats == "")
+            pipeline += aggregate_stats_pipeline(field=self.stats)
 
         pipeline += operations
 
@@ -208,7 +209,10 @@ class Dataset(LogDocument):
     fields_meta = DictField()
 
 
-dataset_dao = Dao(Dataset, [{"$project": {"items": 0}}], stats="stats")
+dataset_dao = Dao(Dataset, [
+    *aggregate_stats_pipeline(field="stats"),
+    {"$project": {"items": 0}}
+])
 
 
 class StarType(EmbeddedDocument):
@@ -384,9 +388,6 @@ class Message(LogDocument):
         if "tag" not in self and "user_id" not in self:
             raise ValidationError("Message must have valid owner.")
 
-        if "tag" in self and "user_id" in self:
-            raise ValidationError("Notification must not have owner.")
-
 
 message_dao = Dao(Message, [
     {"$lookup": {
@@ -394,7 +395,8 @@ message_dao = Dao(Message, [
     }},
     {"$unwind": {"path": "$user", "preserveNullAndEmptyArrays": True}},
     {"$set": {"user._id": {"$toString": "$user._id"}}},
-    {"$project": {"user_id": 0}}
+    {"$project": {"user_id": 0}},
+    *aggregate_stats_pipeline(field="user.stats")
 ])
 
 # TODO: Star aliases.

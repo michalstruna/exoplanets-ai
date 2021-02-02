@@ -23,9 +23,9 @@ class UserService(Service):
         self.file_service = FileService()
         self.message_service = MessageService()
 
-    def after_add(self, name):
+    def after_add(self, user):
         self.stats_service.add(volunteers=1)
-        self.message_service.add({"text": name, "tag": MessageTag.NEW_VOLUNTEER.value})
+        self.message_service.add({"user_id": user["_id"], "text": user["name"], "tag": MessageTag.NEW_VOLUNTEER.value})
 
     def local_sign_up(self, credentials):
         user = self.add({
@@ -34,7 +34,7 @@ class UserService(Service):
             "password": credentials["password"]
         })
 
-        self.after_add(user["name"])
+        self.after_add(user)
 
         return self.local_login(credentials)
 
@@ -73,7 +73,7 @@ class UserService(Service):
                 }
             })
 
-            self.after_add(user["name"])
+            self.after_add(user)
 
         user = self.update(user["_id"], {"online": True})
         user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})

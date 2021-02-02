@@ -19,6 +19,15 @@ const Root = Styled.div`
     background-color: ${Color.MEDIUM_DARK};
     overflow-x: hidden;
     overflow-y: auto;
+
+    ${HierarchicalTable.Cell} {
+        background-color: transparent !important;
+        padding: 0.5rem;
+
+        &:first-of-type {
+            padding: 0.25rem 0.5rem;
+        }
+    }
 `
 
 const Empty = Styled.p`
@@ -50,11 +59,11 @@ const OnlineUsers = ({ ...props }: Props) => {
                         <IconText
                             icon={user.personal.sex && `User/${{F: 'Female', M: 'Male'}[user.personal.sex]}.svg`}
                             text={user.personal.birth ? Dates.formatDistance(globalStrings, user.personal.birth, undefined, Format.EXACT) : ''} />
-                        ) },
+                        ), width: '6rem' },
                     { accessor: (user: OnlineUser) => {
                             const country = user.personal.country ? (Countries as any).countryCode(user.personal.country) : null
                             return country.emoji + ' ' + country.code
-                        } },
+                        }, width: '5rem' },
                     { accessor: (user: OnlineUser) => {
                         return (
                             <>
@@ -62,7 +71,7 @@ const OnlineUsers = ({ ...props }: Props) => {
                                 {user.clients?.map((_, i) => <IconText key={i} icon='User/Source/Client.svg' title='Client' />)}
                             </>
                         )
-                        }, width: 3 },
+                        }, width: '7rem' },
                 ]}
                 items={users}
                 renderBody={body => users.length > 0 ? body : <Empty>{strings.noOnlineUsers}</Empty>} />

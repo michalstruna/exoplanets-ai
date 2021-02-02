@@ -22,13 +22,17 @@ const Root = Styled(IconText)`
         text-overflow: ellipsis;
         overflow: hidden;
     }
+
+    ${IconText.Icon} {
+        border-radius: ${props => props.size};
+    }
 `
 
 const UserName = ({ user, ...props }: Props) => {
 
     return (
         <Tooltip render={() => <UserPreview user={user} />}>
-            <Root {...props} icon={Avatar.getUrl(user.avatar)} text={user.name} onClick={() => null} />
+            <Root size={IconText.MEDIUM} {...props} icon={Avatar.getUrl(user.avatar)} text={user.name} onClick={() => null} />
         </Tooltip>
     )
 

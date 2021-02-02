@@ -1,6 +1,6 @@
 from utils.patterns import Enum
 
 class MessageTag(Enum):
-    VALUNTEER = "volunteer"
-    PLANET = "planet",
-    DATASET = "dataset"
+    NEW_VOLUNTEER = "new_volunteer"
+    NEW_PLANET = "new_planet",
+    NEW_DATASET = "new_dataset"
