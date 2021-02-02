@@ -388,7 +388,8 @@ export default {
         },
 
         messageTag: {
-            [MessageTag.NEW_VOLUNTEER]: { [CS]: 'Nový dobrovolník', [EN]: 'New volunteer' }
+            [MessageTag.NEW_VOLUNTEER]: { [CS]: 'Nový dobrovolník', [EN]: 'New volunteer' },
+            [MessageTag.NEW_DATASET]: { [CS]: 'Nový dataset', [EN]: 'New dataset' }
         }
     },
 

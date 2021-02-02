@@ -10,6 +10,7 @@ from constants.User import UserRole, Sex
 from utils import time
 from service.Security import SecurityService
 from service.File import FileService
+from constants.Message import MessageTag
 
 security_service = SecurityService()
 file_service = FileService()
@@ -18,7 +19,7 @@ stats_fields = ("data", "items", "planets", "time")
 global_stats_fields = (*stats_fields, "volunteers", "stars")
 
 
-def aggregate_stats_pipeline(days=7, field=""):
+def aggregate_stats_pipeline(field="", days=7):
     global_stats = field == ""
     before = time.day(-days)
     result = []
@@ -111,9 +112,6 @@ class Dao:
 
     def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True, last_filter=None):
         pipeline = []
-
-        if self.stats is not None:
-            pipeline += aggregate_stats_pipeline(field=self.stats)
 
         pipeline += operations
 
@@ -210,7 +208,7 @@ class Dataset(LogDocument):
 
 
 dataset_dao = Dao(Dataset, [
-    *aggregate_stats_pipeline(field="stats"),
+    *aggregate_stats_pipeline("stats"),
     {"$project": {"items": 0}}
 ])
 
@@ -325,7 +323,7 @@ class GlobalStats(BaseDocument):
     items = IntField(required=True, default=0)
 
 
-global_stats_dao = Dao(GlobalStats, stats="")
+global_stats_dao = Dao(GlobalStats, aggregate_stats_pipeline(""))
 
 
 class UserPersonal(EmbeddedDocument):
@@ -376,17 +374,13 @@ class User(LogDocument):
                 self["password"] = security_service.hash(self["password"])
 
 
-user_dao = Dao(User, stats="stats")
+user_dao = Dao(User, aggregate_stats_pipeline("stats"))
 
 
 class Message(LogDocument):
     text = StringField(required=True, min_length=1, max_length=300)
     user_id = ReferenceField(User)
-    tag = StringField()
-
-    def pre_add(self):
-        if "tag" not in self and "user_id" not in self:
-            raise ValidationError("Message must have valid owner.")
+    tag = StringField(required=True, default=MessageTag.MESSAGE.value)
 
 
 message_dao = Dao(Message, [

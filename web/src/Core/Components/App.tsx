@@ -17,8 +17,8 @@ interface Props extends React.ComponentPropsWithoutRef<any> {
 
 const mapMessFilter: Record<MessageSelection, FilterData | undefined> = {
     [MessageSelection.ALL]: undefined,
-    [MessageSelection.MESSAGES]: { attribute: ['tag'], relation: [Validator.Relation.LESS_THAN], value: [''] },
-    [MessageSelection.NOTIFICATIONS]: { attribute: ['tag'], relation: [Validator.Relation.GREATER_THAN], value: [''] },
+    [MessageSelection.MESSAGES]: { attribute: ['tag'], relation: [Validator.Relation.EQUALS], value: [MessageTag.MESSAGE] },
+    [MessageSelection.NOTIFICATIONS]: { attribute: ['tag'], relation: [Validator.Relation.CONTAINS], value: [`^(?!${MessageTag.MESSAGE}$)`] },
     [MessageSelection.DATASETS]: { attribute: ['tag'], relation: [Validator.Relation.EQUALS], value: [MessageTag.NEW_DATASET] },
     [MessageSelection.USERS]: { attribute: ['tag'], relation: [Validator.Relation.EQUALS], value: [MessageTag.NEW_VOLUNTEER] },
     [MessageSelection.PLANETS]: { attribute: ['tag'], relation: [Validator.Relation.EQUALS], value: [MessageTag.NEW_PLANET] },

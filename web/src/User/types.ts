@@ -64,6 +64,6 @@ export type NewMessage = {
 
 export type Message = LogObject & NewMessage & {
     user?: User
-    tag?: MessageTag
+    tag: MessageTag
     created: number
 }

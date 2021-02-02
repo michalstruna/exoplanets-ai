@@ -22,10 +22,6 @@ interface MessageBlockProps {
     own?: boolean
 }
 
-interface NotificationBlokProps {
-    tag: MessageTag
-}
-
 const Root = Styled.div`
     ${size()}
     background-color: ${Color.MEDIUM_DARK};
@@ -57,16 +53,6 @@ const Root = Styled.div`
     }
 `
 
-const Messages = Styled.div`
-    ${size('100%', 'calc(100% - 4rem)')}
-    animation: ${fadeIn} ${Duration.MEDIUM} 1;
-    box-sizing: border-box;
-    overflow: hidden;
-    overflow-y: auto;
-    padding: 1rem;
-    text-align: center;
-`
-
 const MessageContent = Styled.div`
     margin-left: 0.7rem;
 `
@@ -88,6 +74,7 @@ const MessageText = Styled.div`
     background-color: #2A2A2A;
     border-radius: 0.5rem;
     border-top-left-radius: 0;
+    box-sizing: border-box;
     display: inline-block;
     font-size: 90%;
     margin-top: 0.2rem;
@@ -144,11 +131,13 @@ const MessageBlock = Styled.div<MessageBlockProps>`
     `}
 `
 
-const NotificationBlok = Styled(MessageText)<NotificationBlokProps>`
+const NotificationBlok = Styled(MessageText)`
     background-color: ${Color.DARKEST};
     border-radius: 0.5rem;
     margin: 0 auto;
     margin-top: 0.7rem;
+    padding: 0.5rem;
+    max-width: calc(50% - 0.25rem);
 
     ${MessageHeader} {
         display: inline-flex;
@@ -156,20 +145,18 @@ const NotificationBlok = Styled(MessageText)<NotificationBlokProps>`
         visibility: visible;
     }
 
-    ${props => props.tag === MessageTag.NEW_VOLUNTEER && css`
-        ${MessageHeader} {
-            margin-left: 2.35rem;
-            margin-bottom: 0
-        }
+    ${MessageHeader} {
+        margin-left: 2.35rem;
+        margin-bottom: 0
+    }
 
-        ${IconText.Root} {
-            margin-top: -0.8rem;
-        }
+    ${IconText.Root} {
+        margin-top: -0.8rem;
+    }
 
-        ${IconText.Text} {
-            vertical-align: bottom;
-        }
-    `}
+    ${IconText.Text} {
+        vertical-align: bottom;
+    }
 `
 
 const Selection = Styled.select`
@@ -177,6 +164,20 @@ const Selection = Styled.select`
     box-shadow: 0 0 0.25rem ${Color.DARKEST};
     border: none;
     margin-right: 0.5rem;
+`
+
+const Messages = Styled.div`
+    ${size('100%', 'calc(100% - 4rem)')}
+    animation: ${fadeIn} ${Duration.MEDIUM} 1;
+    box-sizing: border-box;
+    overflow: hidden;
+    overflow-y: auto;
+    padding: 1rem;
+    text-align: center;
+
+    ${NotificationBlok} + ${NotificationBlok} {
+        margin-left: 0.5rem;
+    }
 `
 
 type Values = {
@@ -191,6 +192,7 @@ const Chat = ({ ...props }: Props) => {
     const identity = useIdentity()
     const scrollable = React.useRef<HTMLDivElement>(null)
     const actions = useActions({ addMessage, setMessageSelection })
+    const messageSelection = useSelector<any, MessageTag>(state => state.user.messageSelection)
 
     const handleSend = async (values: Values, form: UseFormMethods<Values>) => {
         if (!identity.payload) {
@@ -199,8 +201,7 @@ const Chat = ({ ...props }: Props) => {
             const action = await actions.addMessage(values)
 
             if (action.error) {
-                console.log(action.error)
-                form.setError('text', { message: 'Chyba' })
+                form.setError('text', { message: 'Chyba' })  // TODO: Error.
             } else {
                 form.reset() // TODO: Remove?
             }
@@ -221,6 +222,8 @@ const Chat = ({ ...props }: Props) => {
         switch (message.tag) {
             case MessageTag.NEW_VOLUNTEER:
                 return <UserName user={message.user!} />
+            case MessageTag.NEW_DATASET:
+                return <IconText icon='Core/Nav/Database.svg' text={message.text} size={IconText.MEDIUM} />
         }
     } 
 
@@ -228,15 +231,15 @@ const Chat = ({ ...props }: Props) => {
         <Root {...props}>
             <Messages ref={scrollable}>
                 <Async data={messages} success={() => (
-                    messages.payload?.content.map((message, i) => message.tag ? (
-                        <NotificationBlok key={i} tag={message.tag}>
+                    messages.payload?.content.map((message, i) => message.tag !== MessageTag.MESSAGE ? (
+                        <NotificationBlok key={i}>
                             <MessageHeader>
                                 {strings.messageTag[message.tag]} <MessageDate time={message.created} format={Dates.Format.SHORT_NATURE} />
                             </MessageHeader>
                             {renderNotification(message)}
                         </NotificationBlok>
                     ) : (
-                        <MessageBlock key={i} own={identity.payload && identity.payload._id === message.user!._id && i % 2 === 0}>
+                        <MessageBlock key={i} own={identity.payload && identity.payload._id === message.user!._id}>
                             <UserName user={message.user!} size='3rem' />
                             <MessageContent>
                                 <MessageHeader>
@@ -251,7 +254,7 @@ const Chat = ({ ...props }: Props) => {
                 )} />
             </Messages>
             <Form defaultValues={{ text: '' }} onSubmit={handleSend}>
-                <Selection onChange={e => actions.setMessageSelection(e.target.value as MessageSelection)}>
+                <Selection onChange={e => actions.setMessageSelection(e.target.value as MessageSelection)} defaultValue={messageSelection}>
                     {Object.values(MessageSelection).map((selection, i) => (
                         <option value={selection} key={i}>{strings.messageSelection[selection]}</option>
                     ))}

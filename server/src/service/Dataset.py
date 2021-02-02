@@ -8,6 +8,8 @@ from constants.Dataset import DatasetType, DatasetFields
 from utils import time
 import db
 from .Stats import GlobalStatsService
+from service.Message import MessageService
+from constants.Message import MessageTag
 
 
 class DatasetService(Service):
@@ -16,6 +18,7 @@ class DatasetService(Service):
         super().__init__(db.dataset_dao)
         self.star_service = StarService()
         self.stats_service = GlobalStatsService()
+        self.message_service = MessageService()
 
     def add(self, dataset):
         stats, global_stats = {"time": time.now()}, {}
@@ -38,6 +41,7 @@ class DatasetService(Service):
         dataset["stats"] = [{"date": time.day(), **stats}]
         result = self.dao.add(dataset)
         self.stats_service.add(**stats, **global_stats)
+        self.message_service.add({"text": dataset["name"], "tag": MessageTag.NEW_DATASET.value})
 
         return result
 
