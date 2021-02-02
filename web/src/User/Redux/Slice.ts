@@ -81,7 +81,7 @@ const Slice = Redux.slice(
 
         getMessages: async<Cursor, SegmentData<Message>>('messages', cursor => Requests.get(`messages`, undefined, cursor)),
         addMessage: async<NewMessage, Message>('newMessage', message => Requests.post(`messages`, message)),
-        addLocalMessage: plain<Message>(Redux.addToSegment('messages')),
+        addLocalMessage: plain<Message>(Redux.addToSegment('messages', 50)),
         setMessageSelection: set<MessageSelection>('messageSelection')
     })
 )

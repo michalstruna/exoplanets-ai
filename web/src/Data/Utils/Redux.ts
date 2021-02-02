@@ -57,13 +57,18 @@ type UpdatableObject = {
 }
 
 /** Add item to state property with type AsyncData<SegmentData<UpdatableObject>>. */
-export const addToSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): any => ( // TODO: Fix type.
+export const addToSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State, maxSize?: number): any => ( // TODO: Fix type.
     (state: State, action: Action<Item, Error>) => {
         const maxIndex = Math.max(...state[property].payload!.content.map(item => item.index!), 0)
         action.payload.index = maxIndex + 1
+        const val = state[property].payload!
+        val.content.push(action.payload)
 
-        state[property].payload!.content.push(action.payload)
-        state[property].payload!.count++
+        if (!maxSize || val.content.length < maxSize) {
+            val.count++
+        } else {
+            val.content = val.content.slice(Math.max(val.content.length - maxSize, 0))
+        }
     }
 )
 
