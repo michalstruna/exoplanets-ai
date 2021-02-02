@@ -265,8 +265,8 @@ class Api:
             def post(_self):
                 data = request.get_json()
 
-                if "author" in res_type:
-                    data[res_type["author"]] = security_service.get_req_identity()
+                if "modify" in res_type:
+                    res_type["modify"](data, security_service.get_req_identity())
 
                 return Response.post(lambda: self.service.add(data))
 

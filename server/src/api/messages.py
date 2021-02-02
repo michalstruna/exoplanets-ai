@@ -20,11 +20,17 @@ message = api.ns.inherit("Message",  new_message, {
     "created": fields.Integer(required=True)
 })
 
+def modify_new(item, author_id):
+    item["user_id"] = author_id
+    
+    if "tag" in item:
+        del item["tag"]
+
 resource_type = {
     "get_all": {"role": UserRole.UNAUTH},
     "get": {"role": UserRole.UNAUTH},
     "delete": {"role": UserRole.ADMIN},
-    "add": {"role": UserRole.AUTH, "author": "user_id"}
+    "add": {"role": UserRole.AUTH, "modify": modify_new}
 }
 
 message_service = MessageService()

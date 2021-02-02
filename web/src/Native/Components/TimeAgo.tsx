@@ -37,7 +37,7 @@ const TimeAgo = ({ time, frequency, exact, refTime, format, ...props }: Props) =
 
 TimeAgo.defaultProps = {
     exact: false,
-    frequency: 60000,
+    frequency: 10000,
     format: Dates.Format.LONG
 }
 

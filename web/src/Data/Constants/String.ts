@@ -93,6 +93,7 @@ export default {
     },
 
     units: {
+        now: { [CS]: 'Teď', [EN]: 'Now' },
         time: {
             second: 's', minute: 'm', hour: 'h', day: 'd', year: { [CS]: 'r', [EN]: 'y' }, millisecond: 'ms'
         }

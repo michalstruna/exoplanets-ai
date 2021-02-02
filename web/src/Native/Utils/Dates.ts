@@ -75,7 +75,7 @@ export const formatDistance = (strings: any, date1: number, date2?: number, form
                 } else if (format === Format.SHORT) {
                     return Math.floor(val) + ' ' + strings.units.time[units[i]]
                 } else if (format === Format.SHORT_NATURE) {
-                    return parseInt(i) === units.length - 1 ? 'Teď' : Math.floor(val) + ' ' + strings.units.time[units[i]]
+                    return parseInt(i) === units.length - 1 ? strings.units.now : Math.floor(val) + ' ' + strings.units.time[units[i]]
                 }
 
                 return ''
@@ -83,7 +83,7 @@ export const formatDistance = (strings: any, date1: number, date2?: number, form
         }
     }
 
-    return '0 s'
+    return strings.units.now
 }
 
 export const daysToMs = (days: number) => { // TODO: convert(10, Unit.DAY, UNIT.MS)
