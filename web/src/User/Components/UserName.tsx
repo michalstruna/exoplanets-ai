@@ -9,6 +9,8 @@ import Avatar from './Avatar'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: User
+    text?: React.ReactNode
+    value?: React.ReactNode
     size?: string
 }
 
@@ -32,7 +34,7 @@ const UserName = ({ user, ...props }: Props) => {
 
     return (
         <Tooltip render={() => <UserPreview user={user} />}>
-            <Root size={IconText.MEDIUM} {...props} icon={Avatar.getUrl(user.avatar)} text={user.name} onClick={() => null} />
+            <Root text={user.name} size={IconText.MEDIUM} {...props} icon={Avatar.getUrl(user.avatar)} onClick={() => null} />
         </Tooltip>
     )
 

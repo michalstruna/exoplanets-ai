@@ -23,6 +23,7 @@ const Nav = Styled.nav`
 
 const NavLink = Styled(IconText)`
     flex: 1 1 0;
+    justify-content: center;
     transition: background-color ${Duration.MEDIUM}, opacity ${Duration.MEDIUM};
 `
 

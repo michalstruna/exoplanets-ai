@@ -22,7 +22,7 @@ interface AreaRootProps {
 
 const Root = Styled.div`
     height: 100%;
-    max-width: 100%;
+    width: 100%;
 `
 
 const TransformationWrapper = Styled.div<AreaRootProps>`

@@ -22,7 +22,12 @@ const getIconName = (os: string) => {
 const OsLabel = ({ os, ...props }: Props) => {
 
     return (
-        <IconText {...props} icon={`Discovery/Process/OS/${getIconName(os)}.svg`} text='OS' value={os} title={os} />
+        <IconText {...props}
+            icon={`Discovery/Process/OS/${getIconName(os)}.svg`}
+            text='OS'
+            value={os}
+            title={os}
+            size={IconText.MEDIUM} />
     )
 
 }
