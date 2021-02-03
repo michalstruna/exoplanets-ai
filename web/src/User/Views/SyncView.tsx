@@ -74,7 +74,7 @@ const SyncView = ({ ...props }: Props) => {
     const { match } = useRouter<any>()
 
     const handleSync = () => {
-        Socket.emit('client_sync', match.params.clientId)
+        Socket.emit('client_auth', match.params.clientId)
     }
 
     return (
