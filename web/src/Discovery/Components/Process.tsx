@@ -32,19 +32,11 @@ const Row = Styled.div`
     align-items: center;
     display: flex;
     padding-bottom: 0.5rem;
-    width: 100%;
     
     & > * {
-        flex: 1 1 0;
-    }
-    
-    & > div > div:last-of-type {
-        width: calc(100% - 2rem);
-        
-        & > div {
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        flex: 0 0 50%;
+        justify-content: flex-start;
+        width: 50%;
     }
     
     button {
@@ -152,19 +144,19 @@ const Process = ({ data, ...props }: Props) => {
                         icon={`Controls/${getIconByState(data.state)}.svg`}
                         text={strings.state[data.state]}
                         value={<TimeAgo time={data.start + data.pause_total}
-                                        refTime={data.pause_start || undefined} />} />
+                                        refTime={data.pause_start || undefined} />} size={IconText.MEDIUM} />
                 </Row>
                 <Row>
                     <OsLabel os={data.os} />
-                    <IconText icon='Discovery/Process/CPU/Intel.svg' text='CPU' value={data.cpu} title={data.cpu} />
+                    <IconText icon='Discovery/Process/CPU/Intel.svg' text='CPU' value={data.cpu} title={data.cpu} size={IconText.MEDIUM} />
                 </Row>
                 <Row>
-                    <IconText icon='Discovery/Process/Processing.svg' text='% vašeho výkonu' value={50} />
-                    <IconText icon='Discovery/Process/Processing.svg' text='% celkového výkonu' value={0.051} />
+                    <IconText icon='Discovery/Process/Processing.svg' text='% vašeho výkonu' value={50} size={IconText.MEDIUM} />
+                    <IconText icon='Discovery/Process/Processing.svg' text='% celkového výkonu' value={0.051} size={IconText.MEDIUM} />
                 </Row>
                 <Row>
-                    <IconText icon='Discovery/Process/Star.svg' text={'Analyzovaných hvězd'} value={1363} />
-                    <IconText icon='Discovery/Process/Planet.svg' text={'Objevených planet'} value={1} />
+                    <IconText icon='Discovery/Process/Star.svg' text={'Analyzovaných hvězd'} value={1363} size={IconText.MEDIUM} />
+                    <IconText icon='Discovery/Process/Planet.svg' text={'Objevených planet'} value={1} size={IconText.MEDIUM} />
                 </Row>
                 <ControlRow>
                     {memoControls}

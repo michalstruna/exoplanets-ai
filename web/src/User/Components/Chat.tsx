@@ -8,11 +8,13 @@ import { Field, Form } from '../../Form'
 import { Message } from '../types'
 import { AsyncData, useActions, useStrings } from '../../Data'
 import { Async } from '../../Async'
-import { addMessage, MessageSelection, useIdentity, setMessageSelection, UserName, MessageTag } from '..'
+import { addMessage, MessageSelection, useIdentity, setMessageSelection, UserName, MessageTag, Avatar } from '..'
 import { SegmentData } from '../../Database/types'
 import { Dates } from '../../Native'
 import { IconText } from '../../Layout'
 import TimeAgo from '../../Native/Components/TimeAgo'
+import Tooltip from '../../Layout/Components/Tooltip'
+import UserPreview from './UserPreview'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -101,6 +103,10 @@ const MessageBlock = Styled.div<MessageBlockProps>`
         top: 0;
     }
 
+    & > div {
+        width: auto;
+    }
+
     ${props => props.own && `
         flex-direction: row-reverse;
 
@@ -131,31 +137,23 @@ const MessageBlock = Styled.div<MessageBlockProps>`
     `}
 `
 
-const NotificationBlok = Styled(MessageText)`
-    background-color: ${Color.DARKEST};
-    border-radius: 0.5rem;
-    margin: 0 auto;
-    margin-top: 0.7rem;
-    padding: 0.5rem;
+const NotificationBlok = Styled.div`
+    display: inline-block;
     max-width: calc(50% - 0.25rem);
 
-    ${MessageHeader} {
-        display: inline-flex;
-        margin-bottom: 0.5rem;
-        visibility: visible;
-    }
-
-    ${MessageHeader} {
-        margin-left: 2.35rem;
-        margin-bottom: 0
-    }
-
     ${IconText.Root} {
-        margin-top: -0.8rem;
+        background-color: ${Color.DARKEST};
+        border-radius: 0.5rem;
+        box-sizing: border-box;
+        height: auto;
+        margin: 0 auto;
+        margin-top: 0.7rem;
+        padding: 0.5rem;
+        width: auto;
     }
 
     ${IconText.Text} {
-        vertical-align: bottom;
+        font-size: 85%;
     }
 `
 
@@ -181,7 +179,7 @@ const Messages = Styled.div`
 `
 
 type Values = {
-    text: string
+    text: string 
 }
 
 const Chat = ({ ...props }: Props) => {
@@ -219,11 +217,23 @@ const Chat = ({ ...props }: Props) => {
     }, [scrollable, messages])
 
     const renderNotification = (message: Message) => {
+        const text = <>{strings.messageTag[message.tag]} <MessageDate time={message.created} format={Dates.Format.SHORT_NATURE} /></>
+
         switch (message.tag) {
             case MessageTag.NEW_VOLUNTEER:
-                return <UserName user={message.user!} />
-            case MessageTag.NEW_DATASET:
-                return <IconText icon='Core/Nav/Database.svg' text={message.text} size={IconText.MEDIUM} />
+                return (
+                    <UserName
+                        user={message.user!}
+                        text={text}
+                        value={message.text} />
+                )
+            default: // TODO: Icon.
+                return (
+                    <IconText
+                        icon='Core/Nav/Database.svg'
+                        text={text}
+                        value={message.text} />
+                )
         }
     } 
 
@@ -233,10 +243,7 @@ const Chat = ({ ...props }: Props) => {
                 <Async data={messages} success={() => (
                     messages.payload?.content.map((message, i) => message.tag !== MessageTag.MESSAGE ? (
                         <NotificationBlok key={i}>
-                            <MessageHeader>
-                                {strings.messageTag[message.tag]} <MessageDate time={message.created} format={Dates.Format.SHORT_NATURE} />
-                            </MessageHeader>
-                            {renderNotification(message)}
+                            {renderNotification(message)} 
                         </NotificationBlok>
                     ) : (
                         <MessageBlock key={i} own={identity.payload && identity.payload._id === message.user!._id}>

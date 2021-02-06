@@ -16,6 +16,10 @@ const Root = Styled.nav`
     justify-content: space-around;
     user-select: none;
     text-align: center;
+
+    ${IconText.Root}  {
+        justify-content: center;
+    }
 `
 
 const Nav = ({ ...props }: Props) => {
