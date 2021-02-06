@@ -13,6 +13,7 @@ import { SegmentData } from '../../Database/types'
 import { Dates } from '../../Native'
 import { Console, IconText } from '../../Layout'
 import TimeAgo from '../../Native/Components/TimeAgo'
+import { pascalCase } from 'change-case'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -184,21 +185,21 @@ const Chat = ({ ...props }: Props) => {
 
     const messages = useSelector<any, AsyncData<SegmentData<Message>>>(state => state.user.messages)
     const globalStrings = useStrings()
-    const strings = globalStrings.users
+    const strings = globalStrings.users.chat
     const identity = useIdentity()
     const actions = useActions({ addMessage, setMessageSelection })
     const messageSelection = useSelector<any, MessageTag>(state => state.user.messageSelection)
 
     const handleSend = async (values: Values, form: UseFormMethods<Values>) => {
         if (!identity.payload) {
-            form.setError('text', { message: strings.unauth })
+            form.setError('text', { message: globalStrings.users.unauth })
         } else if (values.text) {
             const action = await actions.addMessage(values)
 
             if (action.error) {
-                form.setError('text', { message: 'Chyba' })  // TODO: Error.
+                form.setError('text', { message: globalStrings.errors.general })
             } else {
-                form.reset() // TODO: Remove?
+                form.reset()
             }
         }
     }
@@ -214,10 +215,10 @@ const Chat = ({ ...props }: Props) => {
                         text={text}
                         value={message.text} />
                 )
-            default: // TODO: Icon.
+            default:
                 return (
                     <IconText
-                        icon='Core/Nav/Database.svg'
+                        icon={`User/Chat/Tag/${pascalCase(message.tag)}.svg`}
                         text={text}
                         value={message.text} />
                 )

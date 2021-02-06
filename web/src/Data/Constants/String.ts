@@ -358,7 +358,6 @@ export default {
         volunteersRank: { [CS]: 'Žebříček dobrovolníků', [EN]: 'Volunteers rank' },
         lastWeek: { [CS]: 'Poslední týden', [EN]: 'Last week' },
         total: { [CS]: 'Celkem', [EN]: 'Total' },
-        unauth: { [CS]: 'Nejste přihlášený', [EN]: 'You are not logged in' },
 
         sexName: {
             [Sex.FEMALE]: { [CS]: 'Žena', [EN]: 'Female' },
@@ -381,21 +380,24 @@ export default {
         noOnlineUsers: { [CS]: 'Nikdo není online.', [EN]: 'Nobody is online.' },
         volunteers: { [CS]: 'Dobrovolníci', [EN]: 'Volunteers' },
         discussion: { [CS]: 'Diskuse', [EN]: 'Discussion' },
-        type: { [CS]: 'Napište něco', [EN]: 'Type anything' },
+        unauth: { [CS]: 'Nejste přihlášený', [EN]: 'You are not logged in' },
 
-        messageSelection: {
-            [MessageSelection.ALL]: { [CS]: 'Vše', [EN]: 'All' },
-            [MessageSelection.MESSAGES]: { [CS]: 'Zprávy', [EN]: 'Messages' },
-            [MessageSelection.NOTIFICATIONS]: { [CS]: 'Oznámení', [EN]: 'Notification' },
-            [MessageSelection.DATASETS]: { [CS]: 'Datasety', [EN]: 'Datasets' },
-            [MessageSelection.PLANETS]: { [CS]: 'Planety', [EN]: 'Planets' },
-            [MessageSelection.USERS]: { [CS]: 'Uživatelé', [EN]: 'Users' }
+        chat: {
+            type: { [CS]: 'Napište něco', [EN]: 'Type anything' },
+            messageSelection: {
+                [MessageSelection.ALL]: { [CS]: 'Vše', [EN]: 'All' },
+                [MessageSelection.MESSAGES]: { [CS]: 'Zprávy', [EN]: 'Messages' },
+                [MessageSelection.NOTIFICATIONS]: { [CS]: 'Oznámení', [EN]: 'Notification' },
+                [MessageSelection.DATASETS]: { [CS]: 'Datasety', [EN]: 'Datasets' },
+                [MessageSelection.PLANETS]: { [CS]: 'Planety', [EN]: 'Planets' },
+                [MessageSelection.USERS]: { [CS]: 'Uživatelé', [EN]: 'Users' }
+            },
+    
+            messageTag: {
+                [MessageTag.NEW_VOLUNTEER]: { [CS]: 'Nový dobrovolník', [EN]: 'New volunteer' },
+                [MessageTag.NEW_DATASET]: { [CS]: 'Nový dataset', [EN]: 'New dataset' }
+            }
         },
-
-        messageTag: {
-            [MessageTag.NEW_VOLUNTEER]: { [CS]: 'Nový dobrovolník', [EN]: 'New volunteer' },
-            [MessageTag.NEW_DATASET]: { [CS]: 'Nový dataset', [EN]: 'New dataset' }
-        }
     },
 
     discovery: {
@@ -466,6 +468,10 @@ export default {
         changeIdentity: {
             [CS]: 'Přihlásit se jako jiný uživatel'
         }
+    },
+
+    errors: {
+        general: { [CS]: 'Nastala chyba', [EN]: 'Error occured' }
     }
 
 }

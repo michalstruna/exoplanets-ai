@@ -29,7 +29,7 @@ export default {
 
     DATE: {
         name: 'date',
-        validator: () => true // TODO: Validate date.
+        validator: () => true
     },
 
     SELECT: {

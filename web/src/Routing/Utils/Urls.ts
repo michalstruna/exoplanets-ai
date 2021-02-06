@@ -28,7 +28,7 @@ export const replace = (location: Target): void => {
  * @return Merged location.
  */
 export const merge = (target: Target, source: Location = History.location): Location => {
-    const result: Location = {} as any // TODO: Target?
+    const result = {} as Location
 
     if (target.pathname || source.pathname) {
         const pathname = target.pathname || source.pathname
@@ -47,17 +47,6 @@ export const merge = (target: Target, source: Location = History.location): Loca
 }
 
 /**
- * Check pathname from URL. If its current value is not allowed, set default value.
- */
-export const safePathname = (pathParamName: string, predicate: Validator.Predicate<string>, defaultValue: string): void => {
-    const value = History.location.pathname // TODO: Only parameter, not pathname.
-
-    if (!Validator.is(value, predicate)) {
-        replace({ pathname: defaultValue })
-    }
-}
-
-/**
  * Check query parameter from URL. If its value is not allowed, set default value.
  */
 export const safeQuery = <T extends QueryValue>(queryName: string, predicate: Validator.Predicate<QueryValue>, defaultValue: QueryValue = undefined): T => {
@@ -69,17 +58,6 @@ export const safeQuery = <T extends QueryValue>(queryName: string, predicate: Va
     }
 
     return value as T
-}
-
-/**
- * Check hash from URL. If its current value is not allowed, set default value.
- */
-export const safeHash = (predicate: Validator.Predicate<string>, defaultValue: string): void => {
-    const value = History.location.hash
-
-    if (!Validator.is(value, predicate)) {
-        replace({ hash: defaultValue })
-    }
 }
 
 /**
