@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 import Styled from 'styled-components'
 import { Color, size } from '../../Style'
 import { Arrays, Numbers } from '../../Native'

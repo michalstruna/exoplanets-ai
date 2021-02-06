@@ -6,13 +6,9 @@ import UserPreview from './UserPreview'
 import AuthForm from './AuthForm'
 import Tooltip from '../../Layout/Components/Tooltip'
 
-interface Props {
-
-}
-
 const setCoords = () => ({ x: window.innerWidth - 70, y: 25 })
 
-const AuthControl = ({  }: Props) => {
+const AuthControl = () => {
 
     const identity = useIdentity()
     const isLoggedIn = !!identity.payload

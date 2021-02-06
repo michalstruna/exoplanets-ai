@@ -1,8 +1,7 @@
 import Cookies from 'js-cookie'
 
 import { Cookie } from '../../Native'
-import { Cursor, Redux, Segment, Sort, Value } from '../../Data'
-import UserRole from '../Constants/UserRole'
+import { Cursor, Redux, Sort, Value } from '../../Data'
 import {
     Credentials,
     EditedUser,

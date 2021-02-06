@@ -1,7 +1,7 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 
-import { LightCurve, PlanetData, PlanetProperties, StarData as StarData, StarProperties } from '../types'
+import { LightCurve, PlanetData, PlanetProperties, StarData, StarProperties } from '../types'
 import { Numbers } from '../../Native'
 import Ref from '../Components/Ref'
 

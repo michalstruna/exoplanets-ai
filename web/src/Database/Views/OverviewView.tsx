@@ -2,12 +2,10 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Color, Dimension, size } from '../../Style'
-import { Block } from '../../Layout'
 import { UsersBlock } from '../../User'
 import PlanetsRank from '../Components/PlanetsRank'
 import GlobalStatsPanel from '../Components/GlobalStats/GlobalStatsPanel'
-import { DiscoveryBlock } from '../../Discovery'
-import { Strings } from '../../Native'
+import { DiscoveryBlock } from '../../Discovery' 
 
 interface Props {
 
@@ -27,10 +25,6 @@ const Right = Styled.div`
     overflow: hidden;
     padding: 1.5rem;
     padding-top: 0;
-`
-
-const Top = Styled(DiscoveryBlock)`
-    flex: 1 0 0;
 `
 
 const Bottom = Styled.div`

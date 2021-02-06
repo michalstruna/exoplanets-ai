@@ -182,7 +182,7 @@ const Filter = ({ attributes, groupAttributes, onChange, initialValues, onSubmit
         const vals = [...values]
         vals.pop()
         onChange?.(fromInternal(vals))
-    }, [values])
+    }, [values, onChange])
 
     const removeEmptyFromEnd = (values: InternalFilterData): InternalFilterData => {
         for (let i = values.length - 1; i >= 0; i--) {

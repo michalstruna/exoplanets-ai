@@ -514,7 +514,7 @@ const SkyMap = ({ target, ...props }: Props) => {
             var label = A.source(con.center[0], con.center[1], { name: con.name })
             constellationLabels.addSources([label])
         }
-    }, [])
+    }, [target])
 
     return (
         <Root {...props} id='aladin-lite'>

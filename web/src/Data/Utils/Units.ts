@@ -10,7 +10,7 @@ import UnitType from '../Constants/UnitType'
 export const format = (value: number, units: UnitTypeData = UnitType.SCALAR) => {
     for (let i = 0; i < units.length - 1; i++) {
         const [unitLabel, unitValue] = units[i]
-        const [_, nextUnitValue] = units[i + 1]
+        const [, nextUnitValue] = units[i + 1]
 
         if (value < nextUnitValue) {
             return Numbers.format(value / unitValue) + unitLabel

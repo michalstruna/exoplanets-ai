@@ -1,8 +1,8 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { useActions, useStrings } from '../../Data'
-import { login, ForgotPasswordData } from '..'
+import { useStrings } from '../../Data'
+import { ForgotPasswordData } from '..'
 import { Form, Field } from '../../Form'
 import { UseFormMethods } from 'react-hook-form'
 import { PrimaryButton } from '../../Layout'
@@ -23,17 +23,13 @@ const Submit = Styled(PrimaryButton)`
     font-size: 100%;
 `
 
+// TODO: Rename and add action.
 const LoginForm = ({ handleLogin, handleSignUp, ...props }: Props) => {
 
-    const actions = useActions({ login })
     const strings = useStrings().auth
 
     const handleSubmit = async (values: ForgotPasswordData, form: UseFormMethods<ForgotPasswordData>) => {
-        /*const action = await actions.login(values) // TODO
 
-        if (action.error) {
-            form.setError(Form.GLOBAL_ERROR, strings.error)
-        }*/
     }
 
     return (

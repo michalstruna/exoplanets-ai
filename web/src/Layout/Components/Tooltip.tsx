@@ -67,7 +67,7 @@ const Tooltip = ({ id: _id, setCoords, render, ...props }: Props) => {
             Tooltip.Area.instances[id].render = render
             Tooltip.Area.update?.()
         }
-    }, [render])
+    }, [render, id])
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.stopPropagation()

@@ -16,12 +16,22 @@ const Root = Styled.div`
 
 const Console = <Line extends any>({ lines, lineRenderer, size, ...props }: Props<Line>) => {
 
+    const root = React.useRef<HTMLDivElement>(null)
+
+    React.useEffect(() => {
+        const el = root.current
+
+        if (el) {
+            el.scrollTop = el.scrollHeight
+        }
+    }, [root, lines, size])
+
     const memoLines = React.useMemo(() => (
         lines.slice(0, size).map((line, i) => lineRenderer!(line, i))
     ), [lines, lineRenderer, size])
 
     return (
-        <Root {...props}>
+        <Root {...props} ref={root}>
             {memoLines}
         </Root>
     )

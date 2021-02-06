@@ -39,14 +39,14 @@ const UsersBlock = ({ ...props }: Props) => {
     const onlineUsers = useOnlineUsers()
     const strings = useStrings().users
 
-    const links = [
-        { icon: 'Database/RealTime/Volunteers.svg', text: strings.volunteers },
-        { icon: 'Controls/Active.svg', text: `Online (${onlineUsers.length})` },
-        { icon: 'Database/RealTime/Discussion.svg', text: strings.discussion }
-    ]
+    const renderedLinks = React.useMemo(() => {
+        const links = [
+            { icon: 'Database/RealTime/Volunteers.svg', text: strings.volunteers },
+            { icon: 'Controls/Active.svg', text: `Online (${onlineUsers.length})` },
+            { icon: 'Database/RealTime/Discussion.svg', text: strings.discussion }
+        ]
 
-    const renderedLinks = React.useMemo(() => (
-        links.map((link, i) => (
+        return links.map((link, i) => (
             <NavLink
                 onClick={() => setTab(i)}
                 key={i}
@@ -54,7 +54,7 @@ const UsersBlock = ({ ...props }: Props) => {
                 icon={link.icon}
                 text={link.text} />
         ))
-    ), [tab, onlineUsers])
+    }, [tab, onlineUsers, strings])
 
     const renderedContent = React.useMemo(tabs[tab], [tab])
 

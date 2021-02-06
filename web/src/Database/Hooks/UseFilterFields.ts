@@ -21,16 +21,15 @@ export default (): TextEnumValue[] => {
 
     const table = useTable()
     const strings = useStrings()
-    const { stars, planets, datasets, users } = strings
 
     return React.useMemo(() => {
         switch (table) {
             case DbTable.BODIES:
                 return [
-                    ...fields(stars, [
+                    ...fields(strings.stars, [
                         ['name', String],
-                        ['spectral_class', Object.values(SpectralClass).map(value => ({ text: `${stars.colors[value]} (${value})`, value }))],
-                        ['luminosity_class', Object.values(LuminosityClass).map(value => ({ text: `${stars.sizes[value]} (${value})`, value }))],
+                        ['spectral_class', Object.values(SpectralClass).map(value => ({ text: `${strings.stars.colors[value]} (${value})`, value }))],
+                        ['luminosity_class', Object.values(LuminosityClass).map(value => ({ text: `${strings.stars.sizes[value]} (${value})`, value }))],
                         ['diameter', Number, '☉'],
                         ['mass', Number, '☉'],
                         ['density', Number, 'km/m^3'],
@@ -38,7 +37,7 @@ export default (): TextEnumValue[] => {
                         ['distance', Number, 'ly'],
                         ['luminosity', Number, '☉'],
                         ['transit_depth', Number], // TODO: Test.
-                        ['planets', Number], // TODO: Test.
+                        ['strings.planets', Number], // TODO: Test.
                         ['surface_gravity', Number, 'm/s^2'],
                         ['absolute_magnitude', Number],
                         ['apparent_magnitude', Number],
@@ -46,9 +45,9 @@ export default (): TextEnumValue[] => {
                         ['ra', Number], // TODO: Unit hours or degrees?
                         ['dec', Number],
                     ]),
-                    ...fields(planets, [ // TODO: Test planets.
+                    ...fields(strings.planets, [ // TODO: Test strings.planets.
                         ['name', String],
-                        ['type', Object.values(PlanetType).map(value => ({ text: planets.types[value], value }))],
+                        ['type', Object.values(PlanetType).map(value => ({ text: strings.planets.types[value], value }))],
                         ['diameter', Number, '⊕'],
                         ['mass', Number, '⊕'],
                         ['density', Number, 'km/m^3'],
@@ -56,16 +55,16 @@ export default (): TextEnumValue[] => {
                         ['semi_major_axis', Number, 'au'],
                         ['orbital_period', Number, 'd'],
                         ['transit_depth', Number],
-                        ['life_conditions', Object.values(LifeType).map(value => ({ text: planets.lifeConditionsTypes[value], value }))],
+                        ['life_conditions', Object.values(LifeType).map(value => ({ text: strings.planets.lifeConditionsTypes[value], value }))],
                         ['surface_gravity', Number, 'm/s^2'],
                         ['orbital_velocity', Number, 'km/s'],
                     ], { namePrefix: 'planet_' })
                 ]
             case DbTable.STARS:
-                return fields(stars, [
+                return fields(strings.stars, [
                     ['name', String],
-                    ['spectral_class', Object.values(SpectralClass).map(value => ({ text: `${stars.colors[value]} (${value})`, value }))],
-                    ['luminosity_class', Object.values(LuminosityClass).map(value => ({ text: `${stars.sizes[value]} (${value})`, value }))],
+                    ['spectral_class', Object.values(SpectralClass).map(value => ({ text: `${strings.stars.colors[value]} (${value})`, value }))],
+                    ['luminosity_class', Object.values(LuminosityClass).map(value => ({ text: `${strings.stars.sizes[value]} (${value})`, value }))],
                     ['diameter', Number, '☉'],
                     ['mass', Number, '☉'],
                     ['density', Number, 'km/m^3'],
@@ -73,7 +72,7 @@ export default (): TextEnumValue[] => {
                     ['distance', Number, 'ly'],
                     ['luminosity', Number, '☉'],
                     ['transit_depth', Number], // TODO: Test.
-                    ['planets', Number], // TODO: Test.
+                    ['strings.planets', Number], // TODO: Test.
                     ['surface_gravity', Number, 'm/s^2'],
                     ['absolute_magnitude', Number],
                     ['apparent_magnitude', Number],
@@ -82,9 +81,9 @@ export default (): TextEnumValue[] => {
                     ['dec', Number],
                 ])
             case DbTable.PLANETS:
-                return fields(planets, [ // TODO: Test planets.
+                return fields(strings.planets, [ // TODO: Test strings.planets.
                     ['name', String],
-                    ['type', Object.values(PlanetType).map(value => ({ text: planets.types[value], value }))],
+                    ['type', Object.values(PlanetType).map(value => ({ text: strings.planets.types[value], value }))],
                     ['diameter', Number, '⊕'],
                     ['mass', Number, '⊕'],
                     ['density', Number, 'km/m^3'],
@@ -92,7 +91,7 @@ export default (): TextEnumValue[] => {
                     ['semi_major_axis', Number, 'au'],
                     ['orbital_period', Number, 'd'],
                     ['transit_depth', Number],
-                    ['life_conditions', Object.values(LifeType).map(value => ({ text: planets.lifeConditionsTypes[value], value }))],
+                    ['life_conditions', Object.values(LifeType).map(value => ({ text: strings.planets.lifeConditionsTypes[value], value }))],
                     ['surface_gravity', Number, 'm/s^2'],
                     ['orbital_velocity', Number, 'km/s'],
                     ['distance', Number, 'ly'],
@@ -101,19 +100,19 @@ export default (): TextEnumValue[] => {
                 ])
 
             case DbTable.DATASETS:
-                return fields(datasets, [
+                return fields(strings.datasets, [
                     ['name', String],
-                    ['type', Object.values(DatasetType).map(value => ({ text: datasets.types[value], value }))],
+                    ['type', Object.values(DatasetType).map(value => ({ text: strings.datasets.types[value], value }))],
                     ['size', Number],
                     ['processed', Number, 'B'],
                     ['time', Number, 's'], // TODO: Hours?
                     ['created', Number],
                     ['modified', Number],
-                    ['priority', Object.values(DatasetPriority).filter(value => typeof value === 'number').map(value => ({ text: datasets.priorities[value], value }))],
+                    ['priority', Object.values(DatasetPriority).filter(value => typeof value === 'number').map(value => ({ text: strings.datasets.priorities[value], value }))],
                     ['url', String]
                 ])
             case DbTable.USERS:
-                return fields(users, [
+                return fields(strings.users, [
                     ['name', String]
                 ])
         }

@@ -146,10 +146,4 @@ Curve.GV = 'gv'
 Curve.LC = 'lc'
 Curve.STATS = 'stats'
 
-const colorMap = {
-    [Curve.LV]: '#FAA',
-    [Curve.LV]: '#AFA',
-    [Curve.GV]: '#AAF'
-}
-
 export default Curve

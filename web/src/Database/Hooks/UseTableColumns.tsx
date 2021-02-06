@@ -14,7 +14,7 @@ import { Dates, Numbers } from '../../Native'
 import LifeType from '../Constants/LifeType'
 import * as Col from '../Utils/Col'
 import { MultiValue } from '../Utils/Col'
-import { Dataset, PlanetData, PlanetProperties, StarData } from '../types'
+import { Dataset, PlanetData, StarData } from '../types'
 import Detail from '../Components/TableItemDetail'
 import { Cursor, Units, UnitType, useStrings } from '../../Data'
 import { deleteDataset, useTable, Value } from '../index'
@@ -279,7 +279,7 @@ export default (): Structure => {
         }
 
         return null as any
-    }, [table, strings, dispatch])
+    }, [table, strings, dispatch, datasets, planets, stars, users])
 }
 
 interface Colored {
