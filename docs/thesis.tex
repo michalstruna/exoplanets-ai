@@ -153,7 +153,7 @@ Nejvíce objevených exoplanet spadá do kategorie plynných obrů, které kvůl
 
 Někdy se planeta při obíhání dostane mezi svou hvězdu a~Zemi. Tento jev se pro pozorovatele na Zemi projeví jako mírný pokles jasu hvězdy (obvykle ve zlomku procenta). Při dlouhodobém pozorování je možné v~těchto změnách jasu hvězdy odhalit opakující se složku. To by mohlo indikovat přítomnost planety v~blízkosti této hvězdy.~\cite{exoplanets,transit}
 
-\img[1]{Přechod planety přes kotouč hvězdy}{img/transit.png}
+\img[1]{Přechod planety přes kotouč hvězdy}{img/transit.pdf}
 \drawgimp
 
 Tyto změny však nemusí být na první pohled viditelné, protože v~soustavě může být více planet, které svou hvězdu zastiňují různou měrou a~obíhají kolem ní s~různou periodou. Navíc i v situaci, kdy je ve změnách jasu hvězdy objevena periodická složka nemusí jít vždy o~obíhající planetu. Hvězda může být např. sama o~sobě proměnlivá nebo se může jednat o~dvojhvězdu, jejíž složky se vzájmně zastiňují.~\cite{kepler80}
@@ -174,7 +174,7 @@ Prvním krokem v~analýze hvězdy tranzitní metodou je její fyzické pozorová
 
 TPF obsahuje část oblohy o velikosti několika pixelů, na které se v původní fotografii nacházela zkoumaná hvězda a~její okolí. Barva pixelů je určena jasem.
 
-\img[1]{Target pixel file hvězdy Kepler-10}{img/tpf.png}
+\img[1]{TPF soustavy Kepler-10 s~lineárním a~logaritmickým měřítkem}{img/tpf.png}
 \data{1}{nasadata}
 
 \subsubsection{Světelná křivka hvězdy}
@@ -253,11 +253,11 @@ Je třeba aby vstupní data do neuronové sítě měla stejné rozměry i~formá
 \vspace{\fill}
 \data{1}{nasadata}
 
-Na obrázku 12 je uprostřed slabě patrný transit. Má malou šířku, protože trvá pouze 0,25 dne, zatímco celá perioda je dlouhá 45,3 dne. Z~této složené časové řady se vytvoří dva pohledy, které budou vstupem do neuronové sítě:
+Na obrázku 13 je uprostřed slabě patrný transit. Má malou šířku, protože trvá pouze 0,25 dne, zatímco celá perioda je dlouhá 45,3 dne. Z~této složené časové řady se vytvoří dva pohledy, které budou vstupem do neuronové sítě:
 
 \begin{itemize}
-\item \textbf{Globální pohled} \emph{(obr. 13)} -- Šířka periody a~počet bodů v~časové řadě jsou fixní. Nevýhodou je, že u planet s~dlouhou periodou bude tranzit velice nepatrný, proto pouze globální pohled nestačí.~\cite{kepler80}
-\item \textbf{Lokální pohled} \emph{(obr. 14)} -- Šířka tranzitu a počet bodů v časové řadě jsou fixní. Nevýhodou je, že není viditelný celý průběh světelné křivky. Naproti tomu je ale zřetelný tranzit.~\cite{kepler80}
+\item \textbf{Globální pohled} \emph{(obr. 14)} -- Šířka periody a~počet bodů v~časové řadě jsou fixní. Nevýhodou je, že u planet s~dlouhou periodou bude tranzit velice nepatrný, proto pouze globální pohled nestačí.~\cite{kepler80}
+\item \textbf{Lokální pohled} \emph{(obr. 15)} -- Šířka tranzitu a počet bodů v časové řadě jsou fixní. Nevýhodou je, že není viditelný celý průběh světelné křivky. Naproti tomu je ale zřetelný tranzit.~\cite{kepler80}
 \end{itemize}
 
 \begin{multicols}{2}
