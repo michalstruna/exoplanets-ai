@@ -2,9 +2,10 @@ import React from 'react'
 import Styled, { css } from 'styled-components'
 import Paginate from 'react-paginate'
 
-import { size, Color, Duration } from '../../Style'
+import { size, Color, Duration, image } from '../../Style'
 import { Numbers } from '../../Native'
 import { Segment } from '../types'
+import { useStrings } from '../Redux/Selectors'
 
 interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
     page: Segment
@@ -68,7 +69,13 @@ const Root = Styled.div<RootProps>`
     }
     
     .${EDGE} {
-    
+        &:first-child {
+            ${image('Controls/ArrowLeft.svg', 'auto 50%')}
+        }
+
+        &:last-child {
+            ${image('Controls/ArrowRight.svg', 'auto 50%')}
+        }
     }
     
     ${props => !props.surrounding && css`
@@ -108,6 +115,7 @@ const Paginator = ({ onChange, page, itemsCount, freeze, stats, surrounding, ...
 
     const getPagesCount = React.useCallback(() => Math.ceil(itemsCount / page.size), [itemsCount, page.size])
     const getCache = () => ({ pages: getPagesCount(), itemsCount })
+    const strings = useStrings().data.paginator
 
     const [cache, setCache] = React.useState(getCache())
 
@@ -131,9 +139,6 @@ const Paginator = ({ onChange, page, itemsCount, freeze, stats, surrounding, ...
         }
     }
 
-    // TODO: Localize strings.
-    // TODO: Use icons instead of < and >.
-
     return (
         <Root {...props} surrounding={surrounding!}>
             <Row>
@@ -144,21 +149,21 @@ const Paginator = ({ onChange, page, itemsCount, freeze, stats, surrounding, ...
                     forcePage={page.index}
                     marginPagesDisplayed={1}
                     nextClassName={EDGE}
-                    nextLabel='>'
+                    nextLabel=''
                     onPageChange={page => handleChangePage(page.selected)}
                     pageClassName={PAGE}
                     pageCount={cache.pages}
                     pageRangeDisplayed={5}
                     previousClassName={EDGE}
-                    previousLabel='<' />
+                    previousLabel='' />
             </Row>
             {stats && <Row>
                 <Stats>
                     <Line>
-                    Zobrazeno {page.index * page.size + 1}-{Math.min(cache.itemsCount, (page.index + 1) * page.size)} z {Numbers.format(cache.itemsCount)}.
+                    {strings.showed} {page.index * page.size + 1}-{Math.min(cache.itemsCount, (page.index + 1) * page.size)} {strings.from} {Numbers.format(cache.itemsCount)}.
                         </Line>
                         <Line>
-                        Velikost stránky {(
+                        {strings.pageSize} {(
                     <PerPage onChange={event => handleChangeSize(parseInt(event.target.value))} defaultValue={page.size}>
                         {[5, 10, 20, 50, 100, 200].map((value, i) => (
                             <option key={i} value={value}>

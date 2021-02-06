@@ -14,7 +14,7 @@ import { MessageSelection, MessageTag, Sex, UserRole } from '../../User'
 const CS = Language.CS
 const EN = Language.EN
 
-export default {
+const strings = {
 
     nav: {
         links: [
@@ -44,52 +44,6 @@ export default {
             [Validator.Relation.GREATER_THAN]: { [CS]: 'Je větší než', [EN]: 'Is more than' }
         },
         value: { [CS]: 'Hodnota filtru...', [EN]: 'Filter value...' }
-    },
-
-    properties: {
-        // General
-        type: { [CS]: 'Typ', [EN]: 'Type' },
-        name: { [CS]: 'Název', [EN]: 'Name' },
-
-        // Datasets
-        size: { [CS]: 'Položek', [EN]: 'Items' },
-        processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
-        date: { [CS]: 'Datum', [EN]: 'Date' },
-        published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
-        url: 'URL',
-        time: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
-        modified: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
-        priority: { [CS]: 'Priorita', [EN]: 'Priority' },
-
-        // Stars
-        spectral_class: { [CS]: 'Spektrální třída', [EN]: 'Spectral class' },
-        luminosity_class: { [CS]: 'Třída svítivosti', [EN]: 'Luminosity class' },
-        diameter: { [CS]: 'Průměr', [EN]: 'Diameter' },
-        mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
-        distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
-        surfaceTemperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
-        spectralClass: { [CS]: 'Spektr. třída', [EN]: 'Spectr. class' },
-        density: { [CS]: 'Hustota', [EN]: 'Density' },
-        luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
-        surfaceGravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
-        planets: { [CS]: 'Planet', [EN]: 'Planets' },
-        dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
-        lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
-        absoluteMagnitude: 'Abs. mag.',
-        apparentMagnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
-        metallicity: { [CS]: 'Metalicita', [EN]: 'Metallicity' },
-        ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
-        dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
-
-        // Planets
-        semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
-        transit: { [CS]: 'Tranzit', [EN]: 'Transit' },
-        orbitalPeriod: { [CS]: 'Perioda', [EN]: 'Period' },
-        orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
-        lifeConditions: { [CS]: 'Život', [EN]: 'Life' },
-        planet: { [CS]: 'Planeta', [EN]: 'Planet' },
-        status: 'Status',
-        eccentricity: { [CS]: 'Excentricita', [EN]: 'Eccentricity' }
     },
 
     units: {
@@ -130,7 +84,6 @@ export default {
             [DatasetPriority.HIGHEST]: { [CS]: 'Nejvyšší', [EN]: 'Highest' }
         },
 
-        // TODO: Remove from properties.
         type: { [CS]: 'Typ', [EN]: 'Type' },
         name: { [CS]: 'Název', [EN]: 'Name' },
         missingName: { [CS]: 'Zadejte název', [EN]: 'Type name' },
@@ -345,7 +298,6 @@ export default {
         role: 'Role',
         created: { [CS]: 'Registrace', [EN]: 'Registration' },
         modified: { [CS]: 'Aktivní', [EN]: 'Active' },
-        rank: { [CS]: 'Umístění', [EN]: 'Rank' },  // TODO: Remove.
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
         items: { [CS]: 'Křivek', [EN]: 'Curves' },
         data: { [CS]: 'Zpracováno', [EN]: 'Processed' },
@@ -472,6 +424,16 @@ export default {
 
     errors: {
         general: { [CS]: 'Nastala chyba', [EN]: 'Error occured' }
+    },
+
+    data: {
+        paginator: {
+            showed: { [CS]: 'Zobrazeno', [EN]: 'Showed' },
+            from: { [CS]: 'z', [EN]: 'from' },
+            pageSize: { [CS]: 'Velikost stránky', [EN]: 'Page size' }
+        }
     }
 
 }
+
+export default strings

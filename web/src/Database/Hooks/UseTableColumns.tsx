@@ -86,8 +86,7 @@ const Properties = ({ item, render }: PropertiesProps) => {
     return render(item.properties[0].name, item.properties[0].type)
 }
 
-
-export default (): Structure => {
+const UseTableColumns = (): Structure => {
 
     const dispatch = useDispatch()
     const table = useTable()
@@ -109,7 +108,7 @@ export default (): Structure => {
                                 { name: 'surface_temperature', unit: 'K', multi: 'properties' },
                                 { name: 'distance', unit: 'ly', multi: 'properties' },
                                 { name: 'luminosity', unit: '☉', multi: 'properties' },
-                                { name: 'transit_depth', format: (_, item) => item.light_curves[0] && <Curve data={item.light_curves[0]} simple={true} type={Curve.LC} />, title: <Colored color='#FAA'>{strings.properties.lightCurve}</Colored>, width: '20rem' },
+                                { name: 'transit_depth', format: (_, item) => item.light_curves[0] && <Curve data={item.light_curves[0]} simple={true} type={Curve.LC} />, title: <Colored color='#FAA'>{strings.stars.lightCurve}</Colored>, width: '20rem' },
                                 { name: 'planets', format: (val, item) => item.planets.length },
                                 { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
                                 { name: 'absolute_magnitude', format: Numbers.format, multi: 'properties' },
@@ -148,7 +147,7 @@ export default (): Structure => {
                                 { name: 'surface_temperature', unit: '°C', multi: 'properties' },
                                 { name: 'semi_major_axis', unit: 'au', multi: 'properties' },
                                 { name: 'orbital_period', format: val => Dates.formatDistance(strings, Dates.daysToMs(val), 0, Dates.Format.EXACT), multi: 'properties' },
-                                { name: 'transit_depth', format: (_, planet) => planet.properties[0]?.transit?.local_view && <Curve data={planet.properties[0].transit.local_view as any} simple={true} type={Curve.LV} />, title: <Colored color='#AFA'>{strings.properties.transit}</Colored>, width: '20rem' },
+                                { name: 'transit_depth', format: (_, planet) => planet.properties[0]?.transit?.local_view && <Curve data={planet.properties[0].transit.local_view as any} simple={true} type={Curve.LV} />, title: <Colored color='#AFA'>{strings.planets.transit}</Colored>, width: '20rem' },
                                 { name: 'life_conditions', format: val => strings.planets.lifeConditionsTypes[val], styleMap: lifeTypeStyle, multi: 'properties' },
                                 { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
                                 { name: 'orbital_velocity', unit: <Fraction top='km' bottom='s' />, multi: 'properties' },
@@ -183,12 +182,13 @@ export default (): Structure => {
                                 { name: 'surface_temperature', unit: 'K', multi: 'properties' },
                                 { name: 'distance', unit: 'ly', multi: 'properties' },
                                 { name: 'luminosity', unit: '☉', multi: 'properties' },
-                                { name: 'gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
+                                { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
                                 { name: 'planets', format: (val, item) => item.planets.length },
-                                { name: 'transit_depth', format: (_, item) => item.light_curves[0] && <Curve data={item.light_curves[0]} simple={true} type={Curve.LC} />, title: <Colored color='#FAA'>{strings.properties.lightCurve}</Colored>, width: '20rem' },
+                                { name: 'transit_depth', format: (_, item) => item.light_curves[0] && <Curve data={item.light_curves[0]} simple={true} type={Curve.LC} />, title: <Colored color='#FAA'>{strings.stars.lightCurve}</Colored>, width: '20rem' },
                                 { name: 'dataset', format: val => <IconText text={val} icon='/img/Database/Dataset/StarProperties.svg' />, width: 1.5, multi: 'properties' }
                             ], {
-                                strings: stars
+                                strings: stars,
+                                indexColumnName: 'index'
                             })
                         }
                     ],
@@ -200,8 +200,8 @@ export default (): Structure => {
                     levels: [
                         {
                             columns: Col.list<PlanetData>([
-                                { name: 'type', format: (val, item) => <ItemImage image={`Database/Planet/${pascalCase(item.properties[0].type)}.png`} />, width: '4rem', headerIcon: false },
-                                { name: 'name', format: (val, item) => <Detail title={item.properties[0].name} subtitle={strings.planets.types[item.properties[0].type]} />, width: 1.5, headerIcon: false },
+                                { name: 'type', format: (val, item) => item.properties && item.properties[0] && <ItemImage image={`Database/Planet/${pascalCase(item.properties[0].type || 'Unknown')}.png`} />, width: '5rem', headerIcon: false },
+                                { name: 'name', format: (val, item) => item.properties && item.properties[0] && <Detail pathname='/abc' title={item.properties[0].name} subtitle={strings.planets.types[item.properties[0].type] || strings.planets.unknownType} />, width: 1.5, headerIcon: false },
                                 { name: 'diameter', unit: '⊕', multi: 'properties' },
                                 { name: 'mass', unit: '⊕', multi: 'properties' },
                                 { name: 'density', unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/>, multi: 'properties' },
@@ -209,10 +209,14 @@ export default (): Structure => {
                                 { name: 'semi_major_axis', unit: 'au', multi: 'properties' },
                                 { name: 'orbital_period', format: val => Dates.formatDistance(strings, Dates.daysToMs(val), 0, Dates.Format.EXACT), multi: 'properties' },
                                 { name: 'orbital_velocity', unit: <Fraction top='km' bottom='s' />, multi: 'properties' },
+                                { name: 'transit_depth', format: (_, planet) => planet.properties[0]?.transit?.local_view && <Curve data={planet.properties[0].transit.local_view as any} simple={true} type={Curve.LV} />, title: <Colored color='#AFA'>{strings.planets.transit}</Colored>, width: '20rem' },
                                 { name: 'life_conditions', format: val => strings.planets.lifeConditionsTypes[val], styleMap: lifeTypeStyle, multi: 'properties' },
-                                { name: 'distance', format: val => '4.2 ly' },
-                                { name: 'transit_depth', format: () => null/*<Curve data={[]} color='#AFA' simple={true} />*/, title: <Colored color='#AFA'>{strings.properties.transit}</Colored>, width: '20rem' },
-                                { name: 'dataset', format: val => <IconText text={val} icon='/img/Database/Dataset/PlanetProperties.svg' />, width: 1.5, multi: 'properties' }
+                                { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
+                                { name: 'stat   us', format: value => strings.planets.statuses[value], styleMap: planetStatusStyle },
+                                { name: 'todo' },
+                                { name: 'todo' },
+                                { name: 'todo' },
+                                { name: 'dataset', format: (val, planet, i) => <IconText text={val} icon={`/img/Database/Dataset/${(planet as any).processed ? 'TargetPixel' : 'PlanetProperties'}.svg`} />, width: 1.5, multi: 'properties' }
                             ], {
                                 strings: planets
                             })
@@ -234,7 +238,7 @@ export default (): Structure => {
                                 { name: 'time', format: (val, item) => <Diff {...item.stats.time} format={val => Units.format(val, UnitType.TIME)} />},
 
                                 { name: 'size', format: Numbers.format },
-                                { name: 'created', format: val => <DateTime s={val} />, title: strings.properties.published },
+                                { name: 'created', format: val => <DateTime s={val} />, title: strings.datasets.published },
                                 { name: 'modified', format: val => Dates.formatDistance(strings, val) },
                                 { name: 'priority', format: val => strings.datasets.priorities[val], styleMap: priorityStyle },
                                 { icon: true, title: 'URL', name: 'items_getter', format: (val, item) => <OptionalLine lines={[item.items_getter, item.item_getter]} format={url => <TextLink pathname={url as string}>{Urls.parse(url as string).hostname}</TextLink>} />, width: 1.75     }
@@ -282,11 +286,11 @@ export default (): Structure => {
     }, [table, strings, dispatch, datasets, planets, stars, users])
 }
 
-interface Colored {
+interface ColoredProps {
     color: string
 }
 
-const Colored = Styled.span<Colored>`
+const Colored = Styled.span<ColoredProps>`
     color: ${props => props.color};
     `
 
@@ -306,3 +310,5 @@ const ItemImage = Styled.div<ItemImageProps>`
     `}
     display: inline - block
 `
+
+export default UseTableColumns
