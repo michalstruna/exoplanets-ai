@@ -15,6 +15,10 @@ const Root = Styled.div`
     background-color: ${Color.BACKGROUND};
     overflow: hidden;
     min-height: 100%;
+
+    ${Process.Root} {
+        height: 15rem;
+    }
 `
 
 const Processes = Styled.div`

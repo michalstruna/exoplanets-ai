@@ -404,7 +404,7 @@ export default {
             steps: [
                 {
                     icon: 'Download.svg',
-                    download: true,
+                    download: 'https://www.google.com',
                     title: 'Stáhněte si klientský program (16,8 kiB)'
                 },
                 {
@@ -442,7 +442,12 @@ export default {
                 [ProcessState.WAITING_FOR_PAUSE]: { [CS]: 'Čeká na pauzu.', [EN]: 'Waiting for pause.' },
                 [ProcessState.WAITING_FOR_TERMINATE]: { [CS]: 'Čeká na ukončení.', [EN]: 'Waiting for terminate.' },
                 [ProcessState.TERMINATED]: { [CS]: 'Proces byl ukončen.', [EN]: 'Process was terminated.' }
-            }
+            },
+            pause: { [CS]: 'Pozastavit', [EN]: 'Pause' },
+            terminate: { [CS]: 'Ukončit', [EN]: 'Terminate' },
+            run: { [CS]: 'Spustit', [EN]: 'Run' },
+            analyzedCurves: { [CS]: 'Analyzovaných křivek', [EN]: 'Analyzed curves' },
+            discoveredPlanets: { [CS]: 'Objevených planet', [EN]: 'Discovered planets' }
         }
     },
 

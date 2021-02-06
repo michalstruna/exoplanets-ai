@@ -27,8 +27,6 @@ interface RootProps {
 const Root = Styled.div<RootProps>`
      user-select: none;
      
-     surrounding
-     
      li, ul {
         margin: 0;
         padding: 0;

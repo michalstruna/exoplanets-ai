@@ -25,7 +25,8 @@ enum Color {
 
     YELLOW = '#DB0',
     DARK_YELLOW = 'rgba(200, 180, 0, 0.4)',
-    SEMITRANSPARENT_DARKEST = 'rgba(0, 0, 0, 0.5)'
+    SEMITRANSPARENT_DARKEST = 'rgba(0, 0, 0, 0.5)',
+    TRANSPARENT_DARKEST = 'rgba(0, 0, 0, 0.15)'
 }
 
 export default Color
