@@ -34,10 +34,13 @@ class Sockets(metaclass=Singleton):
         self.socket_service = SocketService()
 
         @sio.on("web_connect")
-        def web_connect():
+        def web_connect(user_id=None):
             self.webs[request.sid] = {"id": request.sid}  # Create new web.
             self.socket_service.emit_web("set_online_users", list(self.users.values()), id=request.sid)
             join_room(self.socket_service.get_room_name(None, "webs"))  # Join to room with all webs.
+
+            if user_id:
+                web_auth(user_id)
 
         @sio.on("web_auth")
         def web_auth(user_id):
@@ -71,6 +74,21 @@ class Sockets(metaclass=Singleton):
             if "user_id" in web:  # If it is authenticated web.
                 web_unauth()
 
+        @sio.on("disconnect")
+        def disconnect():
+            if request.sid in self.clients:
+                client = self.clients[request.sid]
+                leave_room(self.socket_service.get_room_name(None, "clients"))  # Leave room of all clients.
+
+                if "user_id" in client:  # Client was already authenticated.
+                    self._remove_user_if_empty(client["user_id"], clients=client["id"])
+                    leave_room(self.socket_service.get_room_name(client["user_id"], "webs"))  # Leave room of user's webs.
+                    self.emit_web("client_disconnect", request.sid, user=client["user_id"])
+                    # TODO: If interrupted, restore item to dataset.
+                    # TODO: Emit web auth/disconnect client.
+
+                    del self.clients[client["id"]]
+
         @sio.on("client_connect")
         def client_connect(client):
             self.clients[request.sid] = {"id": request.sid, **client}  # Create new client.
@@ -84,25 +102,6 @@ class Sockets(metaclass=Singleton):
             client["user_id"] = user["_id"]
             join_room(self.socket_service.get_room_name(user["_id"], "clients"))
             self.socket_service.emit_web("client_auth", client, user=user["_id"])
-
-        @sio.on("client_disconnect")
-        def client_disconnect():
-            client = self.clients[request.sid]
-            leave_room(self.socket_service.get_room_name(None, "clients"))  # Leave room of all clients.
-
-            if "user_id" in client:  # Client was already authenticated.
-                self._remove_user_if_empty(client["user_id"], clients=client["id"])
-                leave_room(self.socket_service.get_room_name(client["user_id"], "webs"))  # Leave room of user's webs.
-                self.emit_web("client_disconnect", request.sid, user=client["user_id"])
-                # TODO: If interrupted, restore item to dataset.
-                # TODO: Emit web auth/disconnect client.
-
-            del self.clients[client["id"]]
-
-
-
-
-
 
         @sio.on("web_pause_client")
         def web_pause_client(client_id):
@@ -172,13 +171,9 @@ class Sockets(metaclass=Singleton):
         else:
             self.socket_service.emit_web("update_online_user", user)
 
+    
 
 
-
-
-
-    def remove_client(self):
-        pass
 
     def update_client(self, id):
         client = self.clients[id]

@@ -4,14 +4,10 @@ import { Socket } from '../../Async'
 import { addLocalMessage, addOnlineUser, Identity, Message, OnlineUser, removeOnlineUser, setOnlineUsers, updateOnlineUser } from '../../User'
 
 export const init = (identity?: Identity) => {
-    Socket.emit('web_connect')
+    Socket.emit('web_connect', identity?._id)
 
-    window.onbeforeunload = () => {
+    window.onbeforeunload = () => {  // TODO: Automatically emit disconnect.
         Socket.emit('web_disconnect')
-    }
-
-    if (identity) {
-        Socket.emit('web_auth', identity._id)
     }
 
     Socket.on('client_auth', (process: ProcessData) => {
