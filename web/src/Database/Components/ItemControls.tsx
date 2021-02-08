@@ -17,6 +17,7 @@ const Root = Styled.div`
     & > * {
         display: inline-block;
         margin-left: 0.5rem;
+        width: auto;
         
         &:first-child {
             margin-left: 0;
