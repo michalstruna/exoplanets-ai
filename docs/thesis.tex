@@ -1237,15 +1237,29 @@ Běžící aplikace je dostupná na adrese \url{https://exoplanets.now.sh}, doku
 	\end{tabular}
 }
 
-Jakmile jsou všechny požadavky nainstalovány, je možné aplikaci sestavit. V~kořenovém adresáři projektu je spustitelný soubor \code{installer.sh}, popř. \code{installer.exe}, po jehož spuštění se nainstalují všechny závislosti a~dojde k~sestavení serveru, webové i~klientské aplikace. Server je následně možné spustit z~terminálu (\code{http://localhost:5000}).
+Po nainstalování závislostí můžeme přejít v~kořenovém adresáři do podadresáře \code{scripts} a~v~něm spustit soubor \code{build.sh} (Linux), popř. \code{build.bat} (Windows), čímž dojde k~sestavení serveru, webové i~klientské aplikace.
 
-\lstinputlisting[caption={Spuštění serveru.}]{codes/run_server.txt}
+\lstinputlisting[caption={Sestavení a spuštění aplikace (Linux).}]{codes/build.txt}
 
-\vspace{-5pt}
+Sestavená klientská aplikace je v~adresáři \code{client/build}, webová aplikace v~\code{web/build}. Lze ji umístit na  vlastní webový server s~přístupovým bodem \code{index.html} nebo ji spustit v~předpřipraveném webovém serveru pomocí skriptu \code{run.sh}, resp. \code{run.bat}.
 
-Sestavená webová aplikace je v~adresáři \code{web/build}. Lze ji umístit na  vlastní webový server s~přístupovým bodem \code{index.html} nebo tento soubor přímo otevřít v~prohlížeči.
-
-\vspace{-5pt}
+{
+\tab{Výchozí adresy komponent po spuštění}{
+	\begin{tabular}{|l|l|}
+		\hline	
+		\rowcolor{lightgray}
+		Komponenta & Adresa/Cesta \\	
+		\hline	
+		Server & \url{http://localhost:5000} \\
+		\hline
+		Web & \url{http://localhost:3000} \\
+		\hline
+		Klient & \url{client/build} \\
+		\hline
+		Databáze & \url{http://localhost:27017} \\
+		\hline
+	\end{tabular}
+}
 
 \subsubsection{Konfigurace}
 
@@ -1255,33 +1269,37 @@ Pokud není výchozí konfigurace vyhovující, můžeme před sestavením někt
 
 \vspace{-10pt}
 
-Jestliže chceme mít více oddělených konfigurací pro různé režimy, můžeme vytvořit vlastní konfigurační soubory ve tvaru \code{server/config/my\_custom\_mode.cfg}. Pro využití této konfigurace je pak třeba před spuštěním serveru nastavit proměnnou prostředí \code{ENV} na příslušnou hodnotu.
+Jestliže chceme mít více oddělených konfigurací pro různé režimy, můžeme vytvořit vlastní konfigurační soubory ve tvaru \code{server/config/mode\_name.cfg}. Pro využití této konfigurace je pak třeba před spuštěním serveru nastavit proměnnou prostředí \code{ENV} na příslušnou hodnotu.
 
-\lstinputlisting[caption={Spuštění serveru s vlastní konfigurací.}]{codes/run_server_custom_config.txt}
+\lstinputlisting[caption={Spuštění a sestavení aplikace s~vlastní konfigurací (Linux).}]{codes/run_custom_config.txt}
 
 V~souboru \code{web/src/Async/Constants/Config.ts} také můžeme upravit adresu serveru, se kterým bude komunikovat webová aplikace.
 
 \lstinputlisting[caption={Výchozí konfigurace webové aplikace.}]{codes/default_web_config.txt}
 
-Stejným způsobem můžeme upravit i~konfigurační soubor \code{client/constants/config.py} pro klientskou aplikaci.
+Stejným způsobem můžeme upravit i~konfiguraci \code{client/constants/config.py} pro klientskou aplikaci. Pokud zmíněné skripty nechceme aplikovat na všechny části projektu (server, web i~klient), ale pouze na některé, můžeme je specifikovat pomocí argumentů.
+
+\lstinputlisting[caption={Argumenty spouštěcích skriptů (Linux).}]{codes/script_args.txt}
+
+\vspace{-10pt}
 
 \subsubsection{Vývoj}
 
-Postup výše nám umožní jednorázově sestavit a~spustit aplikaci. Pokud však chceme aplikaci dále vyvíjet, je vhodné ji spustit ve vývojovém režimu. To zajistí výpis všech chyb i~varování do konzole, automatický restart serveru při změně kódu a~taktéž oddělenou databázi od produkčních dat. Webová aplikace bude dostupná na adrese \url{http://localhost:3000}.
+Postup výše nám umožní jednorázově sestavit a~spustit aplikaci. Pokud však chceme aplikaci dále vyvíjet, je vhodné ji spustit ve vývojovém režimu. To zajistí výpis chyb do konzole, restart serveru při změně kódu a~oddělenou databázi od produkčních dat.
 
-\lstinputlisting[caption={Spuštění v~režimu pro vývoj.}]{codes/run_server_dev_config.txt}
+\lstinputlisting[caption={Spuštění v~režimu pro vývoj (Linux).}]{codes/run_dev.txt}
 
 \vspace{-20pt}
 
 \subsubsection{Testování a~validace}
 
-Serverová část je otestována integračními testy s~využitím knihovny \code{pytest}. Tyto testy je možné spustit buď všechny zároveň, nebo vybrat pouze testy ze specifikovaného souboru. Výsledek jednotlivých testů bude zobrazen v~terminálu i~s~popisem případných chyb.
+Serverová část je otestována integračními testy s~využitím knihovny \code{pytest}. Výsledek jednotlivých testů bude zobrazen v~terminálu i~s~popisem případných chyb.
 
-\lstinputlisting[caption={Spuštění testů aplikace.}]{codes/test_server.txt}
+\lstinputlisting[caption={Spuštění testů aplikace (Linux).}]{codes/test_server.txt}
 
-Stejně tak je možné i~otestovat úspěšnost aplikace při hledání exoplanet v~distribuovaném prostředí. V~tomto případě ale bude proces trvat několik desítek minut. Dojde ke stažení a~zpracování několika položek z~datasetu od NASA a~následně se porovnají dosažené výsledky s~těmi očekávanými. Výsledný report bude uložen do~souboru \code{server/test/validation.txt}.
+Stejně tak je možné i~otestovat úspěšnost aplikace při hledání exoplanet v~distribuovaném prostředí. V~tomto případě ale bude proces trvat několik desítek minut. Dojde ke stažení a~zpracování několika položek z~datasetu od NASA a~následně se porovnají dosažené výsledky s~těmi očekávanými. Výsledný report bude uložen do~souboru \code{scripts/validation.txt}.
 
-\lstinputlisting[caption={Spuštění validace aplikace.}]{codes/validate.txt}
+\lstinputlisting[caption={Spuštění validace aplikace (Linux).}]{codes/validate.txt}
 
 \section{Rozvržení aplikace}
 

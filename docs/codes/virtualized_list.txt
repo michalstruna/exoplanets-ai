@@ -1,5 +1,0 @@
-const Item = ({ index, style }) => (
-    <div style={style}>Item {index}</div>
-)
-
-<VirtualizedList itemRenderer={Item} itemHeight={60} itemsCount={900} />
