@@ -1,0 +1,3 @@
+./build.sh   // Build all.
+./build.sh --client  // Build only client.
+./run --web --server  // Run web and server.

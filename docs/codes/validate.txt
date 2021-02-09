@@ -1,1 +1,1 @@
-pytest server/test/validation.py
+./validate.sh
