@@ -1,3 +1,0 @@
-mongod                  // Run database.
-ENV=my_custom_mode
-python3 server/main.py  // Run server with my_custom_mode.cfg.

@@ -13,4 +13,5 @@ __pycache__
 *.pyc
 *.code-workspace
 *.map
+*-venv
 server/public
