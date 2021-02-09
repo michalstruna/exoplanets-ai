@@ -45,6 +45,7 @@
     "@types/styled-components": "^4.4.3",
     "@types/throttle-debounce": "^2.1.0",
     "react-scripts": "^3.4.1",
+    "serve": "^11.3.2",
     "ts-loader": "^7.0.1",
     "typescript": "^3.8.3"
   },
