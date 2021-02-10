@@ -103,10 +103,13 @@ class Sockets(metaclass=Singleton):
             join_room(self.socket_service.get_room_name(user["_id"], "clients"))
             self.socket_service.emit_web("client_auth", client, user=user["_id"])
 
+
+
+
+        # TODO: Fix web-client controls.
         @sio.on("web_pause_client")
         def web_pause_client(client_id):
             time.sleep(1000)
-            # TODO: ...
             self.pause_client(client_id)
 
         @sio.on("web_run_client")
@@ -118,6 +121,9 @@ class Sockets(metaclass=Singleton):
         def web_terminate_client(client_id):
             time.sleep(1000)
             self.socket_service.emit_client("terminate", id=client_id)
+
+
+
 
         @sio.on("client_log")
         def client_log(log):
@@ -183,6 +189,7 @@ class Sockets(metaclass=Singleton):
         self.socket_service.emit_web("update_client", update, user=user_id)
 
     def pause_client(self, client_id):
+        # TODO: Wait for pause.
         client, user_id = self.clients[client_id]["data"], self.clients[client_id]["user_id"]
         client["state"] = ProcessState.PAUSED.value
 
@@ -209,7 +216,7 @@ class Sockets(metaclass=Singleton):
             self.update_client(client_id)
             self.socket_service.emit_client("run", task, id=client_id)
         except:
-            pass
+            pass  # TODO: Wait for new item.
 
     def finish_task(self, task):
         """
