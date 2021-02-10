@@ -18,7 +18,6 @@ This module contains all components and methods for work with url.
   * [Urls.merge()](#urls-merge)
   * [Urls.safePath()](#urls-safe-path)
   * [Urls.safeQuery()](#urls-safe-query)
-  * [Urls.safeHash()](#urls-safe-hash)
   * [Urls.isCurrent()](#urls-is-current)
   
 ## Hash
@@ -136,10 +135,6 @@ Check if current hash match `predicate`. If not, set `defaultValue`.
 #### <a name="urls-safe-query">`Urls.testQuery(queryName: string, predicate: Validator.Predicate, defaultValue: string): void`</a>
 
 Check if current path parameter with `pathParamName` match `predicate`. If not, set `defaultValue`.
-
-#### <a name="urls-safe-hash">`Urls.safeHash(predicate: Predicate, defaultValue: string): void`</a>
-
-Check if current query param with `queryName` name match `predicate`. If not, set `defaultValue`.
 
 #### <a name="urls-is-current">`Urls.isCurrent(source: Location, target: Target): boolean`</a>
 

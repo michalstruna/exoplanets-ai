@@ -45,6 +45,8 @@ const OnlineUsers = ({ ...props }: Props) => {
     const globalStrings = useStrings()
     const strings = useStrings().users
 
+    console.log(users)
+
     return (
         <Root {...props}>
             <HierarchicalTable
@@ -68,7 +70,7 @@ const OnlineUsers = ({ ...props }: Props) => {
                         return (
                             <>
                                 <IconText icon='User/Source/Web.svg' title='Web' />
-                                {user.clients?.map((_, i) => <IconText key={i} icon='User/Source/Client.svg' title='Client' />)}
+                                {user.clients?.map((client, i) => <IconText key={i} icon='User/Source/Client.svg' title='Client' />)}
                             </>
                         )
                         }, width: '7rem' },

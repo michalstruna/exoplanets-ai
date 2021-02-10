@@ -7,7 +7,7 @@ import { getUsers, useIdentity, User, useUsers, getUserRank } from '..'
 import { Link, Url } from '../../Routing'
 import UserName from './UserName'
 import { Async } from '../../Async'
-import { Paginator, Sort, Units, UnitType, UnitTypeData, useStrings } from '../../Data'
+import { Paginator, Units, UnitType, UnitTypeData, useStrings } from '../../Data'
 import { AggregatedStats } from '../../Stats'
 import DbTable from '../../Database/Constants/DbTable'
 import { useSelector } from 'react-redux'
@@ -159,17 +159,19 @@ const UsersRank = ({ ...props }: Props) => {
                 {strings[r[0]]}
             </NavLink>
         ))
-    ), [rank])
+    ), [rank, strings])
 
-    const sort = [{ columnName: rank[0] + sortSuffix, isAsc: false, level: 0 }, { columnName: 'name', isAsc: true, level: 0 }]
+    const sort = React.useMemo(() => (
+        [{ columnName: rank[0] + sortSuffix, isAsc: false, level: 0 }, { columnName: 'name', isAsc: true, level: 0 }]
+    ), [rank, sortSuffix])
 
     const usersGetter = React.useCallback(() => (
         getUsers({ segment: { index: page, size: PAGE_SIZE }, sort })
-    ), [rank, sortSuffix, page])
+    ), [page, sort])
 
     const userRankGetter = React.useCallback(() => (
         getUserRank([identity.payload?._id, sort])
-    ), [identity])
+    ), [identity, sort])
 
     const items = React.useMemo(() => {
         const result = [...(users.payload?.content || [])]

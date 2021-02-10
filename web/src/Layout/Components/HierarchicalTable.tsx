@@ -185,7 +185,7 @@ const HierarchicalTable = ({
                 ))}
             </Header>
         )
-    }, [sort, isAsc, levels, sortedColumn, sortedLevel, fixedWidth, getWidth])
+    }, [sort, isAsc, levels, sortedColumn, sortedLevel, fixedWidth, onSort])
 
     const rows = React.useMemo(() => {
         const rows = [] as any

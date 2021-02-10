@@ -8,6 +8,7 @@ import ExternalAuthButton from './ExternalAuthButton'
 import { Color } from '../../Style'
 import { useActions } from '../../Data'
 import { facebookLogin } from '..'
+import { Config } from '../../Async'
 
 interface Props extends React.ComponentPropsWithoutRef<'button'> {
 
@@ -23,13 +24,11 @@ const Root = Styled(ExternalAuthButton)`
 
 const FacebookLogin = ({ ...props }: Props) => {
 
-    // TODO: AppId to config.
-
     const actions = useActions({ facebookLogin })
 
     return (
         <Facebook
-            appId='605737407006284'
+            appId={Config.fbId}
             callback={(identity: any) => actions.facebookLogin({ token: identity.accessToken})}
             scope='user_birthday,user_gender,user_location'
             render={(renderProps: any) => (

@@ -11,32 +11,37 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
 const Root = Styled.div`
     background-color: ${Color.MEDIUM_DARK};
-    padding: 2rem 0;
     width: 100%;
 `
 
 const Inner = Styled.div`
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     margin: 0 auto;
+    padding: 1rem;
     width: 75rem;
-    max-width: calc(100% - 2rem);
+    max-width: 100%;
 `
 
 const Steps = Styled.main`
+    ${size()}
     align-items: center;
     display: flex;
+    justify-content: space-around;
     flex: 1 0 3rem;
 `
 
-const Block = Styled(Link)`
-    ${image(undefined, '100% auto', 'top center')}
-    box-sizing: border-box;
-    flex: 1 0 15rem;
-    padding-top: 10rem;
+const Step = Styled(Link)`
+    flex: 1 1 0;
+    max-width: 15rem;
 `
 
 const Transition = Styled.div`
     ${image('Controls/ArrowRight.svg')}
-    ${size('4rem', '5rem')}
+    flex: 0 0 4rem;
+    height: 5rem;
     opacity: 0.2;
     transform: scaleX(0.5);
 `
@@ -46,8 +51,16 @@ const Title = Styled(PageTitle)`
     margin-bottom: 2rem;
 `
 
-// TODO
-const DOWNLOAD_URL = 'https://www.google.com'
+const StepImage = Styled.div`
+    ${image(undefined, '90% auto')}
+    height: 0;
+    padding-bottom: 60%;
+`
+
+const StepTitle = Styled(SectionTitle)`
+    font-size: 120%;
+    padding: 0;
+`
 
 const DiscoveryTutorial = ({ ...props }: Props) => {
 
@@ -56,11 +69,12 @@ const DiscoveryTutorial = ({ ...props }: Props) => {
     const renderSteps = () => (
         strings.steps.map((step: any, i: number) => (
             <React.Fragment key={i}>
-                <Block style={{ backgroundImage: `url(/img/Discovery/Tutorial/${step.icon})` }} pathname={step.download && DOWNLOAD_URL}>
-                    <SectionTitle>
+                <Step pathname={step.download}>
+                    <StepImage style={{ backgroundImage: `url(/img/Discovery/Tutorial/${step.icon})` }} />
+                    <StepTitle>
                         {step.title}
-                    </SectionTitle>
-                </Block>
+                    </StepTitle>
+                </Step>
                 {i < strings.steps.length - 1 && <Transition />}
             </React.Fragment>
         ))
@@ -80,5 +94,8 @@ const DiscoveryTutorial = ({ ...props }: Props) => {
     )
 
 }
+
+DiscoveryTutorial.Root = Root
+DiscoveryTutorial.Inner = Inner
 
 export default DiscoveryTutorial

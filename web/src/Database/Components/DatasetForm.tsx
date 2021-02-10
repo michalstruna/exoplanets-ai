@@ -59,7 +59,7 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
                 <ControlTitle>
                     {dataset ? strings.edit : strings.new}
                 </ControlTitle>
-                <FormGroup title={strings.data}>
+                <FormGroup title={strings.dataFields}>
                     <Field
                         name='name'
                         type={Field.Type.TEXT}

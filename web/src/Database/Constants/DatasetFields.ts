@@ -13,6 +13,6 @@ export default {
         metallicity: 'metallicity'
     },
     [DatasetType.TARGET_PIXEL]: {
-
+        name: 'name'
     }
 } as Record<DatasetType, any>

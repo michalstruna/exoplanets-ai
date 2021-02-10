@@ -1,7 +1,8 @@
 import ProcessState from './Constants/ProcessState'
 
 export type ProcessLog = {
-
+    created: number
+    text: number
 }
 
 export type ProcessData = {

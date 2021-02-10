@@ -2,10 +2,10 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Color, Dimension, size } from '../../Style'
-import { Block } from '../../Layout'
 import { UsersBlock } from '../../User'
 import PlanetsRank from '../Components/PlanetsRank'
 import GlobalStatsPanel from '../Components/GlobalStats/GlobalStatsPanel'
+import { DiscoveryBlock } from '../../Discovery' 
 
 interface Props {
 
@@ -22,12 +22,9 @@ const Right = Styled.div`
     display: flex;
     flex: 1 0 0;
     flex-direction: column;
+    overflow: hidden;
     padding: 1.5rem;
     padding-top: 0;
-`
-
-const Top = Styled.div`
-    flex: 1 0 0;
 `
 
 const Bottom = Styled.div`
@@ -36,10 +33,6 @@ const Bottom = Styled.div`
     display: flex;
     padding-top: 1.5rem;
     width: 100%;
-`
-
-const Todo = Styled(Block)`
-    ${size()}
 `
 
 const OverviewUsersBlock = Styled(UsersBlock)`
@@ -71,9 +64,7 @@ const OverviewView = ({ ...props }: Props) => {
         <Root {...props}>
             <GlobalStatsPanel />
             <Right>
-                <Top>
-                    <Todo />
-                </Top>
+                <DiscoveryBlock />
                 <Bottom>
                     <OverviewUsersBlock />
                     <PlanetsRankBlock />

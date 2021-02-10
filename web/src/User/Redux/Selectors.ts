@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { AsyncData, Segment } from '../../Data'
+import { AsyncData } from '../../Data'
 import { User } from '../types'
 import { SegmentData } from '../../Database/types'
 

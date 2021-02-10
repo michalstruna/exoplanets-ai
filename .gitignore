@@ -12,6 +12,6 @@ __pycache__
 .vscode
 *.pyc
 *.code-workspace
-public
 *.map
 *-venv
+server/public

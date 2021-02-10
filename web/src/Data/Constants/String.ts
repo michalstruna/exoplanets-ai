@@ -14,7 +14,7 @@ import { MessageSelection, MessageTag, Sex, UserRole } from '../../User'
 const CS = Language.CS
 const EN = Language.EN
 
-export default {
+const strings = {
 
     nav: {
         links: [
@@ -46,52 +46,6 @@ export default {
         value: { [CS]: 'Hodnota filtru...', [EN]: 'Filter value...' }
     },
 
-    properties: {
-        // General
-        type: { [CS]: 'Typ', [EN]: 'Type' },
-        name: { [CS]: 'Název', [EN]: 'Name' },
-
-        // Datasets
-        size: { [CS]: 'Položek', [EN]: 'Items' },
-        processed: { [CS]: 'Zpracováno', [EN]: 'Processed' },
-        date: { [CS]: 'Datum', [EN]: 'Date' },
-        published: { [CS]: 'Zveřejněno', [EN]: 'Published' },
-        url: 'URL',
-        time: { [CS]: 'Výpočetní čas', [EN]: 'Process time' },
-        modified: { [CS]: 'Posl. aktivita', [EN]: 'Last activity' },
-        priority: { [CS]: 'Priorita', [EN]: 'Priority' },
-
-        // Stars
-        spectral_class: { [CS]: 'Spektrální třída', [EN]: 'Spectral class' },
-        luminosity_class: { [CS]: 'Třída svítivosti', [EN]: 'Luminosity class' },
-        diameter: { [CS]: 'Průměr', [EN]: 'Diameter' },
-        mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
-        distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
-        surfaceTemperature: { [CS]: 'Teplota', [EN]: 'Temperature' },
-        spectralClass: { [CS]: 'Spektr. třída', [EN]: 'Spectr. class' },
-        density: { [CS]: 'Hustota', [EN]: 'Density' },
-        luminosity: { [CS]: 'Zář. výkon', [EN]: 'Luminosity' },
-        surfaceGravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
-        planets: { [CS]: 'Planet', [EN]: 'Planets' },
-        dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
-        lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
-        absoluteMagnitude: 'Abs. mag.',
-        apparentMagnitude: { [CS]: 'Zdánl. mag.', [EN]: 'Apparent mag.' },
-        metallicity: { [CS]: 'Metalicita', [EN]: 'Metallicity' },
-        ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
-        dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
-
-        // Planets
-        semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
-        transit: { [CS]: 'Tranzit', [EN]: 'Transit' },
-        orbitalPeriod: { [CS]: 'Perioda', [EN]: 'Period' },
-        orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
-        lifeConditions: { [CS]: 'Život', [EN]: 'Life' },
-        planet: { [CS]: 'Planeta', [EN]: 'Planet' },
-        status: 'Status',
-        eccentricity: { [CS]: 'Excentricita', [EN]: 'Eccentricity' }
-    },
-
     units: {
         now: { [CS]: 'Teď', [EN]: 'Now' },
         before: {
@@ -115,6 +69,7 @@ export default {
     },
 
     datasets: {
+        dataFields: { [CS]: 'Přehled', [EN]: 'Overview' },
         types: {
             [DatasetType.STAR_PROPERTIES]: { [CS]: 'Hvězdy', [EN]: 'Stars' },
             [DatasetType.PLANET_PROPERTIES]: { [CS]: 'Planety', [EN]: 'Planets' },
@@ -130,7 +85,6 @@ export default {
             [DatasetPriority.HIGHEST]: { [CS]: 'Nejvyšší', [EN]: 'Highest' }
         },
 
-        // TODO: Remove from properties.
         type: { [CS]: 'Typ', [EN]: 'Type' },
         name: { [CS]: 'Název', [EN]: 'Name' },
         missingName: { [CS]: 'Zadejte název', [EN]: 'Type name' },
@@ -221,6 +175,10 @@ export default {
 
         quantitites: { [CS]: 'Veličiny', [EN]: 'Quantities' },
         curves: { [CS]: 'Křivky', [EN]: 'Curves' }
+    },
+
+    tp: {
+        name: { [CS]: 'Název', [EN]: 'Name' },
     },
 
     planets: {
@@ -345,7 +303,6 @@ export default {
         role: 'Role',
         created: { [CS]: 'Registrace', [EN]: 'Registration' },
         modified: { [CS]: 'Aktivní', [EN]: 'Active' },
-        rank: { [CS]: 'Umístění', [EN]: 'Rank' },  // TODO: Remove.
         planets: { [CS]: 'Planet', [EN]: 'Planets' },
         items: { [CS]: 'Křivek', [EN]: 'Curves' },
         data: { [CS]: 'Zpracováno', [EN]: 'Processed' },
@@ -358,7 +315,6 @@ export default {
         volunteersRank: { [CS]: 'Žebříček dobrovolníků', [EN]: 'Volunteers rank' },
         lastWeek: { [CS]: 'Poslední týden', [EN]: 'Last week' },
         total: { [CS]: 'Celkem', [EN]: 'Total' },
-        unauth: { [CS]: 'Nejste přihlášený', [EN]: 'You are not logged in' },
 
         sexName: {
             [Sex.FEMALE]: { [CS]: 'Žena', [EN]: 'Female' },
@@ -381,21 +337,24 @@ export default {
         noOnlineUsers: { [CS]: 'Nikdo není online.', [EN]: 'Nobody is online.' },
         volunteers: { [CS]: 'Dobrovolníci', [EN]: 'Volunteers' },
         discussion: { [CS]: 'Diskuse', [EN]: 'Discussion' },
-        type: { [CS]: 'Napište něco', [EN]: 'Type anything' },
+        unauth: { [CS]: 'Nejste přihlášený', [EN]: 'You are not logged in' },
 
-        messageSelection: {
-            [MessageSelection.ALL]: { [CS]: 'Vše', [EN]: 'All' },
-            [MessageSelection.MESSAGES]: { [CS]: 'Zprávy', [EN]: 'Messages' },
-            [MessageSelection.NOTIFICATIONS]: { [CS]: 'Oznámení', [EN]: 'Notification' },
-            [MessageSelection.DATASETS]: { [CS]: 'Datasety', [EN]: 'Datasets' },
-            [MessageSelection.PLANETS]: { [CS]: 'Planety', [EN]: 'Planets' },
-            [MessageSelection.USERS]: { [CS]: 'Uživatelé', [EN]: 'Users' }
+        chat: {
+            type: { [CS]: 'Napište něco', [EN]: 'Type anything' },
+            messageSelection: {
+                [MessageSelection.ALL]: { [CS]: 'Vše', [EN]: 'All' },
+                [MessageSelection.MESSAGES]: { [CS]: 'Zprávy', [EN]: 'Messages' },
+                [MessageSelection.NOTIFICATIONS]: { [CS]: 'Oznámení', [EN]: 'Notification' },
+                [MessageSelection.DATASETS]: { [CS]: 'Datasety', [EN]: 'Datasets' },
+                [MessageSelection.PLANETS]: { [CS]: 'Planety', [EN]: 'Planets' },
+                [MessageSelection.USERS]: { [CS]: 'Uživatelé', [EN]: 'Users' }
+            },
+    
+            messageTag: {
+                [MessageTag.NEW_VOLUNTEER]: { [CS]: 'Nový dobrovolník', [EN]: 'New volunteer' },
+                [MessageTag.NEW_DATASET]: { [CS]: 'Nový dataset', [EN]: 'New dataset' }
+            }
         },
-
-        messageTag: {
-            [MessageTag.NEW_VOLUNTEER]: { [CS]: 'Nový dobrovolník', [EN]: 'New volunteer' },
-            [MessageTag.NEW_DATASET]: { [CS]: 'Nový dataset', [EN]: 'New dataset' }
-        }
     },
 
     discovery: {
@@ -404,7 +363,7 @@ export default {
             steps: [
                 {
                     icon: 'Download.svg',
-                    download: true,
+                    download: 'https://www.google.com',
                     title: 'Stáhněte si klientský program (16,8 kiB)'
                 },
                 {
@@ -442,7 +401,12 @@ export default {
                 [ProcessState.WAITING_FOR_PAUSE]: { [CS]: 'Čeká na pauzu.', [EN]: 'Waiting for pause.' },
                 [ProcessState.WAITING_FOR_TERMINATE]: { [CS]: 'Čeká na ukončení.', [EN]: 'Waiting for terminate.' },
                 [ProcessState.TERMINATED]: { [CS]: 'Proces byl ukončen.', [EN]: 'Process was terminated.' }
-            }
+            },
+            pause: { [CS]: 'Pozastavit', [EN]: 'Pause' },
+            terminate: { [CS]: 'Ukončit', [EN]: 'Terminate' },
+            run: { [CS]: 'Spustit', [EN]: 'Run' },
+            analyzedCurves: { [CS]: 'Analyzovaných křivek', [EN]: 'Analyzed curves' },
+            discoveredPlanets: { [CS]: 'Objevených planet', [EN]: 'Discovered planets' }
         }
     },
 
@@ -461,6 +425,20 @@ export default {
         changeIdentity: {
             [CS]: 'Přihlásit se jako jiný uživatel'
         }
+    },
+
+    errors: {
+        general: { [CS]: 'Nastala chyba', [EN]: 'Error occured' }
+    },
+
+    data: {
+        paginator: {
+            showed: { [CS]: 'Zobrazeno', [EN]: 'Showed' },
+            from: { [CS]: 'z', [EN]: 'from' },
+            pageSize: { [CS]: 'Velikost stránky', [EN]: 'Page size' }
+        }
     }
 
 }
+
+export default strings

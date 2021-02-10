@@ -17,7 +17,7 @@ export type User = LogObject & StatsObject & {
     name: string
     avatar?: string
     role: UserRole
-    online?: boolean  // TODO: Remove?
+    online?: boolean
     personal: UserPersonal
     devices: {
         count: number,

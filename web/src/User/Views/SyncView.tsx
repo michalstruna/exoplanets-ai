@@ -12,6 +12,7 @@ import { useActions, useStrings } from '../../Data'
 import { Form } from '../../Form'
 import useRouter from 'use-react-router'
 import { Socket } from '../../Async'
+import { Url, Urls } from '../../Routing'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -74,7 +75,8 @@ const SyncView = ({ ...props }: Props) => {
     const { match } = useRouter<any>()
 
     const handleSync = () => {
-        Socket.emit('client_sync', match.params.clientId)
+        Socket.emit('client_auth', match.params.clientId)
+        Urls.replace({ pathname: Url.DISCOVERY })
     }
 
     return (

@@ -65,7 +65,7 @@ const DetailContent = ({ title, sections, ...props }: Props) => {
         )
 
         return renderLevel(sections)
-    }, [])
+    }, [sections])
 
     return (
         <Root {...props}>

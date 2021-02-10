@@ -33,11 +33,12 @@ const App = ({ children }: Props) => {
 
     React.useEffect(() => {
         Sockets.init(identity.payload)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     React.useEffect(() => { // On change tag, fetch chat messages.
         actions.getMessages({ segment: { index: 0, size: 50 }, filter: mapMessFilter[messageSelection] })
-    }, [messageSelection]) // TODO: Filter by tag.
+    }, [messageSelection, actions]) // TODO: Filter by tag.
 
     return (
         <>

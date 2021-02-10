@@ -4,6 +4,7 @@ import Google from 'react-google-login'
 
 import ExternalAuthButton from './ExternalAuthButton'
 import { Color } from '../../Style'
+import { Config } from '../../Async'
 
 interface Props extends React.ComponentPropsWithoutRef<'button'> {
 
@@ -21,18 +22,16 @@ const Root = Styled(ExternalAuthButton)`
 const FacebookLogin = ({ ...props }: Props) => {
 
     const handleSuccess = () => {
-
+        // TODO
     }
 
     const handleFail = () => {
 
     }
 
-    // TODO: Data to config?
-
     return (
         <Google
-            clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+            clientId={Config.googleId}
             buttonText="Google"
             onSuccess={handleSuccess}
             onFailure={handleFail}

@@ -24,18 +24,6 @@ const Fraction = ({ top, bottom, ...props }: Props) => {
         </Root>
     )
 
-    return (
-        <Root {...props}>
-            <div>
-                {top}
-            </div>
-            <hr />
-            <div>
-                {bottom}
-            </div>
-        </Root>
-    )
-
 }
 
 export default Fraction

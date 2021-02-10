@@ -4,7 +4,6 @@ import Styled from 'styled-components'
 import { Dimension, size } from '../../Style'
 import { useStrings } from '../../Data'
 import { IconText } from '../../Layout'
-import useRouter from 'use-react-router'
 
 interface Props extends React.ComponentPropsWithoutRef<'nav'> {
 
@@ -16,18 +15,21 @@ const Root = Styled.nav`
     justify-content: space-around;
     user-select: none;
     text-align: center;
+
+    ${IconText.Root}  {
+        justify-content: center;
+    }
 `
 
 const Nav = ({ ...props }: Props) => {
 
     const strings = useStrings().nav
-    const { location } = useRouter()
 
     const renderedLinks = React.useMemo(() => (
         strings.links.map(({ text, icon, ...link }: any, i: number) => (
             <IconText key={i} icon={`Core/Nav/${icon}.svg`} text={text}{...link} />
         ))
-    ), [strings, location])
+    ), [strings])
 
     return (
         <Root {...props}>

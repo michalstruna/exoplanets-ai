@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import Query from '../../Routing/Constants/Query'
 import { Validator } from '../../Native'
 import { Urls } from '../../Routing'
-import { AsyncData, Segment } from '../types'
+import { AsyncData } from '../types'
 import { SegmentData } from '../../Database/types'
 
 export const async = <T>(payload: T | null = null) => ({ pending: false, payload, error: null })
