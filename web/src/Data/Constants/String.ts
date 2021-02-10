@@ -69,6 +69,7 @@ const strings = {
     },
 
     datasets: {
+        dataFields: { [CS]: 'Přehled', [EN]: 'Overview' },
         types: {
             [DatasetType.STAR_PROPERTIES]: { [CS]: 'Hvězdy', [EN]: 'Stars' },
             [DatasetType.PLANET_PROPERTIES]: { [CS]: 'Planety', [EN]: 'Planets' },
@@ -174,6 +175,10 @@ const strings = {
 
         quantitites: { [CS]: 'Veličiny', [EN]: 'Quantities' },
         curves: { [CS]: 'Křivky', [EN]: 'Curves' }
+    },
+
+    tp: {
+        name: { [CS]: 'Název', [EN]: 'Name' },
     },
 
     planets: {

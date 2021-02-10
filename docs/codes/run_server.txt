@@ -1,2 +1,0 @@
-mongod                  // Run database.
-python3 server/main.py  // Run server.
