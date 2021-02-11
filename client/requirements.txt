@@ -17,7 +17,7 @@ numpy == 1.19.5
 py_cpuinfo == 7.0.0
 
 # client/src/service/Socket.py: 1
-python_socketio == 4.6.0
+python_socketio == 5.0.4
 
 # client/src/service/Astro.py: 5
 tensorflow == 2.4.0
