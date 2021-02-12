@@ -9,7 +9,6 @@ from service.Astro import LightCurveService
 from service.Plot import PlotService
 
 sio = socketio.Client()
-sio.connect("http://localhost:5000")  # TODO: Config.
 
 device = DeviceService()
 plot = PlotService()
@@ -99,7 +98,7 @@ def terminate():
     sio.disconnect()
     sys.exit()
 
-
+sio.connect("http://localhost:5000")  # TODO: Config.
 
 sio.emit("client_connect", {
     "name": device.get_host(),
@@ -111,18 +110,3 @@ sio.emit("client_connect", {
     "pause_total": 0,
     "logs": []
 })
-
-
-"""
-@sio.event
-def connect_error():
-    print("CONNECT_ERROR")
-
-@sio.event
-def disconnect(
-    print("DISCONNECT")
-
-@sio.event
-def authenticated(identity):
-    print("identity")
-"""
