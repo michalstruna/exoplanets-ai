@@ -49,15 +49,11 @@ class Sockets(metaclass=Singleton):
 
             web = self.webs[request.sid]
             web["user_id"] = user_id  # Assign user to web.
-
-            if user_id not in self.users:  # If user does not exist.
-                self._add_user(user_id, webs=request.sid)  # Create user.
-
+            self._add_user(user_id, webs=request.sid)  # Create or update user.
             user = self.users[user_id]
 
             clients = list(map(lambda client_id: self.clients[client_id], user["clients"]))
             self.socket_service.emit_web("clients_update", clients, id=request.sid)  # Send info to new web about all connected clients of user.
-            join_room(self.socket_service.get_room_name(user_id, "webs"))  # Join web to room with user's webs and all webs.
 
         @sio.on("web_unauth")
         def web_unauth():
@@ -80,14 +76,17 @@ class Sockets(metaclass=Singleton):
                 client = self.clients[request.sid]
                 leave_room(self.socket_service.get_room_name(None, "clients"))  # Leave room of all clients.
 
-                if "user_id" in client:  # Client was already authenticated.
+                if "user_id" in client:  # Client was authenticated.
+                    user = self.users[client["user_id"]]
                     self._remove_user_if_empty(client["user_id"], clients=client["id"])
                     leave_room(self.socket_service.get_room_name(client["user_id"], "webs"))  # Leave room of user's webs.
-                    self.emit_web("client_disconnect", request.sid, user=client["user_id"])
+                    self.socket_service.emit_web("client_unauth", request.sid, user=client["user_id"])
                     # TODO: If interrupted, restore item to dataset.
                     # TODO: Emit web auth/disconnect client.
 
-                    del self.clients[client["id"]]
+                    del self.clients[client["user_id"]]
+                    user.clients.remove(client["id"])
+                    self.socket_service.emit_web("update_online_user", user["id"], user)
 
         @sio.on("client_connect")
         def client_connect(client):
@@ -98,10 +97,9 @@ class Sockets(metaclass=Singleton):
         def client_auth(client_id):
             client = self.clients[client_id]
             user = self.users[self.webs[request.sid]["user_id"]]
-            user["clients"].append(client_id)
             client["user_id"] = user["_id"]
-            join_room(self.socket_service.get_room_name(user["_id"], "clients"))
             self.socket_service.emit_web("client_auth", client, user=user["_id"])
+            self._add_user(client["user_id"], clients=client_id)
 
 
 
@@ -154,6 +152,7 @@ class Sockets(metaclass=Singleton):
 
             for k in kwargs:
                 user[k].append(kwargs[k])
+                join_room(self.socket_service.get_room_name(user["_id"], k))
 
             self.socket_service.emit_web("add_online_user", user)
         else:
@@ -161,6 +160,7 @@ class Sockets(metaclass=Singleton):
 
             for k in kwargs:
                 user[k].append(kwargs[k])
+                join_room(self.socket_service.get_room_name(user["_id"], k))
 
             self.socket_service.emit_web("update_online_user", user["id"], user)
 
@@ -175,7 +175,7 @@ class Sockets(metaclass=Singleton):
             self.user_service.update(user_id, {"online": False})
             self.socket_service.emit_web("remove_online_user", user_id)
         else:
-            self.socket_service.emit_web("update_online_user", user)
+            self.socket_service.emit_web("update_online_user", user_id, user)
 
     
 

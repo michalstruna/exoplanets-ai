@@ -9,7 +9,7 @@ class SocketService():
         rooms = [id] if id else list(map(lambda target: self.get_room_name(user, target), targets))
 
         for room in rooms:
-            self.sio.emit(event, *data, room=room)
+            self.sio.emit(event, data, room=room)
 
     def emit_client(self, event, *data, id=None, user=None):
         self.emit(event, *data, id=id, user=user, targets=["clients"])
