@@ -64,18 +64,32 @@ The diploma thesis deals in the theoretical part with methods of detection and a
 
 \begin{description}[font=\mdseries,leftmargin=6em,labelwidth=!,]
 \item[AI]       Artificial intelligence
-\item[au]		Astronomical unit
+\item[API]      Application Programming Interface
+\item[au]       Astronomical unit
 \item[CNN]      Convolutional neural network
-\item[csv]      Comma-separated values
+\item[CRUD]     Create, Read, Update, Delete 
+\item[csv]      Comma-separated values 
 \item[FC]       Fully-connected layer
 \item[FFNN]     Feed-forward neural network
 \item[fits]     Flexible image transport system
-\item[ly]		Light year
+\item[GA]       Genetic algorithm
+\item[HTML]     Hypertext Markup Language 
+\item[HTTP]     Hypertext Transfer Protocol 
+\item[JSX]      JavaScript XML 
+\item[ly]       Light year
+\item[NASA]     National Aeronautics and Space Administration
 \item[ODM]      Object-document mapper
 \item[pc]       Parsec
+\item[REST]     Representational state transfer 
 \item[TESS]     Transiting Exoplanet Survey Satellite
 \item[TPF]      Target pixel file
+\item[TS]       TypeScript
+\item[TSP]      Travelling salesman problem 
+\item[TSX]      TypeScript XML 
 \item[TTV]		Transit timing variation
+\item[UI]       User interface 
+\item[URL]      Uniform Resource Locator
+\item[XML]      Extensible Markup Language
 \end{description}
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Úvod}
@@ -225,11 +239,7 @@ Dále jsou na stejném obrázku písmeny označeny důležité veličiny:
 \end{tabular}
 }}
 
-TODO: Transit types image.
-
-\newpage
-
-\subsubsection{Vyřazení false positives}
+\subsubsection{Vyřazení falešně pozitivních výsledků}
 
 Většina periodických složek ve světelných křivkách hvězd jsou \emph{false positive}~--~patří jiným jevům, než je obíhající planeta. Tyto případy je třeba odfiltrovat, což byla až donedávna především manuální práce lidí -- vědců či dobrovolníků. Protože ale tranzit planety vykazuje specifický průběh popsaný v předchozí kapitole, je možné ho s~určitou úspěšností rozpoznat pomocí naučené umělé neuronové sítě automaticky.~\cite{kepler80}
 
@@ -358,7 +368,7 @@ Hlavní výhodou metody radiálních rychlostí oproti tranzitní metodě je mo�
 
 \clearpage
 
-{ % TODO
+{ 
 \catcode`\-=12
 \tab[1]{Příklady výpočtu hmotnosti planet}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -919,65 +929,57 @@ Protože mutace je náhodná změna, dá se očekávat, že ve většině příp
 \img[1]{Hledání řešení TSP pomocí GA}{img/tsp_final.pdf}
 \draw
 
-\section{Projekty pro hledání exoplanet}
-
-\subsection{Planet Hunters}
-
-TODO
-
-\subsection{Astronet}
-
 TODO: \cite{kepler80}
 
 \section{Použité technologie}
 
 \subsection{TypeScript}
 
-TypeScript (\url{https://www.typescriptlang.org/docs}) je open-source nádstavba JavaScriptu poskytující prvky objektového programování~--~např. třídy a~statické typování. Validní JS je zároveň validním TS, a~proto lze oba jazyky libovolně kombinovat.
+TypeScript (\url{https://www.typescriptlang.org/docs}) je open-source nádstavba JavaScriptu poskytující prvky objektového programování~--~např. třídy a~statické typování. Validní JS je zároveň validním TS, a~proto lze oba jazyky libovolně kombinovat.~\cite{ts}
 
 \subsubsection{React}
 
-React (\url{https://reactjs.org/docs}) je javascriptová knihovna pro vytváření UI. S~využitím syntaxe JSX umožňuje zapisovat javascriptový kód deklarativně v~podobě HTML tagů. Veškeré změny stavu aplikace jsou tak automaticky vykresleny.
+React (\url{https://reactjs.org/docs}) je javascriptová knihovna pro vytváření UI. S~využitím syntaxe JSX (resp. TSX) umožňuje zapisovat javascriptový (resp. typescriptový) kód deklarativně v~podobě HTML tagů. Veškeré změny stavu aplikace jsou tak automaticky vykresleny.~\cite{react}
 
 \lstinputlisting[caption={Ukázka práce s~knihovnou React}]{codes/react.txt}
 
 \subsubsection{Styled components}
 
-Styled components (\url{https://styled-components.com/docs}) je knihovna umožňující psaní CSS kódu přímo k~definici React komponenty.
+Styled components (\url{https://styled-components.com/docs}) je knihovna umožňující psaní CSS kódu přímo k~definici React komponenty.~\cite{styledcomponents}
 
 \lstinputlisting[caption={Ukázka práce s~knihovnou Styled components}]{codes/sc.txt}
 
 \subsection{Python}
 
-Python (\url{https://www.python.org/doc}) je interpretovaný, dynamicky typovaný skriptovací a~programovací jazyk. Podporuje procedurální, objektové a částečně i~funkcionální paradigma. Existují různé implementace, např. CPython (v~C) nebo JPython (v~Javě). Nabízí vysoké pohodlí pro programátora, ovšem na úkor výkonu. Umožňuje však napsat kritické části v~nižším jazyku (např. v~C) a~tento kód pak připojit k~programu jako klasický modul v~Pythonu.
+Python (\url{https://www.python.org/doc}) je interpretovaný, dynamicky typovaný skriptovací a~programovací jazyk. Podporuje procedurální, objektové a částečně i~funkcionální paradigma. Existují různé implementace, např. CPython (v~C) nebo JPython (v~Javě). Nabízí vysoké pohodlí pro programátora, ovšem na úkor výkonu. Umožňuje však napsat kritické části v~nižším jazyku (např. v~C) a~tento kód pak připojit k~programu jako klasický modul v~Pythonu.~\cite{python}
 
 \subsubsection{Flask}
 
-Flask (\url{https://flask.palletsprojects.com}) je webový open-source microframework napsaný v~jazyce Python. Mikroframework poukazuje na minimalistické jádro, které lze rozšiřovat velkým počtem rozšíření (extensions).
+Flask (\url{https://flask.palletsprojects.com}) je webový open-source microframework napsaný v~jazyce Python. Mikroframework poukazuje na minimalistické jádro, které lze rozšiřovat velkým počtem rozšíření (extensions).~\cite{flask}
 
 \lstinputlisting[caption={Ukázka práce s~microframeworkem Flask}]{codes/flask.txt}
 
 \subsubsection{Astropy}
 
-Astropy (\url{https://docs.astropy.org}) je kolekce open-source balíčků napsaných v~jazycích C a~Python. Primárním účelem této kolekce (knihovny) je poskytovat klíčové funkce a~nástroje potřebné pro vytvářeního astronomického nebo astrofyzikálního software.
+Astropy (\url{https://docs.astropy.org}) je kolekce open-source balíčků napsaných v~jazycích C a~Python. Primárním účelem této kolekce (knihovny) je poskytovat klíčové funkce a~nástroje potřebné pro vytvářeního astronomického nebo astrofyzikálního software.~\cite{astropy}
 
 \lstinputlisting[caption={Ukázka práce s~knihovnou Astropy}]{codes/astropy.txt}
 
 \subsubsection{LightKurve}
 
-LightKurve (\url{https://docs.lightkurve.org}) je dalším z~open-source balíčků pro programy v jazyce Python. Jedná se o~nádstavbu nad Astropy specializovanou pro práci se světelnými křivkami a~TPF z~misí Kepler a~TESS.
+LightKurve (\url{https://docs.lightkurve.org}) je dalším z~open-source balíčků pro programy v jazyce Python. Jedná se o~nádstavbu nad Astropy specializovanou pro práci se světelnými křivkami a~TPF z~misí Kepler a~TESS.~\cite{lightkurve}
 
 \lstinputlisting[caption={Ukázka práce s~knihovnou LightKurve}]{codes/lk.txt}
 
 \subsubsection{Keras}
 
-Keras (\url{https://keras.io/api}) je vysokoúrovňová nádstavba nad TensorFlow pro práci s~umělými neuronovými sítěmi. Poskytuje jednoduché API a~možnost rozšiřitelnosti.
+Keras (\url{https://keras.io/api}) je vysokoúrovňová nádstavba nad TensorFlow pro práci s~umělými neuronovými sítěmi. Poskytuje jednoduché API a~možnost rozšiřitelnosti.~\cite{keras}
 
 \lstinputlisting[caption={Tvorba neuronové sítě v~Keras}]{codes/keras.txt}
 
 \subsubsection{MongoEngine}
 
-MongoEngine (\url{http://docs.mongoengine.org}) je objektově-dokumentové mapování (ODM) mezi jazykem Python a~databázi MongoDB. Poskytuje jednoduché deklarativní API a~umožňuje definovat databázová schémata včetně jejich validace.
+MongoEngine (\url{http://docs.mongoengine.org}) je objektově-dokumentové mapování (ODM) mezi jazykem Python a~databázi MongoDB. Poskytuje jednoduché deklarativní API a~umožňuje definovat databázová schémata včetně jejich validace.~\cite{mongoengine}
 \clearpage
 \lstinputlisting[caption={Definice schématu v~MongoEngine}]{codes/mongoengine.txt}
 
@@ -986,7 +988,7 @@ MongoEngine (\url{http://docs.mongoengine.org}) je objektově-dokumentové mapov
 
 \subsection{MongoDB}
 
-MongoDB (\url{https://docs.mongodb.com}) je multiplatformní dokumentová NoSQL databáze. Ve verzi zdarma přes cloudovou službu MongoDB Atlas poskytuje kapacitu 512~MB. Kromě jednoduchých CRUD operací nabízí i~robustní Aggregation Framework pro složitější dotazy a~stejně tak podporuje přístup k~datům přes paradigma map-reduce.
+MongoDB (\url{https://docs.mongodb.com}) je multiplatformní dokumentová NoSQL databáze. Ve verzi zdarma přes cloudovou službu MongoDB Atlas poskytuje kapacitu 512~MB. Kromě jednoduchých CRUD operací nabízí i~robustní Aggregation Framework pro složitější dotazy a~stejně tak podporuje přístup k~datům přes paradigma map-reduce.~\cite{mongodb,mongodbbook}
 
 \lstinputlisting[caption={Ukázka Aggregation Frameworku z~MongoDB}]{codes/mongodb.txt}
 
@@ -994,7 +996,7 @@ MongoDB (\url{https://docs.mongodb.com}) je multiplatformní dokumentová NoSQL 
 
 \subsection{Socket.io}
 
-Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klienty a~serverem. Implementace existují v~různých jazycích včetně JavaScriptu (\url{https://socket.io/docs/v3}) a~Pythonu (\url{https://python-socketio.readthedocs.io}).
+Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klienty a~serverem. Implementace existují v~různých jazycích včetně JavaScriptu (\url{https://socket.io/docs/v3}) a~Pythonu (\url{https://python-socketio.readthedocs.io}).~\cite{socketio}
 
 \lstinputlisting[caption={Ukázka komunikace pomocí socket.io.}]{codes/socket.txt}
 
@@ -1012,7 +1014,7 @@ Socket.IO je protokol umožňující real-time obousměrnou komunikaci mezi klie
 
 \begin{itemize}
 \item \textbf{api} -- Definice REST a~Socket API a~zpracování příchozích požadavků. To zahrnuje autentizaci a~autorizaci odesílatele a~následné provedení operace v~servisní vrstvě. 
-\item \textbf{config} -- Konfigurace serveru (např. připojení k~databázi). Základním konfiguračním souborem je \code{base.cfg}, který je použit automaticky. Bez nutnosti tento soubor měnit je možné vytvořit nový soubor (např. \code{test.cfg}) s~novou konfigurací a~pomocí argumentu při spuštění serveru nastavit, aby se použila tato konfigurace (\code{./src/main.py -{}-env test}). [TODO]
+\item \textbf{config} -- Konfigurace serveru (např. připojení k~databázi). Základním konfiguračním souborem je \code{base.cfg}, který je použit automaticky. Bez nutnosti tento soubor měnit je možné vytvořit nový soubor (např. \code{test.cfg}) s~novou konfigurací a~pomocí argumentu při spuštění serveru nastavit, aby se použila tato konfigurace (\code{export ENV=test \&\& ./src/main.py}).
 \item \textbf{constants} -- Veškeré konstantní hoenoty, ať už technického či fyzikálního typu.
 \item \textbf{service} -- Servisní vrstva obsahující logiku serveru a~manipulaci s~databází.
 \item \textbf{utils} -- Pomocné třídy zapouzdřující specifické funkcionality.
@@ -1131,13 +1133,9 @@ K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~ní�
 
 \subsection{Datasety}
 
-Většina dat se do databáze nevkládá manuálně, jelikož je třeba pracovat se stovkami tisíc či miliony datových položkek. Namísto toho administrátor pouze definuje přístupový bod k~nějakému datasetu dostupnému přes webové rozhraní a~následně dojde k~automatickému zpracování datasetu a~všech položek v~něm. Některé typy datasetů jsou určeny k~jednorázovému uložení do databáze a~není nutno je nijak dál zpracovávat. Zpracování jiných je naopak výpočetně náročné a~připojené klientské aplikace tak činí postupně položku po položce. Jednotlivé typy datasetů jsou popsány níže.
-
-U~všech typů datasetů je také vyřešena situace, kdy by se jedna a~ta samá položka (např. hvězda) nacházela ve dvou datasetech zároveň. V~takovém případě dojde k uložení obou hodnot a~uživatel v~aplikaci pak bude vidět údaje dané položky z~obou datasetů vedle sebe.
+Většina dat se do databáze nevkládá manuálně, jelikož je třeba pracovat se stovkami tisíc datových položkek. Namísto toho administrátor pouze definuje přístupový bod k~nějakému datasetu dostupnému přes webové rozhraní a~následně dojde k~automatickému zpracování datasetu a~všech položek v~něm. Některé typy datasetů jsou určeny k~jednorázovému uložení do databáze a~není nutno je nijak dál zpracovávat. Zpracování jiných je naopak výpočetně náročné a~připojené klientské aplikace tak činí postupně položku po položce. Jednotlivé typy datasetů jsou popsány níže.
 
 \subsubsection{Target pixel files}
-
-\subsubsection{Světelné křivky hvězd}
 
 \subsubsection{Hvězdy}
 
@@ -1428,11 +1426,42 @@ TODO: Verifikace výsledků.
 
 \onlinesource{nasadata}{NASA Exoplanet Archive}{NASA Exoplanet Science Insititute}{12.~8.~2019}{25.~12.~2019}{https://exoplanetarchive.ipac.caltech.edu/docs/API_exoplanet_columns.html}
 
-\onlinesource{sunlight}{Reference Solar Spectral Irradiance: ASTM G-173}{nrel}{??.~?.~????}{27.~12.~2019}{https://rredc.nrel.gov/solar/spectra/am1.5/ASTMG173/ASTMG173.html}
-
 \onlinesource{tess}{TESS Exoplanet Mission}{NASA}{24.~8.~2020}{8.~10.~2020}{https://www.nasa.gov/content/about-tess}
 
 \onlinesource{keras}{Keras API reference}{Keras}{2020}{29.~10.~2020}{https://keras.io/api}
+
+\onlinesource{mongoengine}{MongoEngine User Documentation}{MongoEngine}{2020}{21.~2.2021}{http://docs.mongoengine.org}
+
+\onlinesource{socketio}{Introduction}{Socket.IO}{2020}{21.~2.~2021}{https://socket.io/docs/v3}
+
+
+
+
+
+
+% TODO: Add to text.
+
+\onlinesource{mongodb}{mongoDB manual}{mongoDB}{2021}{20.~2.~2020}{https://docs.mongodb.com/manual/reference/database-references}
+
+\isbnsource[NORDEEN, Alex]{mongodbbook}{MongoDB: Learn in 24 hours.}{Guru99}{2020}{20.~2.~2021}{1230004303503}
+
+\onlinesource{nasaopendata}{Otevřená data NASA}{NASA}{2020}{20.~2.~2020}{https://nasa.github.io/data-nasa-gov-frontpage}
+
+\isbnsource[PECINOVSKÝ, Rudolf]{python}{Python: kompletní příručka jazyka pro verzi 3.9.}{Praha: Grada Publishing}{2020}{20.~2.~2021}{978-80-271-1269-2}
+
+
+\onlinesource{ts}{TypeScript Documentation}{TypeScript}{2020}{21.~2.~2021}{https://www.typescriptlang.org/docs}
+
+\onlinesource{react}{Getting started}{React}{2021}{21.~2.~2020}{https://reactjs.org/docs/getting-started.html}
+
+\onlinesource{styledcomponents}{Documentation}{styled components}{2020}{21.~2.~2021}{https://styled-components.com/docs}
+
+\onlinesource{flask}{web development, one drop at a time}{Flask}{2020}{21.~2.~2021}{https://flask.palletsprojects.com}
+
+\onlinesource{astropy}{A Community Python Library for Astronomy}{astropy}{2020}{21.~2.~2021}{https://docs.astropy.org/en/stable}
+
+
+\onlinesource{lightkurve}{A friendly Python package for making discoveries with Kepler \& TESS}{Lightkurve}{2020}{21.~2.~2021}{https://docs.lightkurve.org}
 
 \end{thebibliography}
 
