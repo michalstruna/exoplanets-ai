@@ -221,7 +221,7 @@ const SystemView = ({ ...props }: Props) => {
                         <Horizontal style={{ paddingTop: 0 }}>
                             <MainLeft>
                                 <Horizontal>
-                                    <SkyMap target={system.payload.properties[0].name} />
+                                    <SkyMap target={Value.Star.name(system.payload)!} />
                                 </Horizontal>
                                 <Subtitle>
                                     {strings.observations}

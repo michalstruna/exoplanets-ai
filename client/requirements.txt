@@ -4,7 +4,7 @@
 distro == 1.4.0
 
 # client/src/service/Astro.py: 1
-lightkurve == 1.11.2
+lightkurve == 2.0.2
 
 # client/src/service/Plot.py: 1,2
 matplotlib == 3.3.2

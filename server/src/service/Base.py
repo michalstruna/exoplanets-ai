@@ -22,7 +22,7 @@ class Service(ABC):
         return self.dao.get_count(self.dao.pipeline, filter=filter)
 
     def aggregate(self, operations, filter=None, limit=None, skip=None, sort=None, with_index=False, last_filter=None, raw=False):
-        return self.dao.aggregate(operations, filter, limit, skip, sort, with_index, last_filter, raw=False)
+        return self.dao.aggregate(operations, filter, limit, skip, sort, with_index, last_filter, raw=raw)
 
     def add(self, item, with_return=True):
         return self.dao.add(item, with_return=with_return)
@@ -63,7 +63,7 @@ class Service(ABC):
     def add_stats(self, id, field="stats", **kwargs):
         item = self.get_by_id(id, raw=True)
         stats = item[field]
-        stat = stats[-1]
+        stat = stats[-1] if stats else {"date": None}
 
         if stat["date"] != time.day():
             stat = {"date": time.day()}

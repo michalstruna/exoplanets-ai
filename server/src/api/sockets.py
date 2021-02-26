@@ -201,8 +201,6 @@ class Sockets(metaclass=Singleton):
             self.socket_service.emit_web("update_client", client, user=client["user_id"])
             self.socket_service.emit_client("run", task, id=client_id)
         except:
-            import traceback
-            traceback.print_exc()
             pass  # TODO: Wait for new item.
 
     def finish_task(self, task):
@@ -220,9 +218,8 @@ class Sockets(metaclass=Singleton):
 
         ms = time.now() - task["meta"]["created"]
 
-        #updated = {"inc__stats.time": ms, "inc__stats.processed": task["meta"]["size"]} #, "pop__items": -1 }  # TODO: Pop item.
         self.dataset_service.add_stats(task["dataset_id"], time=ms, data=task["meta"]["size"])
-        dataset = self.dataset_service.update(task["dataset_id"], {"pop__items": -1})
+        #dataset = self.dataset_service.update(task["dataset_id"], {"pop__items": -1})  # TODO: Pop item.
         light_curve = task["solution"]["light_curve"]  # TODO: target_pixel
 
         stars = 0
