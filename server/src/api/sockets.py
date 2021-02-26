@@ -218,12 +218,9 @@ class Sockets(metaclass=Singleton):
 
         ms = time.now() - task["meta"]["created"]
 
-        self.dataset_service.add_stats(task["dataset_id"], time=ms, data=task["meta"]["size"])
-        #dataset = self.dataset_service.update(task["dataset_id"], {"pop__items": -1})  # TODO: Pop item.
-        light_curve = task["solution"]["light_curve"]  # TODO: target_pixel
-
-        stars = 0
-        planets = 0
+        dataset = self.dataset_service.update(task["dataset_id"], {})#{"pop__items": -1})  # TODO: Pop item.
+        light_curve = task["solution"]["light_curve"]
+        stars, planets = 0, 0
 
         try:
             star = self.star_service.get_by_name(task["item"])
@@ -240,10 +237,9 @@ class Sockets(metaclass=Singleton):
             if not planet["properties"]:
                 planets += 1
 
-            self.stats_service.add(
-                items=1,
-                data=task["meta"]["size"],
-                time=ms,
-                planets=planets,
-                stars=stars
-            )
+        stats = {"items": 1, "data": task["meta"]["size"], "time": ms, "planets": len(task["solution"]["transits"])}
+        self.dataset_service.add_stats(task["dataset_id"], **stats)
+        self.user_service.add_stats(self.clients[request.sid], **stats)
+        stats["planets"], stats["stars"] = planets, stars
+        self.stats_service.add(**stats)
+
