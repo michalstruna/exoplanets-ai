@@ -52,19 +52,18 @@ def aggregate_stats_pipeline(field="", days=7):
 
 class Dao:
 
-    def __init__(self, collection, pipeline=[], stats=None):
+    def __init__(self, collection, pipeline=[]):
         self.collection = collection
         self.pipeline = pipeline
-        self.stats = stats
 
-    def get_by_id(self, id):
-        return self.get({"_id": Dao.id(id)})
+    def get_by_id(self, id, raw=False):
+        return self.get({"_id": Dao.id(id)}, raw=raw)
 
-    def get_all(self, filter=None, sort=None, limit=None, offset=0, with_index=True, last_filter=None):
-        return self.aggregate(self.pipeline, filter=filter, limit=limit, offset=offset, sort=sort, with_index=with_index, last_filter=last_filter)
+    def get_all(self, filter=None, sort=None, limit=None, offset=0, with_index=True, last_filter=None, raw=False):
+        return self.aggregate(self.pipeline, filter=filter, limit=limit, offset=offset, sort=sort, with_index=with_index, last_filter=last_filter, raw=raw)
 
-    def get(self, filter):
-        items = self.get_all(filter=filter, limit=1)
+    def get(self, filter, raw=False):
+        items = self.get_all(filter=filter, limit=1, raw=raw)
 
         if not items:
             raise DoesNotExist(f"Item {filter} was not found.")
@@ -110,10 +109,11 @@ class Dao:
     def delete_all(self):
         pass
 
-    def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True, last_filter=None):
+    def aggregate(self, operations, filter=None, limit=None, offset=None, sort=None, with_index=True, last_filter=None, raw=False):
         pipeline = []
 
-        pipeline += operations
+        if not raw:
+            pipeline += operations
 
         if filter:
             pipeline.append({"$match": filter})

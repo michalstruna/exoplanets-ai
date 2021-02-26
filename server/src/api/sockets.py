@@ -100,6 +100,7 @@ class Sockets(metaclass=Singleton):
             client["user_id"] = user["_id"]
             self.socket_service.emit_web("client_auth", client, user=user["_id"])
             self._add_user(client["user_id"], clients=client_id)
+            self._add_task(client_id)
 
 
 
@@ -113,7 +114,7 @@ class Sockets(metaclass=Singleton):
         @sio.on("web_run_client")
         def web_run_client(client_id):
             time.sleep(1000)
-            self.add_task(client_id)
+            self._add_task(client_id)
 
         @sio.on("web_terminate_client")
         def web_terminate_client(client_id):
@@ -126,23 +127,14 @@ class Sockets(metaclass=Singleton):
         @sio.on("client_log")
         def client_log(log):
             client = self.clients[request.sid]
-            client["data"]["logs"].insert(0, log)
+            client["logs"].insert(0, log)
             self.socket_service.emit_web("client_log", {**log, "client_id": request.sid}, user=client["user_id"])
 
         @sio.on("client_submit_task")
         def client_submit_task(task):
             self.pause_client(request.sid)
-
-            self.stats_service.add(
-                curves=1,
-                bytes=task["meta"]["size"],
-                ms=ms,
-                planets=planets,
-                stars=stars
-            )
-
             self.finish_task(task)
-            self.add_task(request.sid)
+            self._add_task(request.sid)
 
     def _add_user(self, user_id, **kwargs):
         if user_id not in self.users:
@@ -181,29 +173,22 @@ class Sockets(metaclass=Singleton):
 
 
 
-    def update_client(self, id):
-        client = self.clients[id]
-        user_id, client = client["user_id"], client["data"]
-        update = {**client}
-        del update["logs"]
-        self.socket_service.emit_web("update_client", update, user=user_id)
-
     def pause_client(self, client_id):
         # TODO: Wait for pause.
-        client, user_id = self.clients[client_id]["data"], self.clients[client_id]["user_id"]
+        client = self.clients[client_id]
         client["state"] = ProcessState.PAUSED.value
 
         if not client["pause_start"]:
             client["pause_start"] = time.now()
 
-        self.socket_service.emit_web("update_client", client, user=user_id)
+        self.socket_service.emit_web("update_client", client, user=client["user_id"])
         self.socket_service.emit_client("pause", id=client_id)
 
-    def add_task(self, client_id):
+    def _add_task(self, client_id):
         """
         Add task to client with specified id.
         """
-        client, user_id = self.clients[client_id]["data"], self.clients[client_id]["user_id"]
+        client = self.clients[client_id]
 
         try:
             task = self.dataset_service.get_task()
@@ -213,9 +198,11 @@ class Sockets(metaclass=Singleton):
                 client["pause_total"] = time.now() - client["pause_start"]
                 client["pause_start"] = None
 
-            self.update_client(client_id)
+            self.socket_service.emit_web("update_client", client, user=client["user_id"])
             self.socket_service.emit_client("run", task, id=client_id)
         except:
+            import traceback
+            traceback.print_exc()
             pass  # TODO: Wait for new item.
 
     def finish_task(self, task):
@@ -233,8 +220,9 @@ class Sockets(metaclass=Singleton):
 
         ms = time.now() - task["meta"]["created"]
 
-        updated = {"inc__time": ms, "inc__processed": task["meta"]["size"]} #, "pop__items": -1 }
-        dataset = self.dataset_service.update(task["dataset_id"], updated)
+        #updated = {"inc__stats.time": ms, "inc__stats.processed": task["meta"]["size"]} #, "pop__items": -1 }  # TODO: Pop item.
+        self.dataset_service.add_stats(task["dataset_id"], time=ms, data=task["meta"]["size"])
+        dataset = self.dataset_service.update(task["dataset_id"], {"pop__items": -1})
         light_curve = task["solution"]["light_curve"]  # TODO: target_pixel
 
         stars = 0
@@ -254,3 +242,11 @@ class Sockets(metaclass=Singleton):
 
             if not planet["properties"]:
                 planets += 1
+
+            self.stats_service.add(
+                items=1,
+                data=task["meta"]["size"],
+                time=ms,
+                planets=planets,
+                stars=stars
+            )

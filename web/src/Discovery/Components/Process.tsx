@@ -180,7 +180,7 @@ const Process = ({ data, ...props }: Props) => {
                     <IconText
                         icon={`Controls/${getIconByState(data.state)}.svg`}
                         text={strings.state[data.state]}
-                        value={<TimeAgo time={data.start + data.pause_total} refTime={data.pause_start || undefined} />} size={IconText.MEDIUM} />
+                        value={<TimeAgo time={data.start + data.pause_total} refTime={data.pause_start || undefined} frequency={1000}  />} size={IconText.MEDIUM} />
                 </Row>
                 <Row>
                     <IconText icon={Platform.getOsIcon(data.os)} text='OS' value={data.os} title={data.os} size={IconText.MEDIUM} />

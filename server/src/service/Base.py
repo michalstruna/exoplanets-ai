@@ -1,28 +1,28 @@
 from abc import ABC
 from bson.objectid import ObjectId
-
 from mongoengine import DoesNotExist
 
+from utils import time
 
 class Service(ABC):
 
     def __init__(self, dao=None):
         self.dao = dao
 
-    def get_by_id(self, id):
-        return self.dao.get_by_id(id)
+    def get_by_id(self, id, raw=False):
+        return self.dao.get_by_id(id, raw=raw)
 
-    def get(self, filter):
-        return self.dao.get(filter)
+    def get(self, filter, raw=False):
+        return self.dao.get(filter, raw=raw)
 
-    def get_all(self, filter=None, sort=None, limit=None, offset=None, with_index=True, last_filter=None):
-        return self.aggregate(self.dao.pipeline, filter=filter, limit=limit, skip=offset, sort=sort, with_index=with_index, last_filter=last_filter)
+    def get_all(self, filter=None, sort=None, limit=None, offset=None, with_index=True, last_filter=None, raw=False):
+        return self.aggregate(self.dao.pipeline, filter=filter, limit=limit, skip=offset, sort=sort, with_index=with_index, last_filter=last_filter, raw=raw)
 
     def get_count(self, filter={}, **kwargs):
         return self.dao.get_count(self.dao.pipeline, filter=filter)
 
-    def aggregate(self, operations, filter=None, limit=None, skip=None, sort=None, with_index=False, last_filter=None):
-        return self.dao.aggregate(operations, filter, limit, skip, sort, with_index, last_filter)
+    def aggregate(self, operations, filter=None, limit=None, skip=None, sort=None, with_index=False, last_filter=None, raw=False):
+        return self.dao.aggregate(operations, filter, limit, skip, sort, with_index, last_filter, raw=False)
 
     def add(self, item, with_return=True):
         return self.dao.add(item, with_return=with_return)
@@ -59,3 +59,17 @@ class Service(ABC):
             raise DoesNotExist(f"Item with if {id} was not found.")
         
         return items[0]["index"]
+
+    def add_stats(self, id, field="stats", **kwargs):
+        item = self.get_by_id(id, raw=True)
+        stats = item[field]
+        stat = stats[-1]
+
+        if stat["date"] != time.day():
+            stat = {"date": time.day()}
+            stats.append(stat)
+
+        for prop in kwargs:
+            stat[prop] = stat[prop] + kwargs[prop] if prop in stat else kwargs[prop]
+
+        return self.update(id, {"stats": stats})
