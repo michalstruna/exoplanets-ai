@@ -145,7 +145,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
         switch (type) {
             case FieldType.SELECT:
                 return (
-                    <Select {...props as any} onChange={props.onChange} ref={register(registerOptions)} name={name}>
+                    <Select {...props as any} onChange={props.onChange} ref={register(registerOptions)} name={name} tabIndex={props.readOnly ? -1 : undefined}>
                         {Array.isArray(options![0].value) ? (
                             (options as TextValue<TextValue<string | number>[]>[]).map((group, i) => (
                                 <optgroup label={group.text}>

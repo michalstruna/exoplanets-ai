@@ -71,7 +71,7 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
                         label={strings.type}
                         required={strings.missingType}
                         options={Object.entries(strings.types).map(([value, text]) => ({ text, value } as any))}
-                        disabled={!!dataset} />
+                        readOnly={!!dataset} />
                     <Field
                         name='priority'
                         type={Field.Type.SELECT}

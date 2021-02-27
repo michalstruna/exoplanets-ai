@@ -239,7 +239,7 @@ class Sockets(metaclass=Singleton):
 
         stats = {"items": 1, "data": task["meta"]["size"], "time": ms, "planets": len(task["solution"]["transits"])}
         self.dataset_service.add_stats(task["dataset_id"], **stats)
-        self.user_service.add_stats(self.clients[request.sid], **stats)
+        self.user_service.add_stats(self.clients[request.sid]["user_id"], **stats)
         stats["planets"], stats["stars"] = planets, stars
         self.stats_service.add(**stats)
 

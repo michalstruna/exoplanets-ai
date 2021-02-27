@@ -32,6 +32,13 @@ const GlobalStyle = createGlobalStyle`
         padding: 0.5rem 0.5rem;
         -webkit-appearance: none;
     }
+
+    select {
+        &[readonly] {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    }
     
     optgroup {
         background-color: ${Color.DARK};
