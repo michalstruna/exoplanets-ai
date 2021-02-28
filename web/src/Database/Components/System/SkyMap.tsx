@@ -1,6 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { Color, size } from '../../Style'
+
+import { Color, size } from '../../../Style'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     target: string

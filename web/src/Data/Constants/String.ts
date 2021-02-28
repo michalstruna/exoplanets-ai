@@ -146,6 +146,11 @@ const strings = {
         lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
         transit: 'Transit',
         transitDepth: { [CS]: 'Hloubka transitu', [EN]: 'Transit depth' },
+        surface: { [CS]: 'Povrch', [EN]: 'Surface' },
+        matter: { [CS]: 'Hmota', [EN]: 'Matter' },
+        other: { [CS]: 'Ostatní', [EN]: 'Other' },
+        age: { [CS]: 'Stáří', [EN]: 'Age' },
+        location: { [CS]: 'Poloha', [EN]: 'Location' },
 
         unknownSize: { [CS]: 'Typ', [EN]: 'Type' },
         unknownType: { [CS]: 'Neznámý', [EN]: 'Unknown' },
@@ -247,7 +252,9 @@ const strings = {
         orbit: { [CS]: 'Dráha', [EN]: 'Orbit' },
         other: { [CS]: 'Ostatní', [EN]: 'Other' },
         localView: { [CS]: 'Lokální pohled', [EN]: 'Local view' },
-        globalView: { [CS]: 'Globální pohled', [EN]: 'Global view' }
+        globalView: { [CS]: 'Globální pohled', [EN]: 'Global view' },
+        nObservations: { [CS]: 'Počet pozorování', [EN]: 'Number of observations' },
+        length: { [CS]: 'Délka', [EN]: 'Length' }
     },
 
     stats: {

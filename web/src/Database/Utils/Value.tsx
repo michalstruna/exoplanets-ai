@@ -1,7 +1,7 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 
-import { LightCurve, PlanetData, PlanetProperties, StarData, StarProperties } from '../types'
+import { LightCurveData, PlanetData, PlanetProperties, StarData, StarProperties } from '../types'
 import { Numbers } from '../../Native'
 import Ref from '../Components/Ref'
 
@@ -65,9 +65,9 @@ export const Star = {
         return null
     },
 
-    names: (star: StarData, renderer: PropRenderer<string, StarProperties | LightCurve>): any[] => {
+    names: (star: StarData, renderer: PropRenderer<string, StarProperties | LightCurveData>): any[] => {
         const items = [...star.properties, ...star.light_curves]
-        const unique = [...new Set(items.map((item: StarProperties | LightCurve) => item.name)) as any]
+        const unique = [...new Set(items.map((item: StarProperties | LightCurveData) => item.name)) as any]
         return unique.map((name, i) => renderer(name, i, unique[i]))
     },
 
