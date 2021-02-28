@@ -10,6 +10,7 @@ import SpectralClass from '../../Database/Constants/SpectralClass'
 import LuminosityClass from '../../Database/Constants/LuminosityClass'
 import PlanetStatus from '../../Database/Constants/PlanetStatus'
 import { MessageSelection, MessageTag, Sex, UserRole } from '../../User'
+import ProcessLogType from '../../Discovery/Constants/ProcessLogType'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -406,7 +407,13 @@ const strings = {
             terminate: { [CS]: 'Ukončit', [EN]: 'Terminate' },
             run: { [CS]: 'Spustit', [EN]: 'Run' },
             analyzedCurves: { [CS]: 'Analyzovaných křivek', [EN]: 'Analyzed curves' },
-            discoveredPlanets: { [CS]: 'Objevených planet', [EN]: 'Discovered planets' }
+            discoveredPlanets: { [CS]: 'Objevených planet', [EN]: 'Discovered planets' },
+            log: {
+                [ProcessLogType.CONNECT]: { [CS]: ['Spojení navázáno ', '.'], [EN]: ['Connection established ', '.'] },
+                [ProcessLogType.DOWNLOAD_TP]: { [CS]: ['Stahuji target pixel ', '.'], [EN]: ['Downloading target pixel ', '.'] },
+                [ProcessLogType.BUILD_LC]: { [CS]: ['Sestavuji světelnou křivku ', '.'], [EN]: ['Building light curve ', '.'] }, 
+                [ProcessLogType.ANALYZE_LC]: { [CS]: ['Analyzuji světelnou křivku', '.'], [EN]: ['Analyzing light curve ', '.'] }
+            }
         }
     },
 

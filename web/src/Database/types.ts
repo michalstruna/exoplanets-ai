@@ -95,6 +95,10 @@ export interface StarData {
     planets: PlanetData[]
 }
 
+export interface SystemData extends StarData {
+    datasets: Dataset[]
+}
+
 export interface StarDetailData extends StarData {
     datasets: Dataset[]
 }

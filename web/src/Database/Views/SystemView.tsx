@@ -187,17 +187,16 @@ const SystemView = ({ ...props }: Props) => {
             success={() => (
                 <Root {...props}>
                     <DetailContent title={strings.content} sections={[
-                        { name: 'top', text: (Value.Star.name(system.payload) || '') },
+                        { name: 'top', text: (Value.Star.name(system.payload!) || '') },
                         {
                             name: '', text: strings.observations, children: [
-                                { name: '', text: strings.lightCurve + ' (0)' },
-                                { name: '', text: strings.radialVelocity + ' (0)' }
+                                { name: '', text: `${strings.lightCurve} (${system.payload!.light_curves.length || 0})` }
                             ]
                         },
                         {
                             name: '',
-                            text: strings.planets + ' (' + system.payload.planets.length + ')',
-                            children: system.payload.planets.map((planet: PlanetData) => ({
+                            text: strings.planets + ' (' + system.payload!.planets.length + ')',
+                            children: system.payload!.planets.map((planet: PlanetData) => ({
                                 name: planet.properties[0].name,
                                 text: planet.properties[0].name
                             }))
@@ -214,22 +213,22 @@ const SystemView = ({ ...props }: Props) => {
                     ]} />
                     <Main>
                         <CenteredHorizontal>
-                            <ItemPreview.Star item={system.payload} titleComponent={Title} />
-                            <Tags items={Value.Star.names(system.payload, name => ({ text: name }))} />
+                            <ItemPreview.Star item={system.payload!} titleComponent={Title} />
+                            <Tags items={Value.Star.names(system.payload!, name => ({ text: name }))} />
                         </CenteredHorizontal>
 
                         <Horizontal style={{ paddingTop: 0 }}>
                             <MainLeft>
                                 <Horizontal>
-                                    <SkyMap target={Value.Star.name(system.payload)!} />
+                                    <SkyMap target={Value.Star.name(system.payload!)!} />
                                 </Horizontal>
                                 <Subtitle>
                                     {strings.observations}
                                 </Subtitle>
                                 <Subsubtitle>
-                                    {strings.lightCurve} ({system.payload.light_curves.length})
+                                    {strings.lightCurve} ({system.payload!.light_curves.length})
                                 </Subsubtitle>
-                                <ListLc items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
+                                <ListLc items={system.payload!.light_curves.map((lc: LightCurve, i: number) => (
                                     <CenteredHorizontal key={i} reverse={i % 2 > 0}>
                                         <Curve data={lc} width={390} height={200} type={Curve.LC} />
                                         <Table>
@@ -250,23 +249,15 @@ const SystemView = ({ ...props }: Props) => {
                                         </Table>
                                     </CenteredHorizontal>
                                 ))} />
-                                <Subsubtitle>
-                                    Radiální rychlost (0)
-                                </Subsubtitle>
-                                <ListSection items={system.payload.light_curves.map((lc: LightCurve, i: number) => (
-                                    <div key={i}>
-                                        RV
-                                    </div>
-                                ))} />
                                 <Subtitle>
-                                    {strings.planets} ({system.payload.planets.length})
+                                    {strings.planets} ({system.payload!.planets.length})
                                 </Subtitle>
-                                <ListSection items={system.payload.planets.map((planet: PlanetData, i: number) => (
+                                <ListSection items={system.payload!.planets.map((planet: PlanetData, i: number) => (
                                     <React.Fragment key={i}>
                                         <CenteredHorizontal>
                                             <ItemPreview.Planet item={planet} titleComponent={Subsubtitle} />
                                             <Tags
-                                                items={Value.Star.names(system.payload, name => ({ text: name }))} />
+                                                items={Value.Star.names(system.payload!, name => ({ text: name }))} />
                                         </CenteredHorizontal>
                                         <HTable>
                                             <tbody>
@@ -366,13 +357,13 @@ const SystemView = ({ ...props }: Props) => {
                                 <tr>
                                     <td>Vzdálenost</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'distance', { refMap, unit: 'pc' })}
+                                        {Value.Star.props(system.payload!, 'distance', { refMap, unit: 'pc' })}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Rektascenze</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'ra', {
+                                        {Value.Star.props(system.payload!, 'ra', {
                                             refMap,
                                             format: Numbers.formatHours
                                         })}
@@ -381,13 +372,13 @@ const SystemView = ({ ...props }: Props) => {
                                 <tr>
                                     <td>Deklinace</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'dec', { refMap, format: Numbers.formatDeg })}
+                                        {Value.Star.props(system.payload!, 'dec', { refMap, format: Numbers.formatDeg })}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Souhvězdí</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'constellation', { refMap })}
+                                        {Value.Star.props(system.payload!, 'constellation', { refMap })}
                                     </td>
                                 </tr>
                                 <tr>
@@ -396,13 +387,13 @@ const SystemView = ({ ...props }: Props) => {
                                 <tr>
                                     <td>Teplota</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'surface_temperature', { refMap, unit: 'K' })}
+                                        {Value.Star.props(system.payload!, 'surface_temperature', { refMap, unit: 'K' })}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Zdánl. mag.</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'apparent_magnitude', {
+                                        {Value.Star.props(system.payload!, 'apparent_magnitude', {
                                             refMap,
                                             format: Numbers.format
                                         })}
@@ -411,7 +402,7 @@ const SystemView = ({ ...props }: Props) => {
                                 <tr>
                                     <td>Abs. mag.</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'absolute_magnitude', {
+                                        {Value.Star.props(system.payload!, 'absolute_magnitude', {
                                             refMap,
                                             format: Numbers.format
                                         })}
@@ -420,7 +411,7 @@ const SystemView = ({ ...props }: Props) => {
                                 <tr>
                                     <td>Zářivý výkon</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'luminosity', {
+                                        {Value.Star.props(system.payload!, 'luminosity', {
                                             refMap,
                                             unit: <>L<sub>☉</sub></>
                                         })}
@@ -432,7 +423,7 @@ const SystemView = ({ ...props }: Props) => {
                                 <tr>
                                     <td>Průměr</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'diameter', {
+                                        {Value.Star.props(system.payload!, 'diameter', {
                                             refMap,
                                             unit: <>d<sub>☉</sub></>
                                         })}
@@ -441,13 +432,13 @@ const SystemView = ({ ...props }: Props) => {
                                 <tr>
                                     <td>Hmotnost</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'mass', { refMap, unit: <>M<sub>☉</sub></> })}
+                                        {Value.Star.props(system.payload!, 'mass', { refMap, unit: <>M<sub>☉</sub></> })}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Hustota</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'density', {
+                                        {Value.Star.props(system.payload!, 'density', {
                                             refMap,
                                             unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>} />
                                         })}
@@ -456,7 +447,7 @@ const SystemView = ({ ...props }: Props) => {
                                 <tr>
                                     <td>Gravitace</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'surface_gravity', {
+                                        {Value.Star.props(system.payload!, 'surface_gravity', {
                                             refMap,
                                             unit: <Fraction top='m' bottom={<>s<sup>2</sup></>} />
                                         })}
@@ -468,13 +459,13 @@ const SystemView = ({ ...props }: Props) => {
                                 <tr>
                                     <td>Metalicita</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'metallicity', { refMap })}
+                                        {Value.Star.props(system.payload!, 'metallicity', { refMap })}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Stáří</td>
                                     <td>
-                                        {Value.Star.props(system.payload, 'age', { refMap, unit: 'mld. years' })}
+                                        {Value.Star.props(system.payload!, 'age', { refMap, unit: 'mld. years' })}
                                     </td>
                                 </tr>
                                 </tbody>
@@ -510,7 +501,7 @@ const SystemView = ({ ...props }: Props) => {
                                     size: 162147,
                                     image: 'https://www.clker.com/cliparts/W/i/K/w/1/D/glossy-orange-circle-icon-md.png'
                                 },
-                                ...system.payload.planets.map((planet: PlanetData) => ({
+                                ...system.payload!.planets.map((planet: PlanetData) => ({
                                     name: planet.properties[0].name,
                                     size: (planet.properties[0]?.diameter || 0) * 12756,
                                     image: `/img/Database/Planet/${pascalCase(planet.properties[0].type || 'unknown')}.png`
@@ -534,25 +525,25 @@ const SystemView = ({ ...props }: Props) => {
                             ],
                             [
                                 { name: 'Kepler-10', distance: 0, size: 0.005 },
-                                ...system.payload.planets.map((planet: PlanetData) => ({
+                                ...system.payload!.planets.map((planet: PlanetData) => ({
                                     name: planet.properties[0].name,
-                                    distance: planet.properties[0].semi_major_axis
+                                    distance: planet.properties[0].semi_major_axis!
                                 }))
                             ]
                         ]} lifeZones={[
                             { from: 0.6, to: 1.67 },
                             {
-                                from: system.payload.properties[0] ? system.payload.properties[0].life_zone.min_radius : 0,
-                                to: system.payload.properties[0] ? system.payload.properties[0].life_zone.max_radius : 0
+                                from: system.payload!.properties[0] ? system.payload!.properties[0].life_zone?.min_radius || 0 : 0,
+                                to: system.payload!.properties[0] ? system.payload!.properties[0].life_zone?.max_radius || 0 : 0
                             }
-                        ]} />
+                        ]} /> 
                         <Subsubtitle>
                             Interaktivní model
                         </Subsubtitle>
                         <Subtitle>
                             Reference
                         </Subtitle>
-                        <References items={system.payload.datasets} />
+                        <References items={system.payload!.datasets} />
                         <Subtitle>
                             Aktivity
                         </Subtitle>

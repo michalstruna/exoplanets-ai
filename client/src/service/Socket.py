@@ -15,8 +15,8 @@ plot = PlotService()
 lc_service = LightCurveService()
 
 
-def log(type, **values):
-    sio.emit("client_log", {"type": type.value, "values": values, "time": time.now()})
+def log(type, *values):
+    sio.emit("client_log", {"type": type.value, "values": values, "created": time.now()})
 
 
 def submit(task):
@@ -34,12 +34,14 @@ def run(task):
     print("=== RUN ===")
 
     if task["type"] == TaskType.TARGET_PIXEL.value:
-        log(LogType.DOWNLOAD_TP, name=task["item"])
+        log(LogType.DOWNLOAD_TP, task["item"])
         tps = lc_service.download_tps(task["item"])
+        log(LogType.BUILD_LC, task["item"])
         task["meta"]["size"] = lc_service.get_tps_size(tps)
         lc = lc_service.tps_to_lc(tps)
         original_lc = lc.copy()
         short_lc = lc[lc.time - lc.time[0] < 100].remove_nans()
+        log(LogType.ANALYZE_LC, task["item"])
 
         transits = []
 

@@ -90,7 +90,8 @@ const LogLine = Styled.div`
 
 const LogTime = Styled.time`
     background-color: ${Color.TRANSPARENT_DARKEST};
-    flex: 0 0 4rem;
+    flex: 0 0 7rem;
+    font-family: Courier New;
     margin-right: 0.5rem;
     padding: 0 0.5rem;
 `
@@ -113,21 +114,22 @@ const getIconByState = (state: ProcessState) => {
 
 const immediateTerminateStates = [ProcessState.PAUSED, ProcessState.WAITING_FOR_RUN]
 
-const logRenderer = (line: ProcessLog, i: number) => (
-    <LogLine key={i}>
-        <LogTime>
-            {Dates.formatTime(line.created, true, true)}
-        </LogTime>
-        <LogText>
-            {line.text}
-        </LogText>
-    </LogLine>
-)
-
 const Process = ({ data, ...props }: Props) => {
-
     const strings = useStrings().discovery.process
     const actions = useActions({ updateProcess })
+
+    console.log(data)
+
+    const logRenderer = (line: ProcessLog, i: number) => (
+        <LogLine key={i}>
+            <LogTime>
+                {Dates.formatTime(line.created, true, true)}
+            </LogTime>
+            <LogText>
+                {strings.log[line.type].join(line.values[0])}
+            </LogText>
+        </LogLine>
+    )
 
     const memoControls = React.useMemo(() => {
         const handleRun = () => {
@@ -195,7 +197,7 @@ const Process = ({ data, ...props }: Props) => {
                 </ControlRow>
             </Main>
             <Console
-                lines={new Array(50).fill({ created: 1592202214316, text: 'Úspěšné spuštění (Michal Struna).' })}
+                lines={data.logs}
                 lineRenderer={logRenderer} />
         </Root>
     )
