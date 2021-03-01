@@ -1,7 +1,7 @@
 import * as Numbers from './Numbers'
 
-const fillZero = (value: number): string => (
-    value < 10 ? '0' + value : value.toString()
+const fillZero = (value: number, n: number = 2): string => (
+    '0'.repeat(n - value.toString().length) + value
 )
 
 export const formatTime = (date: number, s: boolean = false, ms: boolean = false): string => {
@@ -13,7 +13,7 @@ export const formatTime = (date: number, s: boolean = false, ms: boolean = false
     }
 
     if (ms) {
-        result += ',' + fillZero(dateObj.getMilliseconds())
+        result += ',' + fillZero(dateObj.getMilliseconds(), 3)
     }
 
     return result

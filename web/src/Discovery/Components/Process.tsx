@@ -10,6 +10,7 @@ import { updateProcess } from '../Redux/Slice'
 import ProcessState from '../Constants/ProcessState'
 import * as Platform from '../Utils/Platform'
 import { Dates, TimeAgo } from '../../Native'
+import ProcessLogType from '../Constants/ProcessLogType'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     data: ProcessData
@@ -79,9 +80,18 @@ const Message = Styled.p<MessageProps>`
     line-height: 1.4rem;
 `
 
-const LogLine = Styled.div`
+interface LogLineProps {
+    important?: boolean
+}
+
+const LogLine = Styled.div<LogLineProps>`
     display: flex;
     line-height: 1.5rem;
+
+    ${props => props.important && `
+        color: ${Color.GREEN};
+        font-weight: bold;
+    `}
 
     &:nth-of-type(2n) {
         background-color: ${Color.TRANSPARENT_DARKEST};
@@ -98,6 +108,7 @@ const LogTime = Styled.time`
 
 const LogText = Styled.p`
     flex: 1 1 0;
+    font-weight: inherit;
 `
 
 const getIconByState = (state: ProcessState) => {
@@ -118,15 +129,13 @@ const Process = ({ data, ...props }: Props) => {
     const strings = useStrings().discovery.process
     const actions = useActions({ updateProcess })
 
-    console.log(data)
-
     const logRenderer = (line: ProcessLog, i: number) => (
-        <LogLine key={i}>
+        <LogLine key={i} important={line.type === ProcessLogType.PLANET_FOUND}>
             <LogTime>
                 {Dates.formatTime(line.created, true, true)}
             </LogTime>
             <LogText>
-                {strings.log[line.type].join(line.values[0])}
+                {strings.log[line.type].join(line.values?.[0])}
             </LogText>
         </LogLine>
     )
@@ -189,8 +198,8 @@ const Process = ({ data, ...props }: Props) => {
                     <IconText icon={Platform.getCpuIcon(data.cpu)} text='CPU' value={data.cpu} title={data.cpu} size={IconText.MEDIUM} />
                 </Row>
                 <Row>
-                    <IconText icon='Discovery/Process/Curve.svg' text={strings.analyzedCurves} value={1363} size={IconText.MEDIUM} />
-                    <IconText icon='Discovery/Process/Planet.svg' text={strings.discoveredPlanets} value={1} size={IconText.MEDIUM} />
+                    <IconText icon='Discovery/Process/Curve.svg' text={strings.analyzedCurves} value={data.n_curves} size={IconText.MEDIUM} />
+                    <IconText icon='Discovery/Process/Planet.svg' text={strings.discoveredPlanets} value={data.n_planets} size={IconText.MEDIUM} />
                 </Row>
                 <ControlRow>
                     {memoControls}

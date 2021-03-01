@@ -108,17 +108,14 @@ class Sockets(metaclass=Singleton):
         # TODO: Fix web-client controls.
         @sio.on("web_pause_client")
         def web_pause_client(client_id):
-            time.sleep(1000)
             self.pause_client(client_id)
 
         @sio.on("web_run_client")
         def web_run_client(client_id):
-            time.sleep(1000)
             self._add_task(client_id)
 
         @sio.on("web_terminate_client")
         def web_terminate_client(client_id):
-            time.sleep(1000)
             self.socket_service.emit_client("terminate", id=client_id)
 
 
@@ -126,15 +123,19 @@ class Sockets(metaclass=Singleton):
 
         @sio.on("client_log")
         def client_log(log):
-            client = self.clients[request.sid]
-            client["logs"].insert(0, log)
-            self.socket_service.emit_web("client_log", {**log, "client_id": request.sid}, user=client["user_id"])
+            self._client_log(log)
 
         @sio.on("client_submit_task")
         def client_submit_task(task):
             self.pause_client(request.sid)
             self.finish_task(task)
             self._add_task(request.sid)
+
+    def _client_log(self, log, client_id=None):
+        client_id = client_id if client_id else request.sid
+        client = self.clients[client_id]
+        client["logs"].append(log)
+        self.socket_service.emit_web("client_log", {**log, "client_id": client_id}, user=client["user_id"])
 
     def _add_user(self, user_id, **kwargs):
         if user_id not in self.users:
@@ -193,7 +194,7 @@ class Sockets(metaclass=Singleton):
         try:
             task = self.dataset_service.get_task()
 
-            if client["state"] != ProcessState.ACTIVE.value:
+            if client["state"] != ProcessState.ACTIVE.value:  # If client is paused, run it.
                 client["state"] = ProcessState.ACTIVE.value
                 client["pause_total"] = time.now() - client["pause_start"]
                 client["pause_start"] = None
@@ -201,7 +202,7 @@ class Sockets(metaclass=Singleton):
             self.socket_service.emit_web("update_client", client, user=client["user_id"])
             self.socket_service.emit_client("run", task, id=client_id)
         except:
-            pass  # TODO: Wait for new item.
+            self._client_log({"type": "no_data", "created": time.now()}, client_id=client_id)
 
     def finish_task(self, task):
         """
@@ -242,4 +243,8 @@ class Sockets(metaclass=Singleton):
         self.user_service.add_stats(self.clients[request.sid]["user_id"], **stats)
         stats["planets"], stats["stars"] = planets, stars
         self.stats_service.add(**stats)
+
+        client = self.clients[request.sid]
+        client["n_planets"] += planets
+        client["n_curves"] += 1
 

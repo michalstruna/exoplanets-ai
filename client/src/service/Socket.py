@@ -54,6 +54,7 @@ def run(task):
             lv_norm = lc_service.get_lv(original_lc, pdg, norm=True)
 
             if lc_service.is_planet(gv_norm, lv_norm):
+                log(LogType.PLANET_FOUND, task["item"], per)
                 gv = lc_service.get_gv(original_lc, pdg)
                 lv = lc_service.get_lv(original_lc, pdg)
 
@@ -72,33 +73,8 @@ def run(task):
                         "max_flux": round(np.max(gv.flux), 4)
                     },
                 })
-        """
-        pd, peaks = lc_service.get_pd(lc)
-
-        for peak in peaks:
-            gv_norm = lc_service.get_gv(lc, pd, peak, norm=True)
-            lv_norm = lc_service.get_lv(lc, pd, peak, norm=True)
-
-            if lc_service.is_planet(gv_norm, lv_norm):
-                gv = lc_service.get_gv(lc, pd, peak)
-                lv = lc_service.get_lv(lc, pd, peak)
-
-                transits.append({
-                    "period": pd.period[peak].value,
-                    "depth": pd.depth[peak],
-                    "duration": pd.duration[peak].value,
-                    "local_view": {
-                        "plot": plot.plot_lc(lv.time, lv.flux, size=15, alpha=0.7),
-                        "min_flux": round(np.min(lv.flux), 4),
-                        "max_flux": round(np.max(lv.flux), 4)
-                    },
-                    "global_view": {
-                        "plot": plot.plot_lc(gv.time, gv.flux, size=15, alpha=0.7),
-                        "min_flux": round(np.min(gv.flux), 4),
-                        "max_flux": round(np.max(gv.flux), 4)
-                    },
-                })
-            """
+            else:
+                log(LogType.FALSE_POSITIVE, task["item"], per)
 
         task["solution"] = {
             "transits": transits,
@@ -139,5 +115,7 @@ sio.emit("client_connect", {
     "state": ProcessState.WAITING_FOR_RUN.value,
     "pause_start": time.now(),
     "pause_total": 0,
+    "n_planets": 0,
+    "n_curves": 0,
     "logs": []
 })
