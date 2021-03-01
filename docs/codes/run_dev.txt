@@ -1,2 +1,1 @@
-export ENV=dev
 ./dev.sh --server --web
