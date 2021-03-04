@@ -418,8 +418,7 @@ const strings = {
             log: {
                 [ProcessLogType.CONNECT]: { [CS]: ['Spojení navázáno (', ').'], [EN]: ['Connection established (', ').'] },
                 [ProcessLogType.NO_DATA]: { [CS]: ['Žádná data ke zpracování.'], [EN]: 'No data for processing.' },
-                [ProcessLogType.DOWNLOAD_TP]: { [CS]: ['Stahuji target pixel ', '.'], [EN]: ['Downloading target pixel ', '.'] },
-                [ProcessLogType.BUILD_LC]: { [CS]: ['Sestavuji světelnou křivku ', '.'], [EN]: ['Building light curve ', '.'] }, 
+                [ProcessLogType.DOWNLOAD_TP]: { [CS]: ['Stahuji target pixel ', '.'], [EN]: ['Downloading target pixel ', '.'] }, 
                 [ProcessLogType.ANALYZE_LC]: { [CS]: ['Analyzuji světelnou křivku ', '.'], [EN]: ['Analyzing light curve ', '.'] },
                 [ProcessLogType.PLANET_FOUND]: { [CS]: ['Nalezena perioda ', ' d (planeta).'], [EN]: ['Period found ', ' d (planet).'] },
                 [ProcessLogType.FALSE_POSITIVE]: { [CS]: ['Nalezena perioda ', ' d (false positive).'], [EN]: ['Period found ', ' d (false positive).'] }

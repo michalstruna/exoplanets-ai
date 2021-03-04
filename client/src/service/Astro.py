@@ -10,7 +10,7 @@ from tensorflow.keras.models import load_model
 class LightCurveService:
 
     def download_tps(self, star_name):
-        return [lk.search_targetpixelfile(star_name, mission="Kepler", quarter=1).download()]
+        return lk.search_targetpixelfile(star_name, mission="Kepler", quarter=1).download_all()
 
     def get_tps_size(self, tps):
         size = 0

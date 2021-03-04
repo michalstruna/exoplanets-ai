@@ -35,3 +35,15 @@ export const zoomIn = keyframes`
     }
 
 `
+
+export const fromTransparentLeft = keyframes`
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    
+    to {
+        opacity: 1;
+        transform: none;
+    }
+`

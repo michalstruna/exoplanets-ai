@@ -36,7 +36,6 @@ def run(task):
     if task["type"] == TaskType.TARGET_PIXEL.value:
         log(LogType.DOWNLOAD_TP, task["item"])
         tps = lc_service.download_tps(task["item"])
-        log(LogType.BUILD_LC, task["item"])
         task["meta"]["size"] = lc_service.get_tps_size(tps)
         lc = lc_service.tps_to_lc(tps)
         original_lc = lc.copy()
@@ -54,7 +53,7 @@ def run(task):
             lv_norm = lc_service.get_lv(original_lc, pdg, norm=True)
 
             if lc_service.is_planet(gv_norm, lv_norm):
-                log(LogType.PLANET_FOUND, task["item"], per)
+                log(LogType.PLANET_FOUND, round(per.value, 2))
                 gv = lc_service.get_gv(original_lc, pdg)
                 lv = lc_service.get_lv(original_lc, pdg)
 
@@ -74,7 +73,7 @@ def run(task):
                     },
                 })
             else:
-                log(LogType.FALSE_POSITIVE, task["item"], per)
+                log(LogType.FALSE_POSITIVE, round(per.value, 2))
 
         task["solution"] = {
             "transits": transits,
@@ -95,7 +94,7 @@ def run(task):
 
 
 @sio.event
-def pause():
+def pause():  # TODO: Remove, pause is not needed.
     print("=== PAUSE ===")
 
 

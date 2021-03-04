@@ -32,7 +32,7 @@ interface RowProps {
 }
 
 const Row = Styled.div<RowProps>`    
-    align-items: stretch;
+    align-items: center;
     ${props => props.flex ? 'display: flex;' : null}
     white-space: nowrap;
     min-width: 100%;

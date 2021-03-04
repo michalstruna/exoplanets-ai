@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Color } from '../../Style'
+import { Color, Duration, fromTransparentLeft } from '../../Style'
 import { IconText, Console } from '../../Layout'
 import { ProcessData, ProcessLog } from '../types'
 import { useActions, useStrings } from '../../Data'
@@ -85,6 +85,7 @@ interface LogLineProps {
 }
 
 const LogLine = Styled.div<LogLineProps>`
+    animation: ${fromTransparentLeft} ${Duration.MEDIUM} 1;
     display: flex;
     line-height: 1.5rem;
 
@@ -130,7 +131,7 @@ const Process = ({ data, ...props }: Props) => {
     const actions = useActions({ updateProcess })
 
     const logRenderer = (line: ProcessLog, i: number) => (
-        <LogLine key={i} important={line.type === ProcessLogType.PLANET_FOUND}>
+        <LogLine key={line.created.toString() + i.toString()} important={line.type === ProcessLogType.PLANET_FOUND}>
             <LogTime>
                 {Dates.formatTime(line.created, true, true)}
             </LogTime>

@@ -1,5 +1,5 @@
 import Store from '../Redux/Store'
-import { ProcessData, addProcess, setProcesses, updateProcess, logProcess, removeProcess } from '../../Discovery'
+import { ProcessData, addProcess, setProcesses, updateProcess, removeProcess } from '../../Discovery'
 import { Socket } from '../../Async'
 import { addLocalMessage, addOnlineUser, Identity, Message, OnlineUser, removeOnlineUser, setOnlineUsers, updateOnlineUser } from '../../User'
 
@@ -23,11 +23,8 @@ export const init = (identity?: Identity) => {
     })
 
     Socket.on('update_client', (process: ProcessData) => {
+        console.log(888, process.logs)
         Store.dispatch(updateProcess([process.id, process]))
-    })
-
-    Socket.on('client_log', (log: any) => {
-        Store.dispatch(logProcess([log.client_id, log]))
     })
 
 

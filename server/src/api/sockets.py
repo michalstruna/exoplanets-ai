@@ -104,22 +104,32 @@ class Sockets(metaclass=Singleton):
 
 
 
-
-        # TODO: Fix web-client controls.
-        @sio.on("web_pause_client")
-        def web_pause_client(client_id):
-            self.pause_client(client_id)
-
         @sio.on("web_run_client")
         def web_run_client(client_id):
-            self._add_task(client_id)
+            client = self.clients[client_id]
+
+            if client["state"] not in [ProcessState.TERMINATED.value, ProcessState.ACTIVE.value]:
+                self._add_task(client_id)
 
         @sio.on("web_terminate_client")
         def web_terminate_client(client_id):
-            self.socket_service.emit_client("terminate", id=client_id)
+            client = self.clients[client_id]
 
+            if client["state"] == ProcessState.ACTIVE.value:
+                client["state"] = ProcessState.WAITING_FOR_TERMINATE.value
+                self.socket_service.emit_web("update_client", client, user=client["user_id"])
+            else:
+                self._stop_client(client_id, True)
 
+        @sio.on("web_pause_client")
+        def web_pause_client(client_id):
+            client = self.clients[client_id]
 
+            if client["state"] == ProcessState.ACTIVE.value:
+                client["state"] = ProcessState.WAITING_FOR_PAUSE.value
+                self.socket_service.emit_web("update_client", client, user=client["user_id"])
+            else:
+                self._stop_client(client_id)
 
         @sio.on("client_log")
         def client_log(log):
@@ -127,15 +137,19 @@ class Sockets(metaclass=Singleton):
 
         @sio.on("client_submit_task")
         def client_submit_task(task):
-            self.pause_client(request.sid)
+            client = self.clients[request.sid]
+            is_active = client["state"] == ProcessState.ACTIVE.value
             self.finish_task(task)
-            self._add_task(request.sid)
+            self._stop_client(client["id"], client["state"] == ProcessState.WAITING_FOR_TERMINATE.value)
+
+            if is_active:
+                self._add_task(client["id"])
 
     def _client_log(self, log, client_id=None):
         client_id = client_id if client_id else request.sid
         client = self.clients[client_id]
         client["logs"].append(log)
-        self.socket_service.emit_web("client_log", {**log, "client_id": client_id}, user=client["user_id"])
+        self.socket_service.emit_web("update_client", client, user=client["user_id"])
 
     def _add_user(self, user_id, **kwargs):
         if user_id not in self.users:
@@ -174,16 +188,16 @@ class Sockets(metaclass=Singleton):
 
 
 
-    def pause_client(self, client_id):
-        # TODO: Wait for pause.
+
+    def _stop_client(self, client_id, terminate=False):
         client = self.clients[client_id]
-        client["state"] = ProcessState.PAUSED.value
+        client["state"] = ProcessState.TERMINATED.value if terminate else ProcessState.PAUSED.value
 
         if not client["pause_start"]:
             client["pause_start"] = time.now()
 
         self.socket_service.emit_web("update_client", client, user=client["user_id"])
-        self.socket_service.emit_client("pause", id=client_id)
+        self.socket_service.emit_client("terminate" if terminate else "pause", id=client_id)
 
     def _add_task(self, client_id):
         """
