@@ -7,7 +7,6 @@
 
 \usepackage{utils}
 \usepackage{titletoc}
-\usepackage{amssymb}  % TODO: Odebrat
 \usepackage{amsmath}
 
 \def\code#1{\texttt{#1}}
@@ -1028,7 +1027,7 @@ K~vytvoření rozhraní je nejdříve třeba nadefinovat příslušné struktury
 
 Následně může dojít k~nadefinování koncových bodů rozhraní. Koncovým bodem jsou metody jakékoliv třídy, jež je potomkem \code{Resource}, přičemž názvy metod třídy odpovídají názvům metod HTTP.
 
-Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nesprávnosti vstupních parametrů je odeslána chybová odpověď a~díky anotacím je také automaticky generována dokumentace REST API v~nástroji Swagger~UI dostupná na adrese \url{exoplanets.now.sh/api-docs}. Ukázka dokumentace REST API je umístěna v~příloze [TODO] na konci dokumentu.
+Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nesprávnosti vstupních parametrů je odeslána chybová odpověď a~díky anotacím je také automaticky generována dokumentace REST API v~nástroji Swagger~UI dostupná na adrese \url{exoplanets.now.sh/api-docs}. Ukázka dokumentace REST API je umístěna v~příloze C na konci dokumentu.
 
 \lstinputlisting[caption={Vytvoření koncového bodu v~REST API.}]{codes/rest_endpoint.txt}
 
@@ -1119,7 +1118,7 @@ Zatímco spektrální třída hvězdy je jednoznačně dána dle povrchové tepl
 
 V~momentě, kdy je nalezena periodická složka ve světelné křivce hvězdy, je třeba ověřit, zda se jedná o~tranzit obíhající exoplanety nebo o~jiný jev. To je opět problém vhodný pro neuronovou síť.
 
-Síť na vstupu přijme globální a~lokální pohled na potenciální tranzit. Výstupem sítě je číslo z~intervalu od 0 do 1, přičemž čím větší číslo je, tím s~větší jistotou síť považuje vstup za skutečný tranzit planety. Kompletní zdrojový kód sítě se nachází v~Jupyter Notebooku \code{data/transit/transit.ipynb}. Architektura sítě popsána v~příloze TODO.
+Síť na vstupu přijme globální a~lokální pohled na potenciální tranzit. Výstupem sítě je číslo z~intervalu od 0 do 1, přičemž čím větší číslo je, tím s~větší jistotou síť považuje vstup za skutečný tranzit planety. Kompletní zdrojový kód sítě se nachází v~Jupyter Notebooku \code{data/transit/transit.ipynb}. Architektura sítě popsána v~příloze A.
 
 \img[1]{Část trénovací množiny pro detekci tranzitů exoplanet}{img/train_set.png}
 \data{1}{nasadata}
@@ -1404,7 +1403,6 @@ TODO: Verifikace výsledků.
 
 \isbnsource[DOLEŽEL, Petr]{nn}{Úvod do umělých neuronových sítí}{Univerzita Pardubice, Fakulta elektrotechniky a~informatiky}{2016}{9.~10.~2020}{978-80-7560-022-6}
 
-% TODO
 \onlinesource[VRAHATIS, Michael]{ai}{Computational Approaches to Artificial Intelligence: Theory, Methods and Applications.}{Springer}{2019}{28.~11.~2020}{https://www.researchgate.net/publication/334023205_Computational_Approaches_to_Artificial_Intelligence_Theory_Methods_and_Applications}
 
 \isbnsource[KHAN, Salman]{convnn}{A Guide to Convolutional Neural Networks for Computer Vision}{Morgan \& Claypool}{2018}{26.~10.~2020}{781681730226}
@@ -1413,7 +1411,11 @@ TODO: Verifikace výsledků.
 
 \onlinesource[MARCY, Geoffrey]{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal 481(2)}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088}
 
+\isbnsource[NORDEEN, Alex]{mongodbbook}{MongoDB: Learn in 24 hours.}{Guru99}{2020}{20.~2.~2021}{1230004303503}
+
 \onlinesource[OGBUEFI, Kalvin]{transitprops}{Photometry Analysis of Exoplanets WASP-80b~\&~HD 189733b}{Baylor University}{2013}{23.~10.~2020}{https://www.baylor.edu/content/services/document.php/208057.pdf}
+
+\isbnsource[PECINOVSKÝ, Rudolf]{python}{Python: kompletní příručka jazyka pro verzi 3.9.}{Praha: Grada Publishing}{2020}{20.~2.~2021}{978-80-271-1269-2}
 
 \onlinesource[PERRYMAN, Michael]{exoplanets}{Extra-solar planets}{Reports on Progress in Physics 63(8)}{31.~5.~2000}{8.~10.~2020}{https://arxiv.org/abs/astro-ph/0005602}
 
@@ -1421,66 +1423,59 @@ TODO: Verifikace výsledků.
 
 \onlinesource[TASKER, Elizabeth, LANEUVILLE, Matthieu, GUTTENBERG, Nicholas]{nnmass}{Estimating Planetary Mass with Deep Learning}{The Astronomical Journal 159(2)}{25.~11.~2019}{9.~10.~2020}{https://arxiv.org/abs/1911.11035}
 
-\onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
-
 \onlinesource[MOUTOU, Claire, PONT, Frédéric]{transit}{Detection and characterization of extrasolar planets: the transit method}{Strasbourg: Observatoire astronomique de Strasbourg et Société Française d'Astronomie et d'Astrophysique}{2006}{8.~10.~2020}{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.4155&rep=rep1&type=pdf}
 
-\onlinesource{nasadata}{NASA Exoplanet Archive}{NASA Exoplanet Science Insititute}{12.~8.~2019}{25.~12.~2019}{https://exoplanetarchive.ipac.caltech.edu/docs/API_exoplanet_columns.html}
 
-\onlinesource{tess}{TESS Exoplanet Mission}{NASA}{24.~8.~2020}{8.~10.~2020}{https://www.nasa.gov/content/about-tess}
-
-\onlinesource{keras}{Keras API reference}{Keras}{2020}{29.~10.~2020}{https://keras.io/api}
-
-\onlinesource{mongoengine}{MongoEngine User Documentation}{MongoEngine}{2020}{21.~2.2021}{http://docs.mongoengine.org}
-
-\onlinesource{socketio}{Introduction}{Socket.IO}{2020}{21.~2.~2021}{https://socket.io/docs/v3}
-
-
-
-
-
-
-% TODO: Add to text.
-
-\onlinesource{mongodb}{mongoDB manual}{mongoDB}{2021}{20.~2.~2020}{https://docs.mongodb.com/manual/reference/database-references}
-
-\isbnsource[NORDEEN, Alex]{mongodbbook}{MongoDB: Learn in 24 hours.}{Guru99}{2020}{20.~2.~2021}{1230004303503}
-
-\onlinesource{nasaopendata}{Otevřená data NASA}{NASA}{2020}{20.~2.~2020}{https://nasa.github.io/data-nasa-gov-frontpage}
-
-\isbnsource[PECINOVSKÝ, Rudolf]{python}{Python: kompletní příručka jazyka pro verzi 3.9.}{Praha: Grada Publishing}{2020}{20.~2.~2021}{978-80-271-1269-2}
-
-
-\onlinesource{ts}{TypeScript Documentation}{TypeScript}{2020}{21.~2.~2021}{https://www.typescriptlang.org/docs}
-
-\onlinesource{react}{Getting started}{React}{2021}{21.~2.~2020}{https://reactjs.org/docs/getting-started.html}
-
-\onlinesource{styledcomponents}{Documentation}{styled components}{2020}{21.~2.~2021}{https://styled-components.com/docs}
-
-\onlinesource{flask}{web development, one drop at a time}{Flask}{2020}{21.~2.~2021}{https://flask.palletsprojects.com}
 
 \onlinesource{astropy}{A Community Python Library for Astronomy}{astropy}{2020}{21.~2.~2021}{https://docs.astropy.org/en/stable}
 
-
 \onlinesource{lightkurve}{A friendly Python package for making discoveries with Kepler \& TESS}{Lightkurve}{2020}{21.~2.~2021}{https://docs.lightkurve.org}
 
+\onlinesource{styledcomponents}{Documentation}{styled components}{2020}{21.~2.~2021}{https://styled-components.com/docs}
+
+\onlinesource{react}{Getting started}{React}{2021}{21.~2.~2020}{https://reactjs.org/docs/getting-started.html}
+
+\onlinesource{socketio}{Introduction}{Socket.IO}{2020}{21.~2.~2021}{https://socket.io/docs/v3}
+
+\onlinesource{keras}{Keras API reference}{Keras}{2020}{29.~10.~2020}{https://keras.io/api}
+
+\onlinesource{methods}{Metody objevování planet}{Astronomia}{23.~1.~2013}{~23.~12.~2019}{http://hvezdy.astro.cz/exoplanety/51-metody-objevovani-planet}
+
+\onlinesource{mongodb}{mongoDB manual}{mongoDB}{2021}{20.~2.~2020}{https://docs.mongodb.com/manual/reference/database-references}
+
+\onlinesource{mongoengine}{MongoEngine User Documentation}{MongoEngine}{2020}{21.~2.2021}{http://docs.mongoengine.org}
+
+\onlinesource{nasadata}{NASA Exoplanet Archive}{NASA Exoplanet Science Insititute}{12.~8.~2019}{25.~12.~2019}{https://exoplanetarchive.ipac.caltech.edu/docs/API_exoplanet_columns.html}
+
+\onlinesource{nasaopendata}{Otevřená data NASA}{NASA}{2020}{20.~2.~2020}{https://nasa.github.io/data-nasa-gov-frontpage}
+
+\onlinesource{tess}{TESS Exoplanet Mission}{NASA}{24.~8.~2020}{8.~10.~2020}{https://www.nasa.gov/content/about-tess}
+
+\onlinesource{ts}{TypeScript Documentation}{TypeScript}{2020}{21.~2.~2021}{https://www.typescriptlang.org/docs}
+
+\onlinesource{flask}{web development, one drop at a time}{Flask}{2020}{21.~2.~2021}{https://flask.palletsprojects.com}
+
+
+
+
+
 \end{thebibliography}
-
-Exoplanets data \url{http://exoplanets.org/detail/alpha_Cen_B_b}
-
-Wavelength \url{http://spiff.rit.edu/classes/phys240/lectures/expand/expand.html}
-
-TODO: Doplnit reference ze zadání diplomové práce.
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Seznam příloh}
 \section*{Seznam příloh}
 
 \noindent Příloha~A~~~~Architektura neuronové sítě \dotfill \pageref{priloha_a}
 
+\noindent Příloha~B~~~~Architektura databáze \dotfill \pageref{priloha_b}
+
+\noindent Příloha~C~~~~Dokumentace REST API \dotfill \pageref{priloha_c}
+
 \section*{Příloha~A -- Architektura neuron. sítě}\label{priloha_a}
 \includegraphics[width=\linewidth]{img/lc_cnn.png}
 
 \section*{Příloha~B -- Architektura databáze}\label{priloha_b}
 \includegraphics[width=\linewidth]{img/db.png}
+
+\section*{Příloha~C -- Dokumentace REST API}\label{priloha_c}
 
 \end{document}
