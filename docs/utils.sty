@@ -42,7 +42,6 @@
 \usepackage{etoolbox}
 \usepackage{caption,setspace}
 
-\DeclareCaptionType{eq}[Vzorec][Seznam vzorců]
 \captionsetup{font={footnotesize,stretch=1.0},justification=centering,margin=\parindent}
 
 
@@ -317,9 +316,11 @@
 	\addcontentsline{toc}{section}{Seznam zdrojových kódů}
 }
 
+\DeclareCaptionType{eq}[Vzorec][Seznam vzorců]
+
 \newcommand{\formulalist}{
 	\listofeq
-	\addcontentsline{toc}{section}{Seznam vzorců}
+	%\addcontentsline{toc}{section}{Seznam vzorců}
 }
 
 \newcommand{\annotationcs}{%
