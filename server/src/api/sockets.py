@@ -74,19 +74,13 @@ class Sockets(metaclass=Singleton):
         def disconnect():
             if request.sid in self.clients:
                 client = self.clients[request.sid]
-                leave_room(self.socket_service.get_room_name(None, "clients"))  # Leave room of all clients.
 
                 if "user_id" in client:  # Client was authenticated.
-                    user = self.users[client["user_id"]]
-                    self._remove_user_if_empty(client["user_id"], clients=client["id"])
-                    leave_room(self.socket_service.get_room_name(client["user_id"], "webs"))  # Leave room of user's webs.
-                    self.socket_service.emit_web("client_unauth", request.sid, user=client["user_id"])
+                    self._stop_client(client["id"], terminate=True)
                     # TODO: If interrupted, restore item to dataset.
                     # TODO: Emit web auth/disconnect client.
-
-                    del self.clients[client["user_id"]]
-                    user.clients.remove(client["id"])
-                    self.socket_service.emit_web("update_online_user", user["id"], user)
+                
+                del self.clients[client["id"]]
 
         @sio.on("client_connect")
         def client_connect(client):
@@ -101,8 +95,6 @@ class Sockets(metaclass=Singleton):
             self.socket_service.emit_web("client_auth", client, user=user["_id"])
             self._add_user(client["user_id"], clients=client_id)
             self._add_task(client_id)
-
-
 
         @sio.on("web_run_client")
         def web_run_client(client_id):
@@ -184,11 +176,6 @@ class Sockets(metaclass=Singleton):
         else:
             self.socket_service.emit_web("update_online_user", user_id, user)
 
-    
-
-
-
-
     def _stop_client(self, client_id, terminate=False):
         client = self.clients[client_id]
         client["state"] = ProcessState.TERMINATED.value if terminate else ProcessState.PAUSED.value
@@ -196,8 +183,19 @@ class Sockets(metaclass=Singleton):
         if not client["pause_start"]:
             client["pause_start"] = time.now()
 
-        self.socket_service.emit_web("update_client", client, user=client["user_id"])
         self.socket_service.emit_client("terminate" if terminate else "pause", id=client_id)
+
+        if terminate:
+            client = self.clients[request.sid]
+            leave_room(self.socket_service.get_room_name(None, "clients"))  # Leave room of all clients.
+
+            if "user_id" in client:  # Client was authenticated.
+                self._remove_user_if_empty(client["user_id"], clients=client["id"])
+                leave_room(self.socket_service.get_room_name(client["user_id"], "webs"))  # Leave room of user's webs.
+                del self.clients[client["id"]]
+
+        if "user_id" in client:
+            self.socket_service.emit_web("update_client", client, user=client["user_id"])
 
     def _add_task(self, client_id):
         """

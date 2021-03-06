@@ -14,16 +14,11 @@ export const init = (identity?: Identity) => {
         Store.dispatch(addProcess(process))
     })
 
-    Socket.on('client_unauth', (clientId: string) => {
-        Store.dispatch(removeProcess(clientId))
-    })
-
     Socket.on('clients_update', (processes: ProcessData[]) => {
         Store.dispatch(setProcesses(processes))
     })
 
     Socket.on('update_client', (process: ProcessData) => {
-        console.log(888, process.logs)
         Store.dispatch(updateProcess([process.id, process]))
     })
 
@@ -43,7 +38,6 @@ export const init = (identity?: Identity) => {
     })
 
     Socket.on('update_online_user', (userId: string, user: OnlineUser) => {
-        console.log(userId, user)
         Store.dispatch(updateOnlineUser([userId, user]))
     })
 

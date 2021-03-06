@@ -11,7 +11,7 @@ const slice = Redux.slice(
             state.processes.unshift(action.payload)
         }),
         setProcesses: set<ProcessData[]>('processes'),
-        removeProcess: plain<string>((state, action) => {
+        removeProcess: plain<string>((state, action) => {  // TODO: Remove? It is not needed.
             state.processes = state.processes.filter(process => process.id !== action.payload)
         }),
         updateProcess: plain<[string, Partial<ProcessData>]>((state, action) => {
