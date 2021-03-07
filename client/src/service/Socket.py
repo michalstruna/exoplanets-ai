@@ -5,14 +5,14 @@ import numpy as np
 from utils import time
 from service.Device import DeviceService
 from constants.Process import ProcessState, TaskType, LogType
-from service.Astro import LightCurveService
+from service.Astro import LcService
 from service.Plot import PlotService
 
 sio = socketio.Client()
 
 device = DeviceService()
 plot = PlotService()
-lc_service = LightCurveService()
+lc_service = LcService()
 
 
 def log(type, *values):
@@ -44,32 +44,32 @@ def run(task):
 
         transits = []
 
-        for max_per in (10, 100, 300):
-            pdg = lc.to_periodogram("bls", period=np.linspace(0.5, max_per, 10000))
+        for max_per in LcService.PERIODS:
+            pdg = lc.to_periodogram("bls", period=np.linspace(0.5, max_per, 100000))
             per, t0, dur, dep = pdg.period_at_max_power, pdg.transit_time_at_max_power, pdg.duration_at_max_power, pdg.depth_at_max_power
             mask = pdg.get_transit_mask(period=per, transit_time=t0, duration=dur)
             lc = lc[~mask]
             gv_norm = lc_service.get_gv(original_lc, pdg, norm=True)
             lv_norm = lc_service.get_lv(original_lc, pdg, norm=True)
 
-            if lc_service.is_planet(gv_norm, lv_norm):
+            if True:#lc_service.is_planet(gv_norm, lv_norm):
                 log(LogType.PLANET_FOUND, round(per.value, 2))
                 gv = lc_service.get_gv(original_lc, pdg)
                 lv = lc_service.get_lv(original_lc, pdg)
 
                 transits.append({
-                    "period": per,
-                    "depth": dep,
-                    "duration": dur,
+                    "period": per.value,
+                    "depth": dep.value,
+                    "duration": dur.value,
                     "local_view": {
-                        "plot": plot.plot_lc(lv.time.value, lv.flux, size=15, alpha=0.7),
-                        "min_flux": round(np.min(lv.flux), 4),
-                        "max_flux": round(np.max(lv.flux), 4)
+                        "plot": plot.plot_lc(lv.time.value, lv.flux.value, size=15, alpha=0.7),
+                        "min_flux": np.round(np.min(lv.flux.value), 4),
+                        "max_flux": np.round(np.max(lv.flux.value), 4)
                     },
                     "global_view": {
-                        "plot": plot.plot_lc(gv.time.value, gv.flux, size=15, alpha=0.7),
-                        "min_flux": round(np.min(gv.flux), 4),
-                        "max_flux": round(np.max(gv.flux), 4)
+                        "plot": plot.plot_lc(gv.time.value, gv.flux.value, size=15, alpha=0.7),
+                        "min_flux": np.round(np.min(gv.flux.value), 4),
+                        "max_flux": np.round(np.max(gv.flux.value), 4)
                     },
                 })
             else:

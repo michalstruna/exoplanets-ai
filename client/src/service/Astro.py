@@ -7,10 +7,12 @@ from tensorflow.keras.models import load_model
 
 # TODO: Replace nan.
 
-class LightCurveService:
+class LcService:
 
-    def download_tps(self, star_name):
-        return lk.search_targetpixelfile(star_name, mission="Kepler", quarter=1).download_all()
+    PERIODS = (10, 50, 250)
+
+    def download_tps(self, star_name, mission="Kepler", exptime="long"):
+        return lk.search_targetpixelfile(star_name, mission="Kepler", exptime=exptime).download_all()
 
     def get_tps_size(self, tps):
         size = 0
