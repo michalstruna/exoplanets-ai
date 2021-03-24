@@ -91,7 +91,6 @@ class StarService(Service):
 
     def complete_star(self, star, with_constellation=True):
         result = {**star}
-
         result["density"] = self.get_density(star)
         result["surface_gravity"] = self.get_surface_gravity(star)
         result["luminosity"] = self.get_luminosity(star)

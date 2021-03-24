@@ -63,8 +63,8 @@ def run(task):
                     "duration": dur.value,
                     "local_view": {
                         "plot": plot.plot_lc(lv.time.value, lv.flux.value, size=15, alpha=0.7),
-                        "min_flux": np.round(np.min(lv.flux.value), 4),
-                        "max_flux": np.round(np.max(lv.flux.value), 4)
+                        "min_flux": np.round(np.nanmin(lv.flux.value), 4),
+                        "max_flux": np.round(np.nanmax(lv.flux.value), 4)
                     },
                     "global_view": {
                         "plot": plot.plot_lc(gv.time.value, gv.flux.value, size=15, alpha=0.7),

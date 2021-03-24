@@ -19,8 +19,7 @@ const Root = Styled(PlainTable)`
 const PlanetTable = ({ data, refMap, ...props }: Props) => {
 
     const strings = useStrings().system
-    const properties = strings.properties
-    const planets = strings.planets
+    const planets = useStrings().planets
 
     return (
         <Root {...props}>
@@ -31,33 +30,33 @@ const PlanetTable = ({ data, refMap, ...props }: Props) => {
                 <th colSpan={2}>{strings.other}</th>
             </tr>
             <tr>
-                <td>{properties.diameter}</td>
+                <td>{planets.diameter}</td>
                 <td>{Value.Planet.props(data, 'diameter', { refMap, unit: <>d<sub>⊕</sub></> })}</td>
-                <td>{properties.orbitalPeriod}</td>
+                <td>{planets.orbitalPeriod}</td>
                 <td>{Value.Planet.props(data, 'orbital_period', { refMap, unit: 'd' })}</td>
-                <td>{properties.lifeConditions}</td>
+                <td>{planets.lifeConditions}</td>
                 <td>{Value.Planet.props(data, 'life_conditions', { refMap })}</td>
             </tr>
             <tr>
-                <td>{properties.mass}</td>
+                <td>{planets.mass}</td>
                 <td>{Value.Planet.props(data, 'mass', { refMap, unit: <>M<sub>⊕</sub></>, isEstimate: props => props.processed })}</td>
-                <td>{properties.semiMajorAxis}</td>
+                <td>{planets.semiMajorAxis}</td>
                 <td>{Value.Planet.props(data, 'semi_major_axis', { refMap, unit: 'au' })}</td>
-                <td>{properties.surfaceTemperature}</td>
+                <td>{planets.surfaceTemperature}</td>
                 <td>{Value.Planet.props(data, 'surface_temperature', { refMap, unit: '°C', isEstimate: props => props.processed })}</td>
             </tr>
             <tr>
-                <td>{properties.density}</td>
+                <td>{planets.density}</td>
                 <td>{Value.Planet.props(data, 'density', { refMap, unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>} />, isEstimate: props => props.processed })}</td>
-                <td>{properties.orbitalVelocity}</td>
+                <td>{planets.orbitalVelocity}</td>
                 <td>{Value.Planet.props(data, 'orbital_velocity', { refMap, unit: <Fraction top='km' bottom='s' /> })}</td>
-                <td>{properties.status}</td>
+                <td>{planets.status}</td>
                 <td>{planets.statuses[data.status]}</td>
             </tr>
             <tr>
-                <td>{properties.surfaceGravity}</td>
+                <td>{planets.surfaceGravity}</td>
                 <td>{Value.Planet.props(data, 'surface_gravity', { refMap, unit: <Fraction top='m' bottom={<>s<sup>2</sup></>} />, isEstimate: props => props.processed })}</td>
-                <td>{properties.eccentricity}</td>
+                <td>{planets.eccentricity}</td>
                 <td>{Value.Planet.props(data, 'eccentricity', { refMap, format: Numbers.format })}</td>
                 <td>???</td>
                 <td>???</td>

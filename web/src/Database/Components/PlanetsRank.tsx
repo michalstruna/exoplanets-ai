@@ -35,12 +35,12 @@ const Root = Styled.div`
 `
 
 const planets = [
-    { name: 'Proxima Centauri b', distance: 4.2, diameter: 15535 },
-    { name: 'VY Canis Majors', distance: 5.2, diameter: 8963 },
-    { name: 'Proxima Centauri b', distance: 4.2, diameter: 12411 },
-    { name: 'VY Canis Majors', distance: 5.2, diameter: 13691 },
-    { name: 'Proxima Centauri b', distance: 4.2, diameter: 15741 },
-    { name: 'VY Canis Majors', distance: 5.2, diameter: 13691 },
+    { name: 'Kepler-8b', distance: 4.2, diameter: 15535 },
+    { name: 'Kepler-10c', distance: 5.2, diameter: 8963 },
+    { name: 'KIC 1126578', distance: 4.2, diameter: 12411 },
+    { name: 'Kepler-13b', distance: 5.2, diameter: 13691 },
+    { name: 'WASP-12b', distance: 4.2, diameter: 15741 },
+    { name: 'HD 219666 b', distance: 5.2, diameter: 13691 },
 ]
 
 const icons = ['Database/Planet/Earth.png', 'Database/Planet/Jupiter.png']
@@ -52,9 +52,9 @@ const PlanetsRank = ({ ...props }: Props) => {
     const earthLike = (
         <HierarchicalTable items={planets} columns={[
             { accessor: (planet: PlanetData, i: number) => i + 1, title: '#', render: i => i + '.', width: '2.5rem' },
-            { accessor: (planet: PlanetData, i: number) => 'Abcbcd', title: strings.planet, render: name => <IconText text={name} icon={icons[Math.floor(Math.random() * 2)]} size='2.35rem' />, width: 10 },
-            { accessor: (planet: PlanetData) => 32333, render: v => Units.format(v, UnitType.KM), title: strings.diameter, width: '9rem' },
-            { accessor: (planet: PlanetData) => 12.34, render: v => Units.format(v, UnitType.LY), title: strings.distance, width: '9rem' }
+            { accessor: (planet: PlanetData, i: number) => planets[i].name, title: strings.planet, render: name => <IconText text={name} icon={icons[Math.floor(Math.random() * 2)]} size='2.35rem' />, width: 10 },
+            { accessor: (planet: PlanetData, i: number) => planets[i].diameter, render: v => Units.format(v, UnitType.KM), title: strings.diameter, width: '9rem' },
+            { accessor: (planet: PlanetData, i: number) => planets[i].distance, render: v => Units.format(v, UnitType.LY), title: strings.distance, width: '9rem' }
         ]} />
     )
 

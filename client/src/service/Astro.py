@@ -34,7 +34,7 @@ class LcService:
         return lk.LightCurveCollection(lcs).stitch().flatten(window_length=501).remove_outliers()
 
     def get_pd(self, lc):
-        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 150, 0.1))  # TODO: 0.001
+        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 150, 0.001))  # TODO: 0.001
         med = np.median(pd.power)
         return pd, self.get_peaks(pd.power, around=int(pd.power.shape[0] / 20), minimum=med)
 
@@ -55,7 +55,7 @@ class LcService:
     def get_gv(self, lc, pdg, norm=False):
         per, t0 = pdg.period_at_max_power, pdg.transit_time_at_max_power
         folded = lc.fold(per, t0=t0)
-        gv = folded.bin(n_bins=2001)
+        gv = folded.bin(bins=2001)
 
         if norm:
             gv = gv.normalize() - 1
@@ -69,7 +69,7 @@ class LcService:
         folded = lc.fold(per, t0=t0)
         phase_mask = (folded.phase.value > -4 * fractional_duration) & (folded.phase.value < 4 * fractional_duration)
         lc_zoom = folded[phase_mask]
-        lv = lc_zoom.bin(n_bins=201)
+        lv = lc_zoom.bin(bins=201)
 
         if norm:
             lv = lv.normalize() - 1
