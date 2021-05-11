@@ -7,17 +7,18 @@ from tensorflow.keras.models import load_model
 
 # TODO: Replace nan.
 
+class LcService:
 
-class LightCurveService:
+    PERIODS = (10, 50, 250)
 
-    def download_tps(self, star_name):
-        return lk.search_targetpixelfile(star_name, mission="Kepler").download_all()
+    def download_tps(self, star_name, mission="Kepler", exptime="long"):
+        return lk.search_targetpixelfile(star_name, mission="Kepler", exptime=exptime).download_all()
 
     def get_tps_size(self, tps):
         size = 0
 
         for tp in tps:
-            size += tp.flux.nbytes + tp.time.nbytes
+            size += tp.flux.nbytes + tp.time.size
 
         return size
 
@@ -30,8 +31,7 @@ class LightCurveService:
                 lcs.append(tp.to_lightcurve(aperture_mask=tp.pipeline_mask))
                 target = tp.targetid
 
-        lc = lk.LightCurveCollection(lcs)
-        return lc.stitch(corrector_func=lambda lc: lc.remove_outliers().flatten(window_length=401)).remove_outliers(20)
+        return lk.LightCurveCollection(lcs).stitch().flatten(window_length=501).remove_outliers()
 
     def get_pd(self, lc):
         pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 150, 0.001))  # TODO: 0.001
@@ -52,13 +52,10 @@ class LightCurveService:
 
         return peaks
 
-    def get_gv(self, lc, pd, peak, norm=False):
-        t0 = pd.transit_time[peak]
-        period = pd.period[peak]
-
-        folded = lc.fold(period, t0=t0)
-
-        gv = folded.bin(bins=2001, method='median')
+    def get_gv(self, lc, pdg, norm=False):
+        per, t0 = pdg.period_at_max_power, pdg.transit_time_at_max_power
+        folded = lc.fold(per, t0=t0)
+        gv = folded.bin(bins=2001)
 
         if norm:
             gv = gv.normalize() - 1
@@ -66,22 +63,18 @@ class LightCurveService:
 
         return gv
 
-    def get_lv(self, lc, pd, peak, norm=False):
-        t0 = pd.transit_time[peak]
-        period = pd.period[peak]
-        duration = pd.duration[peak]
-
-        fractional_duration = duration / period
-        folded = lc.fold(period, t0=t0)
-
-        phase_mask = (folded.phase > -4 * fractional_duration) & (folded.phase < 4.0 * fractional_duration)
+    def get_lv(self, lc, pdg, norm=False):
+        per, t0, dur = pdg.period_at_max_power, pdg.transit_time_at_max_power, pdg.duration_at_max_power
+        fractional_duration = dur / per
+        folded = lc.fold(per, t0=t0)
+        phase_mask = (folded.phase.value > -4 * fractional_duration) & (folded.phase.value < 4 * fractional_duration)
         lc_zoom = folded[phase_mask]
-
-        lv = lc_zoom.bin(bins=201, method='median')
+        lv = lc_zoom.bin(bins=201)
 
         if norm:
             lv = lv.normalize() - 1
             lv = (lv / np.abs(lv.flux.min())) * 2.0 + 1
+            
         return lv
 
     def is_planet(self, gv, lv):

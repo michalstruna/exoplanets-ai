@@ -71,7 +71,7 @@ export interface StarProperties {
     life_zone?: LifeZone
 }
 
-export interface LightCurve {
+export interface LightCurveData {
     name: string
     plot: string
     min_time: number
@@ -91,8 +91,12 @@ export interface LifeZone {
 export interface StarData {
     _id: string
     properties: StarProperties[]
-    light_curves: LightCurve[]
+    light_curves: LightCurveData[]
     planets: PlanetData[]
+}
+
+export interface SystemData extends StarData {
+    datasets: Dataset[]
 }
 
 export interface StarDetailData extends StarData {

@@ -10,6 +10,7 @@ import SpectralClass from '../../Database/Constants/SpectralClass'
 import LuminosityClass from '../../Database/Constants/LuminosityClass'
 import PlanetStatus from '../../Database/Constants/PlanetStatus'
 import { MessageSelection, MessageTag, Sex, UserRole } from '../../User'
+import ProcessLogType from '../../Discovery/Constants/ProcessLogType'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -145,6 +146,11 @@ const strings = {
         lightCurve: { [CS]: 'Světelná křivka', [EN]: 'Light curve' },
         transit: 'Transit',
         transitDepth: { [CS]: 'Hloubka transitu', [EN]: 'Transit depth' },
+        surface: { [CS]: 'Povrch', [EN]: 'Surface' },
+        matter: { [CS]: 'Hmota', [EN]: 'Matter' },
+        other: { [CS]: 'Ostatní', [EN]: 'Other' },
+        age: { [CS]: 'Stáří', [EN]: 'Age' },
+        location: { [CS]: 'Poloha', [EN]: 'Location' },
 
         unknownSize: { [CS]: 'Typ', [EN]: 'Type' },
         unknownType: { [CS]: 'Neznámý', [EN]: 'Unknown' },
@@ -246,7 +252,9 @@ const strings = {
         orbit: { [CS]: 'Dráha', [EN]: 'Orbit' },
         other: { [CS]: 'Ostatní', [EN]: 'Other' },
         localView: { [CS]: 'Lokální pohled', [EN]: 'Local view' },
-        globalView: { [CS]: 'Globální pohled', [EN]: 'Global view' }
+        globalView: { [CS]: 'Globální pohled', [EN]: 'Global view' },
+        nObservations: { [CS]: 'Počet pozorování', [EN]: 'Number of observations' },
+        length: { [CS]: 'Délka', [EN]: 'Length' }
     },
 
     stats: {
@@ -406,7 +414,15 @@ const strings = {
             terminate: { [CS]: 'Ukončit', [EN]: 'Terminate' },
             run: { [CS]: 'Spustit', [EN]: 'Run' },
             analyzedCurves: { [CS]: 'Analyzovaných křivek', [EN]: 'Analyzed curves' },
-            discoveredPlanets: { [CS]: 'Objevených planet', [EN]: 'Discovered planets' }
+            discoveredPlanets: { [CS]: 'Objevených planet', [EN]: 'Discovered planets' },
+            log: {
+                [ProcessLogType.CONNECT]: { [CS]: ['Spojení navázáno (', ').'], [EN]: ['Connection established (', ').'] },
+                [ProcessLogType.NO_DATA]: { [CS]: ['Žádná data ke zpracování.'], [EN]: 'No data for processing.' },
+                [ProcessLogType.DOWNLOAD_TP]: { [CS]: ['Stahuji target pixel ', '.'], [EN]: ['Downloading target pixel ', '.'] }, 
+                [ProcessLogType.ANALYZE_LC]: { [CS]: ['Analyzuji světelnou křivku ', '.'], [EN]: ['Analyzing light curve ', '.'] },
+                [ProcessLogType.PLANET_FOUND]: { [CS]: ['Nalezena perioda ', ' d (planeta).'], [EN]: ['Period found ', ' d (planet).'] },
+                [ProcessLogType.FALSE_POSITIVE]: { [CS]: ['Nalezena perioda ', ' d (false positive).'], [EN]: ['Period found ', ' d (false positive).'] }
+            }
         }
     },
 

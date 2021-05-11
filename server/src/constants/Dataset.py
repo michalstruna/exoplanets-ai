@@ -19,6 +19,9 @@ class DatasetFields(Enum):
         "distance": {"type": float},
         "metallicity": {"type": float}
     }
+    TARGET_PIXEL = {
+        "name": {"type": str}
+    }
 
 
 class DatasetPriority(Enum):

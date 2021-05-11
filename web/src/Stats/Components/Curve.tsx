@@ -1,11 +1,11 @@
 import React from 'react'
 import Styled from 'styled-components'
 import { Config } from '../../Async'
-import { LightCurve } from '../../Database/types'
+import { LightCurveData } from '../../Database/types'
 import { Color, size } from '../../Style'
 
 interface Props extends Omit<React.ComponentPropsWithoutRef<'canvas'>, 'title'> {
-    data: LightCurve
+    data: LightCurveData
     simple?: boolean
     type: string
     title?: React.ReactNode

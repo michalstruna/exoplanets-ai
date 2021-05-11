@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Color } from '../../Style'
+import { Color, Duration, fromTransparentLeft } from '../../Style'
 import { IconText, Console } from '../../Layout'
 import { ProcessData, ProcessLog } from '../types'
 import { useActions, useStrings } from '../../Data'
@@ -10,6 +10,7 @@ import { updateProcess } from '../Redux/Slice'
 import ProcessState from '../Constants/ProcessState'
 import * as Platform from '../Utils/Platform'
 import { Dates, TimeAgo } from '../../Native'
+import ProcessLogType from '../Constants/ProcessLogType'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     data: ProcessData
@@ -74,14 +75,26 @@ interface MessageProps {
 }
 
 const Message = Styled.p<MessageProps>`
-    color: ${props => props.red ? Color.RED : Color.YELLOW};
+    color: ${props => (props.red ? Color.RED : Color.YELLOW)};
     font-size: 85%;
     line-height: 1.4rem;
 `
 
-const LogLine = Styled.div`
+interface LogLineProps {
+    important?: boolean
+}
+
+const LogLine = Styled.div<LogLineProps>`
+    animation: ${fromTransparentLeft} ${Duration.MEDIUM} 1;
     display: flex;
     line-height: 1.5rem;
+
+    ${props =>
+        props.important &&
+        `
+        color: ${Color.GREEN};
+        font-weight: bold;
+    `}
 
     &:nth-of-type(2n) {
         background-color: ${Color.TRANSPARENT_DARKEST};
@@ -90,13 +103,15 @@ const LogLine = Styled.div`
 
 const LogTime = Styled.time`
     background-color: ${Color.TRANSPARENT_DARKEST};
-    flex: 0 0 4rem;
+    flex: 0 0 7rem;
+    font-family: Courier New;
     margin-right: 0.5rem;
     padding: 0 0.5rem;
 `
 
 const LogText = Styled.p`
     flex: 1 1 0;
+    font-weight: inherit;
 `
 
 const getIconByState = (state: ProcessState) => {
@@ -113,21 +128,16 @@ const getIconByState = (state: ProcessState) => {
 
 const immediateTerminateStates = [ProcessState.PAUSED, ProcessState.WAITING_FOR_RUN]
 
-const logRenderer = (line: ProcessLog, i: number) => (
-    <LogLine key={i}>
-        <LogTime>
-            {Dates.formatTime(line.created, true, true)}
-        </LogTime>
-        <LogText>
-            {line.text}
-        </LogText>
-    </LogLine>
-)
-
 const Process = ({ data, ...props }: Props) => {
-
     const strings = useStrings().discovery.process
     const actions = useActions({ updateProcess })
+
+    const logRenderer = (line: ProcessLog, i: number) => (
+        <LogLine key={line.created.toString() + i.toString()} important={line.type === ProcessLogType.PLANET_FOUND}>
+            <LogTime>{Dates.formatTime(line.created, true, true)}</LogTime>
+            <LogText>{strings.log[line.type].join(line.values?.[0])}</LogText>
+        </LogLine>
+    )
 
     const memoControls = React.useMemo(() => {
         const handleRun = () => {
@@ -137,12 +147,26 @@ const Process = ({ data, ...props }: Props) => {
 
         const handlePause = () => {
             Socket.emit('web_pause_client', data.id)
-            actions.updateProcess([data.id, { state: immediateTerminateStates.includes(data.state) ? ProcessState.PAUSED : ProcessState.WAITING_FOR_PAUSE }])
+            actions.updateProcess([
+                data.id,
+                {
+                    state: immediateTerminateStates.includes(data.state)
+                        ? ProcessState.PAUSED
+                        : ProcessState.WAITING_FOR_PAUSE
+                }
+            ])
         }
 
         const handleStop = () => {
             Socket.emit('web_terminate_client', data.id)
-            actions.updateProcess([data.id, { state: immediateTerminateStates.includes(data.state) ? ProcessState.TERMINATED : ProcessState.WAITING_FOR_TERMINATE }])
+            actions.updateProcess([
+                data.id,
+                {
+                    state: immediateTerminateStates.includes(data.state)
+                        ? ProcessState.TERMINATED
+                        : ProcessState.WAITING_FOR_TERMINATE
+                }
+            ])
         }
 
         switch (data.state) {
@@ -150,22 +174,20 @@ const Process = ({ data, ...props }: Props) => {
             case ProcessState.WAITING_FOR_RUN:
                 return (
                     <>
-                        <IconText icon='Controls/Pause.svg' text={strings.pause} onClick={handlePause} />
-                        <IconText icon='Controls/Stop.svg' text={strings.terminate} onClick={handleStop} />
+                        <IconText icon="Controls/Pause.svg" text={strings.pause} onClick={handlePause} />
+                        <IconText icon="Controls/Stop.svg" text={strings.terminate} onClick={handleStop} />
                     </>
                 )
             case ProcessState.PAUSED:
                 return (
                     <>
-                        <IconText icon='Controls/PlayGreen.svg' text={strings.run} onClick={handleRun} />
-                        <IconText icon='Controls/Stop.svg' text={strings.terminate} onClick={handleStop} />
+                        <IconText icon="Controls/PlayGreen.svg" text={strings.run} onClick={handleRun} />
+                        <IconText icon="Controls/Stop.svg" text={strings.terminate} onClick={handleStop} />
                     </>
                 )
             default:
                 return (
-                    <Message red={data.state === ProcessState.TERMINATED}>
-                        {strings.stateMessage[data.state]}
-                    </Message>
+                    <Message red={data.state === ProcessState.TERMINATED}>{strings.stateMessage[data.state]}</Message>
                 )
         }
     }, [data.id, data.state, actions, strings])
@@ -174,32 +196,55 @@ const Process = ({ data, ...props }: Props) => {
         <Root {...props}>
             <Main>
                 <Row>
-                    <Name>
-                        {data.name}
-                    </Name>
+                    <Name>{data.name}</Name>
                     <IconText
                         icon={`Controls/${getIconByState(data.state)}.svg`}
                         text={strings.state[data.state]}
-                        value={<TimeAgo time={data.start + data.pause_total} refTime={data.pause_start || undefined} />} size={IconText.MEDIUM} />
+                        value={
+                            <TimeAgo
+                                time={data.start + data.pause_total}
+                                refTime={data.pause_start || undefined}
+                                frequency={1000}
+                            />
+                        }
+                        size={IconText.MEDIUM}
+                    />
                 </Row>
                 <Row>
-                    <IconText icon={Platform.getOsIcon(data.os)} text='OS' value={data.os} title={data.os} size={IconText.MEDIUM} />
-                    <IconText icon={Platform.getCpuIcon(data.cpu)} text='CPU' value={data.cpu} title={data.cpu} size={IconText.MEDIUM} />
+                    <IconText
+                        icon={Platform.getOsIcon(data.os)}
+                        text="OS"
+                        value={data.os}
+                        title={data.os}
+                        size={IconText.MEDIUM}
+                    />
+                    <IconText
+                        icon={Platform.getCpuIcon(data.cpu)}
+                        text="CPU"
+                        value={data.cpu}
+                        title={data.cpu}
+                        size={IconText.MEDIUM}
+                    />
                 </Row>
                 <Row>
-                    <IconText icon='Discovery/Process/Curve.svg' text={strings.analyzedCurves} value={1363} size={IconText.MEDIUM} />
-                    <IconText icon='Discovery/Process/Planet.svg' text={strings.discoveredPlanets} value={1} size={IconText.MEDIUM} />
+                    <IconText
+                        icon="Discovery/Process/Curve.svg"
+                        text={strings.analyzedCurves}
+                        value={data.n_curves}
+                        size={IconText.MEDIUM}
+                    />
+                    <IconText
+                        icon="Discovery/Process/Planet.svg"
+                        text={strings.discoveredPlanets}
+                        value={data.n_planets}
+                        size={IconText.MEDIUM}
+                    />
                 </Row>
-                <ControlRow>
-                    {memoControls}
-                </ControlRow>
+                <ControlRow>{memoControls}</ControlRow>
             </Main>
-            <Console
-                lines={new Array(50).fill({ created: 1592202214316, text: 'Úspěšné spuštění (Michal Struna).' })}
-                lineRenderer={logRenderer} />
+            <Console lines={data.logs} lineRenderer={logRenderer} />
         </Root>
     )
-
 }
 
 Process.Root = Root

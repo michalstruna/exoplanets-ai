@@ -10,6 +10,8 @@ export { default as ListSection } from './Components/ListSection'
 export { default as Block } from './Components/Block'
 export { default as Diff } from './Components/Diff'
 export { default as Console } from './Components/Console'
+export { default as PlainTable } from './Components/PlainTable'
+export { default as FlexLine } from './Components/FlexLine'
 
 export { default as Reducer } from './Redux/Slice'
 export * from './Redux/Slice'

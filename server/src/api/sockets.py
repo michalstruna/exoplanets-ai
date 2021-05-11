@@ -49,15 +49,11 @@ class Sockets(metaclass=Singleton):
 
             web = self.webs[request.sid]
             web["user_id"] = user_id  # Assign user to web.
-
-            if user_id not in self.users:  # If user does not exist.
-                self._add_user(user_id, webs=request.sid)  # Create user.
-
+            self._add_user(user_id, webs=request.sid)  # Create or update user.
             user = self.users[user_id]
 
             clients = list(map(lambda client_id: self.clients[client_id], user["clients"]))
             self.socket_service.emit_web("clients_update", clients, id=request.sid)  # Send info to new web about all connected clients of user.
-            join_room(self.socket_service.get_room_name(user_id, "webs"))  # Join web to room with user's webs and all webs.
 
         @sio.on("web_unauth")
         def web_unauth():
@@ -78,16 +74,13 @@ class Sockets(metaclass=Singleton):
         def disconnect():
             if request.sid in self.clients:
                 client = self.clients[request.sid]
-                leave_room(self.socket_service.get_room_name(None, "clients"))  # Leave room of all clients.
 
-                if "user_id" in client:  # Client was already authenticated.
-                    self._remove_user_if_empty(client["user_id"], clients=client["id"])
-                    leave_room(self.socket_service.get_room_name(client["user_id"], "webs"))  # Leave room of user's webs.
-                    self.emit_web("client_disconnect", request.sid, user=client["user_id"])
+                if "user_id" in client:  # Client was authenticated.
+                    self._stop_client(client["id"], terminate=True)
                     # TODO: If interrupted, restore item to dataset.
                     # TODO: Emit web auth/disconnect client.
-
-                    del self.clients[client["id"]]
+                
+                del self.clients[client["id"]]
 
         @sio.on("client_connect")
         def client_connect(client):
@@ -98,47 +91,57 @@ class Sockets(metaclass=Singleton):
         def client_auth(client_id):
             client = self.clients[client_id]
             user = self.users[self.webs[request.sid]["user_id"]]
-            user["clients"].append(client_id)
             client["user_id"] = user["_id"]
-            join_room(self.socket_service.get_room_name(user["_id"], "clients"))
             self.socket_service.emit_web("client_auth", client, user=user["_id"])
-
-        @sio.on("web_pause_client")
-        def web_pause_client(client_id):
-            time.sleep(1000)
-            # TODO: ...
-            self.pause_client(client_id)
+            self._add_user(client["user_id"], clients=client_id)
+            self._add_task(client_id)
 
         @sio.on("web_run_client")
         def web_run_client(client_id):
-            time.sleep(1000)
-            self.add_task(client_id)
+            client = self.clients[client_id]
+
+            if client["state"] not in [ProcessState.TERMINATED.value, ProcessState.ACTIVE.value]:
+                self._add_task(client_id)
 
         @sio.on("web_terminate_client")
         def web_terminate_client(client_id):
-            time.sleep(1000)
-            self.socket_service.emit_client("terminate", id=client_id)
+            client = self.clients[client_id]
+
+            if client["state"] == ProcessState.ACTIVE.value:
+                client["state"] = ProcessState.WAITING_FOR_TERMINATE.value
+                self.socket_service.emit_web("update_client", client, user=client["user_id"])
+            else:
+                self._stop_client(client_id, True)
+
+        @sio.on("web_pause_client")
+        def web_pause_client(client_id):
+            client = self.clients[client_id]
+
+            if client["state"] == ProcessState.ACTIVE.value:
+                client["state"] = ProcessState.WAITING_FOR_PAUSE.value
+                self.socket_service.emit_web("update_client", client, user=client["user_id"])
+            else:
+                self._stop_client(client_id)
 
         @sio.on("client_log")
         def client_log(log):
-            client = self.clients[request.sid]
-            client["data"]["logs"].insert(0, log)
-            self.socket_service.emit_web("client_log", {**log, "client_id": request.sid}, user=client["user_id"])
+            self._client_log(log)
 
         @sio.on("client_submit_task")
         def client_submit_task(task):
-            self.pause_client(request.sid)
-
-            self.stats_service.add(
-                curves=1,
-                bytes=task["meta"]["size"],
-                ms=ms,
-                planets=planets,
-                stars=stars
-            )
-
+            client = self.clients[request.sid]
+            is_active = client["state"] == ProcessState.ACTIVE.value
             self.finish_task(task)
-            self.add_task(request.sid)
+            self._stop_client(client["id"], client["state"] == ProcessState.WAITING_FOR_TERMINATE.value)
+
+            if is_active:
+                self._add_task(client["id"])
+
+    def _client_log(self, log, client_id=None):
+        client_id = client_id if client_id else request.sid
+        client = self.clients[client_id]
+        client["logs"].append(log)
+        self.socket_service.emit_web("update_client", client, user=client["user_id"])
 
     def _add_user(self, user_id, **kwargs):
         if user_id not in self.users:
@@ -148,6 +151,7 @@ class Sockets(metaclass=Singleton):
 
             for k in kwargs:
                 user[k].append(kwargs[k])
+                join_room(self.socket_service.get_room_name(user["_id"], k))
 
             self.socket_service.emit_web("add_online_user", user)
         else:
@@ -155,6 +159,7 @@ class Sockets(metaclass=Singleton):
 
             for k in kwargs:
                 user[k].append(kwargs[k])
+                join_room(self.socket_service.get_room_name(user["_id"], k))
 
             self.socket_service.emit_web("update_online_user", user["id"], user)
 
@@ -169,47 +174,47 @@ class Sockets(metaclass=Singleton):
             self.user_service.update(user_id, {"online": False})
             self.socket_service.emit_web("remove_online_user", user_id)
         else:
-            self.socket_service.emit_web("update_online_user", user)
+            self.socket_service.emit_web("update_online_user", user_id, user)
 
-    
-
-
-
-    def update_client(self, id):
-        client = self.clients[id]
-        user_id, client = client["user_id"], client["data"]
-        update = {**client}
-        del update["logs"]
-        self.socket_service.emit_web("update_client", update, user=user_id)
-
-    def pause_client(self, client_id):
-        client, user_id = self.clients[client_id]["data"], self.clients[client_id]["user_id"]
-        client["state"] = ProcessState.PAUSED.value
+    def _stop_client(self, client_id, terminate=False):
+        client = self.clients[client_id]
+        client["state"] = ProcessState.TERMINATED.value if terminate else ProcessState.PAUSED.value
 
         if not client["pause_start"]:
             client["pause_start"] = time.now()
 
-        self.socket_service.emit_web("update_client", client, user=user_id)
-        self.socket_service.emit_client("pause", id=client_id)
+        self.socket_service.emit_client("terminate" if terminate else "pause", id=client_id)
 
-    def add_task(self, client_id):
+        if terminate:
+            client = self.clients[request.sid]
+            leave_room(self.socket_service.get_room_name(None, "clients"))  # Leave room of all clients.
+
+            if "user_id" in client:  # Client was authenticated.
+                self._remove_user_if_empty(client["user_id"], clients=client["id"])
+                leave_room(self.socket_service.get_room_name(client["user_id"], "webs"))  # Leave room of user's webs.
+                del self.clients[client["id"]]
+
+        if "user_id" in client:
+            self.socket_service.emit_web("update_client", client, user=client["user_id"])
+
+    def _add_task(self, client_id):
         """
         Add task to client with specified id.
         """
-        client, user_id = self.clients[client_id]["data"], self.clients[client_id]["user_id"]
+        client = self.clients[client_id]
 
         try:
             task = self.dataset_service.get_task()
 
-            if client["state"] != ProcessState.ACTIVE.value:
+            if client["state"] != ProcessState.ACTIVE.value:  # If client is paused, run it.
                 client["state"] = ProcessState.ACTIVE.value
                 client["pause_total"] = time.now() - client["pause_start"]
                 client["pause_start"] = None
 
-            self.update_client(client_id)
+            self.socket_service.emit_web("update_client", client, user=client["user_id"])
             self.socket_service.emit_client("run", task, id=client_id)
         except:
-            pass
+            self._client_log({"type": "no_data", "created": time.now()}, client_id=client_id)
 
     def finish_task(self, task):
         """
@@ -226,12 +231,9 @@ class Sockets(metaclass=Singleton):
 
         ms = time.now() - task["meta"]["created"]
 
-        updated = {"inc__time": ms, "inc__processed": task["meta"]["size"]} #, "pop__items": -1 }
-        dataset = self.dataset_service.update(task["dataset_id"], updated)
-        light_curve = task["solution"]["light_curve"]  # TODO: target_pixel
-
-        stars = 0
-        planets = 0
+        dataset = self.dataset_service.update(task["dataset_id"], {})#{"pop__items": -1})  # TODO: Pop item.
+        light_curve = task["solution"]["light_curve"]
+        stars, planets = 0, 0
 
         try:
             star = self.star_service.get_by_name(task["item"])
@@ -247,3 +249,14 @@ class Sockets(metaclass=Singleton):
 
             if not planet["properties"]:
                 planets += 1
+
+        stats = {"items": 1, "data": task["meta"]["size"], "time": ms, "planets": len(task["solution"]["transits"])}
+        self.dataset_service.add_stats(task["dataset_id"], **stats)
+        self.user_service.add_stats(self.clients[request.sid]["user_id"], **stats)
+        stats["planets"], stats["stars"] = planets, stars
+        self.stats_service.add(**stats)
+
+        client = self.clients[request.sid]
+        client["n_planets"] += planets
+        client["n_curves"] += 1
+

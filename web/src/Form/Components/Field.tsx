@@ -58,7 +58,7 @@ const Text = Styled.section`
     transition: transform ${Duration.MEDIUM}, color ${Duration.MEDIUM};
     transform-origin: left center;
     
-    input:focus + &, input:not([data-empty="true"]) + &, select + &, textarea:focus + &, textarea:not([data-empty="true"]) + & {
+    input:focus + &, input:not(:placeholder-shown) + &, select + &, textarea:focus + &, textarea:not(:placeholder-shown) + & {
         transform: translateY(-1.1rem) scale(0.8) translateZ(0);
     }
 `
@@ -133,13 +133,7 @@ const CheckContainer = Styled.div`
 
 const Field = ({ label, name, type, required, invalid, validator, placeholder, options, ...props }: Props) => {
 
-    const { register, errors, getValues } = useFormContext()
-    const [value, setValue] = React.useState<string>(getValues(name) || '')
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        setValue(event.target.value)
-        props.onChange?.(event)
-    }
+    const { register, errors } = useFormContext()
 
     const validate = (value: any) => (
         (type.validator(value) && (!validator || validator(value))) || invalid || label || placeholder || 'Error'
@@ -151,7 +145,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
         switch (type) {
             case FieldType.SELECT:
                 return (
-                    <Select {...props as any} onChange={handleChange} ref={register(registerOptions)} name={name}>
+                    <Select {...props as any} onChange={props.onChange} ref={register(registerOptions)} name={name} tabIndex={props.readOnly ? -1 : undefined}>
                         {Array.isArray(options![0].value) ? (
                             (options as TextValue<TextValue<string | number>[]>[]).map((group, i) => (
                                 <optgroup label={group.text}>
@@ -173,8 +167,8 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                 )
             case FieldType.CHECKBOX:
                 return (
-                    <CheckContainer>
-                        <input type='checkbox' onChange={handleChange} ref={register(registerOptions)} name={name} />
+                    <CheckContainer> 
+                        <input type='checkbox' onChange={props.onChange} ref={register(registerOptions)} name={name} />
                         <CheckSlider />
                     </CheckContainer>
 
@@ -186,7 +180,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                         name={name}
                         placeholder={placeholder}
                         ref={register(registerOptions)}
-                        onChange={handleChange} />
+                        onChange={props.onChange} />
                 )
             default:
                 return (
@@ -197,8 +191,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                         type={type.name}
                         autoComplete='off'
                         ref={register(registerOptions)}
-                        data-empty={['date'].includes(type.name) ? undefined : (value === '' || undefined)}
-                        onChange={handleChange} />
+                        onChange={props.onChange} />
                 )
         }
     }
@@ -214,6 +207,10 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
         </Root>
     )
 
+}
+
+Field.defaultProps = {
+    placeholder: ' '
 }
 
 Field.Root = Root

@@ -2,7 +2,8 @@ import ProcessState from './Constants/ProcessState'
 
 export type ProcessLog = {
     created: number
-    text: number
+    type: string
+    values: any[]
 }
 
 export type ProcessData = {
@@ -11,8 +12,8 @@ export type ProcessData = {
     os: string
     cpu: string
     start: number
-    stars: number
-    planets: number
+    n_curves: number
+    n_planets: number
     state: ProcessState
     pause_start?: number
     pause_total: number

@@ -1,4 +1,5 @@
 import React from 'react'
+import Styled from 'styled-components'
 import { camelCase, pascalCase } from 'change-case'
 
 import { Numbers } from '../../Native'
@@ -29,10 +30,22 @@ interface ColOptionsList<Item> {
     onReset?: (item: Item) => void
 }
 
+const Note = Styled.p`
+    font-size: 80%;
+    font-style: italic;
+    margin-top: 0.3rem;
+    opacity: 0.6;
+`
+
+const N_LINES = 3
+
 export const MultiValue = ({ items, property, formatter = val => val }: { items: any[], property: string, formatter?: (val: any, i: any, item: any) => any }) => items ? (
     <div>
-        {items.filter(item => !!item[property]).map((item, i) => <div
+        {items.slice(0, N_LINES).filter(item => !!item[property]).map((item, i) => <div
             title={'Dataset: ' + item.dataset}>{formatter(item[property], item, i)}</div>)}
+            {items.length > N_LINES && (
+                <Note>A další {items.length - N_LINES}...</Note>
+            )}
     </div>
 ) : null
 

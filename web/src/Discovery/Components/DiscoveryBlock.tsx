@@ -8,9 +8,7 @@ import DiscoveryTutorial from './DiscoveryTutorial'
 import * as Platform from '../Utils/Platform'
 import Process from './Process'
 
-interface Props extends React.ComponentPropsWithoutRef<'div'> {
-
-}
+interface Props extends React.ComponentPropsWithoutRef<'div'> {}
 
 const Root = Styled.div`
     ${size()}
@@ -57,27 +55,31 @@ const Tab = Styled.button`
 `
 
 const DiscoveryBlock = ({ ...props }: Props) => {
-
     const processes = useProcesses()
     const [tab, setTab] = React.useState(0)
 
     return (
         <Root {...props}>
-            {processes.length > 0 && <Tabs>
-                <Tab data-active={tab === 0 || undefined} onClick={() => setTab(0)} style={{ backgroundImage: 'url(/img/Discovery/Download.svg' }} />
-                {processes.map((p, i) => (
+            {processes.length > 0 ? (
+                <Tabs>
                     <Tab
-                        key={i}
-                        data-active={i + 1 === tab || undefined}
-                        onClick={() => setTab(i + 1)}
-                        style={{ backgroundImage: `url(/img/${Platform.getOsIcon(p.os)})` }} />
-                ))}
-            </Tabs>}
-            <Body>
-                {tab === 0 ? <DiscoveryTutorial /> : <Process data={processes[tab - 1]} />}
-            </Body>
+                        data-active={tab === 0 || undefined}
+                        onClick={() => setTab(0)}
+                        style={{ backgroundImage: 'url(/img/Discovery/Download.svg' }}
+                    />
+                    {processes.map((p, i) => (
+                        <Tab
+                            key={i}
+                            data-active={i + 1 === tab || undefined}
+                            onClick={() => setTab(i + 1)}
+                            style={{ backgroundImage: `url(/img/${Platform.getOsIcon(p.os)})` }}
+                        />
+                    ))}
+                </Tabs>
+            ) : null}
+            <Body>{tab === 0 ? <DiscoveryTutorial /> : <Process data={processes[tab - 1]} />}</Body>
         </Root>
     )
-
 }
+
 export default DiscoveryBlock

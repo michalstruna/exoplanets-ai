@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { useSelector } from 'react-redux'
 
 import GlobalStyle from './GlobalStyle'
 import { useElement, Validator } from '../../Native'
@@ -9,7 +10,6 @@ import { Sockets } from '../index'
 import { MessageSelection, MessageTag, useIdentity } from '../../User'
 import { FilterData, useActions } from '../../Data'
 import { getMessages } from '../../User'
-import { useSelector } from 'react-redux'
 
 interface Props extends React.ComponentPropsWithoutRef<any> {
 

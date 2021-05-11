@@ -21,7 +21,7 @@ class FileService:
         res = requests.get(url)
         return self.save(res.content, tag, res.headers["Content-Type"])
 
-    def save(self, file, tag, content_type):
+    def save(self, file, tag, content_type="image/png"):
         extension = guess_extension(content_type)
         name = self.generate_name(extension)
         path = os.path.join("public", tag if type(tag) == str else tag.value, name)

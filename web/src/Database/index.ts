@@ -32,7 +32,7 @@ export { default as LifeType } from './Constants/LifeType'
 export { default as Database } from './Components/Database'
 export { default as ItemControls } from './Components/ItemControls'
 export { default as TableItemDetail } from './Components/TableItemDetail'
-export { default as SkyMap } from './Components/SkyMap'
+export { default as SkyMap } from './Components/System/SkyMap'
 export { default as BodyType } from './Components/BodyType'
 
 /**

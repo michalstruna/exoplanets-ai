@@ -45,8 +45,6 @@ const OnlineUsers = ({ ...props }: Props) => {
     const globalStrings = useStrings()
     const strings = useStrings().users
 
-    console.log(users)
-
     return (
         <Root {...props}>
             <HierarchicalTable

@@ -5,18 +5,18 @@ import numpy as np
 from utils import time
 from service.Device import DeviceService
 from constants.Process import ProcessState, TaskType, LogType
-from service.Astro import LightCurveService
+from service.Astro import LcService
 from service.Plot import PlotService
 
 sio = socketio.Client()
-sio.connect("http://localhost:5000")  # TODO: Config.
 
 device = DeviceService()
 plot = PlotService()
+lc_service = LcService()
 
 
-def log(type, **values):
-    sio.emit("client_log", {"type": type.value, "values": values, "time": time.now()})
+def log(type, *values):
+    sio.emit("client_log", {"type": type.value, "values": values, "created": time.now()})
 
 
 def submit(task):
@@ -30,57 +30,62 @@ def connected():
 
 @sio.event
 def run(task):
+    # TODO: remove_outliers - upper lower
     print("=== RUN ===")
-    time.sleep(1000)
 
     if task["type"] == TaskType.TARGET_PIXEL.value:
-        log(LogType.DOWNLOAD_TP, name=task["item"])
-        lc_service = LightCurveService()
+        log(LogType.DOWNLOAD_TP, task["item"])
         tps = lc_service.download_tps(task["item"])
         task["meta"]["size"] = lc_service.get_tps_size(tps)
         lc = lc_service.tps_to_lc(tps)
-
-        pd, peaks = lc_service.get_pd(lc)
+        original_lc = lc.copy()
+        short_lc = lc[lc.time - lc.time[0] < 100].remove_nans()
+        log(LogType.ANALYZE_LC, task["item"])
 
         transits = []
 
-        for peak in peaks:
-            gv_norm = lc_service.get_gv(lc, pd, peak, norm=True)
-            lv_norm = lc_service.get_lv(lc, pd, peak, norm=True)
+        for max_per in LcService.PERIODS:
+            pdg = lc.to_periodogram("bls", period=np.linspace(0.5, max_per, 100000))
+            per, t0, dur, dep = pdg.period_at_max_power, pdg.transit_time_at_max_power, pdg.duration_at_max_power, pdg.depth_at_max_power
+            mask = pdg.get_transit_mask(period=per, transit_time=t0, duration=dur)
+            lc = lc[~mask]
+            gv_norm = lc_service.get_gv(original_lc, pdg, norm=True)
+            lv_norm = lc_service.get_lv(original_lc, pdg, norm=True)
 
-            if lc_service.is_planet(gv_norm, lv_norm):
-                gv = lc_service.get_gv(lc, pd, peak)
-                lv = lc_service.get_lv(lc, pd, peak)
+            if True:#lc_service.is_planet(gv_norm, lv_norm):
+                log(LogType.PLANET_FOUND, round(per.value, 2))
+                gv = lc_service.get_gv(original_lc, pdg)
+                lv = lc_service.get_lv(original_lc, pdg)
 
                 transits.append({
-                    "period": pd.period[peak].value,
-                    "depth": pd.depth[peak],
-                    "duration": pd.duration[peak].value,
+                    "period": per.value,
+                    "depth": dep.value,
+                    "duration": dur.value,
                     "local_view": {
-                        "plot": plot.plot_lc(lv.time, lv.flux, size=15, alpha=0.7),
-                        "min_flux": round(np.min(lv.flux), 4),
-                        "max_flux": round(np.max(lv.flux), 4)
+                        "plot": plot.plot_lc(lv.time.value, lv.flux.value, size=15, alpha=0.7),
+                        "min_flux": np.round(np.nanmin(lv.flux.value), 4),
+                        "max_flux": np.round(np.nanmax(lv.flux.value), 4)
                     },
                     "global_view": {
-                        "plot": plot.plot_lc(gv.time, gv.flux, size=15, alpha=0.7),
-                        "min_flux": round(np.min(gv.flux), 4),
-                        "max_flux": round(np.max(gv.flux), 4)
+                        "plot": plot.plot_lc(gv.time.value, gv.flux.value, size=15, alpha=0.7),
+                        "min_flux": np.round(np.min(gv.flux.value), 4),
+                        "max_flux": np.round(np.max(gv.flux.value), 4)
                     },
                 })
-
-        short_lc = lc[lc.time - lc.time[0] < 100].remove_nans()
+            else:
+                log(LogType.FALSE_POSITIVE, round(per.value, 2))
 
         task["solution"] = {
             "transits": transits,
             "light_curve": {
                 "name": task["item"],
-                "plot": plot.plot_lc(short_lc.time, short_lc.flux),
-                "min_flux": round(np.min(short_lc.flux), 4),
-                "max_flux": round(np.max(short_lc.flux), 4),
-                "min_time": round(np.min(short_lc.time), 4),
-                "max_time": round(np.max(short_lc.time), 4),
+                "plot": plot.plot_lc(short_lc.time.value, short_lc.flux.value),
+                "min_flux": np.round(np.min(short_lc.flux.value), 4),
+                "max_flux": np.round(np.max(short_lc.flux.value), 4),
+                "min_time": np.round(np.min(short_lc.time.value), 4),
+                "max_time": np.round(np.max(short_lc.time.value), 4),
                 "n_observations": len(lc.flux),
-                "n_days": round(lc.time[-1] - lc.time[0]),
+                "n_days": np.round(lc.time.value[-1] - lc.time.value[0]),
                 "dataset": "Kepler 12"
             }
         }
@@ -89,7 +94,7 @@ def run(task):
 
 
 @sio.event
-def pause():
+def pause():  # TODO: Remove, pause is not needed.
     print("=== PAUSE ===")
 
 
@@ -99,7 +104,7 @@ def terminate():
     sio.disconnect()
     sys.exit()
 
-
+sio.connect("http://localhost:5000")  # TODO: Config.
 
 sio.emit("client_connect", {
     "name": device.get_host(),
@@ -109,20 +114,7 @@ sio.emit("client_connect", {
     "state": ProcessState.WAITING_FOR_RUN.value,
     "pause_start": time.now(),
     "pause_total": 0,
+    "n_planets": 0,
+    "n_curves": 0,
     "logs": []
 })
-
-
-"""
-@sio.event
-def connect_error():
-    print("CONNECT_ERROR")
-
-@sio.event
-def disconnect(
-    print("DISCONNECT")
-
-@sio.event
-def authenticated(identity):
-    print("identity")
-"""

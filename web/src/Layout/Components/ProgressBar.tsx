@@ -43,7 +43,7 @@ const ProgressBar = ({ range, value, label, ...props }: Props) => {
     const min = Array.isArray(range) ? range[0] : 0
     const max = Array.isArray(range) ? range[1] : range
 
-    const percentages = values.map(value => Math.round(10000 * value / (max - min)) / 100)
+    const percentages = values.map(value => Math.min(100, Math.round(10000 * value / (max - min)) / 100))
 
     return (
         <Root {...props}>

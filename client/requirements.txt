@@ -4,7 +4,7 @@
 distro == 1.4.0
 
 # client/src/service/Astro.py: 1
-lightkurve == 1.11.2
+lightkurve == 2.0.6
 
 # client/src/service/Plot.py: 1,2
 matplotlib == 3.3.2
@@ -17,7 +17,7 @@ numpy == 1.19.5
 py_cpuinfo == 7.0.0
 
 # client/src/service/Socket.py: 1
-python_socketio == 5.0.4
+python_socketio == 4.6.1
 
 # client/src/service/Astro.py: 5
 tensorflow == 2.4.0
