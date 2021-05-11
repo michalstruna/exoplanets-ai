@@ -5,9 +5,7 @@ import { useStrings } from '../../Data'
 import { Link } from '../../Routing'
 import { PageTitle, SectionTitle } from '../../Layout'
 
-interface Props extends React.ComponentPropsWithoutRef<'div'> {
-
-}
+interface Props extends React.ComponentPropsWithoutRef<'div'> {}
 
 const Root = Styled.div`
     background-color: ${Color.MEDIUM_DARK};
@@ -63,36 +61,27 @@ const StepTitle = Styled(SectionTitle)`
 `
 
 const DiscoveryTutorial = ({ ...props }: Props) => {
-
     const strings = useStrings().discovery.tutorial
 
-    const renderSteps = () => (
+    const renderSteps = () =>
         strings.steps.map((step: any, i: number) => (
             <React.Fragment key={i}>
                 <Step pathname={step.download}>
                     <StepImage style={{ backgroundImage: `url(/img/Discovery/Tutorial/${step.icon})` }} />
-                    <StepTitle>
-                        {step.title}
-                    </StepTitle>
+                    <StepTitle>{step.title}</StepTitle>
                 </Step>
                 {i < strings.steps.length - 1 && <Transition />}
             </React.Fragment>
         ))
-    )
 
     return (
         <Root {...props}>
             <Inner>
-                <Title>
-                    {strings.title}
-                </Title>
-                <Steps>
-                    {renderSteps()}
-                </Steps>
+                <Title>{strings.title}</Title>
+                <Steps>{renderSteps()}</Steps>
             </Inner>
         </Root>
     )
-
 }
 
 DiscoveryTutorial.Root = Root
