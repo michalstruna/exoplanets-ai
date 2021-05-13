@@ -1,14 +1,14 @@
 import * as React from 'react'
 import Styled from 'styled-components'
-import Google from 'react-google-login'
+import Google, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login'
 
 import ExternalAuthButton from './ExternalAuthButton'
 import { Color } from '../../Style'
+import { googleLogin } from '..'
 import { Config } from '../../Async'
+import { useActions } from '../../Data'
 
-interface Props extends React.ComponentPropsWithoutRef<'button'> {
-
-}
+interface Props extends React.ComponentPropsWithoutRef<'button'> {}
 
 const Root = Styled(ExternalAuthButton)`
     background-color: ${Color.GOOGLE};
@@ -18,15 +18,17 @@ const Root = Styled(ExternalAuthButton)`
         background-color: ${Color.GOOGLE_HOVER};
     }
 `
+const GoogleLogin = ({ ...props }: Props) => {
+    const actions = useActions({ googleLogin })
 
-const FacebookLogin = ({ ...props }: Props) => {
-
-    const handleSuccess = () => {
-        // TODO
+    const handleSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+        if ('accessToken' in res) {
+            actions.googleLogin({ token: res.accessToken })
+        }
     }
 
-    const handleFail = () => {
-
+    const handleFail = (x: any) => {
+        console.log(222, x)
     }
 
     return (
@@ -36,12 +38,9 @@ const FacebookLogin = ({ ...props }: Props) => {
             onSuccess={handleSuccess}
             onFailure={handleFail}
             cookiePolicy={'single_host_origin'}
-            render={() => (
-                <Root {...props} text='Google' icon='User/Google.svg' />
-            )}
+            render={libProps => <Root {...libProps} {...props} text="Google" icon="User/Google.svg" />}
         />
     )
-
 }
 
-export default FacebookLogin
+export default GoogleLogin

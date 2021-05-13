@@ -104,10 +104,18 @@ class FacebookLogin(Resource):
     @api.ns.response(HTTPStatus.BAD_REQUEST, "Invalid credentials.")
     @api.ns.expect(external_credentials)
     def post(self):
-        if identity:
-            return user_service.facebook_login(request.get_json()["token"])
-        else:
-            return Response.bad_credentials("Facebook token is not valid.")
+        result = user_service.facebook_login(request.get_json()["token"])
+        return result if result else Response.bad_credentials("Facebook token is not valid.")
+
+@api.ns.route("/login/google")
+class GoogleLogin(Resource):
+
+    @api.ns.marshal_with(identity, description="Successfully login user.")
+    @api.ns.response(HTTPStatus.BAD_REQUEST, "Invalid credentials.")
+    @api.ns.expect(external_credentials)
+    def post(self):
+        result = user_service.google_login(request.get_json()["token"])
+        return result if result else Response.bad_credentials("Google token is not valid.")
 
 
 resource_type = {

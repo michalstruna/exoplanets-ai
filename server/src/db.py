@@ -335,11 +335,12 @@ class UserPersonal(EmbeddedDocument):
 
 
 class User(LogDocument):
-    name = StringField(required=True, unique=True, sparse=True, max_length=20)
+    name = StringField(required=True, max_length=20)
     username = EmailField(max_length=200, unique=True, sparse=True)
     password = BinaryField(max_length=200)
     role = IntField(required=True, default=UserRole.AUTH.value, enum=UserRole.values())
     fb_id = StringField(max_length=200, unique=True, sparse=True)
+    google_id = StringField(max_length=200, unique=True, sparse=True)
     avatar = StringField(max_length=50)
     personal = EmbeddedDocumentField(UserPersonal)
     stats = EmbeddedDocumentListField(Stats, default=[])

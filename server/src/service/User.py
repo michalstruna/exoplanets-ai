@@ -79,6 +79,29 @@ class UserService(Service):
         user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})
         return user
 
+    def google_login(self, token):
+        profile_res = requests.get("https://www.googleapis.com/oauth2/v3/userinfo", headers={"Authorization": f"Bearer {token}"})
+
+        if profile_res.status_code != HTTPStatus.OK:
+            return None
+
+        identity = profile_res.json()
+
+        try:
+            user = self.get({"google_id": identity["sub"]})
+        except DoesNotExist:
+            user = self.add({
+                "name": identity["name"],
+                "google_id": identity["sub"],
+                "avatar": self.file_service.save_from_url(identity["picture"], FileService.Type.AVATAR)
+            })
+
+            self.after_add(user)
+
+        user = self.update(user["_id"], {"online": True})
+        user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})
+        return user
+
     def update(self, id, item, with_return=True):
         if "password" in item and item["password"]:  # Verify old password if password changed.
             user = self.get_by_id(id)
