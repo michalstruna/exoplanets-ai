@@ -93,7 +93,8 @@ class UserService(Service):
             user = self.add({
                 "name": identity["name"],
                 "google_id": identity["sub"],
-                "avatar": self.file_service.save_from_url(identity["picture"], FileService.Type.AVATAR)
+                "avatar": self.file_service.save_from_url(identity["picture"], FileService.Type.AVATAR),
+                "personal": {}
             })
 
             self.after_add(user)

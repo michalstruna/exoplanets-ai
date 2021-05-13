@@ -6,6 +6,7 @@ import UserPreview from './UserPreview'
 import Tooltip from '../../Layout/Components/Tooltip'
 import { IconText } from '../../Layout'
 import Avatar from './Avatar'
+import { image, size } from '../../Style'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     user: User
@@ -17,6 +18,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
 const Root = Styled(IconText)`
     cursor: pointer;
     opacity: 0.8;
+    position: relative;
     text-align: left;
     max-width: 100%;
     
@@ -27,17 +29,33 @@ const Root = Styled(IconText)`
 
     ${IconText.Icon} {
         border-radius: ${props => props.size};
+        position: relative;
+
+        &:after {
+            ${size('0.5rem')}
+            ${image()}
+            border-radius: 100%;
+            content: "";
+            display: block;
+            left: 100%;
+            position: absolute;
+            transform: translateX(-100%) translateY(-100%);
+            top: 100%;
+        }
     }
 `
 
 const UserName = ({ user, ...props }: Props) => {
-
     return (
         <Tooltip render={() => <UserPreview user={user} />}>
-            <Root text={user.name} size={IconText.MEDIUM} {...props} icon={Avatar.getUrl(user.avatar)} onClick={() => null} />
+            <Root
+                text={user.name}
+                size={IconText.MEDIUM}
+                {...props}
+                icon={Avatar.getUrl(user.avatar)}
+                onClick={() => null} />
         </Tooltip>
     )
-
 }
 
 export default UserName
