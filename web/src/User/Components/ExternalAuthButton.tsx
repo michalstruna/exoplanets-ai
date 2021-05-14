@@ -22,13 +22,11 @@ const Root = Styled.button.attrs({
 `
 
 const ExternalAuthButton = ({ text, ...props }: Props) => {
-
     return (
-        <Root {...props}>
+        <Root {...props} disabled={false}>
             {text}
         </Root>
     )
-
 }
 
 export default ExternalAuthButton
