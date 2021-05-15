@@ -3,6 +3,8 @@ from astropy import constants as c
 import math
 
 from constants.Database import PlanetType, LifeType
+from service.File import FileService
+from service.Plot import PlotService
 from .Base import Service
 import db
 
@@ -130,3 +132,15 @@ class PlanetService(Service):
 
         return LifeType.PROMISING.value
 
+
+
+
+# TODO: After planet update
+# TODO: Fetch planet data.
+ps = PlotService()
+fs = FileService()
+pl = PlanetService()
+
+sc = ps.main_scatter([100, 200, 5000], [40, 20, 3000])
+
+fs.save(sc, "stats", "SmaxMass") 

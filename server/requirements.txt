@@ -39,6 +39,8 @@ bcrypt == 3.2.0
 # server/src/utils/http.py: 4,6
 flask_restx == 0.2.0
 
+matplotlib == 3.3.2
+
 # server/src/app_factory.py: 3
 # server/src/db.py: 4
 # server/src/service/Base.py: 4

@@ -5,3 +5,4 @@ class FileType(Enum):
     GV = "gv"
     LV = "lv"
     AVATAR = "avatar"
+    STATS = "stats"
