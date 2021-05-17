@@ -12,6 +12,7 @@ interface Axis {
     label?: string
     nTicks?: number
     format?: TickFormatter
+    log?: boolean
 }
 
 interface Props extends Omit<React.ComponentPropsWithoutRef<'div'>, 'title'> {
@@ -37,9 +38,9 @@ const InnerRoot = Styled.div`
 `
 
 const Image = Styled.img`
+    ${size()}
     pointer-events: none;
     position: relative;
-    width: 100%;
 `
 
 const Vertical = Styled.div`
@@ -113,6 +114,7 @@ const XAxis = Styled.div`
     
     ${Tick} {
         flex: 1 1 0;
+        overflow: hidden;
     }
     
     ${AxisLabel} {
@@ -200,14 +202,20 @@ const ImagePlot = ({ data, x, y, overlay, ...props }: Props) => {
     const xTicks = data.x.ticks || range(data.x.min!, data.x.max!, x?.nTicks ?? 8, data.x.log)
     const yTicks = data.y.ticks || range(data.y.max!, data.y.min!, y?.nTicks ?? 6, data.y.log)
 
-    const renderTicks = (ticks: (number | string)[], formatter: TickFormatter = val => val) => {
-        const minLength = ticks[0].toString().length
-        const maxLength = ticks[ticks.length - 1].toString().length
-        const isLog = Math.abs(maxLength - minLength) > 1
+    if (x) {
+        x.log = data.x.log
+    }
+
+    if (y) {
+        y.log = data.y.log
+    }
+
+    const renderTicks = (ticks: (number | string)[], axis?: Axis) => {
+        const format = axis?.format ?? ((val: any) => val)
 
         return ticks.map((value, i) => (
             <Tick key={i}>
-                {typeof value === 'number' ? formatter(isLog ? Numbers.toExponential(value) : Numbers.format(value)) : formatter(value)}
+                {typeof value === 'number' ? format(axis?.log ? Numbers.toExponential(value) : value) : format(value)}
             </Tick>
         ))
     }
@@ -215,7 +223,7 @@ const ImagePlot = ({ data, x, y, overlay, ...props }: Props) => {
     const xAxis = x?.show !== false && (
         <XAxis>
             <Ticks>
-                {renderTicks(xTicks, x?.format)}
+                {renderTicks(xTicks, x)}
             </Ticks>
             {x?.label && <AxisLabel>{x.label}</AxisLabel>}
         </XAxis>
@@ -229,7 +237,7 @@ const ImagePlot = ({ data, x, y, overlay, ...props }: Props) => {
                         <YAxis wide={!!y?.label}>
                             {y?.label && <VerticalAxisLabel><AxisLabel>{y.label}</AxisLabel></VerticalAxisLabel>}
                             <Ticks>
-                                {renderTicks(yTicks, y?.format)}
+                                {renderTicks(yTicks, y)}
                             </Ticks>
                         </YAxis>
                     )}
@@ -262,6 +270,9 @@ const ImagePlot = ({ data, x, y, overlay, ...props }: Props) => {
 
 }
 
-ImagePlot.INT_TICK = (v: string | number) => Math.round(parseInt(v as string))
+ImagePlot.INT_TICK = (v: string | number) => Numbers.format(Math.round(parseInt(v as string)))
+
+ImagePlot.Vertical = Vertical
+ImagePlot.TinyVertical = TinyVertical
 
 export default ImagePlot

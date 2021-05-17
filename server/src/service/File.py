@@ -3,11 +3,13 @@ import requests
 import os
 from mimetypes import guess_extension
 
-from constants.File import FileType
+from constants.File import FileType, ContentType
+from utils.patterns import Enum
 
 class FileService:
 
     Type = FileType
+    ContentType = ContentType
 
     def generate_name(self, ext):
         return str(uuid.uuid4()) + ext
@@ -21,10 +23,10 @@ class FileService:
         res = requests.get(url)
         return self.save(res.content, tag, res.headers["Content-Type"])
 
-    def save(self, file, tag, name=None, content_type="image/png"):
-        extension = guess_extension(content_type)
+    def save(self, file, tag, name=None, content_type=ContentType.PNG):
+        extension = guess_extension(Enum.get(content_type))
         name = f"{name}{extension}" if name else self.generate_name(extension)
-        path = os.path.join("public", tag if type(tag) == str else tag.value, name)
+        path = os.path.join("public", Enum.get(tag), name)
 
         with open(path, "wb") as f:
             f.write(file)

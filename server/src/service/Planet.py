@@ -132,15 +132,49 @@ class PlanetService(Service):
 
         return LifeType.PROMISING.value
 
+    def get_properties_list(self, props, star_props=[]):
+        projection = {}
+        result = {}
+
+        for prop in props:
+            projection[prop] = f"$planets.properties.{prop}"
+            result[prop] = []
+
+        for prop in star_props:
+            projection[prop] = {"$first": f"$properties.{prop}"}
+            result[prop] = []
+
+        planets = self.dao.aggregate([
+            {"$unwind": "$planets"},
+            {"$unwind": "$planets.properties"},
+            {"$project": projection}
+            # TODO: Filter null?
+        ])
+
+        for planet in planets:
+            for prop in [*props, *star_props]:
+                if prop in planet:
+                    result[prop].append(planet[prop])
+            
+        return result
 
 
 
-# TODO: After planet update
-# TODO: Fetch planet data.
-ps = PlotService()
-fs = FileService()
-pl = PlanetService()
+def x():
+    # TODO: After planet update
+    ps = PlotService()
+    fs = FileService()
+    pl = PlanetService()
+    props = pl.get_properties_list(["mass", "semi_major_axis"], ["distance"])
+    sc = ps.main_scatter(props["semi_major_axis"], props["mass"])
+    fs.save(sc, fs.Type.STATS, "SmaxMass") 
 
-sc = ps.main_scatter([100, 200, 5000], [40, 20, 3000])
+    props["distance"] = [1, 12, 100, 1000, 10000]
 
-fs.save(sc, "stats", "SmaxMass") 
+    hist = ps.hist(props["distance"], [0, 50, 200, 500, 2000, 10e10])
+    fs.save(hist, fs.Type.STATS, "DistanceCount", fs.ContentType.SVG)
+
+from threading import Timer
+
+t = Timer(1, x)
+t.start()

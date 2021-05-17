@@ -8,10 +8,17 @@ interface Props {
 }
 
 const Horizontal = Styled.div`
-    display: flex;
-    
     & > div {
-        flex: 1 1 0;
+        float: left;
+        width: 50%;
+    }
+
+    ${ImagePlot.Vertical} {
+        width: calc(100% - 2.5rem);
+    }
+
+    ${ImagePlot.TinyVertical} {
+        width: 2.5rem;
     }
 `
 
@@ -23,8 +30,7 @@ const PlotStats = ({ value }: Props) => {
     return (
         <>
             <div>
-                <ImagePlot data={smax_mass} x={{ label: 'Velká poloosa [au]' }}
-                           y={{ label: 'Hmotnost [Mo]' }} />
+                <ImagePlot data={smax_mass} x={{ label: 'Velká poloosa [au]' }} y={{ label: 'Hmotnost [Mo]' }} />
             </div>
             <Horizontal>
                 <ImagePlot data={type_count} y={{ nTicks: 5, format: ImagePlot.INT_TICK }} x={{
