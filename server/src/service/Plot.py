@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import matplotlib
 import matplotlib.pyplot as plt
 import io
@@ -29,16 +30,25 @@ class PlotService:
         return buf.getvalue()
 
 
-    def hist(self, values, bins, figsize=FULL_HD):
-        vals, bins = np.histogram(values, bins=bins)
+    def hist(self, values, bins, figsize=FULL_HD, color="#47A"):
+        is_str = type(bins[0]) == str
+
+        if is_str:
+            categories, tmp = np.unique(values, return_counts=True)
+            categories = list(categories)
+            vals = []
+
+            for bin in bins:
+                vals.append(tmp[categories.index(bin)] if bin in categories else 0) 
+        else:
+            vals, bins = np.histogram(values, bins=bins)
+            
         bins = range(len(vals))
 
         buf = io.BytesIO()
 
         plt.figure(figsize=figsize)
-        #plt.xscale("linear")
-        #plt.yscale("linear")
-        plt.bar(bins, vals)
+        plt.bar(bins, vals, color=color)
         max_val = max(vals)
 
         for i, value in enumerate(vals):

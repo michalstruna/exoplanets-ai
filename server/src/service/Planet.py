@@ -160,12 +160,15 @@ class PlanetService(Service):
 
 
 
+from threading import Timer
+import numpy as np
+
 def x():
     # TODO: After planet update
     ps = PlotService()
     fs = FileService()
     pl = PlanetService()
-    props = pl.get_properties_list(["mass", "semi_major_axis"], ["distance"])
+    props = pl.get_properties_list(["mass", "semi_major_axis", "type"], ["distance"])
     sc = ps.main_scatter(props["semi_major_axis"], props["mass"])
     fs.save(sc, fs.Type.STATS, "SmaxMass") 
 
@@ -174,7 +177,8 @@ def x():
     hist = ps.hist(props["distance"], [0, 50, 200, 500, 2000, 10e10])
     fs.save(hist, fs.Type.STATS, "DistanceCount", fs.ContentType.SVG)
 
-from threading import Timer
+    hist = ps.hist(["mercury", "jupiter"], ["mercury", "earth", "super_earth", "neptune", "jupiter"])
+    fs.save(hist, fs.Type.STATS, "TypeCount", fs.ContentType.SVG)
 
 t = Timer(1, x)
 t.start()
