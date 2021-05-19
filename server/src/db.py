@@ -1,4 +1,4 @@
-from mongoengine.fields import BinaryField, BooleanField, DictField, EmailField, EmbeddedDocumentField, EmbeddedDocumentListField, FloatField, ImageField, IntField, ListField, LongField, MapField, ReferenceField, StringField, URLField
+from mongoengine.fields import BinaryField, BooleanField, DictField, DynamicField, EmailField, EmbeddedDocumentField, EmbeddedDocumentListField, FloatField, ImageField, IntField, ListField, LongField, MapField, ReferenceField, StringField, URLField
 from mongoengine.errors import DoesNotExist, ValidationError
 from mongoengine.base import ObjectIdField
 from mongoengine.document import Document, EmbeddedDocument, EmbeddedDocumentList
@@ -325,22 +325,12 @@ class GlobalStats(BaseDocument):
 
 global_stats_dao = Dao(GlobalStats, aggregate_stats_pipeline(""))
 
-
-class PlotAxis(EmbeddedDocument):
-    min = FloatField()
-    max = FloatField()
-    log = BooleanField(default=False)
-    ticks = ListField()
-    # TODO: vals?
-
-class PlotData(BaseDocument):
-    key = StringField(required=True)
-    image = StringField(required=True)
-    x = EmbeddedDocumentField(PlotAxis, default={})
-    y = EmbeddedDocumentField(PlotAxis, default={})
+class Store(BaseDocument):
+    key = StringField(required=True, index=True)
+    value = DynamicField()
 
 
-plots_dao = Dao(PlotData)
+store_dao = Dao(Store)
 
 class UserPersonal(EmbeddedDocument):
     sex = StringField(enum=Sex)
