@@ -3,8 +3,6 @@ from astropy import constants as c
 import math
 
 from constants.Database import PlanetType, LifeType
-from service.File import FileService
-from service.Plot import PlotService
 from .Base import Service
 import db
 
@@ -157,28 +155,3 @@ class PlanetService(Service):
                     result[prop].append(planet[prop])
             
         return result
-
-
-
-from threading import Timer
-import numpy as np
-
-def x():
-    # TODO: After planet update
-    ps = PlotService()
-    fs = FileService()
-    pl = PlanetService()
-    props = pl.get_properties_list(["mass", "semi_major_axis", "type"], ["distance"])
-    sc = ps.main_scatter(props["semi_major_axis"], props["mass"])
-    fs.save(sc, fs.Type.STATS, "SmaxMass") 
-
-    props["distance"] = [1, 12, 100, 1000, 10000]
-
-    hist = ps.hist(props["distance"], [0, 50, 200, 500, 2000, 10e10])
-    fs.save(hist, fs.Type.STATS, "DistanceCount", fs.ContentType.SVG)
-
-    hist = ps.hist(["mercury", "jupiter"], ["mercury", "earth", "super_earth", "neptune", "jupiter"], color="#383")
-    fs.save(hist, fs.Type.STATS, "TypeCount", fs.ContentType.SVG)
-
-t = Timer(1, x)
-t.start()

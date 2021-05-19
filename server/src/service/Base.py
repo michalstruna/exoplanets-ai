@@ -13,7 +13,6 @@ class Service(ABC):
         return self.dao.get_by_id(id, raw=raw)
 
     def get(self, filter, raw=False):
-        print(111, self.dao.collection, filter)
         return self.dao.get(filter, raw=raw)
 
     def get_all(self, filter=None, sort=None, limit=None, offset=None, with_index=True, last_filter=None, raw=False):
