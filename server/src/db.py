@@ -326,6 +326,22 @@ class GlobalStats(BaseDocument):
 global_stats_dao = Dao(GlobalStats, aggregate_stats_pipeline(""))
 
 
+class PlotAxis(EmbeddedDocument):
+    min = FloatField()
+    max = FloatField()
+    log = BooleanField(default=False)
+    ticks = ListField()
+    # TODO: vals?
+
+class PlotData(BaseDocument):
+    key = StringField(required=True)
+    image = StringField(required=True)
+    x = EmbeddedDocumentField(PlotAxis, default={})
+    y = EmbeddedDocumentField(PlotAxis, default={})
+
+
+plots_dao = Dao(PlotData)
+
 class UserPersonal(EmbeddedDocument):
     sex = StringField(enum=Sex)
     country = StringField(max_length=10)

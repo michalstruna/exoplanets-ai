@@ -73,7 +73,8 @@ class PlotStats(Resource):
 
     @api.ns.marshal_with(plots_stats, description="Get plot stats.")
     def get(self):
-        return {
+        return global_stat_service.get_plot_data()
+        """return {
             "smax_mass": {
                 "x": {"min": 10e-3, "max": 10e4, "log": True},
                 "y": {"min": 10e-2, "max": 10e5, "log": True},
@@ -93,7 +94,7 @@ class PlotStats(Resource):
                 "y": {"vals": [18.194567, 82.456]},
                 "image": "Progress.svg"
             }
-        }
+        }"""
 
 
 global_stat_service = GlobalStatsService()

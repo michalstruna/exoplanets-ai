@@ -177,7 +177,7 @@ def x():
     hist = ps.hist(props["distance"], [0, 50, 200, 500, 2000, 10e10])
     fs.save(hist, fs.Type.STATS, "DistanceCount", fs.ContentType.SVG)
 
-    hist = ps.hist(["mercury", "jupiter"], ["mercury", "earth", "super_earth", "neptune", "jupiter"])
+    hist = ps.hist(["mercury", "jupiter"], ["mercury", "earth", "super_earth", "neptune", "jupiter"], color="#383")
     fs.save(hist, fs.Type.STATS, "TypeCount", fs.ContentType.SVG)
 
 t = Timer(1, x)
