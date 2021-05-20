@@ -255,7 +255,7 @@ const ImagePlot = ({ data, x, y, overlay, ...props }: Props) => {
                                 {new Array(yTicks.length).fill(null).map((_, i) => <HLine key={i} />)}
                             </HGrid>
                         )}
-                        <Image src={`http://localhost:5000/public/stats/${data.image}`} />
+                        <Image src={`http://localhost:5000/public/stats/${data.image}?t=${new Date().getTime()}`} />
                     </Plot>
                     {xAxis}
                 </Vertical>

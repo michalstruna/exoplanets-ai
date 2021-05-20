@@ -94,5 +94,5 @@ def x():
     x = GlobalStatsService()
     x.update_planets()
 
-t = Timer(1, x)
+t = Timer(5, x)
 t.start()

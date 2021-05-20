@@ -122,7 +122,7 @@ class PlanetService(Service):
         if not life_zone or not life_zone["max_radius"] or not smax or not pl_type:
             return LifeType.UNKNOWN.value
 
-        if pl_type not in [PlanetType.MERCURY.value, PlanetType.EARTH.value, PlanetType.SUPER_EARTH.value]:
+        if pl_type not in [PlanetType.MERCURY.value, PlanetType.EARTH.value, PlanetType.SUPEREARTH.value]:
             return LifeType.IMPOSSIBLE.value
 
         if life_zone["max_radius"] < smax or life_zone["min_radius"] > smax:

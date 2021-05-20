@@ -11,13 +11,13 @@ class PlotService:
  
     FULL_HD = (8, 4.5)
 
-    def main_scatter(self, semaxes, masses, alpha=0.5, size=10, figsize=FULL_HD):
+    def main_scatter(self, semaxes, masses, alpha=0.5, size=10, figsize=FULL_HD, return_range=False):
         buf = io.BytesIO()
 
         plt.figure(figsize=figsize)
         plt.xscale("log")
         plt.yscale("log")
-        plt.axis([10e-2, 10e5, 10e-1, 10e6])
+        #plt.axis([10e-2, 10e5, 10e-1, 10e6])
         plt.scatter(semaxes, masses, c="#EEE", s=size, alpha=alpha)
         plt.margins(0, 0)
         plt.gca().set_axis_off()
@@ -27,10 +27,15 @@ class PlotService:
 
         buf.seek(0)
 
-        return buf.getvalue()
+
+        if return_range:
+            xmin, xmax, ymin, ymax = plt.axis()
+            return buf.getvalue(), float(xmin), float(xmax), float(ymin), float(ymax)
+        else:
+            return buf.getvalue()
 
 
-    def hist(self, values, bins, figsize=FULL_HD, color="#47A"):
+    def hist(self, values, bins, figsize=FULL_HD, color="#47A", return_range=False):
         is_str = type(bins[0]) == str
 
         if is_str:
@@ -65,4 +70,8 @@ class PlotService:
 
         buf.seek(0)  
 
-        return buf.getvalue()
+        if return_range:
+            xmin, xmax, ymin, ymax = plt.axis()
+            return buf.getvalue(), float(ymax)
+        else:
+            return buf.getvalue()

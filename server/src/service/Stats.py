@@ -1,3 +1,4 @@
+from constants.Database import PlanetType
 from service.File import FileService
 from service.Planet import PlanetService
 from service.Plot import PlotService
@@ -28,31 +29,31 @@ class GlobalStatsService(Service):
 
     def update_planets(self):
         props = self.planet_service.get_properties_list(["mass", "semi_major_axis", "type"], ["distance"])
-        sc = self.plot_service.main_scatter(props["semi_major_axis"], props["mass"])
+        sc, xmin1, xmax1, ymin1, ymax1 = self.plot_service.main_scatter(props["semi_major_axis"], props["mass"], return_range=True)
         self.file_service.save(sc, self.file_service.Type.STATS, "SmaxMass") 
 
-        #props["distance"] = [1, 12, 100, 1000, 10000]
+        planet_types = PlanetType.values()
+        hist, ymax2 = self.plot_service.hist(["mercury", "jupiter"], planet_types, color="#383", return_range=True)
+        self.file_service.save(hist, self.file_service.Type.STATS, "TypeCount", self.file_service.ContentType.SVG)
 
-        hist = self.plot_service.hist(props["distance"], [0, 50, 200, 500, 2000, 10e10])
+        hist, ymax3 = self.plot_service.hist(props["distance"], [0, 50, 200, 500, 2000, 10e10], return_range=True)
         self.file_service.save(hist, self.file_service.Type.STATS, "DistanceCount", self.file_service.ContentType.SVG)
 
-        hist = self.plot_service.hist(["mercury", "jupiter"], ["mercury", "earth", "super_earth", "neptune", "jupiter"], color="#383")
-        self.file_service.save(hist, self.file_service.Type.STATS, "TypeCount", self.file_service.ContentType.SVG)
 
         self.store_service.update("planets_plots", {
             "smax_mass": {
-                "x": {"min": 10e-3, "max": 10e4, "log": True},
-                "y": {"min": 10e-2, "max": 10e5, "log": True},
+                "x": {"min": xmin1, "max": xmax1, "log": xmax1 / xmin1 > 10e3},
+                "y": {"min": ymin1, "max": ymax1, "log": ymax1 / ymin1 > 10e3},
                 "image": "SmaxMass.png"
             },
             "type_count": {
-                "x": {"ticks": ["mercury", "earth", "superearth", "neptune", "jupiter"]},
-                "y": {"min": 0, "max": 10},
+                "x": {"ticks": planet_types},
+                "y": {"min": 0, "max": ymax2},
                 "image": "TypeCount.svg"
             },
             "distance_count": {
                 "x": {"ticks": ["< 50", "50-200", "200-500", "500-2k", "> 2k"]},
-                "y": {"min": 0, "max": 10},
+                "y": {"min": 0, "max": ymax3},
                 "image": "DistanceCount.svg"
             },
             "progress": {
