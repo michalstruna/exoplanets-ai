@@ -23,10 +23,7 @@ const Item = Styled.div`
     box-sizing: border-box;
     padding: 0.5rem;
     width: 33.33%;
-    
-    &:nth-of-type(2n) {
-    
-    }
+    white-space: nowrap;
 `
 
 const Name = Styled.div`
