@@ -12,18 +12,23 @@ class PlotService:
     FULL_HD = (8, 4.5)
     SQUARE = (5, 5)
 
-    def main_scatter(self, semaxes, masses, alpha=0.5, size=10, figsize=FULL_HD, return_range=False):
+    def to_float(self, value):
+        try:
+            return float(value)
+        except:
+            return value
+
+    def _plot(self, figsize, return_range, func, args={}, xscale="linear", yscale="linear", format="svg"):
         buf = io.BytesIO()
 
         plt.figure(figsize=figsize)
-        plt.xscale("log")
-        plt.yscale("log")
-        #plt.axis([10e-2, 10e5, 10e-1, 10e6])
-        plt.scatter(semaxes, masses, c="#EEE", s=size, alpha=alpha)
+        plt.xscale(xscale)
+        plt.yscale(yscale)
+        func(**args)
         plt.margins(0, 0)
         plt.gca().set_axis_off()
         plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
-        plt.savefig(buf, transparent=True)
+        plt.savefig(buf, transparent=True, format=format)
         plt.show() 
 
         buf.seek(0)
@@ -31,23 +36,22 @@ class PlotService:
 
         if return_range:
             xmin, xmax, ymin, ymax = plt.axis()
-            return buf.getvalue(), float(xmin), float(xmax), float(ymin), float(ymax)
+            return buf.getvalue(), self.to_float(xmin), self.to_float(xmax), self.to_float(ymin), self.to_float(ymax)
         else:
             return buf.getvalue()
 
+    def main_scatter(self, semaxes, masses, alpha=0.5, size=10, figsize=FULL_HD, return_range=False):
+        return self._plot(
+            figsize, return_range, plt.scatter,
+            dict(x=semaxes, y=massess, c="#EEE", s=size, alpha=alpha),
+            format="png"
+        )  # TODO: Conditional log scale.
+
     def pie(self, values, width=1, colors=["#A55", "#5A5"], figsize=SQUARE):
-        buf = io.BytesIO()
-
-        plt.figure(figsize=figsize)
-        plt.pie(values, wedgeprops=dict(width=width), startangle=90, colors=colors)
-        plt.margins(0, 0)
-        plt.gca().set_axis_off()
-        plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
-        plt.savefig(buf, transparent=True, format="svg")
-        plt.show()
-        buf.seek(0)
-
-        return buf.getvalue()
+        return self._plot(
+            figsize, False, plt.scatter,
+            dict(x=values, wedgeprops=dict(width=width), startangle=90, colors=colors)
+        )
 
     def hist(self, values, bins, figsize=FULL_HD, color="#47A", return_range=False):
         is_str = type(bins[0]) == str
