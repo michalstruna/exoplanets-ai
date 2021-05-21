@@ -16,6 +16,9 @@ class Enum(NativeEnum):
     def values(cls):
         return list(map(lambda c: c.value, cls))
 
+    def get(val):
+        return val.value if isinstance(val, NativeEnum) else val
+
 
 def cond_dec(dec, condition):
     def decorator(func):

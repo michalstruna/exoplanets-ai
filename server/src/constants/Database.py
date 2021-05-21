@@ -4,7 +4,7 @@ from utils.patterns import Enum
 class PlanetType(Enum):
     MERCURY = "mercury"
     EARTH = "earth"
-    SUPER_EARTH = "super_earth"
+    SUPEREARTH = "superearth"
     NEPTUNE = "neptune"
     JUPITER = "jupiter"
 

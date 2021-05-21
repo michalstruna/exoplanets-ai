@@ -5,3 +5,8 @@ class FileType(Enum):
     GV = "gv"
     LV = "lv"
     AVATAR = "avatar"
+    STATS = "stats"
+
+class ContentType(Enum):
+    PNG = "image/png"
+    SVG = "image/svg+xml"

@@ -73,27 +73,7 @@ class PlotStats(Resource):
 
     @api.ns.marshal_with(plots_stats, description="Get plot stats.")
     def get(self):
-        return {
-            "smax_mass": {
-                "x": {"min": 10e-3, "max": 10e4, "log": True},
-                "y": {"min": 10e-2, "max": 10e5, "log": True},
-                "image": "SmaxMass.png"
-            },
-            "type_count": {
-                "x": {"ticks": ["mercury", "earth", "superearth", "neptune", "jupiter"]},
-                "y": {"min": 0, "max": 762},
-                "image": "TypeCount.svg"
-            },
-            "distance_count": {
-                "x": {"ticks": ["< 50", "50-200", "200-500", "500-2k", "> 2k"]},
-                "y": {"min": 0, "max": 1659},
-                "image": "DistanceCount.svg"
-            },
-            "progress": {
-                "y": {"vals": [18.194567, 82.456]},
-                "image": "Progress.svg"
-            }
-        }
+        return global_stat_service.get_plot_data()
 
 
 global_stat_service = GlobalStatsService()
@@ -105,3 +85,14 @@ api.init(
     model_name="GlobalStats",
     resource_type=Api.CUSTOM_RESOURCE
 )
+
+from threading import Timer
+import numpy as np
+
+def x():
+    # TODO: After planet update.
+    x = GlobalStatsService()
+    x.update_planets()
+
+t = Timer(5, x)
+t.start() 

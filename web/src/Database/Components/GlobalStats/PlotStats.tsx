@@ -2,16 +2,24 @@ import React from 'react'
 import Styled from 'styled-components'
 import { ImagePlot, PlotStats as PlotStatsType } from '../../../Stats'
 import { useStrings } from '../../../Data'
+import { Numbers } from '../../../Native'
 
 interface Props {
     value: PlotStatsType
 }
 
 const Horizontal = Styled.div`
-    display: flex;
-    
     & > div {
-        flex: 1 1 0;
+        float: left;
+        width: 50%;
+    }
+
+    ${ImagePlot.Vertical} {
+        width: calc(100% - 2.5rem);
+    }
+
+    ${ImagePlot.TinyVertical} {
+        width: 2.5rem;
     }
 `
 
@@ -23,8 +31,7 @@ const PlotStats = ({ value }: Props) => {
     return (
         <>
             <div>
-                <ImagePlot data={smax_mass} x={{ label: 'Velká poloosa [au]' }}
-                           y={{ label: 'Hmotnost [Mo]' }} />
+                <ImagePlot data={smax_mass} x={{ label: 'Velká poloosa [au]', format: Numbers.format as any }} y={{ label: 'Hmotnost [Mo]', format: Numbers.format as any }} />
             </div>
             <Horizontal>
                 <ImagePlot data={type_count} y={{ nTicks: 5, format: ImagePlot.INT_TICK }} x={{
@@ -34,7 +41,7 @@ const PlotStats = ({ value }: Props) => {
                 }} />
                 <ImagePlot data={distance_count} y={{ nTicks: 5, format: ImagePlot.INT_TICK }} x={{
                     label: 'Vzdálenost od Země [ly]',
-                    nTicks: type_count.x.ticks!.length + 1
+                    nTicks: type_count.x.ticks!.length + 1,
                 }} />
             </Horizontal>
         </>

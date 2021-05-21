@@ -122,7 +122,7 @@ class PlanetService(Service):
         if not life_zone or not life_zone["max_radius"] or not smax or not pl_type:
             return LifeType.UNKNOWN.value
 
-        if pl_type not in [PlanetType.MERCURY.value, PlanetType.EARTH.value, PlanetType.SUPER_EARTH.value]:
+        if pl_type not in [PlanetType.MERCURY.value, PlanetType.EARTH.value, PlanetType.SUPEREARTH.value]:
             return LifeType.IMPOSSIBLE.value
 
         if life_zone["max_radius"] < smax or life_zone["min_radius"] > smax:
@@ -130,3 +130,28 @@ class PlanetService(Service):
 
         return LifeType.PROMISING.value
 
+    def get_properties_list(self, props, star_props=[]):
+        projection = {}
+        result = {}
+
+        for prop in props:
+            projection[prop] = f"$planets.properties.{prop}"
+            result[prop] = []
+
+        for prop in star_props:
+            projection[prop] = {"$first": f"$properties.{prop}"}
+            result[prop] = []
+
+        planets = self.dao.aggregate([
+            {"$unwind": "$planets"},
+            {"$unwind": "$planets.properties"},
+            {"$project": projection}
+            # TODO: Filter null?
+        ])
+
+        for planet in planets:
+            for prop in [*props, *star_props]:
+                if prop in planet:
+                    result[prop].append(planet[prop])
+            
+        return result
