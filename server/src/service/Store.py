@@ -1,3 +1,4 @@
+from utils.patterns import Enum
 from .Base import Service
 import db
 
@@ -18,4 +19,4 @@ class StoreService(Service):
         return super().add({"key": key, "value": value})
 
     def update(self, key, value):
-        return self.dao.update({"key": key}, {"value": value})
+        return self.dao.update({"key": Enum.get(key)}, {"value": value})

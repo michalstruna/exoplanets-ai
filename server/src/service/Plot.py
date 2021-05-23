@@ -43,13 +43,13 @@ class PlotService:
     def main_scatter(self, semaxes, masses, alpha=0.5, size=10, figsize=FULL_HD, return_range=False):
         return self._plot(
             figsize, return_range, plt.scatter,
-            dict(x=semaxes, y=massess, c="#EEE", s=size, alpha=alpha),
+            dict(x=semaxes, y=masses, c="#EEE", s=size, alpha=alpha),
             format="png"
-        )  # TODO: Conditional log scale.
+        )  # TODO: Conditional log scale. 
 
     def pie(self, values, width=1, colors=["#A55", "#5A5"], figsize=SQUARE):
         return self._plot(
-            figsize, False, plt.scatter,
+            figsize, False, plt.pie,
             dict(x=values, wedgeprops=dict(width=width), startangle=90, colors=colors)
         )
 
@@ -93,3 +93,4 @@ class PlotService:
             return buf.getvalue(), float(ymax)
         else:
             return buf.getvalue()
+

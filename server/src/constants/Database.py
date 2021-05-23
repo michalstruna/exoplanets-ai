@@ -20,3 +20,9 @@ class LifeType(Enum):
     POSSIBLE = "possible"
     UNKNOWN = "unknown"
     PROMISING = "promising"
+
+
+
+class Store(Enum):
+    PLANET_PLOTS = "planet_plots"
+    PLANET_RANKS = "planet_ranks"
