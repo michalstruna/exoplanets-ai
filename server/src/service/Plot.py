@@ -24,7 +24,14 @@ class PlotService:
         plt.figure(figsize=figsize)
         plt.xscale(xscale)
         plt.yscale(yscale)
-        func(**args)
+
+        if not isinstance(func, list):
+            func = [func]
+            args = [args]
+
+        for i in range(len(func)):
+            func[i](**args[i])
+
         plt.margins(0, 0)
         plt.gca().set_axis_off()
         plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
@@ -32,7 +39,6 @@ class PlotService:
         plt.show() 
 
         buf.seek(0)
-
 
         if return_range:
             xmin, xmax, ymin, ymax = plt.axis()
@@ -65,32 +71,20 @@ class PlotService:
                 vals.append(tmp[categories.index(bin)] if bin in categories else 0) 
         else:
             vals, bins = np.histogram(values, bins=bins)
-            
-        bins = range(len(vals))
 
-        buf = io.BytesIO()
 
-        plt.figure(figsize=figsize)
-        plt.bar(bins, vals, color=color)
-        max_val = max(vals)
+        def after():
+            max_val = max(vals)
 
-        for i, value in enumerate(vals):
-            is_in_bar = value / max_val > 0.9
-            y = value - (max_val / 10) if is_in_bar else value + (max_val / 30)
+            for i, value in enumerate(vals):
+                is_in_bar = value / max_val > 0.9
+                y = value - (max_val / 10) if is_in_bar else value + (max_val / 30)
 
-            plt.text(i, y, str(value), color="#EEE", fontsize=25, horizontalalignment="center") 
+                plt.text(i, y, str(value), color="#EEE", fontsize=25, horizontalalignment="center") 
 
-        plt.margins(0, 0)
-        plt.gca().set_axis_off()
-        plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
-        plt.savefig(buf, transparent=True, format="svg")
-        plt.show() 
+        return self._plot(
+            figsize, return_range, [plt.bar, after],
+            [dict(x=range(len(vals)), height=vals, color=color), {}],
+        )
 
-        buf.seek(0)  
-
-        if return_range:
-            xmin, xmax, ymin, ymax = plt.axis()
-            return buf.getvalue(), float(ymax)
-        else:
-            return buf.getvalue()
 

@@ -31,7 +31,7 @@ class GlobalStatsService(Service):
 
     def update_planets(self):
         self.update_planet_plots()
-        self.update_planet_ranks()
+        #self.update_planet_ranks()
 
     def update_planet_plots(self):
         props = self.planet_service.get_properties_list(["mass", "semi_major_axis", "type"], ["distance"])
