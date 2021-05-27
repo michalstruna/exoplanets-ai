@@ -13,7 +13,7 @@ class GlobalStatsService(Service):
     def __init__(self):
         super().__init__(db.global_stats_dao)
         self.dataset_dao = db.dataset_dao
-        self.planet_dao = db.planet_dao
+        self.star_dao = db.star_dao
         self.plot_service = PlotService()
         self.file_service = FileService()
         self.planet_service = PlanetService()
@@ -26,12 +26,15 @@ class GlobalStatsService(Service):
     def get_plot_data(self):
         return self.store_service.get(Store.PLANET_PLOTS)
 
+    def get_planet_ranks(self):
+        return self.store_service.get(Store.PLANET_RANKS)
+
     def set_plot_data(self, value):
         return self.store_service.add(Store.PLANET_PLOTS, value)
 
     def update_planets(self):
         self.update_planet_plots()
-        #self.update_planet_ranks()
+        self.update_planet_ranks()
 
     def update_planet_plots(self):
         props = self.planet_service.get_properties_list(["mass", "semi_major_axis", "type"], ["distance"])
@@ -87,11 +90,19 @@ class GlobalStatsService(Service):
         ])[0]["done"] * 100
 
     def update_planet_ranks(self):
-        x = self.get_planet_rank()
+        near = self.get_planet_rank("distance")
+        similar = self.get_planet_rank("distance")
+        life = self.get_planet_rank("distance")
 
-    def get_planet_rank(self):
-        return self.planet_dao.aggregate([
+        self.store_service.update(Store.PLANET_RANKS, {
+            "near": near,
+            "similar": similar,
+            "life": life
+        })
+
+    def get_planet_rank(self, name):
+        return self.star_dao.aggregate([
             {"$unwind": "$planets"},
-            {"$sort": {"distance": 1}}
+            {"$sort": {name: 1}},
+            {"$project": {"planets": 1, f"properties.{name}": 1}}
         ])
-

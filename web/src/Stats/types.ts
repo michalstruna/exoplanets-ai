@@ -1,3 +1,5 @@
+import { RankedPlanetData } from "../Database/types"
+
 export interface Stats {
     planets: number
     stars: number
@@ -50,4 +52,10 @@ export interface PlotStats {
     type_count: PlotStat
     distance_count: PlotStat
     progress: PlotStats
+}
+
+export type PlanetRanks = {
+    nearest: RankedPlanetData[]
+    latest: RankedPlanetData[]
+    similar: RankedPlanetData[]
 }

@@ -45,6 +45,10 @@ export interface PlanetData {
     status: PlanetStatus
 }
 
+export interface RankedPlanetData {
+    value: number
+}
+
 export interface StarProperties {
     name: string
     mass?: number

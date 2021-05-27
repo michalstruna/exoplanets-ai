@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux'
 import useRouter from 'use-react-router'
 
 import { AsyncData, Cursor } from '../../Data'
+import { PlanetRanks } from '../../Stats'
 import DbTable from '../Constants/DbTable'
 import { SystemData } from '../types'
 
@@ -34,3 +35,13 @@ export const useSystem = (): AsyncData<SystemData> => useSelector((state: any) =
 
 export const useGlobalStats = () => useSelector((state: any) => state.database.globalStats)
 export const usePlotStats = () => useSelector((state: any) => state.database.plotStats)
+
+type DatabaseState = {
+    planetRanks: AsyncData<PlanetRanks>
+}
+
+type StoreState = {
+    database: DatabaseState
+}
+
+export const useDatabaseState = () => useSelector((state: StoreState) => state.database)

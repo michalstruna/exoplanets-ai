@@ -3,7 +3,7 @@ import Styled from 'styled-components'
 
 import { Color, Dimension, size } from '../../Style'
 import { UsersBlock } from '../../User'
-import PlanetsRank from '../Components/PlanetsRank'
+import PlanetRanks from '../Components/PlanetRanks'
 import GlobalStatsPanel from '../Components/GlobalStats/GlobalStatsPanel'
 import { DiscoveryBlock } from '../../Discovery' 
 
@@ -42,7 +42,7 @@ const OverviewUsersBlock = Styled(UsersBlock)`
     min-width: 28rem;
 `
 
-const PlanetsRankBlock = Styled(PlanetsRank)`
+const PlanetRanksBlock = Styled(PlanetRanks)`
     ${size('100%', '32rem')}
     flex: 1.5 0 0;
     padding: 0;
@@ -67,7 +67,7 @@ const OverviewView = ({ ...props }: Props) => {
                 <DiscoveryBlock />
                 <Bottom>
                     <OverviewUsersBlock />
-                    <PlanetsRankBlock />
+                    <PlanetRanksBlock />
                 </Bottom>
             </Right>
         </Root>

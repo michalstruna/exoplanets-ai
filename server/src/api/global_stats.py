@@ -75,7 +75,6 @@ class PlotStats(Resource):
     def get(self):
         return global_stat_service.get_plot_data()
 
-
 global_stat_service = GlobalStatsService()
 
 api.init(
