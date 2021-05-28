@@ -45,7 +45,7 @@ export interface PlanetData {
     status: PlanetStatus
 }
 
-export interface RankedPlanetData {
+export interface RankedPlanetData extends PlanetData {
     value: number
 }
 

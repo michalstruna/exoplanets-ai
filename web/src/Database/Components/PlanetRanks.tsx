@@ -5,8 +5,8 @@ import { Units, UnitType, useStrings } from '../../Data'
 import { HierarchicalTable, IconText, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
 import { Color } from '../../Style'
-import { PlanetData } from '../types'
-import { useDatabaseState, getPlanetRanks } from '..'
+import { PlanetData, RankedPlanetData } from '../types'
+import { useDatabaseState, getPlanetRanks, Value } from '..'
 import { Async } from '../../Async'
 import { PlanetRanks } from '../../Stats'
 
@@ -39,7 +39,16 @@ const Root = Styled.div`
 `
 
 const icons = ['Database/Planet/Earth.png', 'Database/Planet/Jupiter.png']
-const ranks: (keyof PlanetRanks)[] = ['latest', 'nearest', 'similar']
+
+
+type Rank = {
+    name: keyof PlanetRanks
+    formatValue?: (value: number) => React.ReactNode
+    titleValue?: string
+    format?: (value: number) => React.ReactNode
+    getter: (planet: RankedPlanetData) => number
+    title?: string
+}
 
 const PlanetsRank = ({ ...props }: Props) => {
 
@@ -47,19 +56,26 @@ const PlanetsRank = ({ ...props }: Props) => {
     const { planetRanks } = useDatabaseState()
 
 
-    const items = React.useMemo(() => planetRanks.payload && ranks.map(((rank) => {
-        const planets = planetRanks.payload![rank] as any
+    const items = React.useMemo(() => {
+        const ranks: Rank[] = [
+            { name: 'latest', getter: p => Value.Planet.prop(p, 'diameter'), format: v => Units.format(v, UnitType.KM), title: strings.diameter, formatValue: v => '19. 7. 2017', titleValue: strings.discovery },
+            { name: 'nearest', getter: p => Value.Planet.prop(p, 'diameter'), format: v => Units.format(v, UnitType.KM), title: strings.diameter, formatValue: v => Units.format(v, UnitType.LY), titleValue: strings.distance },
+            { name: 'similar', getter: p => Value.Planet.prop(p, 'diameter'), format: v => Units.format(v, UnitType.LY), title: strings.distance, formatValue: v => Units.format(v, UnitType.KM), titleValue: strings.diameter }
+        ]
+        
+        return planetRanks.payload && ranks.map((rank => {
+            const planets = planetRanks.payload![rank.name] as any
 
-        return {
-            header: strings[rank], link: { pathname: Url.DATABASE }, content: (
-                <HierarchicalTable items={planets || []} columns={[
-                    { accessor: (planet: PlanetData, i: number) => i + 1, title: '#', render: i => i + '.', width: '2.5rem' },
-                    { accessor: (planet: PlanetData, i: number) => planets[i].name, title: strings.planet, render: name => <IconText text={name} icon={icons[Math.floor(Math.random() * 2)]} size='2.35rem' />, width: 10 },
-                    { accessor: (planet: PlanetData, i: number) => planets[i].diameter, render: v => Units.format(v, UnitType.KM), title: strings.diameter, width: '9rem' },
-                    { accessor: (planet: PlanetData, i: number) => planets[i].distance, render: v => Units.format(v, UnitType.LY), title: strings.distance, width: '9rem' }
-                ]} />
-            )
-    }})), [planetRanks, strings])
+            return {
+                header: strings[rank.name], link: { pathname: Url.DATABASE }, content: (
+                    <HierarchicalTable items={planets || []} columns={[
+                        { accessor: (planet: RankedPlanetData, i: number) => (i + 1) + '.', title: '#', width: '2.5rem' },
+                        { accessor: (planet: RankedPlanetData) => Value.Planet.props(planet, 'name'), title: strings.planet, render: name => <IconText text={name} icon={icons[Math.floor(Math.random() * 2)]} size='2.35rem' />, width: 10 },
+                        { accessor: (planet: RankedPlanetData, i: number) => planet.value, render: rank.formatValue, title: rank.titleValue, width: '9rem' },
+                        { accessor: rank.getter, render: rank.format, title: rank.title, width: '9rem' }
+                    ]} />
+                )
+    }}))}, [planetRanks, strings])
 
     return (
         <Root {...props}>

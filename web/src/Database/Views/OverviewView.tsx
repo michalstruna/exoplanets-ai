@@ -48,16 +48,6 @@ const PlanetRanksBlock = Styled(PlanetRanks)`
     padding: 0;
 `
 
-const randomPlanets = [] as any
-
-for (let i = 0; i < 20; i++) {
-    randomPlanets.push({
-        mass: Math.max(1, Math.ceil(Math.random() * 150) * Math.pow(10, Math.round(Math.random() * 5 + 5))),
-        period: Math.ceil(Math.random() * 720),
-        method: Math.round(Math.random() * 5).toString()
-    })
-}
-
 const OverviewView = ({ ...props }: Props) => {
 
     return (

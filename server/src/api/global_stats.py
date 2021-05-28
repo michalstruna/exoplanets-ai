@@ -94,4 +94,4 @@ def x():
     x.update_planets()
 
 t = Timer(5, x)
-t.start() 
+t.start()

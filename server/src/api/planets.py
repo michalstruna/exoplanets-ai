@@ -87,7 +87,6 @@ class PlanetRanks(Resource):
 
     @api.ns.marshal_with(planet_ranks, description="Get planet ranks.")
     def get(self):
-        print("|" * 100, 111)
         return stats_service.get_planet_ranks()
 
 

@@ -1,4 +1,5 @@
 from constants.Database import PlanetType, Store
+from constants.Planet import PlanetRanks
 from service.File import FileService
 from service.Planet import PlanetService
 from service.Plot import PlotService
@@ -90,19 +91,21 @@ class GlobalStatsService(Service):
         ])[0]["done"] * 100
 
     def update_planet_ranks(self):
-        near = self.get_planet_rank("distance")
+        latest = self.get_planet_rank("distance")
         similar = self.get_planet_rank("distance")
-        life = self.get_planet_rank("distance")
+        nearest = self.get_planet_rank("distance")
 
         self.store_service.update(Store.PLANET_RANKS, {
-            "near": near,
-            "similar": similar,
-            "life": life
+            PlanetRanks.LATEST.value: latest,
+            PlanetRanks.SIMILAR.value: similar,
+            PlanetRanks.NEAREST.value: nearest
         })
 
     def get_planet_rank(self, name):
         return self.star_dao.aggregate([
             {"$unwind": "$planets"},
-            {"$sort": {name: 1}},
-            {"$project": {"planets": 1, f"properties.{name}": 1}}
+            {"$project": {"value": {"$first": f"$properties.{name}"}, "planets": 1}},
+            {"$replaceRoot": {"newRoot": {"$mergeObjects": ["$$ROOT", "$planets"]}}},
+            {"$project": {"planets": 0}},
+            {"$sort": {"value": 1}}
         ])

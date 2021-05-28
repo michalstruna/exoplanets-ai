@@ -209,6 +209,7 @@ const strings = {
         ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
         dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
         distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
+        discovery: { [CS]: 'Objevení', [EN]: 'Discovery' },
 
         unknownType: { [CS]: 'Neznámý typ', [EN]: 'Unknown type' },
 
