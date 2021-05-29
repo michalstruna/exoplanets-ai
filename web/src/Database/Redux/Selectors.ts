@@ -1,12 +1,7 @@
-import { useSelector } from 'react-redux'
 import useRouter from 'use-react-router'
 
-import { AsyncData, Cursor } from '../../Data'
-import { PlanetRanks } from '../../Stats'
+import { Cursor, useSelector } from '../../Data'
 import DbTable from '../Constants/DbTable'
-import { SystemData } from '../types'
-
-export const useSort = () => useSelector((state: any) => [state.database.sort])
 
 export const useCursor = () => useSelector((state: any): Cursor => ({
     sort: [state.database.sort],
@@ -30,18 +25,3 @@ export const useItems = (table: DbTable) => useSelector(({ database, user }: any
             return user.users
     }
 })
-
-export const useSystem = (): AsyncData<SystemData> => useSelector((state: any) => state.database.system)
-
-export const useGlobalStats = () => useSelector((state: any) => state.database.globalStats)
-export const usePlotStats = () => useSelector((state: any) => state.database.plotStats)
-
-type DatabaseState = {
-    planetRanks: AsyncData<PlanetRanks>
-}
-
-type StoreState = {
-    database: DatabaseState
-}
-
-export const useDatabaseState = () => useSelector((state: StoreState) => state.database)

@@ -51,7 +51,7 @@ export interface PlotStats {
     smax_mass: PlotStat
     type_count: PlotStat
     distance_count: PlotStat
-    progress: PlotStats
+    progress: PlotStat
 }
 
 export type PlanetRanks = {

@@ -16,6 +16,7 @@ export { default as UnitType } from './Constants/UnitType'
 
 export { default as useSort } from './Hooks/UseSort'
 export { default as useActions } from './Hooks/UseActions'
+export { default as useSelector, useAppDispatch as useDispatch } from '../Data/Hooks/UseSelector'
 
 export { Languages, Redux, Units }
 

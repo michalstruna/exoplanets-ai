@@ -1,8 +1,8 @@
 import { Query } from '../../Routing'
 import { Redux,  FilterData, Sort, Segment, Cursor } from '../../Data'
 import { Requests } from '../../Async'
-import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData, DatasetSelection } from '../types'
-import { AggregatedStats, PlanetRanks, PlotStats } from '../../Stats'
+import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData, DatasetSelection, SystemData } from '../types'
+import { AggregatedStats, GlobalAggregatedStats, PlanetRanks, PlotStats } from '../../Stats'
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
 
@@ -14,9 +14,9 @@ const slice = Redux.slice(
         filter: Redux.empty<FilterData>({}),
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),
-        system: Redux.async<StarData>(),
+        system: Redux.async<SystemData>(),
         usersRank: 0,
-        globalStats: Redux.async<AggregatedStats>(),
+        globalStats: Redux.async<GlobalAggregatedStats>(),
         plotStats: Redux.async<PlotStats>(),
         planetRanks: Redux.async<PlanetRanks>(),
 

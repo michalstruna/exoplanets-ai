@@ -1,12 +1,12 @@
 import React from 'react'
 import Styled from 'styled-components'
 
-import { Units, UnitType, useStrings } from '../../Data'
+import { Units, UnitType, useStrings, useSelector } from '../../Data'
 import { HierarchicalTable, IconText, ToggleLine } from '../../Layout'
 import { Url } from '../../Routing'
 import { Color } from '../../Style'
-import { PlanetData, RankedPlanetData } from '../types'
-import { useDatabaseState, getPlanetRanks, Value } from '..'
+import { RankedPlanetData } from '../types'
+import { getPlanetRanks, Value } from '..'
 import { Async } from '../../Async'
 import { PlanetRanks } from '../../Stats'
 
@@ -53,7 +53,7 @@ type Rank = {
 const PlanetsRank = ({ ...props }: Props) => {
 
     const strings = useStrings().planets
-    const { planetRanks } = useDatabaseState()
+    const planetRanks = useSelector(state => state.database.planetRanks)
 
 
     const items = React.useMemo(() => {

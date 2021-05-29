@@ -2,12 +2,13 @@ import React from 'react'
 import Styled from 'styled-components'
 
 import { Block } from '../../../Layout'
-import { useGlobalStats, usePlotStats, getPlotStats, getGlobalStats } from '../../index'
+import { getPlotStats, getGlobalStats } from '../../index'
 import { Async } from '../../../Async'
 import { Media } from '../../../Style'
 import ProgressStats from './ProgressStats'
 import GlobalStats from './GlobalStats'
 import PlotStats from './PlotStats'
+import { useSelector } from '../../../Data'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -35,8 +36,8 @@ const Root = Styled(Block)`
 
 const GlobalStatsPanel = ({ ...props }: Props) => {
 
-    const globalStats = useGlobalStats()
-    const plotStats = usePlotStats()
+    const globalStats = useSelector(state => state.database.globalStats)
+    const plotStats = useSelector(state => state.database.plotStats)
 
     return (
         <Root {...props}>
@@ -44,9 +45,9 @@ const GlobalStatsPanel = ({ ...props }: Props) => {
                 data={[[plotStats, getPlotStats], [globalStats, getGlobalStats]]}
                 success={() => (
                     <>
-                        <GlobalStats value={globalStats.payload} />
-                        <PlotStats value={plotStats.payload} />
-                        <ProgressStats value={plotStats.payload.progress} />
+                        <GlobalStats value={globalStats.payload!} />
+                        <PlotStats value={plotStats.payload!} />
+                        <ProgressStats value={plotStats.payload!.progress} />
                     </>
                 )} />
         </Root>

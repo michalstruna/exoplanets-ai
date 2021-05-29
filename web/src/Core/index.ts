@@ -15,5 +15,6 @@ export { default as HomeView } from './Views/HomeView'
  * Redux.
  */
 export { default as Store } from './Redux/Store'
+export * from './Redux/Store'
 
 export { Sockets }
