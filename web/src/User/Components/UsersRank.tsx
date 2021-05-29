@@ -3,14 +3,13 @@ import Styled from 'styled-components'
 
 import { Color, Duration, image, opacityHover, size } from '../../Style'
 import { Diff, HierarchicalTable, MinorSectionTitle } from '../../Layout'
-import { getUsers, useIdentity, User, useUsers, getUserRank } from '..'
+import { getUsers, useIdentity, User, getUserRank } from '..'
 import { Link, Url } from '../../Routing'
 import UserName from './UserName'
 import { Async } from '../../Async'
-import { Paginator, Units, UnitType, UnitTypeData, useStrings } from '../../Data'
+import { Paginator, Units, UnitType, UnitTypeData, useStrings, useSelector } from '../../Data'
 import { AggregatedStats } from '../../Stats'
 import DbTable from '../../Database/Constants/DbTable'
-import { useSelector } from 'react-redux'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -144,10 +143,10 @@ const ranks: [string, UnitTypeData][] = [['planets', UnitType.SCALAR], ['items',
 
 const UsersRank = ({ ...props }: Props) => {
 
-    const users = useUsers()
+    const users = useSelector(state => state.user.users)
     const strings = useStrings().users
     const identity = useIdentity()
-    const { userRank } = useSelector<any, any>(state => state.user)
+    const userRank = useSelector(state => state.user.userRank)
 
     const [rank, setRank] = React.useState(ranks[0])
     const [page, setPage] = React.useState(0)

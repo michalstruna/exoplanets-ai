@@ -27,7 +27,7 @@ const handleLogin = (state: any, action: Action<Identity>) => {
 const Slice = Redux.slice(
     'user',
     {
-        users: Redux.async<User>(),
+        users: Redux.async<SegmentData<User>>(),
         identity: Redux.async<Identity>(Cookies.getJSON(Cookie.IDENTITY.name)),
         onlineUsers: Redux.empty<OnlineUser[]>([]),
         editedUser: Redux.async<EditedUser>(),
