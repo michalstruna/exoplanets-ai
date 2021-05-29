@@ -3,7 +3,7 @@ from service.Stats import GlobalStatsService
 
 from utils.http import Api
 from service.Planet import PlanetService
-from constants.Database import PlanetType, PlanetStatus
+from constants.Planet import PlanetType, PlanetStatus
 
 
 def map_props(prop):

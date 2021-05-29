@@ -2,7 +2,7 @@ from astropy import units as u
 from astropy import constants as c
 import math
 
-from constants.Database import PlanetType, LifeType
+from constants.Planet import PlanetType, LifeType
 from .Base import Service
 import db
 

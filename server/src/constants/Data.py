@@ -10,3 +10,8 @@ class Relation(Enum):
     LTE = "lte"
     STARTS = "starts"
     ENDS = "ends"
+
+
+class Store(Enum):
+    PLANET_PLOTS = "planet_plots"
+    PLANET_RANKS = "planet_ranks"

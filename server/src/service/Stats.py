@@ -1,5 +1,5 @@
-from constants.Database import PlanetType, Store
-from constants.Planet import PlanetRanks
+from constants.Data import Store
+from constants.Planet import PlanetRanks, PlanetType
 from service.File import FileService
 from service.Planet import PlanetService
 from service.Plot import PlotService

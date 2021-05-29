@@ -3,7 +3,7 @@ from flask_socketio import join_room, leave_room
 
 from utils.patterns import Singleton
 from service.Socket import SocketService
-from constants.Database import PlanetStatus
+from constants.Planet import PlanetStatus
 from constants.Discovery import ProcessState
 from service.Stats import GlobalStatsService
 from service.Dataset import DatasetService
