@@ -27,6 +27,9 @@ class PlanetService(Service):
 
         st = st["properties"][0]  # TODO: Primary props.
 
+        if st["distance"]:
+            pl["distance"] = st["distance"]
+
         if pl["orbital_period"] and st["mass"]:
             pl["semi_major_axis"] = self.get_semi_major_axis(pl["orbital_period"], st["mass"])
 

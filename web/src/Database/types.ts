@@ -24,6 +24,7 @@ export interface PlanetTransit {
 export interface PlanetProperties {
     name: string
     diameter?: number
+    distance?: number
     mass?: number
     orbital_period?: number
     semi_major_axis?: number

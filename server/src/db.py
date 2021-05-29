@@ -264,6 +264,7 @@ class PlanetProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50)
     type = StringField(enum=PlanetType.values())
     diameter = FloatField(min_value=0)
+    distance = FloatField(min_value=0)
     mass = FloatField(min_value=0)
     density = FloatField(min_value=0)
     semi_major_axis = FloatField(min_value=0)
