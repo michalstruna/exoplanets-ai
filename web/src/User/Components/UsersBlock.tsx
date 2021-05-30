@@ -5,8 +5,7 @@ import { IconText } from '../../Layout'
 import UsersRank from './UsersRank'
 import OnlineUsers from './OnlineUsers'
 import Chat from './Chat'
-import { useOnlineUsers } from '../Redux/Selectors'
-import { useStrings } from '../../Data'
+import { useSelector, useStrings } from '../../Data'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 
@@ -36,7 +35,7 @@ const tabs = [() => <UsersRank />, () => <OnlineUsers />, () => <Chat />]
 const UsersBlock = ({ ...props }: Props) => {
 
     const [tab, setTab] = React.useState(0)
-    const onlineUsers = useOnlineUsers()
+    const onlineUsers = useSelector(state => state.user.onlineUsers)
     const strings = useStrings().users
 
     const renderedLinks = React.useMemo(() => {

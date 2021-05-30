@@ -75,7 +75,6 @@ class PlotStats(Resource):
     def get(self):
         return global_stat_service.get_plot_data()
 
-
 global_stat_service = GlobalStatsService()
 
 api.init(
@@ -95,4 +94,4 @@ def x():
     x.update_planets()
 
 t = Timer(5, x)
-t.start() 
+t.start()

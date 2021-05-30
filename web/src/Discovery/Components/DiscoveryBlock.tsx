@@ -3,10 +3,10 @@ import Styled from 'styled-components'
 
 import { Block } from '../../Layout'
 import { Color, Duration, image, opacityHover, size } from '../../Style'
-import { useProcesses } from '../Redux/Selectors'
 import DiscoveryTutorial from './DiscoveryTutorial'
 import * as Platform from '../Utils/Platform'
 import Process from './Process'
+import { useSelector } from '../../Data'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {}
 
@@ -55,7 +55,8 @@ const Tab = Styled.button`
 `
 
 const DiscoveryBlock = ({ ...props }: Props) => {
-    const processes = useProcesses()
+
+    const processes = useSelector(state => state.discovery.processes)
     const [tab, setTab] = React.useState(0)
 
     return (

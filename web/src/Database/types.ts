@@ -24,6 +24,7 @@ export interface PlanetTransit {
 export interface PlanetProperties {
     name: string
     diameter?: number
+    distance?: number
     mass?: number
     orbital_period?: number
     semi_major_axis?: number
@@ -43,6 +44,10 @@ export interface PlanetData {
     _id: string
     properties: PlanetProperties[]
     status: PlanetStatus
+}
+
+export interface RankedPlanetData extends PlanetData {
+    value: number
 }
 
 export interface StarProperties {

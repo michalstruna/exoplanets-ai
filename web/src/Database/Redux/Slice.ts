@@ -1,8 +1,8 @@
 import { Query } from '../../Routing'
 import { Redux,  FilterData, Sort, Segment, Cursor } from '../../Data'
 import { Requests } from '../../Async'
-import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData, DatasetSelection } from '../types'
-import { AggregatedStats, PlotStats } from '../../Stats'
+import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData, DatasetSelection, SystemData } from '../types'
+import { AggregatedStats, GlobalAggregatedStats, PlanetRanks, PlotStats } from '../../Stats'
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
 
@@ -14,10 +14,11 @@ const slice = Redux.slice(
         filter: Redux.empty<FilterData>({}),
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),
-        system: Redux.async<StarData>(),
+        system: Redux.async<SystemData>(),
         usersRank: 0,
-        globalStats: Redux.async<AggregatedStats>(),
+        globalStats: Redux.async<GlobalAggregatedStats>(),
         plotStats: Redux.async<PlotStats>(),
+        planetRanks: Redux.async<PlanetRanks>(),
 
         datasets: Redux.async<SegmentData<Dataset>>(),
         newDataset: Redux.async<Dataset>(),
@@ -51,6 +52,7 @@ const slice = Redux.slice(
         getSystem: async<string, StarData>('system', name => Requests.get(`stars/name/${name}`)),
         getGlobalStats: async<void, AggregatedStats>('globalStats', () => Requests.get(`global_stats/aggregated`)),
         getPlotStats: async<void, PlotStats>('plotStats', () => Requests.get(`global_stats/plots`)),
+        getPlanetRanks: async<void, PlanetRanks>('planetRanks', () => Requests.get(`planets/ranks`)),
 
         getStars: async<Cursor, StarData[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
         deleteStar: async<[string, DatasetSelection<StarData>], StarData>('deletedItem', ([id, datasetSelection]) => Requests.delete(`stars/${id}/selection`, datasetSelection), {
@@ -72,5 +74,5 @@ export const {
     getDatasets, addDataset, updateDataset, deleteDataset, resetDataset,
     getPlanets,
     getSystem,
-    getGlobalStats, getPlotStats
+    getGlobalStats, getPlotStats, getPlanetRanks
 } = slice.actions

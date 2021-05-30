@@ -4,8 +4,8 @@ import Styled from 'styled-components'
 import { Color, size } from '../../Style'
 import { HierarchicalTable, IconText } from '../../Layout'
 import UserName from './UserName'
-import { OnlineUser, useOnlineUsers, User } from '..'
-import { useStrings } from '../../Data'
+import { OnlineUser, User } from '..'
+import { useSelector, useStrings } from '../../Data'
 import { Dates } from '../../Native'
 import { Format } from '../../Native/Utils/Dates'
 import Countries from 'emoji-flags'
@@ -41,7 +41,7 @@ const Empty = Styled.p`
 
 const OnlineUsers = ({ ...props }: Props) => {
 
-    const users = useOnlineUsers()
+    const users = useSelector(state => state.user.onlineUsers)
     const globalStrings = useStrings()
     const strings = useStrings().users
 

@@ -1,8 +1,9 @@
 from flask_restx import fields, Resource
+from service.Stats import GlobalStatsService
 
 from utils.http import Api
 from service.Planet import PlanetService
-from constants.Database import PlanetType, PlanetStatus
+from constants.Planet import PlanetType, PlanetStatus
 
 
 def map_props(prop):
@@ -57,7 +58,18 @@ planet = api.ns.model("Planet", {
     "status": fields.String(required=True, enum=PlanetStatus.values(), description="Sratus of planet.")
 })
 
+ranked_planet = api.ns.inherit("RankedPlanet", planet, {
+    "value": fields.Float()
+})
+
+planet_ranks = api.ns.model("PlanetRanks", {
+    "nearest": fields.List(fields.Nested(ranked_planet)),
+    "similar": fields.List(fields.Nested(ranked_planet)),
+    "latest": fields.List(fields.Nested(ranked_planet))
+})
+
 planet_service = PlanetService()
+stats_service = GlobalStatsService()
 
 
 @api.ns.route("/<string:planet_id>/merge/<string:target_id>")
@@ -69,6 +81,15 @@ class MergePlanets(Resource):
     @api.ns.response(409, "Specified planets are not around same star.")
     def put(self):
         pass
+
+@api.ns.route("/ranks")
+class PlanetRanks(Resource):
+
+    @api.ns.marshal_with(planet_ranks, description="Get planet ranks.")
+    def get(self):
+        return stats_service.get_planet_ranks()
+
+
 
 
 api.init(full_model=planet, new_model=planet_properties, service=planet_service, model_name="Planet", map_props=map_props)

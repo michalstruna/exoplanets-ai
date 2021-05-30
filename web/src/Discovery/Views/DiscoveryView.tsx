@@ -4,7 +4,7 @@ import Styled from 'styled-components'
 import DiscoveryTutorial from '../Components/DiscoveryTutorial'
 import { Color } from '../../Style'
 import Process from '../Components/Process'
-import { useProcesses } from '..'
+import { useSelector } from '../../Data'
 
 interface Props {
 
@@ -27,7 +27,7 @@ const Processes = Styled.div`
 
 const DiscoveryView = ({ ...props }: Props) => {
 
-    const processes = useProcesses()
+    const processes = useSelector(state => state.discovery.processes)
 
     return (
         <Root {...props}>

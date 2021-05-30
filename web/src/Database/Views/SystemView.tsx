@@ -7,16 +7,16 @@ import { FlexLine, ListSection, MinorSectionTitle, PageTitle, PlainTable, Sectio
 import SizeVisualization from '../Components/SizeVisualization'
 import DistanceVisualization from '../Components/DistanceVisualization'
 import { Async } from '../../Async'
-import { useSystem, getSystem, Value } from '..'
+import { getSystem, Value } from '..'
 import { LightCurveData, PlanetData } from '../types'
-import { useStrings } from '../../Data'
+import { useStrings, useSelector } from '../../Data'
 import { Curve } from '../../Stats'
 import ItemPreview from '../Components/ItemPreview'
 import SkyMap from '../Components/System/SkyMap'
 import References from '../Components/References'
 import LightCurve from '../Components/System/LightCurve'
 import SystemContent from '../Components/System/SystemContent'
-import StarTable from '../Components/System/StarTable'
+import StarTable from '../Components/System/StarTable' 
 import PlanetTable from '../Components/System/PlanetTable'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
@@ -77,7 +77,7 @@ const Actions = Styled(PlainTable)`
 const SystemView = ({ ...props }: Props) => {
 
     const systemName = useRouter<any>().match.params.system
-    const system = useSystem()
+    const system = useSelector(state => state.database.system)
     const str = useStrings()
     const strings = str.system
 

@@ -1,5 +1,5 @@
 import Store from '../Redux/Store'
-import { ProcessData, addProcess, setProcesses, updateProcess, removeProcess } from '../../Discovery'
+import { ProcessData, addProcess, setProcesses, updateProcess } from '../../Discovery'
 import { Socket } from '../../Async'
 import { addLocalMessage, addOnlineUser, Identity, Message, OnlineUser, removeOnlineUser, setOnlineUsers, updateOnlineUser } from '../../User'
 

@@ -1,4 +1,5 @@
-from constants.Database import PlanetType, Store
+from constants.Data import Store
+from constants.Planet import PlanetRanks, PlanetType
 from service.File import FileService
 from service.Planet import PlanetService
 from service.Plot import PlotService
@@ -13,7 +14,7 @@ class GlobalStatsService(Service):
     def __init__(self):
         super().__init__(db.global_stats_dao)
         self.dataset_dao = db.dataset_dao
-        self.planet_dao = db.planet_dao
+        self.star_dao = db.star_dao
         self.plot_service = PlotService()
         self.file_service = FileService()
         self.planet_service = PlanetService()
@@ -26,12 +27,15 @@ class GlobalStatsService(Service):
     def get_plot_data(self):
         return self.store_service.get(Store.PLANET_PLOTS)
 
+    def get_planet_ranks(self):
+        return self.store_service.get(Store.PLANET_RANKS)
+
     def set_plot_data(self, value):
         return self.store_service.add(Store.PLANET_PLOTS, value)
 
     def update_planets(self):
         self.update_planet_plots()
-        #self.update_planet_ranks()
+        self.update_planet_ranks()
 
     def update_planet_plots(self):
         props = self.planet_service.get_properties_list(["mass", "semi_major_axis", "type"], ["distance"])
@@ -87,11 +91,21 @@ class GlobalStatsService(Service):
         ])[0]["done"] * 100
 
     def update_planet_ranks(self):
-        x = self.get_planet_rank()
+        latest = self.get_planet_rank("distance")
+        similar = self.get_planet_rank("distance")
+        nearest = self.get_planet_rank("distance")
 
-    def get_planet_rank(self):
-        return self.planet_dao.aggregate([
+        self.store_service.update(Store.PLANET_RANKS, {
+            PlanetRanks.LATEST.value: latest,
+            PlanetRanks.SIMILAR.value: similar,
+            PlanetRanks.NEAREST.value: nearest
+        })
+
+    def get_planet_rank(self, name):
+        return self.star_dao.aggregate([
             {"$unwind": "$planets"},
-            {"$sort": {"distance": 1}}
+            {"$project": {"value": {"$first": f"$properties.{name}"}, "planets": 1}},
+            {"$replaceRoot": {"newRoot": {"$mergeObjects": ["$$ROOT", "$planets"]}}},
+            {"$project": {"planets": 0}},
+            {"$sort": {"value": 1}}
         ])
-

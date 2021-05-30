@@ -44,7 +44,18 @@ const propsGetter = <Item extends { properties: Values[] }, Values extends any>(
     ))
 }
 
+const propGetter = <Item extends { properties: Values[] }, Values extends any>() => (item: Item, name: keyof Values) => {
+    for (const properties of item.properties) {
+        if (properties[name]) {
+            return properties[name] as any
+        }
+    }
+
+    return null
+}
+
 export const Planet = {
+    prop: propGetter<PlanetData, PlanetProperties>(),
     props: propsGetter<PlanetData, PlanetProperties>()
 }
 
@@ -71,16 +82,7 @@ export const Star = {
         return unique.map((name, i) => renderer(name, i, unique[i]))
     },
 
-    prop: <T extends any>(star: StarData, name: keyof StarProperties): T | null => {
-        for (const properties of star.properties) {
-            if (properties[name]) {
-                return properties[name] as any
-            }
-        }
-
-        return null
-    },
-
+    prop: propGetter<StarData, StarProperties>(),
     props: propsGetter<StarData, StarProperties>()
 
 }

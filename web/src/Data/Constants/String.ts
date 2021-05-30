@@ -209,6 +209,7 @@ const strings = {
         ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
         dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
         distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
+        discovery: { [CS]: 'Objevení', [EN]: 'Discovery' },
 
         unknownType: { [CS]: 'Neznámý typ', [EN]: 'Unknown type' },
 
@@ -231,8 +232,8 @@ const strings = {
             [PlanetStatus.REJECTED]: { [CS]: 'Zamítnuta', [EN]: 'Rejected' }
         },
 
-        last: { [CS]: 'Poslední objevené exoplanety', [EN]: 'Last discovered exoplanets' },
-        mostSimilar: { [CS]: 'Zemi nejpodobnější exoplanety', [EN]: 'Most simular exoplanets to Earth' },
+        latest: { [CS]: 'Poslední objevené exoplanety', [EN]: 'Last discovered exoplanets' },
+        similar: { [CS]: 'Zemi nejpodobnější exoplanety', [EN]: 'Most simular exoplanets to Earth' },
         nearest: { [CS]: 'Nejbližší exoplanety', [EN]: 'Nearest planets' }
     },
 

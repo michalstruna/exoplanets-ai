@@ -1,11 +1,11 @@
-from mongoengine.fields import BinaryField, BooleanField, DictField, DynamicField, EmailField, EmbeddedDocumentField, EmbeddedDocumentListField, FloatField, ImageField, IntField, ListField, LongField, MapField, ReferenceField, StringField, URLField
+from mongoengine.fields import *
 from mongoengine.errors import DoesNotExist, ValidationError
 from mongoengine.base import ObjectIdField
-from mongoengine.document import Document, EmbeddedDocument, EmbeddedDocumentList
+from mongoengine.document import Document, EmbeddedDocument
 from bson.objectid import ObjectId
 
-from constants.Database import *
 from constants.Star import *
+from constants.Planet import *
 from constants.User import UserRole, Sex
 from utils import time
 from service.Security import SecurityService
@@ -259,11 +259,15 @@ class Transit(EmbeddedDocument):
     local_view = EmbeddedDocumentField(View, required=True)
     global_view = EmbeddedDocumentField(View, required=True)
 
+class Discovery(EmbeddedDocument):
+    author = StringField()
+    date = LongField(required=True)
 
 class PlanetProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50)
     type = StringField(enum=PlanetType.values())
     diameter = FloatField(min_value=0)
+    distance = FloatField(min_value=0)
     mass = FloatField(min_value=0)
     density = FloatField(min_value=0)
     semi_major_axis = FloatField(min_value=0)
@@ -275,6 +279,7 @@ class PlanetProperties(EmbeddedDocument):
     transit = EmbeddedDocumentField(Transit)
     dataset = ReferenceField(Dataset, required=True)  # TODO: Surface gravity.
     processed = BooleanField()
+    discovery = EmbeddedDocumentField(Discovery)
 
 
 class Planet(EmbeddedDocument):

@@ -2,7 +2,7 @@ from astropy import units as u
 from astropy import constants as c
 import math
 
-from constants.Database import PlanetType, LifeType
+from constants.Planet import PlanetType, LifeType
 from .Base import Service
 import db
 
@@ -26,6 +26,9 @@ class PlanetService(Service):
             return pl
 
         st = st["properties"][0]  # TODO: Primary props.
+
+        if st["distance"]:
+            pl["distance"] = st["distance"]
 
         if pl["orbital_period"] and st["mass"]:
             pl["semi_major_axis"] = self.get_semi_major_axis(pl["orbital_period"], st["mass"])
