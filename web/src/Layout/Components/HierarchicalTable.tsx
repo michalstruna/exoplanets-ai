@@ -143,19 +143,7 @@ const getWidth = (width?: number | string, fixedWidth?: boolean) => {
 }
 
 // TODO: Generic types. Current = level == 0 ? T1 : T2?
-const HierarchicalTable = ({
-                               columns,
-                               withHeader,
-                               virtualized,
-                               items,
-                               onSort,
-                               defaultSort,
-                               renderBody,
-                               renderHeader,
-                               rowHeight,
-                               fixedWidth,
-                               ...props
-                           }: Props) => {
+const HierarchicalTable = ({ columns, withHeader, virtualized, items, onSort, defaultSort, renderBody, renderHeader, rowHeight, fixedWidth, ...props }: Props) => {
 
     const levels: Level[] = React.useMemo(() => 'columns' in columns[0] ? columns as Level[] : [{ columns: (columns as Column<any, any>[]) }], [columns])
     const { sort, sortedLevel, sortedColumn, isAsc } = useSort(defaultSort?.column, defaultSort?.isAsc, defaultSort?.level)
