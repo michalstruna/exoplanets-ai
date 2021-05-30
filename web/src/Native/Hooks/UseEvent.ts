@@ -17,7 +17,7 @@ const defaultOptions = {
     passive: true
 }
 
-export default (element: Target, event: string, handler: Handler, options: Options = defaultOptions) => {
+const useEvent = (element: Target, event: string, handler: Handler, options: Options = defaultOptions) => {
     const handlerRef = useRef(handler)
 
     React.useEffect(() => {
@@ -55,3 +55,5 @@ export default (element: Target, event: string, handler: Handler, options: Optio
     }, [element, event, handlerRef, options.active, options.immediate, options.passive])
 
 }
+
+export default useEvent

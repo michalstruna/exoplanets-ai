@@ -17,7 +17,7 @@ const fields = (strings: Strings, fields: [string, PossibleValues, string?][], o
     fields.map(([value, values, unit]) => ({ text: strings[camelCase(value)] + (options?.textSuffix || '') + (unit ? ` [${unit}]` : ''), value: (options?.namePrefix || '') + value, values  }))
 )
 
-export default (): TextEnumValue[] => {
+const useFilterFields = (): TextEnumValue[] => {
 
     const table = useTable()
     const strings = useStrings()
@@ -121,3 +121,5 @@ export default (): TextEnumValue[] => {
     }, [table, strings])
 
 }
+
+export default useFilterFields

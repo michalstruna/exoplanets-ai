@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default (defaultIndex: number | undefined, defaultIsAsc: boolean | undefined, defaultLevel: number | undefined) => {
+const useSort = (defaultIndex: number | undefined, defaultIsAsc: boolean | undefined, defaultLevel: number | undefined) => {
 
     const [sortedColumn, setColumn] = React.useState(defaultIndex)
     const [isAsc, setAsc] = React.useState(defaultIsAsc)
@@ -24,3 +24,5 @@ export default (defaultIndex: number | undefined, defaultIsAsc: boolean | undefi
     return { sortedColumn, isAsc, sortedLevel, sort }
 
 }
+
+export default useSort

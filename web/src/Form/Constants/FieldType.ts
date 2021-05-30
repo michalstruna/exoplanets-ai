@@ -1,6 +1,6 @@
 import { Validator } from '../../Native'
 
-export default {
+const FieldType = {
 
     TEXT: {
         name: 'text',
@@ -48,3 +48,5 @@ export default {
     }
 
 }
+
+export default FieldType

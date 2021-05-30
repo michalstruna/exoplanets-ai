@@ -30,7 +30,11 @@ const Content = Styled.div`
     ${size('100%', 'calc(100% - 2.5rem)')}
 `
 
-const tabs = [() => <UsersRank />, () => <OnlineUsers />, () => <Chat />]
+const tabs = [
+    () => <UsersRank />,
+    () => <OnlineUsers />,
+    () => <Chat />
+]
 
 const UsersBlock = ({ ...props }: Props) => {
 
@@ -55,7 +59,7 @@ const UsersBlock = ({ ...props }: Props) => {
         ))
     }, [tab, onlineUsers, strings])
 
-    const renderedContent = React.useMemo(tabs[tab], [tab])
+    const renderedContent = React.useMemo(() => tabs[tab](), [tab])
 
     return (
         <Root {...props}>

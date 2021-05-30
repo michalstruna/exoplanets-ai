@@ -157,7 +157,7 @@ const HierarchicalTable = ({
                                ...props
                            }: Props) => {
 
-    const levels: Level[] = 'columns' in columns[0] ? columns as Level[] : [{ columns: (columns as Column<any, any>[]) }]
+    const levels: Level[] = React.useMemo(() => 'columns' in columns[0] ? columns as Level[] : [{ columns: (columns as Column<any, any>[]) }], [columns])
     const { sort, sortedLevel, sortedColumn, isAsc } = useSort(defaultSort?.column, defaultSort?.isAsc, defaultSort?.level)
     const { app } = useElement()
 

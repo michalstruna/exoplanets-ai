@@ -12,7 +12,7 @@ import { Color } from '../../Style'
 import { DatasetSelection } from '../types'
 
 type Category<T> = [keyof T, any, string?]
-type Values<T> = Record<string, Record<string, boolean>>
+type Values = Record<string, Record<string, boolean>>
 
 interface Props<T> extends Omit<Omit<React.ComponentPropsWithoutRef<'div'>, 'onSubmit'>, 'title'> {
     item: any // TODO: T.
@@ -32,7 +32,7 @@ const Message = Styled.p`
     white-space: nowrap; 
 `
 
-const getFormValuesToOutput = <T extends any>(values: Values<T>): DatasetSelection<T> => {
+const getFormValuesToOutput = <T extends any>(values: Values): DatasetSelection<T> => {
     const result: DatasetSelection<T> = {}
 
     for (const groupName in values) {
@@ -50,8 +50,8 @@ const getFormValuesToOutput = <T extends any>(values: Values<T>): DatasetSelecti
 
 const DatasetsSelectionForm = <T extends any>({ item, categories, onSubmit, title, submitLabel, ...props }: Props<T>) => {
 
-    const defaultValues: Values<T> = React.useMemo<Values<T>>(() => {
-        const result = {} as Values<T>
+    const defaultValues: Values = React.useMemo<Values>(() => {
+        const result = {} as Values
 
         for (const [group, field] of categories) {
             result[group as any] = {}
@@ -61,7 +61,7 @@ const DatasetsSelectionForm = <T extends any>({ item, categories, onSubmit, titl
             }
         }
 
-        return result as Values<T>
+        return result as Values
     }, [item, categories])
 
     const form = useForm({ defaultValues })
@@ -72,7 +72,7 @@ const DatasetsSelectionForm = <T extends any>({ item, categories, onSubmit, titl
     const strings = useStrings().datasets.selection
     const actions = useActions({ addDataset, updateDataset, hideTooltip: Tooltip.hide })
 
-    const handleSubmit = async (values: Values<T>, form: UseFormMethods<Values<T>>) => {
+    const handleSubmit = async (values: Values, form: UseFormMethods<Values>) => {
         let action = await onSubmit(getFormValuesToOutput(values))
 
         if (action.error) {

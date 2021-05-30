@@ -103,7 +103,7 @@ const Colored = Styled.div<ColoredProps>`
     display: inline-block;
 `
 
-const Star = ({ item, withLink, withImage, ...props }: SpecificProps<StarData>) => {
+export const Star = ({ item, withLink, withImage, ...props }: SpecificProps<StarData>) => {
 
     const strings = useStrings().stars
 
@@ -144,7 +144,7 @@ const Star = ({ item, withLink, withImage, ...props }: SpecificProps<StarData>) 
 
 }
 
-const Planet = ({ item, withLink, withImage, ...props }: SpecificProps<PlanetData>) => {
+export const Planet = ({ item, withLink, withImage, ...props }: SpecificProps<PlanetData>) => {
 
     const strings = useStrings().planets
 
@@ -173,10 +173,4 @@ const Planet = ({ item, withLink, withImage, ...props }: SpecificProps<PlanetDat
             large={false} />
     )
 
-}
-
-
-export default {
-    Star,
-    Planet
 }
