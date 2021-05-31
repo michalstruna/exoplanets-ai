@@ -11,13 +11,13 @@ import { Action } from '../../Data/Utils/Redux'
 import { Color } from '../../Style'
 import { DatasetSelection } from '../types'
 
-type Category<T> = [keyof T, any, string?]
+type Category<Key, GroupKey> = [Key, GroupKey, string?]
 type Values = Record<string, Record<string, boolean>>
 
-interface Props<T> extends Omit<Omit<React.ComponentPropsWithoutRef<'div'>, 'onSubmit'>, 'title'> {
-    item: any // TODO: T.
-    categories: Category<T>[]
-    onSubmit: (values: DatasetSelection<T>) => Action<any>
+interface Props<Item, Key, GroupKey> extends Omit<Omit<React.ComponentPropsWithoutRef<'div'>, 'onSubmit'>, 'title'> {
+    item: Item
+    categories: Category<Key, GroupKey>[]
+    onSubmit: (values: DatasetSelection<Item>) => Action<any>
     title?: React.ReactNode
     submitLabel?: string
 }
@@ -48,20 +48,20 @@ const getFormValuesToOutput = <T extends any>(values: Values): DatasetSelection<
     return result
 }
 
-const DatasetsSelectionForm = <T extends any>({ item, categories, onSubmit, title, submitLabel, ...props }: Props<T>) => {
+const DatasetsSelectionForm = <Item extends Record<Key, Record<GroupKey, GroupItem>[]>, Key extends keyof Item, GroupKey extends keyof Item[Key][number], GroupItem extends any>({ item, categories, onSubmit, title, submitLabel, ...props }: Props<Item, Key, GroupKey>) => {
 
     const defaultValues: Values = React.useMemo<Values>(() => {
-        const result = {} as Values
-
+        const result = {} as any
+        
         for (const [group, field] of categories) {
-            result[group as any] = {}
+            result[group] = {}
 
             for (const groupItem of item[group]) {
-                result[group as any][groupItem[field]] = false
+                result[group][groupItem[field]] = false
             }
         }
 
-        return result as Values
+        return result
     }, [item, categories])
 
     const form = useForm({ defaultValues })

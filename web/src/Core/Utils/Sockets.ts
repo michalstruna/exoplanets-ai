@@ -6,7 +6,7 @@ import { addLocalMessage, addOnlineUser, Identity, Message, OnlineUser, removeOn
 export const init = (identity?: Identity) => {
     Socket.emit('web_connect', identity?._id)
 
-    window.onbeforeunload = () => {  // TODO: Automatically emit disconnect.
+    window.onbeforeunload = () => {
         Socket.emit('web_disconnect')
     }
 
