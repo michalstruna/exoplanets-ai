@@ -1,7 +1,7 @@
 import { Query } from '../../Routing'
 import { Redux,  FilterData, Sort, Segment, Cursor } from '../../Data'
 import { Requests } from '../../Async'
-import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData, DatasetSelection, SystemData } from '../types'
+import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData, DatasetSelection, SystemData, Constellation } from '../types'
 import { AggregatedStats, GlobalAggregatedStats, PlanetRanks, PlotStats } from '../../Stats'
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?
@@ -25,7 +25,8 @@ const slice = Redux.slice(
 
         updatedItem: Redux.async<Dataset>(),
         deletedItem: Redux.async<void>(),
-        resetItem: Redux.async<void>()
+        resetItem: Redux.async<void>(),
+        constellations: Redux.async<Constellation[]>()
     },
     ({ async, set }) => ({
         setFilter: set<FilterData>('filter', {
@@ -63,7 +64,8 @@ const slice = Redux.slice(
         addDataset: async<DatasetNew, Dataset>('newDataset', dataset => Requests.post(`datasets`, dataset), { onSuccess: Redux.addToSegment('datasets') }),
         updateDataset: async<[string, DatasetUpdated], Dataset>('updatedItem', ([id, dataset]) => Requests.put(`datasets/${id}`, dataset), { onSuccess: Redux.updateInSegment('datasets') }),
         deleteDataset: async<string, void>('updatedItem', id => Requests.delete(`datasets/${id}`), { onSuccess: Redux.deleteFromSegment('datasets') }),
-        resetDataset: async<string, void>('updatedItem', id => Requests.put(`datasets/${id}/reset`))
+        resetDataset: async<string, void>('updatedItem', id => Requests.put(`datasets/${id}/reset`)),
+        getConstellations: async<void, Constellation[]>('constellations', () => Requests.get(`stars/constellations`))
     })
 )
 
@@ -74,5 +76,6 @@ export const {
     getDatasets, addDataset, updateDataset, deleteDataset, resetDataset,
     getPlanets,
     getSystem,
-    getGlobalStats, getPlotStats, getPlanetRanks
+    getGlobalStats, getPlotStats, getPlanetRanks,
+    getConstellations
 } = slice.actions
