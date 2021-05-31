@@ -118,8 +118,8 @@ const TooltipArea = ({ ...props }: AreaProps) => {
         const coords = getAndSetCoords(id)
         const isActive = id === tooltip
 
-        const withXShift = coords.x > windowSize[0] * 0.5 // TODO: Calculate width.
-        const withYShift = coords.y > windowSize[1] * 0.5 // TODO: Calculate height.
+        const withXShift = coords.x > windowSize[0] * 0.5
+        const withYShift = coords.y > windowSize[1] * 0.5
 
         const transform = []
         transform.push(withXShift ? 'translateX(-100%) translateX(2rem)' : 'translateX(-2rem)')

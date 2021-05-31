@@ -1,6 +1,6 @@
 import UserRole from './Constants/UserRole'
 import { StatsObject } from '../Stats'
-import { LogObject } from '../Data'
+import { LogObject, UniqueObject } from '../Data'
 import Sex from './Constants/Sex'
 import { MessageTag } from '.'
 
@@ -12,8 +12,7 @@ export type UserPersonal = {
     text?: string
 }
 
-export type User = LogObject & StatsObject & {
-    _id: string
+export type User = UniqueObject & LogObject & StatsObject & {
     name: string
     avatar?: string
     role: UserRole
@@ -62,7 +61,7 @@ export type NewMessage = {
     text: string
 }
 
-export type Message = LogObject & NewMessage & {
+export type Message = UniqueObject & LogObject & NewMessage & {
     user?: User
     tag: MessageTag
     created: number

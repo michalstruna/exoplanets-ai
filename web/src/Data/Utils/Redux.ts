@@ -56,8 +56,11 @@ type UpdatableObject = {
     index?: number
 }
 
+type SegmentState<State, Key extends keyof State> = Record<Key, State[Key] extends AsyncData<any> ? AsyncData<SegmentData<UpdatableObject>> : any>
+type SegmentItem<State, Item, Error> = (state: State, action: Action<Item, Error>) => any
+
 /** Add item to state property with type AsyncData<SegmentData<UpdatableObject>>. */
-export const addToSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State, maxSize?: number): any => ( // TODO: Fix type.
+export const addToSegment = <State extends SegmentState<State, Key>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State, maxSize?: number): SegmentItem<State, Item, Error> => (
     (state: State, action: Action<Item, Error>) => {
         const maxIndex = Math.max(...state[property].payload!.content.map(item => item.index!), 0)
         action.payload.index = maxIndex + 1
@@ -73,14 +76,14 @@ export const addToSegment = <State extends Record<Key, AsyncData<SegmentData<Upd
 )
 
 /** Update item by ID in state property with type AsyncData<SegmentData<UpdatableObject>>. */
-export const updateInSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): any => ( // TODO: Fix type.
+export const updateInSegment = <State extends SegmentState<State, Key>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): SegmentItem<State, Item, Error> => (
     (state: State, action: Action<Item, Error>) => {
         state[property].payload!.content = state[property].payload!.content.map(item => item._id === action.meta?.arg[0] ? { ...action.payload, index: item.index } : item)
     }
 )
 
 /** Delete item by ID from state property with type AsyncData<SegmentData<UpdatableObject>>. */
-export const deleteFromSegment = <State extends Record<Key, AsyncData<SegmentData<UpdatableObject>>>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State): any => ( // TODO: Fix type.
+export const deleteFromSegment = <State extends SegmentState<State, Key>, Key extends keyof State, Error, Item = void>(property: keyof State): SegmentItem<State, Item, Error> => (
     (state: State, action: Action<Item, Error>) => {
         const itemId = Array.isArray(action.meta!.arg) ? action.meta!.arg[0] : action.meta!.arg
         state[property].payload!.content = state[property].payload!.content.filter(item => item._id !== itemId)

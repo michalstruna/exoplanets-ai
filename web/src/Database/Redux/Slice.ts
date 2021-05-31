@@ -9,8 +9,8 @@ const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).
 const slice = Redux.slice(
     'database',
     {
-        stars: Redux.async<StarData[]>(),
-        planets: Redux.async<PlanetData[]>(),
+        stars: Redux.async<SegmentData<StarData>>(),
+        planets: Redux.async<SegmentData<PlanetData>>(),
         filter: Redux.empty<FilterData>({}),
         sort: Redux.empty<Sort>({}),
         segment: Redux.empty<Segment>({}),

@@ -17,7 +17,7 @@ const Root = Styled.div`
 const Image = Styled.div`
     ${image(undefined, '110% auto')}
     ${size('16rem')}
-    background-image: url(https://www.solarsystemscope.com/spacepedia/images/handbook/renders/sun.png);
+    background-image: url('https://www.solarsystemscope.com/spacepedia/images/handbook/renders/sun.png');
     border-radius: 100%;
     margin-bottom: 1rem;
 `
@@ -59,7 +59,7 @@ const BodyType = ({ body, withImage, ...props }: Props) => {
                 </SpectralType>
             </Root>
         )
-    } else { // TODO: else if 'transits' in body.
+    } else {
         const type = body.properties[0].type
 
         return (
