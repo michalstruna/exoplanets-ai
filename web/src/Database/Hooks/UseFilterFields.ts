@@ -36,16 +36,16 @@ const useFilterFields = (): TextEnumValue[] => {
                         ['surface_temperature', Number, 'K'],
                         ['distance', Number, 'ly'],
                         ['luminosity', Number, '☉'],
-                        ['transit_depth', Number], // TODO: Test.
-                        ['strings.planets', Number], // TODO: Test.
+                        ['transit_depth', Number],
+                        ['strings.planets', Number],
                         ['surface_gravity', Number, 'm/s^2'],
                         ['absolute_magnitude', Number],
                         ['apparent_magnitude', Number],
                         ['metallicity', Number],
-                        ['ra', Number], // TODO: Unit hours or degrees?
+                        ['ra', Number],
                         ['dec', Number],
                     ]),
-                    ...fields(strings.planets, [ // TODO: Test strings.planets.
+                    ...fields(strings.planets, [
                         ['name', String],
                         ['type', Object.values(PlanetType).map(value => ({ text: strings.planets.types[value], value }))],
                         ['diameter', Number, '⊕'],
@@ -71,17 +71,17 @@ const useFilterFields = (): TextEnumValue[] => {
                     ['surface_temperature', Number, 'K'],
                     ['distance', Number, 'ly'],
                     ['luminosity', Number, '☉'],
-                    ['transit_depth', Number], // TODO: Test.
-                    ['strings.planets', Number], // TODO: Test.
+                    ['transit_depth', Number],
+                    ['strings.planets', Number],
                     ['surface_gravity', Number, 'm/s^2'],
                     ['absolute_magnitude', Number],
                     ['apparent_magnitude', Number],
                     ['metallicity', Number],
-                    ['ra', Number], // TODO: Unit hours or degrees?
+                    ['ra', Number],
                     ['dec', Number],
                 ])
             case DbTable.PLANETS:
-                return fields(strings.planets, [ // TODO: Test strings.planets.
+                return fields(strings.planets, [
                     ['name', String],
                     ['type', Object.values(PlanetType).map(value => ({ text: strings.planets.types[value], value }))],
                     ['diameter', Number, '⊕'],
@@ -105,7 +105,7 @@ const useFilterFields = (): TextEnumValue[] => {
                     ['type', Object.values(DatasetType).map(value => ({ text: strings.datasets.types[value], value }))],
                     ['size', Number],
                     ['processed', Number, 'B'],
-                    ['time', Number, 's'], // TODO: Hours?
+                    ['time', Number, 's'],
                     ['created', Number],
                     ['modified', Number],
                     ['priority', Object.values(DatasetPriority).filter(value => typeof value === 'number').map(value => ({ text: strings.datasets.priorities[value], value }))],
