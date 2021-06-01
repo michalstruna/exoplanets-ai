@@ -23,13 +23,12 @@ const Submit = Styled(PrimaryButton)`
     font-size: 100%;
 `
 
-// TODO: Rename and add action.
-const LoginForm = ({ handleLogin, handleSignUp, ...props }: Props) => {
+const ForgotPasswordForm = ({ handleLogin, handleSignUp, ...props }: Props) => {
 
     const strings = useStrings().auth
 
     const handleSubmit = async (values: ForgotPasswordData, form: UseFormMethods<ForgotPasswordData>) => {
-
+        // TODO
     }
 
     return (
@@ -53,4 +52,4 @@ const LoginForm = ({ handleLogin, handleSignUp, ...props }: Props) => {
 
 }
 
-export default LoginForm
+export default ForgotPasswordForm

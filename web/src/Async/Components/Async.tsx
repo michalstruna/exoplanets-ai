@@ -77,7 +77,7 @@ const Async: any = <T extends any>({ data: rawData, pending, success, fail, acti
         if (isChanged) {
             setDeps(data.map((item: AsyncDataAction<any>) => item[2]))
         }
-    }, [data, deps, dispatch, active]) // TODO: Effect is called on each render because of data.
+    }, [data, deps, dispatch, active])
 
     const { isPending, error, hasPayloads } = getState()
 

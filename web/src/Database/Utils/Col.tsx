@@ -60,7 +60,7 @@ export const list = <T extends any>(cols: ColOptions<any, T>[], options: ColOpti
      * Get column from column options.
      */
     const col = ({ format, multi, name, title, styleMap, icon, headerIcon, unit, ...props }: ColOptions<any, T>) => {
-        let formatter = unit ? ((val: number) => <>{Numbers.format(val)} {unit}</>) : format ? format : (val: T) => val
+        let formatter: any = unit ? ((val: number) => <>{Numbers.format(val)} {unit}</>) : format ? format : (val: T) => val
 
         if (styleMap) {
             let f = formatter

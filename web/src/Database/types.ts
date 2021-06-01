@@ -130,3 +130,9 @@ export type SegmentData<T> = {
 }
 
 export type DatasetSelection<T> = Record<string, string[]>
+
+export type Constellation = {
+    name: string
+    center: [number, number]
+    shape: [number, number][][]
+}

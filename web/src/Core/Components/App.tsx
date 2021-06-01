@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { useSelector } from 'react-redux'
 
 import GlobalStyle from './GlobalStyle'
 import { useElement, Validator } from '../../Native'
@@ -8,7 +7,7 @@ import Header from './Header'
 import Tooltip from '../../Layout/Components/Tooltip'
 import { Sockets } from '../index'
 import { MessageSelection, MessageTag, useIdentity } from '../../User'
-import { FilterData, useActions } from '../../Data'
+import { FilterData, useActions, useSelector } from '../../Data'
 import { getMessages } from '../../User'
 
 interface Props extends React.ComponentPropsWithoutRef<any> {
@@ -28,7 +27,7 @@ const App = ({ children }: Props) => {
 
     const { nav } = useElement()
     const identity = useIdentity()
-    const messageSelection = useSelector<any, MessageSelection>(state => state.user.messageSelection)
+    const messageSelection = useSelector(state => state.user.messageSelection)
     const actions = useActions({ getMessages })
 
     React.useEffect(() => {
@@ -38,7 +37,7 @@ const App = ({ children }: Props) => {
 
     React.useEffect(() => { // On change tag, fetch chat messages.
         actions.getMessages({ segment: { index: 0, size: 50 }, filter: mapMessFilter[messageSelection] })
-    }, [messageSelection, actions]) // TODO: Filter by tag.
+    }, [messageSelection, actions])
 
     return (
         <>

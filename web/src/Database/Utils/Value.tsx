@@ -15,14 +15,14 @@ type PropsOptions = {
     isEstimate?: (props: any) => boolean
 }
 
-const propsGetter = <Item extends { properties: Values[] }, Values extends any>() => (star: Item, name: keyof Values, options?: PropsOptions): React.ReactNode | null => {
+const propsGetter = <Item extends { properties: Values[] }, Values extends StarProperties | PlanetProperties>() => (star: Item, name: keyof Values, options?: PropsOptions): React.ReactNode | null => {
     const cache: Record<string, [any, (string | undefined)[], React.ReactNode]> = {}
 
     for (const props of star.properties) {
         const refId = props.dataset
         const rawValue = props[name] !== null && props[name] !== undefined ? (options?.format ? options.format(props[name]) : props[name]) : null
         const value = options?.unit ? <>{Numbers.format(rawValue as number)}{options.unit === '°' ? '' : ' '}{options.unit}</> : rawValue
-        const json = rawValue !== null && rawValue !== undefined ? (value && value.$$typeof ? renderToString(value) : JSON.stringify(value)) : null
+        const json = rawValue !== null && rawValue !== undefined ? (value && (value as any).$$typeof ? renderToString(value as any) : JSON.stringify(value)) : null
 
         if (json !== null) {
             if (!cache[json]) {

@@ -1,5 +1,7 @@
 import { Dimension } from '../index'
 
-export default {
+const Media = {
     SmallGs: `(max-width: ${Dimension.SMALL_GS_MAX_WIDTH}), (max-height: ${Dimension.SMALL_GS_MAX_HEIGHT})`
 }
+
+export default Media

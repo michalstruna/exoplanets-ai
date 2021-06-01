@@ -2,7 +2,7 @@ from flask_restx import fields, Resource
 from flask import request
 from flask_restx._http import HTTPStatus
 
-from constants.Star import SpectralClass, SpectralSubclass, LuminosityClass
+from constants.Star import SpectralClass, SpectralSubclass, LuminosityClass, Constellation
 from constants.User import UserRole
 from service.Dataset import DatasetService
 from service.Star import StarService
@@ -101,15 +101,26 @@ star_selection = api.ns.model("StarSelection", {
     "light_curves": fields.List(fields.String(required=True), default=[], description="List of lcs datasets to select."),
 })
 
+constellation = api.ns.model("Constellation", {
+    "name": fields.String(required=True),
+    "center": fields.List(fields.Float(), length=2),
+    "shape": fields.List(fields.List(fields.List(fields.Float(), length=2), length=2))
+})
 
 star_service = StarService()
 dataset_service = DatasetService()
 
+@api.ns.route("/constellations")
+class Constellations(Resource):
+
+    @api.ns.marshal_list_with(constellation, code=HTTPStatus.OK, description="Sucessfully get star by name.")
+    def get(self):
+        return Constellation
 
 @api.ns.route("/name/<string:name>")
 class StarByName(Resource):
 
-    @api.ns.marshal_with(star_detail, code=HTTPStatus.OK, description="Sucessfully get star by name,")
+    @api.ns.marshal_with(star_detail, code=HTTPStatus.OK, description="Sucessfully get star by name.")
     @api.ns.response(HTTPStatus.NOT_FOUND, "Star with specified name was not found.", error)
     def get(self, name):
         star = star_service.get_by_name(name)

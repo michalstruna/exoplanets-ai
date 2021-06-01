@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { useForm, UseFormMethods, FormProvider, FieldValues, DefaultValues } from 'react-hook-form'
+import { useForm, UseFormMethods, FormProvider, FieldValues, DefaultValues, UnpackNestedValue } from 'react-hook-form'
 
 import { Color } from '../../Style'
 import { Loader } from '../../Async'
@@ -8,7 +8,7 @@ import { SecondaryButton } from '../../Layout'
 
 interface Props<Values extends FieldValues> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
     defaultValues?: DefaultValues<Values>
-    onSubmit: (values: Values, form: UseFormMethods<Values>) => void
+    onSubmit: (values: UnpackNestedValue<Values>, form: UseFormMethods<Values>) => void
     form?: UseFormMethods<Values>
     buttons?: [(() => void) | undefined, string][]
 }

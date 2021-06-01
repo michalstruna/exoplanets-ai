@@ -11,7 +11,7 @@ import { getSystem, Value } from '..'
 import { LightCurveData, PlanetData } from '../types'
 import { useStrings, useSelector } from '../../Data'
 import { Curve } from '../../Stats'
-import ItemPreview from '../Components/ItemPreview'
+import { Planet as PlanetPreview, Star as StarPreview } from '../Components/ItemPreview'
 import SkyMap from '../Components/System/SkyMap'
 import References from '../Components/References'
 import LightCurve from '../Components/System/LightCurve'
@@ -104,7 +104,7 @@ const SystemView = ({ ...props }: Props) => {
                     <SystemContent system={system.payload!} />
                     <Main>
                         <FlexLine>
-                            <ItemPreview.Star item={system.payload!} titleComponent={Title} />
+                            <StarPreview item={system.payload!} titleComponent={Title} />
                             <Tags items={Value.Star.names(system.payload!, name => ({ text: name }))} />
                         </FlexLine>
                         <FlexLine style={{ paddingTop: 0 }}>
@@ -127,7 +127,7 @@ const SystemView = ({ ...props }: Props) => {
                                 <ListSection items={system.payload!.planets.map((planet: PlanetData, i: number) => (
                                     <React.Fragment key={i}>
                                         <FlexLine>
-                                            <ItemPreview.Planet item={planet} titleComponent={Subsubtitle} />
+                                            <PlanetPreview item={planet} titleComponent={Subsubtitle} />
                                             <Tags items={Value.Star.names(system.payload!, name => ({ text: name }))} />
                                         </FlexLine>
                                         <PlanetTable data={planet} />

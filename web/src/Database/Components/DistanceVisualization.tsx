@@ -115,7 +115,7 @@ interface LifeZoneProps {
     radius: number
 }
 
-const LifeZone = Styled(Orbit)<LifeZoneProps>`  
+const LifeZoneArea = Styled(Orbit)<LifeZoneProps>`  
     ${props => size(props.radius + 'px')}
     background-image: radial-gradient(farthest-side, transparent calc(100% - ${props => (props.thickness / 2) || 50}px), green, transparent 100%);
     opacity: 0.5;
@@ -168,7 +168,7 @@ const DistanceVisualization = ({ systems, lifeZones, ...props }: Props) => {
                 <System key={i}>
                     <InnerSystem>
                         {lifeZones && lifeZones[i] && (
-                            <LifeZone
+                            <LifeZoneArea
                                 thickness={Math.round(ratio * (lifeZones[i].to - lifeZones[i].from))}
                                 radius={Math.round(ratio * lifeZones[i].to)} />
                         )}
