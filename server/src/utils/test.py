@@ -145,6 +145,10 @@ class Comparator:
 class Creator:
 
     @staticmethod
+    def auth(token):
+        return {"Authorization": f"Bearer {token}"}
+
+    @staticmethod
     def stats(box=False, **kwargs):
         result = {}
 

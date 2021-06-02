@@ -67,6 +67,8 @@ pymongo == 3.11.0
 # server/tests/service/test_star_service.py: 1
 pytest == 6.2.1
 
+pytest-flask == 1.1.0
+
 # server/src/service/File.py: 2
 # server/src/service/User.py: 1
 requests == 2.22.0
