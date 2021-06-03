@@ -83,6 +83,10 @@ class Response:
         abort(HTTPStatus.BAD_REQUEST, type=ErrorType.BAD_REQUEST.value, message=message)
 
     @staticmethod
+    def unauth(message=""):
+        abort(HTTPStatus.UNAUTHORIZED, type=ErrorType.UNAUTHORIZED.value, message=message)
+
+    @staticmethod
     def ok(body):
         return body, HTTPStatus.OK
 
@@ -312,9 +316,14 @@ class Api:
             @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
             def put(_self, id):
                 data = request.get_json()
+                author_id = security_service.get_req_identity()
+
+                if res_type["role"] == UserRole.MYSELF:
+                    if author_id != id:
+                        Response.unauth("You can't update foreign item.")
 
                 if "author" in res_type:
-                    data[res_type["author"]] = security_service.get_req_identity()
+                    data[res_type["author"]] = author_id
 
                 return Response.put(lambda: self.service.update(id, data))
 

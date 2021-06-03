@@ -101,6 +101,12 @@ class Res:
         assert res.status_code == HTTPStatus.CONFLICT
         return res
 
+    @staticmethod
+    def unauth(res):
+        assert res.json["type"] == ErrorType.UNAUTHORIZED.value
+        assert res.status_code == HTTPStatus.UNAUTHORIZED
+        return res
+
 
 KEPIDS = ["10000800", "11904151", "10874614"]
 FIELDS = {

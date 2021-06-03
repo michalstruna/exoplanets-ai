@@ -191,12 +191,12 @@ def test_edit_local_user(client):
 
     cr1_updated = {**cr1, "password": Creator.local_credentials(3)["password"]}
     Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated, "old_password": cr2["password"]}, headers=Creator.auth(token1)))  # Change password with bad old password.
+    Res.unauth(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated["password"], "old_password": cr1["password"]}))  # Change password with missing token.
+    Res.unauth(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated["password"], "old_password": cr1["password"]}, headers=Creator.auth(token2)))  # Change password with invalid token.
     Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
 
     Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": "short", "old_password": cr1["password"]}, headers=Creator.auth(token1)))  # Change password to invalid password.
     Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
-
-    # TODO: Test unauth.
 
     Res.updated(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated["password"], "old_password": cr1["password"]}, headers=Creator.auth(token1)), usr1_updated)  # Change password.
     Res.bad_credentials(client.post("/api/users/login", json=cr1))  # User cannot login with old password.
