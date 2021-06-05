@@ -3,7 +3,7 @@ from flask import request
 from flask_restx._http import HTTPStatus
 
 from api.global_stats import stats_aggregated, logged_item
-from constants.User import UserRole, Sex
+from constants.User import EndpointAuth, UserRole, Sex
 from utils.http import Api, Response, Request
 from service.User import UserService
 
@@ -119,11 +119,11 @@ class GoogleLogin(Resource):
 
 
 resource_type = {
-    "get_all": {"role": UserRole.UNAUTH},
-    "get": {"role": UserRole.UNAUTH},
-    "delete": {"role": UserRole.ADMIN},
-    "update": {"role": UserRole.MYSELF},
-    "rank": {"role": UserRole.UNAUTH}
+    "get_all": {"auth": EndpointAuth.ANY},
+    "get": {"auth": EndpointAuth.ANY},
+    "delete": {"auth": EndpointAuth.MYSELF_OR_ADMIN},
+    "update": {"auth": EndpointAuth.MYSELF},
+    "rank": {"auth": EndpointAuth.ANY}
 }
 
 api.init(service=user_service, full_model=user, updated_model=updated_user, resource_type=resource_type, model_name="User", map_props=map_props)

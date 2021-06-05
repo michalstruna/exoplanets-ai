@@ -3,7 +3,7 @@ from flask import request
 from flask_restx._http import HTTPStatus
 
 from constants.Star import SpectralClass, SpectralSubclass, LuminosityClass, Constellation
-from constants.User import UserRole
+from constants.User import EndpointAuth, UserRole
 from service.Dataset import DatasetService
 from service.Star import StarService
 from utils.http import Api, Response
@@ -158,8 +158,8 @@ class StarSelection(Resource):
 
 
 resource_type = {
-    "get_all": {"role": UserRole.UNAUTH},
-    "get": {"role": UserRole.UNAUTH}
+    "get_all": {"auth": EndpointAuth.ANY},
+    "get": {"auth": EndpointAuth.ANY}
 }
 
 api.init(full_model=star, new_model=star_properties, service=star_service, model_name="Star", map_props=map_props, resource_type=resource_type)

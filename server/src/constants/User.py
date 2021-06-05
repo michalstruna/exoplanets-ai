@@ -2,12 +2,14 @@ from utils.patterns import Enum
 
 
 class UserRole(Enum):
-
     UNAUTH = 0
     AUTH = 1
     ADMIN = 2
 
-    MYSELF = -1
+class EndpointAuth(Enum):
+    ANY = 0
+    MYSELF = 1
+    MYSELF_OR_ADMIN = 2
 
 
 class Sex(Enum):

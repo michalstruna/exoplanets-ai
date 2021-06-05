@@ -84,14 +84,3 @@ api.init(
     model_name="GlobalStats",
     resource_type=Api.CUSTOM_RESOURCE
 )
-
-from threading import Timer
-import numpy as np
-
-def x():
-    # TODO: After planet update.
-    x = GlobalStatsService()
-    x.update_planets()
-
-t = Timer(5, x)
-t.start()

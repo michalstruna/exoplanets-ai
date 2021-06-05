@@ -17,4 +17,4 @@ class SecurityService:
         identity = get_jwt_identity()
 
         if identity:
-            return identity["_id"]
+            return identity
