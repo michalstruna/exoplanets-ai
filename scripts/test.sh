@@ -1,17 +1,18 @@
 #!/bin/bash
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
+cd "$(dirname "$0")"
 
 . ./argparser.sh
+cd ..
 
 if [ $server -eq 1 ]; then
-    ./server-test.sh
+    pytest server
 fi
 
 if [ $web -eq 1 ]; then
-    ./web-test.sh
+    echo "No tests."
 fi
 
 if [ $client -eq 1 ]; then
-    ./client-test.sh
+    echo "No tests."
 fi
