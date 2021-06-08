@@ -8,6 +8,7 @@ from .Base import Service
 import db
 from .Constellation import ConstellationService
 from service.AI import NN
+from utils.native import Dict
 
 spectral_temperatures = [50000, 30000, 11000, 7500, 6000, 5000, 3500, 3000]
 
@@ -96,10 +97,10 @@ class StarService(Service):
         result["luminosity"] = self.get_luminosity(star)
         result["absolute_magnitude"] = self.get_absolute_magnitude(result)
         result["type"] = self.get_type(result)
-        result["distance"] = result["distance"] if isinstance(result["distance"], numbers.Number) and result["distance"] > 0 else None  # Kepler dataset has some stars with distance = 0.
+        result["distance"] = result["distance"] if Dict.is_set(result, "distance") and isinstance(result["distance"], numbers.Number) else None  # Kepler dataset has some stars with distance = 0.
         result["life_zone"] = self.get_life_zone(result)
 
-        if with_constellation:
+        if with_constellation and Dict.is_set(result, "ra", "dec", zeros=True):
             result["constellation"] = self.constellation_service.get_by_coords(result["ra"], result["dec"])
 
         return result
@@ -111,6 +112,7 @@ class StarService(Service):
             result.append(self.complete_star(star, with_constellation=False))
 
         self.constellation_service.set_constellations(result)
+
         return result
 
     def get_life_zone(self, star):
@@ -124,7 +126,7 @@ class StarService(Service):
         tmp = {**star}
         tmp["type"] = {}
 
-        if "surface_temperature" in star and star["surface_temperature"] is not None:
+        if Dict.is_set(star, "surface_temperature"):
             cls, subcls = self.get_spectral_class(star)
             tmp["type"]["spectral_class"] = cls
             tmp["type"]["spectral_subclass"] = subcls
@@ -133,60 +135,60 @@ class StarService(Service):
         return tmp["type"]
 
     def get_density(self, star):
-        if star["mass"] and star["diameter"]:
+        if Dict.is_set(star, "mass", "diameter"):
             return 1410 * star["mass"] / star["diameter"] ** 3
 
     def get_surface_gravity(self, star):
-        if star["mass"] and star["diameter"]:
+        if Dict.is_set(star, "mass", "diameter"):
             return 274 * star["mass"] / star["diameter"] ** 2
 
     def get_luminosity(self, star):
-        if star["surface_temperature"] and star["diameter"]:
-            return (star["diameter"] ** 2) * ((star["surface_temperature"] / 5780) ** 4)  # TODO: Constants.
+        if Dict.is_set(star, "surface_temperature", "diameter"):
+            return (star["diameter"] ** 2) * (round(star["surface_temperature"] / 5780) ** 4)  # TODO: Constants.
 
     def get_spectral_class(self, star):
-        teff = star["surface_temperature"]
+        if Dict.is_set(star, "surface_temperature"):
+            teff = star["surface_temperature"]
 
-        if teff <= spectral_temperatures[-1]:
-            return SpectralClass.M.value, SpectralSubclass.NINE.value
+            if teff <= spectral_temperatures[-1]:
+                return SpectralClass.M.value, SpectralSubclass.NINE.value
 
-        if teff >= spectral_temperatures[0]:
-            return SpectralClass.O.value, SpectralSubclass.ZERO.value
+            if teff >= spectral_temperatures[0]:
+                return SpectralClass.O.value, SpectralSubclass.ZERO.value
 
-        for i in range(len(spectral_temperatures)):
-            if spectral_temperatures[i] <= teff:
-                spectral_class = SpectralClass.values()[i - 1]
-                class_min, class_max = spectral_temperatures[i], spectral_temperatures[i - 1]
-                class_size = class_max - class_min
-                rel_teff = teff - class_min
-                spectral_subclass = str(9 - math.floor(10 * rel_teff / class_size))
+            for i in range(len(spectral_temperatures)):
+                if spectral_temperatures[i] <= teff:
+                    spectral_class = SpectralClass.values()[i - 1]
+                    class_min, class_max = spectral_temperatures[i], spectral_temperatures[i - 1]
+                    class_size = class_max - class_min
+                    rel_teff = teff - class_min
+                    spectral_subclass = str(9 - math.floor(10 * rel_teff / class_size))
 
-                return spectral_class, spectral_subclass
+                    return spectral_class, spectral_subclass
 
     def get_bv_index(self, star):
-        t = star["surface_temperature"]
+        if Dict.is_set(star, "surface_temperature"):
+            t = star["surface_temperature"]
 
-        if not t:
-            return None
+            if not t:
+                return None
 
-        return -3.684 * np.log10(t) + 14.551 if t < 9641 else 0.344 * np.log10(t) ** 2 - 3.402 * np.log10(t) + 8.037
+            return -3.684 * np.log10(t) + 14.551 if t < 9641 else 0.344 * np.log10(t) ** 2 - 3.402 * np.log10(t) + 8.037
 
     def get_luminosity_class(self, star):
-        if not star["type"]:
-            return None
+        if Dict.is_set(star, "type"):
+            bv = self.get_bv_index(star)
+            cls = star["type"]["spectral_class"]
+            mag = star["absolute_magnitude"]
 
-        bv = self.get_bv_index(star)
-        cls = star["type"]["spectral_class"]
-        mag = star["absolute_magnitude"]
+            if cls is None or mag is None or bv is None:
+                return None
 
-        if cls is None or mag is None or bv is None:
-            return None
-
-        return LuminosityClass.values()[NN.predict_class(NN.instance.LUM_CLASS, [bv, star["absolute_magnitude"]])]
+            return LuminosityClass.values()[NN.predict_class(NN.instance.LUM_CLASS, [bv, star["absolute_magnitude"]])]
 
 
     def get_absolute_magnitude(self, star):
-        if "distance" in star and "apparent_magnitude" in star and star["distance"] and star["apparent_magnitude"]:
+        if Dict.is_set(star, "distance", "apparent_magnitude"):
             return round(star["apparent_magnitude"] + 5 * (1 - math.log10(star["distance"])), 2)
 
     def delete_empty(self):

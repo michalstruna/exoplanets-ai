@@ -12,7 +12,7 @@ class DatasetFields(Enum):
         "name": {"type": str},
         "diameter": {"type": float},
         "mass": {"type": float},
-        "surface_temperature": {"type": int},
+        "surface_temperature": {"type": float},
         "ra": {"type": float},
         "dec": {"type": float},
         "apparent_magnitude": {"type": float},

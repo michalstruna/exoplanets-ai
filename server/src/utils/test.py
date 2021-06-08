@@ -150,9 +150,7 @@ class Comparator:
 
 class Creator:
 
-    @staticmethod
-    def auth(token):
-        return {"Authorization": f"Bearer {token}"}
+    UUID = 0
 
     @staticmethod
     def stats(box=False, **kwargs):
@@ -266,6 +264,17 @@ class Creator:
             pass
 
         return result
+
+    @staticmethod
+    def auth(token=None, role=None):
+        if role:
+            Creator.UUID += 1
+            cr = Creator.local_credentials(Creator.UUID)
+            Creator.save_user(id=Creator.UUID, role=role, **cr)
+            user = user_service.local_login(cr)
+            token = user["token"]
+
+        return {"Authorization": f"Bearer {token}"}
 
     @staticmethod
     def save_user(**kwargs):

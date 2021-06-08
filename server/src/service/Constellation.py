@@ -2,6 +2,7 @@ from astropy.coordinates import SkyCoord, get_constellation
 from astropy import units as u
 
 from service.Base import Service
+from utils.native import Dict
 
 
 class ConstellationService(Service):
@@ -18,7 +19,7 @@ class ConstellationService(Service):
         dec = []
 
         for star in stars:
-            if star["ra"] is not None and ["dec"] is not None:
+            if Dict.is_set(star, "ra", "dec", zeros=True):
                 ra.append(star["ra"])
                 dec.append(star["dec"])
 
@@ -27,6 +28,6 @@ class ConstellationService(Service):
         i = 0
 
         for star in stars:
-            if star["ra"] is not None and ["dec"] is not None:
+            if Dict.is_set(star, "ra", "dec", zeros=True):
                 star["constellation"] = constellations[i]
                 i += 1

@@ -14,7 +14,4 @@ class SecurityService:
         return create_access_token(identity=data)
 
     def get_req_identity(self):
-        identity = get_jwt_identity()
-
-        if identity:
-            return identity
+        return get_jwt_identity()

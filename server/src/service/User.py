@@ -23,6 +23,9 @@ class UserService(Service):
         self.file_service = FileService()
         self.message_service = MessageService()
 
+    def create_token(self, user):
+        return self.security_service.tokenize({"_id": str(user["_id"]), "role": user["role"]})
+
     def after_add(self, user):
         self.stats_service.add(volunteers=1)
         self.message_service.add({"user_id": user["_id"], "text": user["name"], "tag": MessageTag.NEW_VOLUNTEER.value})
@@ -46,7 +49,7 @@ class UserService(Service):
 
         if self.security_service.verify_hash(user["password"], credentials["password"]):
             user = self.update(user["_id"], {"online": True})
-            user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})  # TODO: Is str() neccesary?
+            user["token"] = self.create_token(user)
             return user
         else:
             raise BadCredentials("Bad credentials.")
@@ -76,7 +79,7 @@ class UserService(Service):
             self.after_add(user)
 
         user = self.update(user["_id"], {"online": True})
-        user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})
+        user["token"] = self.create_token(token)
         return user
 
     def google_login(self, token):
@@ -100,7 +103,7 @@ class UserService(Service):
             self.after_add(user)
 
         user = self.update(user["_id"], {"online": True})
-        user["token"] = self.security_service.tokenize({"_id": str(user["_id"])})
+        user["token"] = self.create_token(user)
         return user
 
     def update(self, id, item, with_return=True):
