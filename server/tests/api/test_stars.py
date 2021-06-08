@@ -1,5 +1,7 @@
 from utils.test import Comparator, Creator, Res, KEPIDS, app
 
+# TODO: Auth
+
 
 def test_get(client):
     Res.list(client.get("/api/stars"), [])  # There is no stars.

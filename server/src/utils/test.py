@@ -219,7 +219,7 @@ class Creator:
 
     @staticmethod
     def add_dataset(client, **kwargs):
-        return client.post("/api/datasets", json=Creator.dataset(**kwargs)).json
+        return client.post("/api/datasets", json=Creator.dataset(**kwargs), headers=Creator.auth(role=UserRole.ADMIN)).json
 
     @staticmethod
     def add_datasets(client, *args):
