@@ -69,15 +69,15 @@ class DatasetReset(Resource):
     @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified ID was not found.", error)
     @jwt_required
     def put(self, id):
-        Request.protect({"auth": UserRole.ADMIN}, id)
+        Request.protect({"auth": UserRole.MOD}, id)
         return Response.put(lambda: dataset_service.reset(id))
 
 resource_type = {
     "get_all": {"auth": EndpointAuth.ANY},
     "get": {"auth": EndpointAuth.ANY},
-    "add": {"auth": UserRole.ADMIN},
-    "delete": {"auth": UserRole.ADMIN},
-    "update": {"auth": UserRole.ADMIN},
+    "add": {"auth": UserRole.MOD},
+    "delete": {"auth": UserRole.MOD},
+    "update": {"auth": UserRole.MOD},
     "rank": {"auth": EndpointAuth.ANY}
 }
 

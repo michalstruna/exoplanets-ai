@@ -4,11 +4,13 @@ from utils.patterns import Enum
 class UserRole(Enum):
     UNAUTH = 0
     AUTH = 1
-    ADMIN = 2
+    MOD = 2
+    ADMIN = 3
 
 class EndpointAuth(Enum):
     ANY = 0
     MYSELF = 1
+    MYSELF_OR_MOD = 1
     MYSELF_OR_ADMIN = 2
 
 

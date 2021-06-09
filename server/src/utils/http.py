@@ -218,8 +218,11 @@ class Request:
             elif res_type["auth"] == EndpointAuth.MYSELF:  # Only author of resource.
                 if req_author["_id"] != resource_id:
                     Response.unauth("You can't update foreign item.")
+            elif res_type["auth"] == EndpointAuth.MYSELF_OR_MOD:
+                if req_author["_id"] != resource_id and req_author["role"] < UserRole.MOD.value:
+                    Response.unauth("You can't update foreign item.")
             elif res_type["auth"] == EndpointAuth.MYSELF_OR_ADMIN:
-                if req_author["_id"] != resource_id and req_author["role"] != UserRole.ADMIN.value:
+                if req_author["_id"] != resource_id and req_author["role"] < UserRole.ADMIN.value:
                     Response.unauth("You can't update foreign item.")
 
         if "author" in res_type:

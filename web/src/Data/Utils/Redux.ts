@@ -152,7 +152,13 @@ export const slice = <State extends Record<any, any>, Actions extends Record<str
                 value.action(state, action)
             }
         } else if (value.type === ActionType.ASYNC) {
-            const thunk = createAsyncThunk(name + '/' + key, value.action)
+            const thunk = createAsyncThunk(name + '/' + key, async (userData, { rejectWithValue }) => {
+                try {
+                    return await value.action(userData)
+                } catch (error) {
+                    return rejectWithValue(error.response.data)
+                }
+            })
 
             extraActions[key] = thunk
 
@@ -180,7 +186,7 @@ export const slice = <State extends Record<any, any>, Actions extends Record<str
 
             extraReducers[thunk.rejected.type] = (state: State, action: PayloadAction<any, string, any, Error>) => {
                 state[value.property].pending = false
-                state[value.property].error = action.error.message
+                state[value.property].error = action.payload
 
                 if (value.options && value.options.onError) {
                     value.options.onError(state, action)

@@ -88,7 +88,7 @@ export default class Requests {
 
         return {
             params: finalQuery,
-            headers: { [Config.authHeaderName]: identity ? ('Bearer ' + identity.token) : null }
+            headers: { ...(identity ? { [Config.authHeaderName]: 'Bearer ' + identity.token } : {}) }
         }
     }
 

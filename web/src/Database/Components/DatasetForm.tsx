@@ -44,7 +44,7 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
         let action = await (dataset ? actions.updateDataset([dataset._id, updateValues]) : actions.addDataset(values))
 
         if (action.error) {
-            form.setError(Form.GLOBAL_ERROR, { type: action.error })
+            form.setError(Form.GLOBAL_ERROR, { type: action.payload.message })
         } else {
             form.reset(dataset ? values : undefined)
             actions.hideTooltip()

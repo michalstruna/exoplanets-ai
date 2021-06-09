@@ -5,7 +5,7 @@ from api.users import user
 from service.Message import MessageService
 from utils.http import Api, Response
 from constants.Message import MessageTag
-from constants.User import UserRole
+from constants.User import EndpointAuth, UserRole
 
 api = Api("messages", description="Chat messages and notifications.")
 
@@ -27,9 +27,9 @@ def modify_new(item, author):
         del item["tag"]
 
 resource_type = {
-    "get_all": {"auth": UserRole.UNAUTH},
-    "get": {"auth": UserRole.UNAUTH},
-    "delete": {"auth": UserRole.ADMIN},
+    "get_all": {"auth": EndpointAuth.ANY},
+    "get": {"auth": EndpointAuth.ANY},
+    "delete": {"auth": UserRole.MOD},
     "add": {"auth": UserRole.AUTH, "modify": modify_new}
 }
 
