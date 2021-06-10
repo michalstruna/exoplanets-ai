@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react'
 import Styled from 'styled-components'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, Controller } from 'react-hook-form'
 
 import { Color, Duration, size } from '../../Style'
 import FieldType from '../Constants/FieldType'
@@ -133,19 +133,22 @@ const CheckContainer = Styled.div`
 
 const Field = ({ label, name, type, required, invalid, validator, placeholder, options, ...props }: Props) => {
 
-    const { register, errors } = useFormContext()
+    const { formState: { errors }, control } = useFormContext()
 
     const validate = (value: any) => (
         (type.validator(value) && (!validator || validator(value))) || invalid || label || placeholder || 'Error'
     )
 
-    const registerOptions = { required: { value: !!required, message: required! }, validate: { value: validate } }
+    const renderComponent = ({ field }: any) => {
+        const onChange = (e: any) => {
+            props.onChange?.(e)
+            field.onChange(e)
+        }
 
-    const renderComponent = (register: any) => {
         switch (type) {
             case FieldType.SELECT:
                 return (
-                    <Select {...props as any} onChange={props.onChange} ref={register(registerOptions)} name={name} tabIndex={props.readOnly ? -1 : undefined}>
+                    <Select {...props as any} {...field} onChange={onChange} tabIndex={props.readOnly ? -1 : undefined}>
                         {Array.isArray(options![0].value) ? (
                             (options as TextValue<TextValue<string | number>[]>[]).map((group, i) => (
                                 <optgroup label={group.text}>
@@ -168,7 +171,7 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
             case FieldType.CHECKBOX:
                 return (
                     <CheckContainer> 
-                        <input type='checkbox' onChange={props.onChange} ref={register(registerOptions)} name={name} />
+                        <input type='checkbox' {...field} onChange={onChange} />
                         <CheckSlider />
                     </CheckContainer>
 
@@ -177,28 +180,29 @@ const Field = ({ label, name, type, required, invalid, validator, placeholder, o
                 return (
                     <textarea
                         {...props as any}
-                        name={name}
                         placeholder={placeholder}
-                        ref={register(registerOptions)}
-                        onChange={props.onChange} />
+                        {...field}
+                        onChange={onChange}/>
                 )
             default:
                 return (
                     <Input
                         {...props}
-                        name={name}
                         placeholder={placeholder}
                         type={type.name}
                         autoComplete='off'
-                        ref={register(registerOptions)}
-                        onChange={props.onChange} />
+                        {...field} onChange={onChange} />
                 )
         }
     }
 
     return (
         <Root>
-            {renderComponent(register)}
+            <Controller
+                control={control}
+                rules={{ required: { value: !!required, message: required! }, validate: { value: validate } }}
+                name={name}
+                render={renderComponent} />
             <Text>
                 <Label bad={errors[name]}>
                     {errors[name] ? (errors[name].message || errors[name].type) : label}

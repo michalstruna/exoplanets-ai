@@ -1,7 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { UseFormMethods } from 'react-hook-form'
+import { UseFormReturn } from 'react-hook-form'
 
 import { Color, Duration, fadeIn, image, opacityHover, size } from '../../Style'
 import { Field, Form } from '../../Form'
@@ -190,7 +190,7 @@ const Chat = ({ ...props }: Props) => {
     const actions = useActions({ addMessage, setMessageSelection })
     const messageSelection = useSelector<any, MessageTag>(state => state.user.messageSelection)
 
-    const handleSend = async (values: Values, form: UseFormMethods<Values>) => {
+    const handleSend = async (values: Values, form: UseFormReturn<Values>) => {
         if (!identity.payload) {
             form.setError('text', { message: globalStrings.users.unauth })
         } else if (values.text) {

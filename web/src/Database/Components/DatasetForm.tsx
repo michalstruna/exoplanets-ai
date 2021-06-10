@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { UseFormMethods, useForm } from 'react-hook-form'
+import { UseFormReturn, useForm } from 'react-hook-form'
 import { camelCase } from 'change-case'
 
 import { Field, Form, FormGroup } from '../../Form'
@@ -39,7 +39,7 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
     const form = useForm<DatasetNew>({ defaultValues: dataset ?? defaultValues })
     const values = form.watch()
 
-    const handleSubmit = async (values: DatasetNew, form: UseFormMethods<DatasetNew>) => {
+    const handleSubmit = async (values: DatasetNew, form: UseFormReturn<DatasetNew>) => {
         const { type, ...updateValues } = values
         let action = await (dataset ? actions.updateDataset([dataset._id, updateValues]) : actions.addDataset(values))
 

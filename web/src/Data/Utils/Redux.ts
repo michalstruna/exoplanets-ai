@@ -62,15 +62,22 @@ type SegmentItem<State, Item, Error> = (state: State, action: Action<Item, Error
 /** Add item to state property with type AsyncData<SegmentData<UpdatableObject>>. */
 export const addToSegment = <State extends SegmentState<State, Key>, Key extends keyof State, Item extends UpdatableObject, Error>(property: keyof State, maxSize?: number): SegmentItem<State, Item, Error> => (
     (state: State, action: Action<Item, Error>) => {
-        const maxIndex = Math.max(...state[property].payload!.content.map(item => item.index!), 0)
-        action.payload.index = maxIndex + 1
-        const val = state[property].payload!
-        val.content.push(action.payload)
+        const val = state[property].payload
+        
+        if (val) {
+            const maxIndex = Math.max(...state[property].payload!.content.map(item => item.index!), 0)
+            action.payload.index = maxIndex + 1
 
-        if (!maxSize || val.content.length < maxSize) {
-            val.count++
+            val.content.push(action.payload)
+    
+            if (!maxSize || val.content.length < maxSize) {
+                val.count++
+            } else {
+                val.content = val.content.slice(Math.max(val.content.length - maxSize, 0))
+            }
         } else {
-            val.content = val.content.slice(Math.max(val.content.length - maxSize, 0))
+            action.payload.index = 1
+            state[property].payload = { content: [action.payload], count: 1 }
         }
     }
 )
