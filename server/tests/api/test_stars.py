@@ -1,6 +1,5 @@
+from constants.User import UserRole
 from utils.test import Comparator, Creator, Res, KEPIDS, app
-
-# TODO: Auth
 
 
 def test_get(client):
@@ -21,6 +20,7 @@ def test_get(client):
 
 
 def test_delete_props(client):
+    auth_mod, auth = Creator.auth(role=UserRole.MOD), Creator.auth(role=UserRole.AUTH)
     dataset1, dataset2 = Creator.add_datasets(client, 2)  # Add two datasets.
 
     stars = Comparator.is_in(client.get("/api/stars").json["content"], [  # There are 2 stars from 2 datasets.
@@ -28,7 +28,15 @@ def test_delete_props(client):
         {"properties": [{"name": KEPIDS[1], "dataset": dataset1["name"]}, {"name": KEPIDS[1], "dataset": dataset2["name"]}]}
     ])
 
-    Res.deleted(client.delete(f"/api/stars/{stars[0]['_id']}/selection", json={"properties": [dataset2["name"]]}), client.get("/api/stars/" + stars[0]["_id"]).json, body=True)
+    Res.unauth(client.delete(f"/api/stars/{stars[0]['_id']}/selection", json={"properties": [dataset2["name"]]}))  # Unauth - fail.
+    Res.unauth(client.delete(f"/api/stars/{stars[0]['_id']}/selection", json={"properties": [dataset2["name"]]}, headers=auth))  # Normal user - fail.
+
+    Comparator.is_in(client.get("/api/stars").json["content"], [  # There are 2 stars from 2 datasets.
+        {"properties": [{"name": KEPIDS[0], "dataset": dataset1["name"]}, {"name": KEPIDS[0], "dataset": dataset2["name"]}]},
+        {"properties": [{"name": KEPIDS[1], "dataset": dataset1["name"]}, {"name": KEPIDS[1], "dataset": dataset2["name"]}]}
+    ])
+
+    Res.deleted(client.delete(f"/api/stars/{stars[0]['_id']}/selection", json={"properties": [dataset2["name"]]}, headers=auth_mod), client.get("/api/stars/" + stars[0]["_id"]).json, body=True)
 
     Comparator.is_in(client.get("/api/datasets").json["content"], [
         {"deleted_items": []},
@@ -40,11 +48,11 @@ def test_delete_props(client):
         {"properties": [{"name": KEPIDS[1], "dataset": dataset1["name"]}, {"name": KEPIDS[1], "dataset": dataset2["name"]}]}
     ])
 
-    Res.not_found(client.delete(f"/api/stars/{stars[0]['_id']}/selection", json={"properties": [dataset1["name"] + "_"]}))  # Delete non-existing dataset from star1.
-    Res.not_found(client.delete(f"/api/stars/{stars[0]['_id']}_/selection", json={"properties": [dataset1["name"]]}))  # Delete dataset1 from non-existing star.
-    Res.not_found(client.delete(f"/api/stars/{stars[0]['_id']}/selection", json={"properties": [dataset1["name"], dataset1["name"] + "_"]}))  # Delete existing and non-existing dataset from star1.
+    Res.not_found(client.delete(f"/api/stars/{stars[0]['_id']}/selection", json={"properties": [dataset1["name"] + "_"]}, headers=auth_mod))  # Delete non-existing dataset from star1.
+    Res.not_found(client.delete(f"/api/stars/{stars[0]['_id']}_/selection", json={"properties": [dataset1["name"]]}, headers=auth_mod))  # Delete dataset1 from non-existing star.
+    Res.not_found(client.delete(f"/api/stars/{stars[0]['_id']}/selection", json={"properties": [dataset1["name"], dataset1["name"] + "_"]}, headers=auth_mod))  # Delete existing and non-existing dataset from star1.
     assert updated_stars == client.get("/api/stars").json["content"]  # Stars should be still same - either entire selection will be deleted or nothing.
-    Res.deleted(client.delete(f"/api/stars/{stars[0]['_id']}/selection", json={"properties": [dataset1["name"]]}))  # Delete dataset1 from star1.
+    Res.deleted(client.delete(f"/api/stars/{stars[0]['_id']}/selection", json={"properties": [dataset1["name"]]}, headers=auth_mod))  # Delete dataset1 from star1.
 
     Comparator.is_in(client.get("/api/datasets").json["content"], [
         {"deleted_items": [stars[0]["properties"][1]["name"]]},
@@ -55,7 +63,7 @@ def test_delete_props(client):
         {"properties": [{"name": KEPIDS[1], "dataset": dataset1["name"]}, {"name": KEPIDS[1], "dataset": dataset2["name"]}]}
     ])
 
-    Res.deleted(client.delete(f"/api/stars/{stars[1]['_id']}/selection", json={"properties": [dataset2["name"], dataset1["name"]]}))  # Delete dataset1 and dataset2 from star2.
+    Res.deleted(client.delete(f"/api/stars/{stars[1]['_id']}/selection", json={"properties": [dataset2["name"], dataset1["name"]]}, headers=auth_mod))  # Delete dataset1 and dataset2 from star2.
 
     Comparator.is_in(client.get("/api/datasets").json["content"], [
         {"deleted_items": [stars[0]["properties"][1]["name"], stars[1]["properties"][0]["name"]]},
@@ -64,18 +72,16 @@ def test_delete_props(client):
 
     Comparator.is_in(client.get("/api/stars").json["content"], [])  # There should not be any star.
 
-# TODO: Test non existing star.
-
 
 def test_add_props(client):
     pass
 
 
-def test_delete_lcs(client):
+def test_reset_props(client):
     pass
 
 
-def test_reset_props(client):
+def test_delete_lcs(client):
     pass
 
 

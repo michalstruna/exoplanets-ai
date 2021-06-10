@@ -28,7 +28,6 @@ class FileService:
         extension = guess_extension(Enum.get(content_type))
         name = f"{name}{extension}" if name else self.generate_name(extension)
         path = os.path.join(FileService._get_server_root(), "public", Enum.get(tag), name)
-        print("|" * 100, extension, name, path)
 
         with open(path, "wb") as f:
             f.write(file)

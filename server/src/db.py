@@ -304,8 +304,8 @@ class LightCurve(EmbeddedDocument):
 
 
 class Star(Document):  # TODO: BaseDocument - _cls is not working.
-    properties = ListField(EmbeddedDocumentField(StarProperties), default=[])
-    light_curves = ListField(EmbeddedDocumentField(LightCurve), default=[])
+    properties = EmbeddedDocumentListField(StarProperties, default=[])
+    light_curves = EmbeddedDocumentListField(LightCurve, default=[])
     planets = EmbeddedDocumentListField(Planet, default=[])
 
     meta = {

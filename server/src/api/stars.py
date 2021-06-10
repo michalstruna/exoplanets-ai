@@ -1,12 +1,13 @@
 from flask_restx import fields, Resource
 from flask import request
 from flask_restx._http import HTTPStatus
+from flask_jwt_extended import jwt_required
 
 from constants.Star import SpectralClass, SpectralSubclass, LuminosityClass, Constellation
 from constants.User import EndpointAuth, UserRole
 from service.Dataset import DatasetService
 from service.Star import StarService
-from utils.http import Api, Response
+from utils.http import Api, Request, Response
 from .datasets import dataset
 from .planets import planet
 from .errors import error
@@ -147,14 +148,18 @@ class StarSelection(Resource):
     @api.ns.marshal_with(star, code=HTTPStatus.OK, description="Star was sucessfully deleted.")
     @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
     @api.ns.expect(star_selection)
+    @jwt_required
     def delete(self, id):
+        Request.protect({"auth": UserRole.MOD}, id)
         return Response.delete(lambda: star_service.delete_selection(id, request.get_json()), with_return=True)
 
     @api.ns.marshal_with(star, code=HTTPStatus.OK, description="Star was sucessfully reset.")
     @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
     @api.ns.expect(star_selection)
+    @jwt_required
     def put(self, id):
-        pass
+        Request.protect({"auth": UserRole.MOD}, id)
+        return Response.put(lambda: star_service.reset_selection(id, request.get_json()), with_return=True)
 
 
 resource_type = {

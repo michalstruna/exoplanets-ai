@@ -76,7 +76,7 @@ const DatasetsSelectionForm = <Item extends Record<Key, Record<GroupKey, GroupIt
         let action = await onSubmit(getFormValuesToOutput(values))
 
         if (action.error) {
-            form.setError(Form.GLOBAL_ERROR, { type: 'Chyba' }) // TODO: Fix error.
+            form.setError(Form.GLOBAL_ERROR, { type: action.payload.message })
         } else {
             form.reset()
             actions.hideTooltip()

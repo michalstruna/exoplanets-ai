@@ -88,7 +88,9 @@ class StarService(Service):
                 upsert=True
             ))
 
-        return db.star_dao.collection._get_collection().bulk_write(operations, ordered=False)
+        result = db.star_dao.collection._get_collection().bulk_write(operations, ordered=False)
+
+        return result
 
     def complete_star(self, star, with_constellation=True):
         result = {**star}
@@ -196,7 +198,7 @@ class StarService(Service):
 
     def delete_selection(self, id, selection):
         star = self.get_by_id(id)
-        self.check_selection(star, selection)
+        selection = self.check_selection(star, selection)
 
         for category in selection:
             def filter_delete(category_item):
@@ -216,6 +218,10 @@ class StarService(Service):
                 return result
 
         self.delete(id)
+
+    def reset_selection(self, id, selection):
+        star = self.get_by_id(id)
+        selection = self.check_selection(star, selection)
 
     def to_updated(self, star):
         for prop in ["_id", "index", "datasets"]:
