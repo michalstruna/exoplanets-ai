@@ -30,7 +30,7 @@ const datasetTypeToEntity: Record<DatasetType, string> = {
     [DatasetType.RADIAL_VELOCITY]: 'rv'
 }
 
-const defaultValues: DatasetNew = { fields: {}, item_getter: '', items_getter: '', name: '', type: DatasetType.STAR_PROPERTIES, priority: DatasetPriority.HIGHEST }
+const defaultValues: DatasetNew = { fields: {}, item_getter: '', items_getter: '', name: '', type: DatasetType.STAR_PROPERTIES, priority: DatasetPriority.NORMAL }
 
 const DatasetForm = ({ dataset, ...props }: Props) => {
 
