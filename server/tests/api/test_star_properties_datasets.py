@@ -101,6 +101,48 @@ def test_delete(client):
     Comparator.is_in(client.get("/api/stars").json["content"], [])
 
 
+def test_update_fields(client):
+    auth_mod = Creator.auth(role=UserRole.MOD)
+    dataset = client.post("/api/datasets", json=Creator.dataset(new=True, kepids=[KEPIDS[1]]), headers=auth_mod).json  # Add dataset.
+    stars1 = client.get("/api/stars").json["content"]
+
+    new_fields = {
+        "name": "KIC {kepid}",
+        "surface_temperature": "{teff*2}",
+        "diameter": "{radius}",
+        "mass": "{mass+5}",
+        "ra": "{ra/2}",
+        "dec": "{dec/3+3}",
+        "distance": "{dist}",
+        "apparent_magnitude": "{kepmag*2*2}",
+        "metallicity": "{feh+13.5}"
+    }
+
+    Res.updated(client.put(f"/api/datasets/{dataset['_id']}", json={"fields": new_fields}, headers=auth_mod)).json
+    stars2 = client.get("/api/stars").json["content"]
+
+    assert stars1 == stars2  # Stars should be unchanged.
+
+    Res.updated(client.put(f"/api/datasets/{dataset['_id']}/reset", headers=auth_mod))
+
+    props = stars2[0]["properties"][0]
+
+    Comparator.is_in(client.get("/api/stars").json["content"], [  # 3 stars from 2 datasets.
+        {"properties": [{
+            "name": f"KIC {KEPIDS[1]}",
+            "dataset": dataset["name"],
+            "surface_temperature": props["surface_temperature"] * 2,
+            "diameter": props["diameter"] / 2,
+            "mass": props["mass"] + 5,
+            "ra": props["ra"] / 2,
+            "dec": props["dec"] / 3 + 3,
+            "distance": props["distance"],
+            "apparent_magnitude": props["apparent_magnitude"] * 4,
+            "metallicity": props["metallicity"] + 13.5
+        }]}
+    ])
+
+
 def test_reset(client):
     auth_mod, auth = Creator.auth(role=UserRole.MOD), Creator.auth(role=UserRole.AUTH)
 

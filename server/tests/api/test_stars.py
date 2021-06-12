@@ -73,10 +73,6 @@ def test_delete_props(client):
     Comparator.is_in(client.get("/api/stars").json["content"], [])  # There should not be any star.
 
 
-def test_add_props(client):
-    pass
-
-
 def test_reset_props(client):
     pass
 

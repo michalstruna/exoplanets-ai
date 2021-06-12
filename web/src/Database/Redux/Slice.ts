@@ -1,5 +1,5 @@
 import { Query } from '../../Routing'
-import { Redux,  FilterData, Sort, Segment, Cursor } from '../../Data'
+import { Redux,  FilterData, Sort, Segment, Cursor, ItemId } from '../../Data'
 import { Requests } from '../../Async'
 import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData, DatasetSelection, SystemData, Constellation } from '../types'
 import { AggregatedStats, GlobalAggregatedStats, PlanetRanks, PlotStats } from '../../Stats'
@@ -50,21 +50,21 @@ const slice = Redux.slice(
             })
         }),
         getPlanets: async<Cursor, PlanetData[]>('planets', cursor => Requests.get('planets', undefined, cursor)),
-        getSystem: async<string, StarData>('system', name => Requests.get(`stars/name/${name}`)),
+        getSystem: async<ItemId, StarData>('system', name => Requests.get(`stars/name/${name}`)),
         getGlobalStats: async<void, AggregatedStats>('globalStats', () => Requests.get(`global_stats/aggregated`)),
         getPlotStats: async<void, PlotStats>('plotStats', () => Requests.get(`global_stats/plots`)),
         getPlanetRanks: async<void, PlanetRanks>('planetRanks', () => Requests.get(`planets/ranks`)),
 
         getStars: async<Cursor, StarData[]>('stars', cursor => Requests.get('stars', undefined, cursor)),
-        deleteStar: async<[string, DatasetSelection<StarData>], StarData>('deletedItem', ([id, datasetSelection]) => Requests.delete(`stars/${id}/selection`, datasetSelection), {
+        deleteStar: async<[ItemId, DatasetSelection<StarData>], StarData>('deletedItem', ([id, datasetSelection]) => Requests.delete(`stars/${id}/selection`, datasetSelection), {
             onSuccess: (state, action) => (action.payload ? Redux.updateInSegment : Redux.deleteFromSegment)('stars')(state, action)
         }),
 
         getDatasets: async<Cursor, SegmentData<Dataset>>('datasets', cursor => Requests.get(`datasets`, undefined, cursor)),
         addDataset: async<DatasetNew, Dataset>('newDataset', dataset => Requests.post(`datasets`, dataset), { onSuccess: Redux.addToSegment('datasets') }),
-        updateDataset: async<[string, DatasetUpdated], Dataset>('updatedItem', ([id, dataset]) => Requests.put(`datasets/${id}`, dataset), { onSuccess: Redux.updateInSegment('datasets') }),
-        deleteDataset: async<string, void>('updatedItem', id => Requests.delete(`datasets/${id}`), { onSuccess: Redux.deleteFromSegment('datasets') }),
-        resetDataset: async<string, void>('updatedItem', id => Requests.put(`datasets/${id}/reset`)),
+        updateDataset: async<[ItemId, DatasetUpdated], Dataset>('updatedItem', ([id, dataset]) => Requests.put(`datasets/${id}`, dataset), { onSuccess: Redux.updateInSegment('datasets') }),
+        deleteDataset: async<ItemId, void>('updatedItem', id => Requests.delete(`datasets/${id}`), { onSuccess: Redux.deleteFromSegment('datasets') }),
+        resetDataset: async<ItemId, void>('updatedItem', id => Requests.put(`datasets/${id}/reset`)),
         getConstellations: async<void, Constellation[]>('constellations', () => Requests.get(`stars/constellations`))
     })
 )
@@ -72,7 +72,7 @@ const slice = Redux.slice(
 export default slice.reducer
 export const {
     setFilter, setSort, setSegment,
-    getStars,deleteStar,
+    getStars, deleteStar,
     getDatasets, addDataset, updateDataset, deleteDataset, resetDataset,
     getPlanets,
     getSystem,

@@ -213,15 +213,11 @@ class StarService(Service):
 
         result = self.update(id, self.to_updated(star))
 
-        for prop in ["properties", "light_curves"]:  # If star is empty, delete whole object. TODO: self.delete_empty for single star?
+        for prop in ["properties", "light_curves"]:
             if prop in star and star[prop]:
                 return result
 
         self.delete(id)
-
-    def reset_selection(self, id, selection):
-        star = self.get_by_id(id)
-        selection = self.check_selection(star, selection)
 
     def to_updated(self, star):
         for prop in ["_id", "index", "datasets"]:

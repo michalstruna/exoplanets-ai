@@ -153,14 +153,6 @@ class StarSelection(Resource):
         Request.protect({"auth": UserRole.MOD}, id)
         return Response.delete(lambda: star_service.delete_selection(id, request.get_json()), with_return=True)
 
-    @api.ns.marshal_with(star, code=HTTPStatus.OK, description="Star was sucessfully reset.")
-    @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
-    @api.ns.expect(star_selection)
-    @jwt_required
-    def put(self, id):
-        Request.protect({"auth": UserRole.MOD}, id)
-        return Response.put(lambda: star_service.reset_selection(id, request.get_json()), with_return=True)
-
 
 resource_type = {
     "get_all": {"auth": EndpointAuth.ANY},

@@ -86,8 +86,9 @@ class Dao:
         pass  # TODO
 
     def update_by_id(self, id, item, with_return=True):
-        if "_id" in item:
-            del item["_id"]
+        for key in ["_id", "created", "modified"]:
+            if key in item:
+                del item[key]
 
         self.collection.objects(id=Dao.id(id)).update_one(**self.modified(item))
 

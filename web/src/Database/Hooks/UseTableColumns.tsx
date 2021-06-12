@@ -133,8 +133,7 @@ const UseTableColumns = (): Structure => {
                                         onSubmit={values => dispatch(deleteStar([item._id, values]))}
                                         submitLabel={strings.datasets.selection.delete} />
                                 ),
-                                onRemove: () => null,
-                                onReset: () => null
+                                onRemove:() => null
                             })
                         },
                         {
@@ -308,7 +307,7 @@ const ItemImage = Styled.div<ItemImageProps>`
     ` : css`
         ${image(props.image)}
     `}
-    display: inline - block
+    display: inline-block
 `
 
 export default UseTableColumns
