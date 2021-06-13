@@ -156,7 +156,11 @@ class Request:
             if order not in ["asc", "desc"]:
                 raise Exception(f"'{order}' is no valid order.")
 
-            result[final_prop] = 1 if order == "asc" else -1
+            if not isinstance(final_prop, list):
+                final_prop = [final_prop]
+
+            for prop in final_prop:
+                result[prop] = 1 if order == "asc" else -1
 
         return result
 

@@ -159,8 +159,7 @@ const UseTableColumns = (): Structure => {
                                 strings: planets,
                                 indexColumnName: 'index',
                                 renderRemove: item => <b>123456789</b>,
-                                onRemove: () => null,
-                                onReset: () => null
+                                onRemove: () => null
                             }),
                             accessor: (star: StarData) => star.planets
                         }
