@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { UseFormMethods, useForm } from 'react-hook-form'
+import { UseFormReturn, useForm } from 'react-hook-form'
 
 import { Field, FieldType, Form, FormGroup, ResetFormButton } from '../../Form'
 import { useActions, useStrings } from '../../Data'
@@ -72,11 +72,11 @@ const DatasetsSelectionForm = <Item extends Record<Key, Record<GroupKey, GroupIt
     const strings = useStrings().datasets.selection
     const actions = useActions({ addDataset, updateDataset, hideTooltip: Tooltip.hide })
 
-    const handleSubmit = async (values: Values, form: UseFormMethods<Values>) => {
+    const handleSubmit = async (values: Values, form: UseFormReturn<Values>) => {
         let action = await onSubmit(getFormValuesToOutput(values))
 
         if (action.error) {
-            form.setError(Form.GLOBAL_ERROR, { type: 'Chyba' }) // TODO: Fix error.
+            form.setError(Form.GLOBAL_ERROR, { type: action.payload.message })
         } else {
             form.reset()
             actions.hideTooltip()

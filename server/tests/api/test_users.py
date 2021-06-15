@@ -11,7 +11,6 @@ def test_local_sign_up(client):
 
     cr1 = Creator.local_credentials(1, new=True)
     Res.duplicate(client.post("/api/users/sign-up", json=Creator.local_credentials(5, new=True, username=cr1["username"])))  # Duplicate username.
-    Res.duplicate(client.post("/api/users/sign-up", json=Creator.local_credentials(5, new=True, name=cr1["name"])))  # Duplicate name.
     Res.invalid(client.post("/api/users/sign-up", json=Creator.local_credentials(5, new=True, username="invalid")))  # Invalid username.
     Res.invalid(client.post("/api/users/sign-up", json=Creator.local_credentials(5, new=True, username="")))  # Empty username.
     Res.invalid(client.post("/api/users/sign-up", json=Creator.local_credentials(5, new=True, name="")))  # Empty name.
@@ -21,6 +20,7 @@ def test_local_sign_up(client):
     Res.invalid(client.post("/api/users/sign-up", json=Creator.local_credentials(5, new=True, password="a" * 51)))  # Long password.
 
     Res.created(client.post("/api/users/sign-up", json=Creator.local_credentials(5, new=True)), Creator.user(5))  # User 5 should not exist yet.
+    Res.created(client.post("/api/users/sign-up", json=Creator.local_credentials(6, new=True, name=cr1["name"])))  # Duplicate name is working.
 
 
 def test_local_login(client):
@@ -149,15 +149,15 @@ def test_sort(client):
 
     Res.list(client.get("/api/users?sort=country,asc"), [usr1, usr2, usr3, usr4])  # Personal
     Res.list(client.get("/api/users?sort=country,desc"), [usr4, usr3, usr2, usr1])
-    Res.list(client.get("/api/users?sort=sex,asc&name,asc"), [usr1, usr3, usr2, usr4])
-    Res.list(client.get("/api/users?sort=sex,desc&name,asc"), [usr2, usr4, usr1, usr3])
+    Res.list(client.get("/api/users?sort=sex,asc&sort=name,asc"), [usr1, usr3, usr2, usr4])
+    Res.list(client.get("/api/users?sort=sex,desc&sort=name,asc"), [usr2, usr4, usr1, usr3])
     Res.list(client.get("/api/users?sort=contact,asc"), [usr1, usr2, usr3, usr4])
     Res.list(client.get("/api/users?sort=contact,desc"), [usr4, usr3, usr2, usr1])
     Res.list(client.get("/api/users?sort=birth,asc"), [usr1, usr2, usr3, usr4])
     Res.list(client.get("/api/users?sort=birth,desc"), [usr4, usr3, usr2, usr1])
 
     Res.list(client.get("/api/users?sort=planets_diff,desc"), [usr1, usr2, usr4, usr3])
-    Res.list(client.get("/api/users?sort=planets_diff,asc"), [usr4, usr4, usr3, usr1])  # TODO: Fix order.
+    Res.list(client.get("/api/users?sort=planets_diff,asc"), [usr3, usr4, usr2, usr1])  # TODO: Fix order.
     Res.list(client.get("/api/users?sort=items_diff,desc"), [usr2, usr1, usr4, usr3])
     Res.list(client.get("/api/users?sort=items_diff,asc"), [usr3, usr4, usr1, usr2])
     Res.list(client.get("/api/users?sort=time_diff,desc"), [usr4, usr3, usr1, usr2])
@@ -179,24 +179,26 @@ def test_edit_local_user(client):
     usr1, usr2 = Res.created(client.post("/api/users/sign-up", json=cr1)).json, Res.created(client.post("/api/users/sign-up", json=cr2)).json
 
     Res.list(client.get("/api/users"), [usr1, usr2])
-    Res.item(client.post("/api/users/login", json=cr1), usr1)  # Users can log in.
-    Res.item(client.post("/api/users/login", json=cr2), usr2)
+    token1 = Res.item(client.post("/api/users/login", json=cr1), usr1).json["token"]  # Users can log in.
+    token2 = Res.item(client.post("/api/users/login", json=cr2), usr2).json["token"]
 
     personal1 = Creator.personal(1)
     assert personal1 != usr1["personal"]
-    usr1_updated = Res.updated(client.put("/api/users/" + usr1["_id"], json={"personal": personal1}), {**usr1, "personal": personal1}).json  # Change personal.
+    usr1_updated = Res.updated(client.put("/api/users/" + usr1["_id"], json={"personal": personal1}, headers=Creator.auth(token1)), {**usr1, "personal": personal1}).json  # Change personal.
 
     Res.list(client.get("/api/users"), [usr1_updated, usr2])  # Check updated user.
     Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
 
     cr1_updated = {**cr1, "password": Creator.local_credentials(3)["password"]}
-    Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated, "old_password": cr2["password"]}))  # Change password with bad old password.
+    Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated, "old_password": cr2["password"]}, headers=Creator.auth(token1)))  # Change password with bad old password.
+    Res.unauth(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated["password"], "old_password": cr1["password"]}))  # Change password with missing token.
+    Res.unauth(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated["password"], "old_password": cr1["password"]}, headers=Creator.auth(token2)))  # Change password with invalid token.
     Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
 
-    Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": "short", "old_password": cr1["password"]}))  # Change password to invalid password.
+    Res.invalid(client.put("/api/users/" + usr1["_id"], json={"password": "short", "old_password": cr1["password"]}, headers=Creator.auth(token1)))  # Change password to invalid password.
     Res.item(client.post("/api/users/login", json=cr1), usr1_updated)  # User still can log in.
 
-    Res.updated(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated["password"], "old_password": cr1["password"]}), usr1_updated)  # Change password.
+    Res.updated(client.put("/api/users/" + usr1["_id"], json={"password": cr1_updated["password"], "old_password": cr1["password"]}, headers=Creator.auth(token1)), usr1_updated)  # Change password.
     Res.bad_credentials(client.post("/api/users/login", json=cr1))  # User cannot login with old password.
     Res.item(client.post("/api/users/login", json=cr1_updated), usr1_updated)  # User can log in with new password.
 

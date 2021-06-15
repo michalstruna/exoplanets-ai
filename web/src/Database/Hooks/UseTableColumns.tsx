@@ -133,8 +133,7 @@ const UseTableColumns = (): Structure => {
                                         onSubmit={values => dispatch(deleteStar([item._id, values]))}
                                         submitLabel={strings.datasets.selection.delete} />
                                 ),
-                                onRemove: () => null,
-                                onReset: () => null
+                                onRemove:() => null
                             })
                         },
                         {
@@ -160,8 +159,7 @@ const UseTableColumns = (): Structure => {
                                 strings: planets,
                                 indexColumnName: 'index',
                                 renderRemove: item => <b>123456789</b>,
-                                onRemove: () => null,
-                                onReset: () => null
+                                onRemove: () => null
                             }),
                             accessor: (star: StarData) => star.planets
                         }
@@ -308,7 +306,7 @@ const ItemImage = Styled.div<ItemImageProps>`
     ` : css`
         ${image(props.image)}
     `}
-    display: inline - block
+    display: inline-block
 `
 
 export default UseTableColumns

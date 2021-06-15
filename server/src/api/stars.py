@@ -1,12 +1,13 @@
 from flask_restx import fields, Resource
 from flask import request
 from flask_restx._http import HTTPStatus
+from flask_jwt_extended import jwt_required
 
 from constants.Star import SpectralClass, SpectralSubclass, LuminosityClass, Constellation
-from constants.User import UserRole
+from constants.User import EndpointAuth, UserRole
 from service.Dataset import DatasetService
 from service.Star import StarService
-from utils.http import Api, Response
+from utils.http import Api, Request, Response
 from .datasets import dataset
 from .planets import planet
 from .errors import error
@@ -147,19 +148,15 @@ class StarSelection(Resource):
     @api.ns.marshal_with(star, code=HTTPStatus.OK, description="Star was sucessfully deleted.")
     @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
     @api.ns.expect(star_selection)
+    @jwt_required
     def delete(self, id):
+        Request.protect({"auth": UserRole.MOD}, id)
         return Response.delete(lambda: star_service.delete_selection(id, request.get_json()), with_return=True)
-
-    @api.ns.marshal_with(star, code=HTTPStatus.OK, description="Star was sucessfully reset.")
-    @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified name was not found in star with specified ID.", error)
-    @api.ns.expect(star_selection)
-    def put(self, id):
-        pass
 
 
 resource_type = {
-    "get_all": {"role": UserRole.UNAUTH},
-    "get": {"role": UserRole.UNAUTH}
+    "get_all": {"auth": EndpointAuth.ANY},
+    "get": {"auth": EndpointAuth.ANY}
 }
 
 api.init(full_model=star, new_model=star_properties, service=star_service, model_name="Star", map_props=map_props, resource_type=resource_type)

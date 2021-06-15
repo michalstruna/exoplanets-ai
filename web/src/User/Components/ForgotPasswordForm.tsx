@@ -4,7 +4,7 @@ import Styled from 'styled-components'
 import { useStrings } from '../../Data'
 import { ForgotPasswordData } from '..'
 import { Form, Field } from '../../Form'
-import { UseFormMethods } from 'react-hook-form'
+import { UseFormReturn } from 'react-hook-form'
 import { PrimaryButton } from '../../Layout'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
@@ -27,7 +27,7 @@ const ForgotPasswordForm = ({ handleLogin, handleSignUp, ...props }: Props) => {
 
     const strings = useStrings().auth
 
-    const handleSubmit = async (values: ForgotPasswordData, form: UseFormMethods<ForgotPasswordData>) => {
+    const handleSubmit = async (values: ForgotPasswordData, form: UseFormReturn<ForgotPasswordData>) => {
         // TODO
     }
 

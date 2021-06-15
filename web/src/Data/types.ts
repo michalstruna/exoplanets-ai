@@ -68,8 +68,10 @@ export type LogObject = {
     modified: number
 }
 
+export type ItemId = string
+
 export type UniqueObject = {
-    _id: string
+    _id: ItemId
 }
 
 export type UnitTypeData = SimpleTextValue<number>[]

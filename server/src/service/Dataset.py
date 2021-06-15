@@ -43,6 +43,8 @@ class DatasetService(Service):
         self.stats_service.add(**stats, **global_stats)
         self.message_service.add({"text": dataset["name"], "tag": MessageTag.NEW_DATASET.value})
 
+        self.star_service.delete_empty()
+
         return result
 
 
@@ -99,7 +101,7 @@ class DatasetService(Service):
         prefix, body, suffix = re.split("{|}", mask)
 
         name, ops_str = "", ""
-        search = re.search("[*-+/]", body)
+        search = re.search("[*\-+/]", body)
         operands, operators, ops = [], [], []
 
         if search:
@@ -112,7 +114,7 @@ class DatasetService(Service):
         if ops_str:
             operators = re.split("[0-9]+", ops_str)
             operators.pop()
-            operands = re.split("[*-+/]", ops_str)[1:]
+            operands = re.split("[*\-+/]", ops_str)[1:]
 
         for i in range(len(operands)):
             ops.append([operators[i], float(operands[i])])
@@ -143,7 +145,6 @@ class DatasetService(Service):
             val = val.astype(str)
 
         field_type = DatasetFields[dataset["type"]].value[field_name]["type"]
-
         return field_meta["prefix"] + val + field_meta["suffix"] if field_type == str else val.astype(field_type)
 
     def fields_to_fields_map(self, dataset):

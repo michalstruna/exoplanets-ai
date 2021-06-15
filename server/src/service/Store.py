@@ -11,8 +11,6 @@ class StoreService(Service):
         try:
             return super().get({"key": Enum.get(key)})["value"]
         except:
-            import traceback
-            traceback.print_exc()
             return None
 
     def add(self, key, value):

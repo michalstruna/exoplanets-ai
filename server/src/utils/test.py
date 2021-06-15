@@ -101,6 +101,12 @@ class Res:
         assert res.status_code == HTTPStatus.CONFLICT
         return res
 
+    @staticmethod
+    def unauth(res):
+        assert res.json["type"] == ErrorType.UNAUTHORIZED.value
+        assert res.status_code == HTTPStatus.UNAUTHORIZED
+        return res
+
 
 KEPIDS = ["10000800", "11904151", "10874614"]
 FIELDS = {
@@ -143,6 +149,8 @@ class Comparator:
 
 
 class Creator:
+
+    UUID = 0
 
     @staticmethod
     def stats(box=False, **kwargs):
@@ -211,7 +219,7 @@ class Creator:
 
     @staticmethod
     def add_dataset(client, **kwargs):
-        return client.post("/api/datasets", json=Creator.dataset(**kwargs)).json
+        return client.post("/api/datasets", json=Creator.dataset(**kwargs), headers=Creator.auth(role=UserRole.MOD)).json
 
     @staticmethod
     def add_datasets(client, *args):
@@ -256,6 +264,17 @@ class Creator:
             pass
 
         return result
+
+    @staticmethod
+    def auth(token=None, role=None):
+        if role:
+            Creator.UUID += 1
+            cr = Creator.local_credentials(Creator.UUID)
+            Creator.save_user(id=Creator.UUID, role=role, **cr)
+            user = user_service.local_login(cr)
+            token = user["token"]
+
+        return {"Authorization": f"Bearer {token}"}
 
     @staticmethod
     def save_user(**kwargs):

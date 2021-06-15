@@ -1,7 +1,7 @@
 from mongoengine.errors import ValidationError, NotUniqueError, DoesNotExist
 from bson.errors import InvalidId
 from flask_restx.reqparse import RequestParser
-from flask_restx import Namespace, Resource, fields, abort
+from flask_restx import Namespace, Resource, fields, abort, resource
 from flask import request
 from flask_restx._http import HTTPStatus
 from flask_jwt_extended import jwt_required
@@ -9,7 +9,7 @@ from flask_jwt_extended import jwt_required
 from api.errors import error, int_value
 from constants.Data import Relation
 from constants.Error import ErrorType
-from constants.User import UserRole
+from constants.User import EndpointAuth, UserRole
 from utils.exceptions import BadCredentials, Invalid
 from service.Security import SecurityService
 from utils.patterns import cond_dec
@@ -83,6 +83,10 @@ class Response:
         abort(HTTPStatus.BAD_REQUEST, type=ErrorType.BAD_REQUEST.value, message=message)
 
     @staticmethod
+    def unauth(message=""):
+        abort(HTTPStatus.UNAUTHORIZED, type=ErrorType.UNAUTHORIZED.value, message=message)
+
+    @staticmethod
     def ok(body):
         return body, HTTPStatus.OK
 
@@ -152,7 +156,11 @@ class Request:
             if order not in ["asc", "desc"]:
                 raise Exception(f"'{order}' is no valid order.")
 
-            result[final_prop] = 1 if order == "asc" else -1
+            if not isinstance(final_prop, list):
+                final_prop = [final_prop]
+
+            for prop in final_prop:
+                result[prop] = 1 if order == "asc" else -1
 
         return result
 
@@ -201,17 +209,45 @@ class Request:
 
         return {"$and": rules} if rules else {}
 
+    @staticmethod
+    def protect(res_type, resource_id=None):
+        req_author = security_service.get_req_identity()
+        data = request.get_json()
+        resource_id = res_type["author_accessor"] if "author_accessor" in res_type else resource_id
+
+        if res_type["auth"] != EndpointAuth.ANY:
+            if isinstance(res_type["auth"], UserRole):  # Specified role is required.
+                if req_author["role"] < res_type["auth"].value:
+                    Response.unauth("You do not have sufficient privileges.") 
+            elif res_type["auth"] == EndpointAuth.MYSELF:  # Only author of resource.
+                if req_author["_id"] != resource_id:
+                    Response.unauth("You can't update foreign item.")
+            elif res_type["auth"] == EndpointAuth.MYSELF_OR_MOD:
+                if req_author["_id"] != resource_id and req_author["role"] < UserRole.MOD.value:
+                    Response.unauth("You can't update foreign item.")
+            elif res_type["auth"] == EndpointAuth.MYSELF_OR_ADMIN:
+                if req_author["_id"] != resource_id and req_author["role"] < UserRole.ADMIN.value:
+                    Response.unauth("You can't update foreign item.")
+
+        if "author" in res_type:
+            data[res_type["author"]] = req_author["_id"]
+
+        if "modify" in res_type:
+            res_type["modify"](data, req_author)
+
+        return data
+
 
 class Api:
 
     _endpoint_uid = 0
 
     UNSECURED_RESOURCE = {
-        "get_all": { "role": UserRole.UNAUTH},
-        "get": {"role": UserRole.UNAUTH},
-        "add": {"role": UserRole.UNAUTH},
-        "update": {"role": UserRole.UNAUTH},
-        "delete": {"role": UserRole.UNAUTH}
+        "get_all": { "auth": EndpointAuth.ANY},
+        "get": {"auth": EndpointAuth.ANY},
+        "add": {"auth": EndpointAuth.ANY},
+        "update": {"auth": EndpointAuth.ANY},
+        "delete": {"auth": EndpointAuth.ANY}
     }
 
     CUSTOM_RESOURCE = {}
@@ -243,31 +279,24 @@ class Api:
         methods = {}
 
         if "get_all" in self.resource_type:
-            res_type = self.resource_type["get_all"]
-
             @self.ns.marshal_with(Response.page_model(self.ns, self.full_model), code=HTTPStatus.OK, description=f"Successfully get {self.model_name}s.", )
             @self.ns.response(HTTPStatus.BAD_REQUEST, "Invalid query parameters.", error)
             @self.ns.expect(Request.cursor_parser())
-            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
+            @cond_dec(jwt_required, self.resource_type["get_all"]["auth"] != EndpointAuth.ANY)
             def get(_self):
+                Request.protect(self.resource_type["get_all"])
                 return Response.page(self.service, self.map_props)
 
             methods["get"] = get
 
         if "add" in self.resource_type:
-            res_type = self.resource_type["add"]
-
             @self.ns.marshal_with(self.full_model, code=HTTPStatus.CREATED, description=f"{self.model_name} was successfully created.")
             @self.ns.response(HTTPStatus.BAD_REQUEST, f"{self.model_name} is invalid.", error)
             @self.ns.response(HTTPStatus.CONFLICT, f"{self.model_name} is duplicate.", error)
             @self.ns.expect(self.new_model)
-            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
+            @cond_dec(jwt_required, self.resource_type["add"]["auth"] != EndpointAuth.ANY)
             def post(_self):
-                data = request.get_json()
-
-                if "modify" in res_type:
-                    res_type["modify"](data, security_service.get_req_identity())
-
+                data = Request.protect(self.resource_type["add"])
                 return Response.post(lambda: self.service.add(data))
 
             methods["post"] = post
@@ -280,42 +309,34 @@ class Api:
         methods = {}
 
         if "get" in self.resource_type:
-            res_type = self.resource_type["get"]
-
             @self.ns.marshal_with(self.full_model, code=HTTPStatus.OK, description=f"Successfully get {self.model_name}.")
             @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
-            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
+            @cond_dec(jwt_required, self.resource_type["get"]["auth"] != EndpointAuth.ANY)
             def get(_self, id):
+                Request.protect(self.resource_type["get"], id)
                 return Response.get(lambda: self.service.get_by_id(id))
 
             methods["get"] = get
 
         if "delete" in self.resource_type:
-            res_type = self.resource_type["delete"]
-
             @self.ns.response(HTTPStatus.NO_CONTENT, description=f"{self.model_name} was successfully deleted.")
             @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
-            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
+            @cond_dec(jwt_required, self.resource_type["delete"]["auth"] != EndpointAuth.ANY)
             def delete(_self, id):
+                Request.protect(self.resource_type["delete"], id)
                 return Response.delete(lambda: self.service.delete(id))
 
             methods["delete"] = delete
 
         if "update" in self.resource_type:
-            res_type = self.resource_type["update"]
-
             @self.ns.marshal_with(self.full_model, code=HTTPStatus.OK, description=f"Successfully get {self.model_name}.")
             @self.ns.response(HTTPStatus.BAD_REQUEST, f"{self.model_name} is invalid.", error)
             @self.ns.response(HTTPStatus.NOT_FOUND, f"{self.model_name} with specified ID was not found.", error)
             @self.ns.response(HTTPStatus.CONFLICT, f"{self.model_name} is duplicate.", error)
             @self.ns.expect(self.updated_model)
-            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
+            @cond_dec(jwt_required, self.resource_type["update"]["auth"] != EndpointAuth.ANY)
             def put(_self, id):
-                data = request.get_json()
-
-                if "author" in res_type:
-                    data[res_type["author"]] = security_service.get_req_identity()
-
+                data = Request.protect(self.resource_type["update"], id)
                 return Response.put(lambda: self.service.update(id, data))
 
             methods["put"] = put
@@ -328,14 +349,14 @@ class Api:
         methods = {}
 
         if "rank" in self.resource_type:
-            res_type = self.resource_type["rank"]
-
             @self.ns.marshal_with(int_value, description="Successfully get item rank.")
             @self.ns.response(HTTPStatus.BAD_REQUEST, "Invalid sort.")
             @self.ns.response(HTTPStatus.NOT_FOUND, "Item with specified ID was not found.")
             @self.ns.expect(Request.sort_parser())
-            @cond_dec(jwt_required, res_type["role"] != UserRole.UNAUTH)
+            @cond_dec(jwt_required, self.resource_type["rank"]["auth"] != EndpointAuth.ANY)
             def get(_self, id):
+                Request.protect(self.resource_type["rank"], id)
+
                 def get_rank():
                     cursor = Request.cursor(self.map_props)
                     rank = self.service.get_rank(id, cursor["sort"])

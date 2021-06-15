@@ -112,7 +112,7 @@ const Table = Styled(HierarchicalTable)`
                     }
                 
                     &:nth-of-type(3) {
-                        padding-left: 3rem;
+                        padding-left: 4rem;
                     }
                 }
             }

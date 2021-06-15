@@ -1,17 +1,26 @@
 #!/bin/bash
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
+cd "$(dirname "$0")"
 
 . ./argparser.sh
+cd ..
 
 if [ $server -eq 1 ]; then
-    ./server-build.sh
+    cd server
+    python3 -m pip install -r server/requirements.txt
+    cd ..
 fi
 
 if [ $web -eq 1 ]; then
-    ./web-build.sh
+    cd ../web
+    npm i
+    npm run build
+    cd ..
 fi
 
 if [ $client -eq 1 ]; then
-    ./client-build.sh
+    cd client
+    python3 -m pip install -r client/requirements.txt
+    # TODO: Build exe and sh files.
+    cd ..
 fi

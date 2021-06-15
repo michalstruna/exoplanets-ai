@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { UseFormMethods, useForm } from 'react-hook-form'
+import { UseFormReturn, useForm } from 'react-hook-form'
 import { camelCase } from 'change-case'
 
 import { Field, Form, FormGroup } from '../../Form'
@@ -12,6 +12,7 @@ import DatasetType from '../Constants/DatasetType'
 import DatasetFields from '../Constants/DatasetFields'
 import { addDataset, updateDataset } from '../Redux/Slice'
 import Tooltip from '../../Layout/Components/Tooltip'
+import { Objects } from '../../Native'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     dataset?: Dataset
@@ -29,22 +30,22 @@ const datasetTypeToEntity: Record<DatasetType, string> = {
     [DatasetType.RADIAL_VELOCITY]: 'rv'
 }
 
-const defaultValues: DatasetNew = { fields: {}, item_getter: '', items_getter: '', name: '', type: DatasetType.STAR_PROPERTIES }
+const defaultValues: DatasetNew = { fields: {}, item_getter: '', items_getter: '', name: '', type: DatasetType.STAR_PROPERTIES, priority: DatasetPriority.NORMAL }
 
 const DatasetForm = ({ dataset, ...props }: Props) => {
 
     const actions = useActions({ addDataset, updateDataset, hideTooltip: Tooltip.hide })
     const globalStrings = useStrings()
     const strings = globalStrings.datasets
-    const form = useForm<DatasetNew>({ defaultValues: dataset ?? defaultValues })
+    const form = useForm<DatasetNew>({ defaultValues: dataset ? Objects.includeKeys(dataset, 'fields', 'item_getter', 'items_getter', 'name', 'type', 'priority') : defaultValues })
     const values = form.watch()
 
-    const handleSubmit = async (values: DatasetNew, form: UseFormMethods<DatasetNew>) => {
+    const handleSubmit = async (values: DatasetNew, form: UseFormReturn<DatasetNew>) => {
         const { type, ...updateValues } = values
         let action = await (dataset ? actions.updateDataset([dataset._id, updateValues]) : actions.addDataset(values))
 
         if (action.error) {
-            form.setError(Form.GLOBAL_ERROR, { type: action.error })
+            form.setError(Form.GLOBAL_ERROR, { type: action.payload.message })
         } else {
             form.reset(dataset ? values : undefined)
             actions.hideTooltip()
@@ -77,7 +78,6 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
                         type={Field.Type.SELECT}
                         label={strings.priority}
                         required={strings.missingPriority}
-                        defaultValue={DatasetPriority.NORMAL}
                         options={Object.entries(strings.priorities).map(([value, text]) => ({ text, value } as any))} />
                     <Field
                         name='items_getter'

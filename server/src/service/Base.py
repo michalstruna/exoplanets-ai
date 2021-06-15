@@ -44,13 +44,22 @@ class Service(ABC):
         self.dao.collection._get_collection().update_many({}, {"$pull": {array_name: {field_name: field_value}}})
 
     def check_selection(self, item, selection):
+        result = {}
+
         for category in selection:
+            if not selection[category]:
+                continue
+
+            result[category] = selection[category]
+
             if category not in item or type(item[category]) != list:
                 raise DoesNotExist(f"Invalid selection: Category \"{category}\" does not exist.")
 
             for selection_item in selection[category]:
                 if not list(filter(lambda x: x["dataset"] == selection_item, item[category])):
                     raise DoesNotExist(f"Invalid selection: Dataset \"{selection_item}\" does not exist in \"{category}\".")
+
+        return result
 
     def get_rank(self, id, sort):
         items = self.get_all(sort=sort, last_filter={"_id": ObjectId(id)})

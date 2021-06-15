@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import { useForm, UseFormMethods, FormProvider, FieldValues, DefaultValues, UnpackNestedValue } from 'react-hook-form'
+import { useForm, UseFormReturn, FormProvider, FieldValues, DefaultValues, UnpackNestedValue } from 'react-hook-form'
 
 import { Color } from '../../Style'
 import { Loader } from '../../Async'
@@ -8,8 +8,8 @@ import { SecondaryButton } from '../../Layout'
 
 interface Props<Values extends FieldValues> extends Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
     defaultValues?: DefaultValues<Values>
-    onSubmit: (values: UnpackNestedValue<Values>, form: UseFormMethods<Values>) => void
-    form?: UseFormMethods<Values>
+    onSubmit: (values: UnpackNestedValue<Values>, form: UseFormReturn<Values>) => void
+    form?: UseFormReturn<Values>
     buttons?: [(() => void) | undefined, string][]
 }
 
@@ -64,9 +64,12 @@ const Form = <Values extends FieldValues>({ defaultValues, onSubmit, children, f
             <Root
                 {...props}
                 noValidate={true}
-                onSubmit={form.handleSubmit(values => onSubmit(values, form))}>
+                onSubmit={e => {
+                    form.clearErrors(Form.GLOBAL_ERROR)
+                    form.handleSubmit(values => onSubmit(values, form))(e)
+                }}>
                 {children}
-                {form.errors[Form.GLOBAL_ERROR] && <ErrorContainer>{(form.errors as any)[Form.GLOBAL_ERROR].type}</ErrorContainer>}
+                {form.formState.errors[Form.GLOBAL_ERROR] && <ErrorContainer>{(form.formState.errors as any)[Form.GLOBAL_ERROR].type}</ErrorContainer>}
                 {form.formState.isSubmitting && <FormLoader />}
                 {buttons && (
                     <Buttons single={buttons.length === 1}>

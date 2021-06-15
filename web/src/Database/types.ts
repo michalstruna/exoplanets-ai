@@ -113,6 +113,7 @@ export type DatasetUpdated = {
     fields: Record<string, string>
     items_getter?: string
     item_getter?: string
+    priority: number
 }
 
 export type DatasetNew = DatasetUpdated & {

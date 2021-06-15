@@ -115,6 +115,7 @@ const strings = {
         selection: {
             noDatasets: { [CS]: 'Žádná data k dispozici', [EN]: 'No data available' },
             delete: { [CS]: 'Smazat', [EN]: 'Delete' },
+            reset: 'Reset'
 
         }
     },

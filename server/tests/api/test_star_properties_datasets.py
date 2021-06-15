@@ -1,6 +1,7 @@
 from pytest import approx
 
 from constants.Dataset import DatasetPriority
+from constants.User import UserRole
 from utils.test import Comparator, Creator, Res, KEPIDS, FIELDS, app
 from utils import time
 
@@ -17,10 +18,14 @@ def test_get(client):
 
 
 def test_add(client):
+    auth_mod, auth = Creator.auth(role=UserRole.MOD), Creator.auth(role=UserRole.AUTH)
+
     Res.list(client.get("/api/datasets"), [])  # There is no dataset.
     Res.list(client.get("/api/stars"), [])  # There is no star.
 
-    dataset1 = Res.created(client.post("/api/datasets", json=Creator.dataset())).json  # Add first dataset.
+    Res.unauth(client.post("/api/datasets", json=Creator.dataset()))  # Unauth - fail.
+    Res.unauth(client.post("/api/datasets", json=Creator.dataset(), headers=auth))  # Normal user - fail.
+    dataset1 = Res.created(client.post("/api/datasets", json=Creator.dataset(), headers=auth_mod)).json  # Add first dataset.
     Res.list(client.get("/api/datasets"), [dataset1])  # There is 1 dataset.
     assert dataset1["size"] == 2
 
@@ -29,7 +34,7 @@ def test_add(client):
         {"properties": [{"name": KEPIDS[1], "dataset": dataset1["name"]}]}
     ])
 
-    dataset2 = Res.created(client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]]))).json  # Add second dataset.
+    dataset2 = Res.created(client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]]), headers=auth_mod)).json  # Add second dataset.
     Res.list(client.get("/api/datasets"), [dataset1, dataset2])  # There are two datasets.
     assert dataset2["size"] == 2
 
@@ -41,8 +46,10 @@ def test_add(client):
 
 
 def test_update(client):
-    dataset1 = client.post("/api/datasets", json=Creator.dataset()).json  # Add first dataset.
-    dataset2 = client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]])).json  # Add second dataset.
+    auth_mod, auth = Creator.auth(role=UserRole.MOD), Creator.auth(role=UserRole.AUTH)
+
+    dataset1 = client.post("/api/datasets", json=Creator.dataset(), headers=auth_mod).json  # Add first dataset.
+    dataset2 = client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]]), headers=auth_mod).json  # Add second dataset.
     Res.list(client.get("/api/datasets"), [dataset1, dataset2])  # Check there are two datasets.
 
     Comparator.is_in(client.get("/api/stars").json["content"], [
@@ -52,7 +59,11 @@ def test_update(client):
     ])
 
     dataset1_new = Creator.dataset(update=True, priority=DatasetPriority.HIGHEST)
-    dataset1_updated = Res.updated(client.put("/api/datasets/" + dataset1["_id"], json=dataset1_new)).json
+    Res.unauth(client.put("/api/datasets/" + dataset1["_id"], json=dataset1_new))  # Unauth - fail.
+    Res.unauth(client.put("/api/datasets/" + dataset1["_id"], json=dataset1_new, headers=auth))  # Normal user - fail.
+    Res.list(client.get("/api/datasets"), [dataset1, dataset2])  # Check datasets are unchanged.
+    dataset1_updated = Res.updated(client.put("/api/datasets/" + dataset1["_id"], json=dataset1_new, headers=auth_mod)).json
+    Res.list(client.get("/api/datasets"), [dataset1_new, dataset2])  # Check datasets are changed.
 
     Comparator.is_in(client.get("/api/stars").json["content"], [
         {"properties": [{"name": KEPIDS[0], "dataset": dataset1_updated["name"]}]},
@@ -62,8 +73,10 @@ def test_update(client):
 
 
 def test_delete(client):
-    dataset1 = client.post("/api/datasets", json=Creator.dataset(new=True)).json  # Add first dataset.
-    dataset2 = client.post("/api/datasets", json=Creator.dataset(new=True, kepids=[KEPIDS[1], KEPIDS[2]])).json  # Add second dataset.
+    auth_mod, auth = Creator.auth(role=UserRole.MOD), Creator.auth(role=UserRole.AUTH)
+
+    dataset1 = client.post("/api/datasets", json=Creator.dataset(new=True), headers=auth_mod).json  # Add first dataset.
+    dataset2 = client.post("/api/datasets", json=Creator.dataset(new=True, kepids=[KEPIDS[1], KEPIDS[2]]), headers=auth_mod).json  # Add second dataset.
     Res.list(client.get("/api/datasets"), [dataset1, dataset2])  # Check there are two datasets.
 
     Comparator.is_in(client.get("/api/stars").json["content"], [
@@ -72,21 +85,69 @@ def test_delete(client):
         {"properties": [{"name": KEPIDS[2], "dataset": dataset2["name"]}]}
     ])
 
-    Res.deleted(client.delete("/api/datasets/" + dataset1["_id"]))
+    Res.unauth(client.delete("/api/datasets/" + dataset1["_id"]))
+    Res.unauth(client.delete("/api/datasets/" + dataset1["_id"], headers=auth))
+    Res.list(client.get("/api/datasets"), [dataset1, dataset2])  # Check dataset is not deleted.
+    Res.deleted(client.delete("/api/datasets/" + dataset1["_id"], headers=auth_mod))
+    Res.list(client.get("/api/datasets"), [dataset2])  # Check dataset is deleted.
 
     Comparator.is_in(client.get("/api/stars").json["content"], [
         {"properties": [{"name": KEPIDS[1], "dataset": dataset2["name"]}]},
         {"properties": [{"name": KEPIDS[2], "dataset": dataset2["name"]}]}
     ])
 
-    Res.deleted(client.delete("/api/datasets/" + dataset2["_id"]))
-
+    Res.deleted(client.delete("/api/datasets/" + dataset2["_id"], headers=auth_mod))
+    Res.list(client.get("/api/datasets"), [])  # Check dataset is deleted.
     Comparator.is_in(client.get("/api/stars").json["content"], [])
 
 
+def test_update_fields(client):
+    auth_mod = Creator.auth(role=UserRole.MOD)
+    dataset = client.post("/api/datasets", json=Creator.dataset(new=True, kepids=[KEPIDS[1]]), headers=auth_mod).json  # Add dataset.
+    stars1 = client.get("/api/stars").json["content"]
+
+    new_fields = {
+        "name": "KIC {kepid}",
+        "surface_temperature": "{teff*2}",
+        "diameter": "{radius}",
+        "mass": "{mass+5}",
+        "ra": "{ra/2}",
+        "dec": "{dec/3+3}",
+        "distance": "{dist}",
+        "apparent_magnitude": "{kepmag*2*2}",
+        "metallicity": "{feh+13.5}"
+    }
+
+    Res.updated(client.put(f"/api/datasets/{dataset['_id']}", json={"fields": new_fields}, headers=auth_mod)).json
+    stars2 = client.get("/api/stars").json["content"]
+
+    assert stars1 == stars2  # Stars should be unchanged.
+
+    Res.updated(client.put(f"/api/datasets/{dataset['_id']}/reset", headers=auth_mod))
+
+    props = stars2[0]["properties"][0]
+
+    Comparator.is_in(client.get("/api/stars").json["content"], [  # 3 stars from 2 datasets.
+        {"properties": [{
+            "name": f"KIC {KEPIDS[1]}",
+            "dataset": dataset["name"],
+            "surface_temperature": props["surface_temperature"] * 2,
+            "diameter": props["diameter"] / 2,
+            "mass": props["mass"] + 5,
+            "ra": props["ra"] / 2,
+            "dec": props["dec"] / 3 + 3,
+            "distance": props["distance"],
+            "apparent_magnitude": props["apparent_magnitude"] * 4,
+            "metallicity": props["metallicity"] + 13.5
+        }]}
+    ])
+
+
 def test_reset(client):
-    dataset1 = client.post("/api/datasets", json=Creator.dataset(new=True)).json  # Add first dataset.
-    dataset2 = client.post("/api/datasets", json=Creator.dataset(new=True, kepids=[KEPIDS[1], KEPIDS[2]])).json  # Add second dataset.
+    auth_mod, auth = Creator.auth(role=UserRole.MOD), Creator.auth(role=UserRole.AUTH)
+
+    dataset1 = client.post("/api/datasets", json=Creator.dataset(new=True), headers=auth_mod).json  # Add first dataset.
+    dataset2 = client.post("/api/datasets", json=Creator.dataset(new=True, kepids=[KEPIDS[1], KEPIDS[2]]), headers=auth_mod).json  # Add second dataset.
     stars = client.get("/api/stars").json["content"]
 
     Comparator.is_in(client.get("/api/stars").json["content"], [  # 3 stars from 2 datasets.
@@ -99,7 +160,7 @@ def test_reset(client):
     ])
 
     dataset1_new = Creator.dataset(update=True, name=dataset1["name"] + "updated", fields={**FIELDS, "name": "{kepid}", "mass": "{radius*2}", "diameter": "{mass}"})  # Switch mass and diameter.
-    dataset1_updated = Res.updated(client.put("/api/datasets/" + dataset1["_id"], json=dataset1_new)).json
+    dataset1_updated = Res.updated(client.put("/api/datasets/" + dataset1["_id"], json=dataset1_new, headers=auth_mod)).json
 
     Comparator.is_in(client.get("/api/stars").json["content"], [  # Only dataset name is different, diameter and mass should be still same.
         {"properties": [{"name": KEPIDS[0], "dataset": dataset1_updated["name"], "diameter": stars[0]["properties"][0]["diameter"], "mass": stars[0]["properties"][0]["mass"]}]},
@@ -110,7 +171,19 @@ def test_reset(client):
         {"properties": [{"name": KEPIDS[2], "dataset": dataset2["name"], "diameter": stars[2]["properties"][0]["diameter"], "mass": stars[2]["properties"][0]["mass"]}]}
     ])
 
-    Res.updated(client.put("/api/datasets/" + dataset1["_id"] + "/reset", json=dataset1_new)).json  # Reset dataset data.
+    Res.unauth(client.put("/api/datasets/" + dataset1["_id"] + "/reset", json=dataset1_new)).json  # Unauth - fail.
+    Res.unauth(client.put("/api/datasets/" + dataset1["_id"] + "/reset", json=dataset1_new, headers=auth)).json  # Normal user - fail.
+
+    Comparator.is_in(client.get("/api/stars").json["content"], [  # No change.
+        {"properties": [{"name": KEPIDS[0], "dataset": dataset1_updated["name"], "diameter": stars[0]["properties"][0]["diameter"], "mass": stars[0]["properties"][0]["mass"]}]},
+        {"properties": [
+            {"name": KEPIDS[1], "dataset": dataset1_updated["name"], "diameter": stars[1]["properties"][0]["diameter"], "mass": stars[1]["properties"][0]["mass"]},
+            {"name": KEPIDS[1], "dataset": dataset2["name"], "diameter": stars[1]["properties"][1]["diameter"], "mass": stars[1]["properties"][1]["mass"]}
+        ]},
+        {"properties": [{"name": KEPIDS[2], "dataset": dataset2["name"], "diameter": stars[2]["properties"][0]["diameter"], "mass": stars[2]["properties"][0]["mass"]}]}
+    ])
+
+    Res.updated(client.put("/api/datasets/" + dataset1["_id"] + "/reset", json=dataset1_new, headers=auth_mod)).json  # Reset dataset data.
 
     Comparator.is_in(client.get("/api/stars").json["content"], [  # Now, mass and diameter should be switched.
         {"properties": [
@@ -123,10 +196,12 @@ def test_reset(client):
 
 
 def test_stats(client):
+    auth_mod = Creator.auth(role=UserRole.MOD)
+
     t1 = time.now()
-    dataset1 = client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1]])).json  # Add first dataset.
+    dataset1 = client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1]]), headers=auth_mod).json  # Add first dataset.
     t2 = time.now()
-    dataset2 = client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]])).json  # Add second dataset.
+    dataset2 = client.post("/api/datasets", json=Creator.dataset(kepids=[KEPIDS[1], KEPIDS[2]]), headers=auth_mod).json  # Add second dataset.
     t3 = time.now()
 
     size1 = int(client.head(dataset1["items_getter"]).headers["content-length"])
@@ -139,8 +214,52 @@ def test_stats(client):
 
 
 def test_fields(client):
-    pass
+    auth_mod = Creator.auth(role=UserRole.MOD)
+
+    fields1 = {"name": "{kepid}"}
+    dataset1 = client.post("/api/datasets", json=Creator.dataset(new=True, fields=fields1, kepids=[KEPIDS[0]]), headers=auth_mod).json  # Add first dataset.
+
+    Res.list(client.get("/api/stars"), [
+        {"properties": [{"name": KEPIDS[0], "dataset": dataset1["name"]}]},
+    ]).json["content"]
+
+    client.post("/api/datasets", json=Creator.dataset(new=True, fields={}, kepids=[KEPIDS[0], KEPIDS[1]]), headers=auth_mod).json  # Empty field.
+
+    Res.list(client.get("/api/stars"), [
+        {"properties": [{"name": KEPIDS[0], "dataset": dataset1["name"]}]}
+    ]).json["content"]
+
+    fields2 = {
+        "name": "KIC {kepid}.",
+        "surface_temperature": "{teff+2}",
+        "diameter": "{radius}",
+        "mass": "{mass*2+100}",
+        "ra": "{ra+10}",
+        "dec": "{dec+20/2}",
+        "distance": "{dist*3.14}",
+        "apparent_magnitude": "{kepmag/2-3}",
+        "metallicity": "{feh}"
+    }
+
+    dataset2 = client.post("/api/datasets", json=Creator.dataset(new=True, fields=FIELDS, kepids=[KEPIDS[1]]), headers=auth_mod).json  # All default fields.
+    dataset3 = client.post("/api/datasets", json=Creator.dataset(new=True, fields=fields2, kepids=[KEPIDS[1]]), headers=auth_mod).json  # All modified fields.
+    props = client.get("/api/stars").json["content"][1]["properties"][0]
+
+    Res.list(client.get("/api/stars"), [
+        {"properties": [{"name": KEPIDS[0], "dataset": dataset1["name"]}]},
+        {"properties": [{"name": KEPIDS[1], "dataset": dataset2["name"]}]},
+        {"properties": [{
+            "name": f"KIC {KEPIDS[1]}.",
+            "dataset": dataset3["name"],
+            "surface_temperature": props["surface_temperature"] + 2,
+            "diameter": props["diameter"] / 2,
+            "mass": props["mass"] * 2 + 100,
+            "ra": props["ra"] + 10,
+            "dec": (props["dec"] + 20) / 2,
+            "distance": props["distance"] * 3.14,
+            "apparent_magnitude": props["apparent_magnitude"] / 2 - 3,
+            "metallicity": props["metallicity"]
+        }]}
+    ]).json["content"]
 
 
-def test_crud(client):
-    pass

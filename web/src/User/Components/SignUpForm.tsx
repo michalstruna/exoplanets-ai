@@ -7,7 +7,7 @@ import { Color, size } from '../../Style'
 import FacebookLogin from './FacebookLogin'
 import GoogleLogin from './GoogleLogin'
 import { Form, Field } from '../../Form'
-import { UseFormMethods } from 'react-hook-form'
+import { UseFormReturn } from 'react-hook-form'
 import { PrimaryButton } from '../../Layout'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
@@ -66,7 +66,7 @@ const LoginForm = ({ handleLogin, ...props }: Props) => {
     const actions = useActions({ signUp })
     const strings = useStrings().auth
 
-    const handleSubmit = async (values: RegistrationCredentials, form: UseFormMethods<RegistrationCredentials>) => {
+    const handleSubmit = async (values: RegistrationCredentials, form: UseFormReturn<RegistrationCredentials>) => {
         const action = await actions.signUp(values)
 
         if (action.error) {

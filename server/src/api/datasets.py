@@ -1,10 +1,12 @@
+from flask_jwt_extended.view_decorators import jwt_required
 from flask_restx import fields, Resource
 from flask_restx._http import HTTPStatus
 
 from api.errors import error
 from api.global_stats import logged_item, stats_aggregated
+from constants.User import EndpointAuth, UserRole
 from service.Dataset import DatasetService
-from utils.http import Api, Response
+from utils.http import Api, Request, Response
 from constants.Dataset import DatasetType
 
 api = Api("datasets", description="Input datasets.")
@@ -65,9 +67,20 @@ class DatasetReset(Resource):
 
     @api.ns.response(HTTPStatus.OK, "Data from dataset was reset succesfully.")
     @api.ns.response(HTTPStatus.NOT_FOUND, "Dataset with specified ID was not found.", error)
+    @jwt_required
     def put(self, id):
+        Request.protect({"auth": UserRole.MOD}, id)
         return Response.put(lambda: dataset_service.reset(id))
+
+resource_type = {
+    "get_all": {"auth": EndpointAuth.ANY},
+    "get": {"auth": EndpointAuth.ANY},
+    "add": {"auth": UserRole.MOD},
+    "delete": {"auth": UserRole.MOD},
+    "update": {"auth": UserRole.MOD},
+    "rank": {"auth": EndpointAuth.ANY}
+}
 
 
 dataset_service = DatasetService()
-api.init(full_model=dataset, new_model=new_dataset, updated_model=updated_dataset, service=dataset_service, model_name="Dataset", map_props=map_props)
+api.init(full_model=dataset, new_model=new_dataset, updated_model=updated_dataset, service=dataset_service, model_name="Dataset", map_props=map_props, resource_type=resource_type)
