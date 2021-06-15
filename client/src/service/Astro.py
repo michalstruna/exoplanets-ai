@@ -33,49 +33,32 @@ class LcService:
 
         return lk.LightCurveCollection(lcs).stitch().flatten(window_length=501).remove_outliers()
 
-    def get_pd(self, lc):
-        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 150, 0.001))  # TODO: 0.001
-        med = np.median(pd.power)
-        return pd, self.get_peaks(pd.power, around=int(pd.power.shape[0] / 20), minimum=med)
-
-    def get_peaks(self, values, minimum=-math.inf, maximum=math.inf, around=1):
-        peaks = []
-
-        for i in range(0, values.shape[0]):
-            before_around = values[max(0, i - around):i]
-            after_around = values[i + 1:min(i + around + 1, values.shape[0] - 1)]
-            before_max = np.max(before_around) if before_around.shape[0] > 0 else -math.inf
-            after_max = np.max(after_around) if after_around.shape[0] > 0 else -math.inf
-
-            if values[i] >= minimum and values[i] <= maximum and values[i] > before_max and values[i] >= after_max:
-                peaks.append(i)
-
-        return peaks
+    def get_pdg(self, lc, max_period, min_period=0.5, num=100000):
+        return lc.to_periodogram(method="bls", period=np.linspace(min_period, max_period, num))
 
     def get_gv(self, lc, pdg, norm=False):
-        per, t0 = pdg.period_at_max_power, pdg.transit_time_at_max_power
-        folded = lc.fold(per, t0=t0)
-        gv = folded.bin(bins=2001)
-
-        if norm:
-            gv = gv.normalize() - 1
-            gv = (gv / np.abs(gv.flux.min())) * 2.0 + 1
-
-        return gv
+        return self._get_view(lc, pdg, 2001, norm)
 
     def get_lv(self, lc, pdg, norm=False):
-        per, t0, dur = pdg.period_at_max_power, pdg.transit_time_at_max_power, pdg.duration_at_max_power
-        fractional_duration = dur / per
-        folded = lc.fold(per, t0=t0)
-        phase_mask = (folded.phase.value > -4 * fractional_duration) & (folded.phase.value < 4 * fractional_duration)
-        lc_zoom = folded[phase_mask]
-        lv = lc_zoom.bin(bins=201)
+        return self._get_view(lc, pdg, 201, norm, 4)
 
-        if norm:
-            lv = lv.normalize() - 1
-            lv = (lv / np.abs(lv.flux.min())) * 2.0 + 1
-            
-        return lv
+    def _get_view(self, lc, pdg, bins, return_norm, phase=None):
+        folded = lc.fold(pdg.period_at_max_power, t0=pdg.transit_time_at_max_power)
+
+        if phase:
+            fractional_duration =  pdg.duration_at_max_power / pdg.period_at_max_power
+            phase_mask = (folded.phase.value > -phase * fractional_duration) & (folded.phase.value < phase * fractional_duration)
+            folded = folded[phase_mask]
+
+        view = folded.bin(bins=bins)
+
+        if return_norm:
+            norm = view.copy()
+            norm = norm.normalize() - 1
+            norm = (norm / np.abs(norm.flux.min())) * 2.0 + 1
+            return view, norm
+
+        return view
 
     def is_planet(self, gv, lv):
         model = load_model(os.path.join(os.path.dirname(__file__), "../data/transit.h5"))
@@ -84,3 +67,6 @@ class LcService:
     def _to_cnn(self, lc):
         flux = lc.flux.reshape((*lc.flux.shape, 1))
         return np.array([flux])
+
+    def shorten(self, lc, days):
+        return lc[lc.time - lc.time[0] < days].remove_nans()

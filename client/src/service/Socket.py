@@ -39,23 +39,21 @@ def run(task):
         task["meta"]["size"] = lc_service.get_tps_size(tps)
         lc = lc_service.tps_to_lc(tps)
         original_lc = lc.copy()
-        short_lc = lc[lc.time - lc.time[0] < 100].remove_nans()
+        short_lc = lc_service.shorten(original_lc, 100)
         log(LogType.ANALYZE_LC, task["item"])
 
         transits = []
 
         for max_per in LcService.PERIODS:
-            pdg = lc.to_periodogram("bls", period=np.linspace(0.5, max_per, 100000))
+            pdg = lc_service.get_pdg(lc, max_per)
             per, t0, dur, dep = pdg.period_at_max_power, pdg.transit_time_at_max_power, pdg.duration_at_max_power, pdg.depth_at_max_power
             mask = pdg.get_transit_mask(period=per, transit_time=t0, duration=dur)
             lc = lc[~mask]
-            gv_norm = lc_service.get_gv(original_lc, pdg, norm=True)
-            lv_norm = lc_service.get_lv(original_lc, pdg, norm=True)
+            gv, gv_norm = lc_service.get_gv(original_lc, pdg, True)
+            lv, lv_norm = lc_service.get_lv(original_lc, pdg, True)
 
             if True:#lc_service.is_planet(gv_norm, lv_norm):
                 log(LogType.PLANET_FOUND, round(per.value, 2))
-                gv = lc_service.get_gv(original_lc, pdg)
-                lv = lc_service.get_lv(original_lc, pdg)
 
                 transits.append({
                     "period": per.value,
