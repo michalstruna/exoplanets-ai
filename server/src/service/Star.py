@@ -194,7 +194,7 @@ class StarService(Service):
             return round(star["apparent_magnitude"] + 5 * (1 - math.log10(star["distance"])), 2)
 
     def delete_empty(self):
-        self.dao.delete({"__raw__": {"$where": "this.properties.length == 0"}})
+        self.dao.delete({"__raw__": {"$expr": {"$eq": [{"$add": [{"$size": {"$ifNull": ["$properties", []]}}, {"$size": {"$ifNull": ["$light_curves", []]}}]}, 0]}}})
 
     def delete_selection(self, id, selection):
         star = self.get_by_id(id)
