@@ -25,7 +25,7 @@
 \def\typPrace{Diplomová práce}
 \def\rok{2021}
 \def\prefixZadani{img/zadani}	% cesta a začátek jména, bude doplněno číslo strany
-\def\suffixZadani{.jpg}		% doplní se ke každému jménu souboru zadání
+\def\suffixZadani{.png}		% doplní se ke každému jménu souboru zadání
 \def\datumOdevzdaniPrace{9.\,5.\,2021}
 
 \long\def\textPodekovani{...}
@@ -877,33 +877,33 @@ Přičemž slabou umělou inteligenci lze dále dělit např. na:
 
 \subsection{Genetický algoritmus}
 
-Genetický algoritmus (GA) je metaheuristický postup inspirovaný evolučními pravidly, která můžeme vidět v~přírodě kolem nás. Obvykle se používá pro řešení optimalizačních problémů, pro něž neexistuje alternativní použitelný analytický postup.
+Genetický algoritmus (GA) je metaheuristický postup inspirovaný evolučními pravidly, která můžeme vidět v~přírodě kolem nás. Obvykle se používá pro řešení optimalizačních problémů, pro něž neexistuje alternativní použitelný analytický postup.~\cite{ttv, tsp}
 
-Jako příklad lze uvést Problém obchodního cestujícího (Traveling salesman problem~--~TSP) patřící mezi NP-těžké úlohy: \textit{„Existuje n měst propojených přímými cestami. Úkolem je navštívit všechna tato města, vrátit se do města počátečního a~přitom urazit co nejkratší vzdálenost.“} Se vzrůstajícím $n$~začne počet možných cest rychle narůstat a~hledat z~nich tu nejkratší exaktními postupy nebo dokonce hrubou silou se tak stane časově neúnosným.
+Jako příklad lze uvést Problém obchodního cestujícího (Traveling salesman problem~--~TSP) patřící mezi NP-těžké úlohy: \textit{„Existuje n měst propojených přímými cestami. Úkolem je navštívit všechna tato města, vrátit se do města počátečního a~přitom urazit co nejkratší vzdálenost.“} Se vzrůstajícím $n$~začne počet možných cest rychle narůstat a~hledat z~nich tu nejkratší exaktními postupy nebo dokonce hrubou silou se tak stane časově neúnosným.~\cite{tsp}
 
 \lstinputlisting[caption={Pseudokód genetického algoritmu}]{codes/ga.txt}
 
 \subsubsection{Inicializace}
 
-Základem tohoto algoritmu je populace jedinců. Každý jedinec v~populaci představuje svým genotypem potenciální řešení problému (ať už dobré nebo špatné). V~případě TSP pro 8 měst může být jedinec reprezentován např. jako sekvence měst, která budou postupně navštívena. Jedinec $x = \{2, 4, 6, 8, 1, 3, 5, 7\}$ tedy nejdříve navštíví města označená sudými čísly a~teprv poté města označená lichými čísly.
+Základem tohoto algoritmu je populace jedinců. Každý jedinec v~populaci představuje svým genotypem potenciální řešení problému (ať už dobré nebo špatné).~\cite{ttv, tsp} V~případě TSP pro 8 měst může být jedinec reprezentován např. jako sekvence měst, která budou postupně navštívena. Jedinec $x = \{2, 4, 6, 8, 1, 3, 5, 7\}$ tedy nejdříve navštíví města označená sudými čísly a~teprv poté města označená lichými čísly.
 
 \img[1]{Někteří z~vygenerovaných jedinců GA pro TSP}{img/tsp_init.pdf}
 \draw
 
-Na počátku běhu algoritmu dojde k~náhodnému vygenerování K~jedinců~--~ti budou tvořit populaci první generace. Počet jedinců K~v populaci volíme na základě složitosti řešeného problému. Čím vyšší je K, tím déle bude zpravidla běh algoritmu trvat, avšak tím slabilnější bude a~tím spíše najde lepší řešení.
+Na počátku běhu algoritmu dojde k~náhodnému vygenerování K~jedinců~--~ti budou tvořit populaci první generace. Počet jedinců K~v populaci volíme na základě složitosti řešeného problému. Čím vyšší je K, tím déle bude zpravidla běh algoritmu trvat, avšak tím slabilnější bude a~tím spíše najde lepší řešení.~\cite{ttv, tsp}
 
 Přestože každý z~jedinců představuje potenciální řešení problému, nejspíše žádné z~nich nebude dostatečně dobré, protože všechna byla pouze vygenerována náhodně. Na obrázku 41 jsou 3~z~vygenerovaných jedinců, kteří v~řešeném TSP urazí 13,1~km, 12,6~km a~12,5~km, což je pro daný počet měst poměrně hodně.
 
 
 \subsubsection{Selekce}
 
-Přirozený výběr je založen na skutečnosti, že úspěšnější (silnější) jedinci mají vyšší pravděpodobnost předat své geny a~rozmnožit se. Abychom tento koncept mohli napodobit i~v~genetickém algoritmu, potřebujeme definovat funkci $F$, která dokáže posoudit kvalitu jedince~--~tzv. fitness.
+Přirozený výběr je založen na skutečnosti, že úspěšnější (silnější) jedinci mají vyšší pravděpodobnost předat své geny a~rozmnožit se. Abychom tento koncept mohli napodobit i~v~genetickém algoritmu, potřebujeme definovat funkci $F$, která dokáže posoudit kvalitu jedince~--~tzv. fitness.~\cite{tsp}
 
 Podoba této funkce je silně závislá na řešeném problému. V~případě TSP jí může být např. převrácená hodnota délky cesty, kterou jedinec urazí. Čím kratší cesta, tím vyšší fitness jedince a~tím vyšší pravděpodobnost na předání genů do další generace.
 
 \subsubsection{Křížení}
 
-Poté, co jsme vybrali jedince k~předání genů (rodiče) může proběhnout jejich zkřížení. To spočívá v~prostém zkombinování genů obou rodičů. Způsob tohoto kombinování opět závisí na typu řešeného problému. Je třeba zajistit, aby výsledkem křížení byl vždy platný jedinec, popř. neplatné jedince dodatečně opravit.
+Poté, co jsme vybrali jedince k~předání genů (rodiče) může proběhnout jejich zkřížení. To spočívá v~prostém zkombinování genů obou rodičů. Způsob tohoto kombinování opět závisí na typu řešeného problému. Je třeba zajistit, aby výsledkem křížení byl vždy platný jedinec, popř. neplatné jedince dodatečně opravit.~\cite{tsp}
 
 \img[1]{Příklad křížení jedinců GA pro TSP}{img/crossover.pdf}
 \draw
@@ -912,23 +912,21 @@ Na obrázku 42 je uveden příklad křížení jedinců při řešení TSP. Prvn
 
 Druhý ze způsobů křížení vezme polovinu genů z~prvního rodiče a~k~nim připojí chybějící geny z~druhého rodiče. Tímto způsobem tak vznikne vždy platný potomek.
 
-Křížení je opakováno dokud není vytvořeno K~potomků tvořících další generaci.
+Křížení je opakováno dokud není vytvořeno K~potomků tvořících další generaci.~\cite{tsp}
 
 \subsubsection{Mutace}
 
-Nyní, když máme další generaci jedinců, je vhodné zajistit vyšší rozmanitost populace. Toho lze docílit tak, že každý jedinec má určitou pravděpodobnost, že zmutuje~--~dojde k~náhodné modifikaci jeho genů.
+Nyní, když máme další generaci jedinců, je vhodné zajistit vyšší rozmanitost populace. Toho lze docílit tak, že každý jedinec má určitou pravděpodobnost, že zmutuje~--~dojde k~náhodné modifikaci jeho genů.~\cite{tsp}
 
 \img[1]{Příklad mutace jedince GA pro TSP}{img/mutate.pdf}
 
-Výše pravděpodobnosti opět závisí na řešeném problému. Obvykle se však volí v~řádu jednotek procent. Pravděpodobnost může být také proměnlivá, např. v~závislosti na podobnosti rodičů~--~čím podobnější rodiče, tím vyšší pravděpodobnost mutace.
+Výše pravděpodobnosti opět závisí na řešeném problému. Obvykle se však volí v~řádu jednotek procent. Pravděpodobnost může být také proměnlivá, např. v~závislosti na podobnosti rodičů~--~čím podobnější rodiče, tím vyšší pravděpodobnost mutace.~\cite{tsp}
 
-Protože mutace je náhodná změna, dá se očekávat, že ve většině případů povede ke zhoršení kvality jedince. Není však vyloučené, že se kvalita jedince i~zvýší. Když se tak stane, takový jedinec bude mít vyšší pravděpodobnost na předání svých genů, čímž dojde i~ke zvýšení průměrné kvality celé populace.
+Protože mutace je náhodná změna, dá se očekávat, že ve většině případů povede ke zhoršení kvality jedince. Není však vyloučené, že se kvalita jedince i~zvýší. Když se tak stane, takový jedinec bude mít vyšší pravděpodobnost na předání svých genů, čímž dojde i~ke zvýšení průměrné kvality celé populace.~\cite{tsp}
 
 
 \img[1]{Hledání řešení TSP pomocí GA}{img/tsp_final.pdf}
 \draw
-
-TODO: \cite{kepler80}
 
 \section{Použité technologie}
 
@@ -1407,13 +1405,15 @@ TODO: Verifikace výsledků.
 
 \isbnsource[DOLEŽEL, Petr]{nn}{Úvod do umělých neuronových sítí}{Univerzita Pardubice, Fakulta elektrotechniky a~informatiky}{2016}{9.~10.~2020}{978-80-7560-022-6}
 
-\onlinesource[VRAHATIS, Michael]{ai}{Computational Approaches to Artificial Intelligence: Theory, Methods and Applications.}{Springer}{2019}{28.~11.~2020}{https://www.researchgate.net/publication/334023205_Computational_Approaches_to_Artificial_Intelligence_Theory_Methods_and_Applications}
+\onlinesource[CHIUNG, Moon, JONGSOO, Kim, GYUNGHYUN, Choi, YOONHO, Seo]{tsp}{An efficient genetic algorithm for the traveling salesman problem with precedence constraints}{European Journal of Operational Research}{2002}{28.~6.~2021}{https://doi.org/10.1016/S0377-2217(01)00227-2}
 
 \isbnsource[KHAN, Salman]{convnn}{A Guide to Convolutional Neural Networks for Computer Vision}{Morgan \& Claypool}{2018}{26.~10.~2020}{781681730226}
 
 \onlinesource[LOVIS, Christophe, FISCHER, Debra A]{radialvelocity}{Radial Velocity Techniques for Exoplanets}{University of Arizona Press}{2011}{25.~12.~2019}{https://www.researchgate.net/publication/253789798_Radial_Velocity_Techniques_for_Exoplanets}
 
 \onlinesource[MARCY, Geoffrey]{51pegasi}{The planet around 51 Pegasi}{The astrophysical journal 481(2)}{1997}{29.~12.~2019}{https://iopscience.iop.org/article/10.1086/304088}
+
+\onlinesource[MOUTOU, Claire, PONT, Frédéric]{transit}{Detection and characterization of extrasolar planets: the transit method}{Strasbourg: Observatoire astronomique de Strasbourg et Société Française d'Astronomie et d'Astrophysique}{2006}{8.~10.~2020}{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.4155&rep=rep1&type=pdf}
 
 \isbnsource[NORDEEN, Alex]{mongodbbook}{MongoDB: Learn in 24 hours.}{Guru99}{2020}{20.~2.~2021}{1230004303503}
 
@@ -1427,8 +1427,7 @@ TODO: Verifikace výsledků.
 
 \onlinesource[TASKER, Elizabeth, LANEUVILLE, Matthieu, GUTTENBERG, Nicholas]{nnmass}{Estimating Planetary Mass with Deep Learning}{The Astronomical Journal 159(2)}{25.~11.~2019}{9.~10.~2020}{https://arxiv.org/abs/1911.11035}
 
-\onlinesource[MOUTOU, Claire, PONT, Frédéric]{transit}{Detection and characterization of extrasolar planets: the transit method}{Strasbourg: Observatoire astronomique de Strasbourg et Société Française d'Astronomie et d'Astrophysique}{2006}{8.~10.~2020}{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.125.4155&rep=rep1&type=pdf}
-
+\onlinesource[VRAHATIS, Michael]{ai}{Computational Approaches to Artificial Intelligence: Theory, Methods and Applications.}{Springer}{2019}{28.~11.~2020}{https://www.researchgate.net/publication/334023205_Computational_Approaches_to_Artificial_Intelligence_Theory_Methods_and_Applications}
 
 
 \onlinesource{astropy}{A Community Python Library for Astronomy}{astropy}{2020}{21.~2.~2021}{https://docs.astropy.org/en/stable}

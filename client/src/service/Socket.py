@@ -30,9 +30,7 @@ def connected():
 
 @sio.event
 def run(task):
-    # TODO: remove_outliers - upper lower
-    print("=== RUN ===")
-
+    print("=== RUN ===", task)
     if task["type"] == TaskType.TARGET_PIXEL.value:
         log(LogType.DOWNLOAD_TP, task["item"])
         tps = lc_service.download_tps(task["item"])

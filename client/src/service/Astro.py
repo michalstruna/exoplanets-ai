@@ -1,11 +1,7 @@
 import lightkurve as lk
 import numpy as np
-import math
 import os
 from tensorflow.keras.models import load_model
-
-
-# TODO: Replace nan.
 
 class LcService:
 
