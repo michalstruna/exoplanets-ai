@@ -1,0 +1,9 @@
+user_resource = {
+    "get": {"auth": EndpointAuth.ANY},
+    "get_all": {"auth": EndpointAuth.ANY},
+    "post": {"auth": EndpointAuth.ANY},
+    "put": {"auth": EndpointAuth.MYSELF},
+    "delete": {"auth": UserRole.ADMIN}
+}
+
+api.init(service=user_service, model=user, resource_type=user_resource)

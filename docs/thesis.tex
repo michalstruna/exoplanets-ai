@@ -1029,7 +1029,10 @@ Veškeré vstupní parametry od uživatele jsou automaticky parsovány, při nes
 
 \lstinputlisting[caption={Vytvoření koncového bodu v~REST API.}]{codes/rest_endpoint.txt}
 
-\vspace{-10pt}
+Pro redukci opakujícího se kódu byla v rámci aplikace vytvořena vlastní knihovna. Ta jednotlivé přístupové body vytvoří automatiky na základě nastavené konigurace. Vyřešena je i~automatická autentizace a~autorizace dle uživatelských rolí.
+
+\lstinputlisting[caption={Konfigurace zdroje v~REST API.}]{codes/rest_resource.txt}
+
 
 \subsubsection{Socket.IO API}
 
@@ -1042,14 +1045,15 @@ Webová aplikace zprostředkovává interakci s~uživatelem. Je napsána v~jazyc
 \img[1]{Architektura webové aplikace}{img/web_app.png}
 \draw
 
-Moduly z~vyšších vrstev mohou komunikovat pouze s~moduly ze stejné nebo z~nižší vrstvy. Tím je zabráněno kruhovým závislostem.
-
-\img[1]{Princip architektury Redux}{img/redux.png}
-\draw
+Moduly z~vyšších vrstev mohou komunikovat pouze s~moduly ze stejné nebo z~nižší vrstvy. Tím je zabráněno kruhovým závislostem v kódu.
 
 Ke správě dat je využita architektura a~knihovna \textit{Redux} ukládající celý stav aplikace v~centralizovaném uložišti (store). Měnit stav tohoto uložiště může pouze funkce \textit{dispatch} jejímž argumentem je akce. Akce je prostý objekt obsahující povinnou položku \textit{type} a~libovolné další položky. Pro pohodlnější práci se akce často umisťuje do parametrizovatelné funkce zvané \textit{action creator}, která tuto akci vrací.
 
+\img[1]{Princip architektury Redux}{img/redux.png}
+
 Funkce \textit{dispatch} následně zjistí aktuální stav aplikace a~společně s~akcí v~argumentu zavolá funkci \textit{reducer}. Ten na základě aktuálního stavu a~akce vrátí stav nový. V~poslední řadě dojde k~překreslení všech komponent, které jsou napojené na právě změněnou část stavu aplikace~--~podoba UI je tak vždy aktuální.
+
+\newpage
 
 \lstinputlisting[caption={Ukázka použití knihovny Redux.}]{codes/redux.txt}
 
@@ -1084,7 +1088,6 @@ Pro využití většího výpočetního potenciálu počítače není vhodné pr
 Po spuštění se otevře webová aplikace, ve které uživatel pod svým účtem provede spárování s~klientskou aplikaci. Následně dojde pomocí \textit{Socket.io} k~navázání spojení se serverem, čímž z~pohledu uživatele vznikne nový proces ve stavu \textit{Čeká na spuštění}.
 
 \img[1]{Životní cyklus procesu klientské aplikace}{img/process_state.pdf}
-\draw
 
 V~případě, že jsou v~databázi některé dosud nezpracované položky z~datasetů, server jednu takovou položku přidělí klientské aplikace a~ta ji začne zpracovávat. Po dokončení je řešení odevzdáno serveru, jenž klientské aplikaci přidělí další položku ke zpracování. Tento cyklus se opakuje až do doby, kdy je klientská aplikace pozastavena či ukončena (uživatel tak může učinit z~UI webové aplikace).
 
@@ -1479,5 +1482,6 @@ TODO: Verifikace výsledků.
 \includegraphics[width=\linewidth]{img/db.png}
 
 \section*{Příloha~C -- Dokumentace REST API}\label{priloha_c}
+\includegraphics[width=\linewidth]{img/api_docs.png}
 
 \end{document}
