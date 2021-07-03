@@ -4,4 +4,4 @@ class Login(Resource):
     @api.response(HttpStatus.BAD_REQUEST, "Invalid credentials.")
     @api.expect(credentials)
     def post(self, credentials):
-        return user_service.auhenticate(credentials)
+        return user_service.authenticate(credentials)
