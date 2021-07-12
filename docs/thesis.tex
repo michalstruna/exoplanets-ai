@@ -1127,7 +1127,7 @@ Síť na vstupu přijme globální a~lokální pohled na potenciální tranzit. 
 
 \subsection{Databáze}
 
-K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~níž se na straně serveru přistupuje skrze ODM \textit{MongoEngine}. Než dojde k~samotnému připojení, je třeba nadefinovat podobu databáze a~validační pravidla jednotlivých kolekcí, tak, jak je to ukázáno v~kapitole 5.2.5.
+K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~níž se na straně serveru přistupuje skrze ODM \textit{MongoEngine}. Než dojde k~samotnému připojení, je třeba nadefinovat podobu databáze a~validační pravidla jednotlivých kolekcí, tak, jak je to ukázáno v~kapitole 4.2.5.
 
 \lstinputlisting[caption={Připojení k databázi.}]{codes/db_conn.txt}
 
@@ -1291,7 +1291,7 @@ Postup výše nám umožní jednorázově sestavit a~spustit aplikaci. Pokud vš
 
 \subsubsection{Testování a~validace}
 
-Serverová část je otestována integračními testy s~využitím knihovny \code{pytest}. Výsledek jednotlivých testů bude zobrazen v~terminálu i~s~popisem případných chyb.
+V~rámci projektu nebyly vytvořeny kompletní testy zcela pokrývající všechny 3 aplikace. Existují však integrační testy pro některé stěžejní části serverové části napsané s~využitím knihovny \code{pytest} a stejně tak pro webovou část s využitím knihovny \code{jest}.
 
 \lstinputlisting[caption={Spuštění testů aplikace (Linux).}]{codes/test_server.txt}
 
