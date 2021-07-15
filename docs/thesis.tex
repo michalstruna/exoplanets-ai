@@ -1319,7 +1319,7 @@ Tato stránka shrnuje shrnuty všechny známé informace o~vybraném systému. K
 
 V~horní části je umístěn odkaz pro stažení klientské aplikace jakožto i~stručný návod pro její spuštění. Níže je zobrazen seznam spuštěných klientských aplikací (procesů) uživatele.
 
-\img{Návod pro spuštění klientské aplikace}{img/process.png} % TODO
+\img{Návod pro spuštění klientské aplikace}{img/tutorial.png}
 
  U~každého procesu jsou základní informace jako např. operační systém, doba běhu nebo kompletní log událostí z~procesu zpracování dat.
 
@@ -1366,18 +1366,24 @@ TODO: Fotka klientské aplikace.
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
 
+V~rámci diplomové práce byla vytvořena trojice aplikací, webová, klientská a~serverová, s~jejich využitím jsou uživatelé schopni poskytnout výpočetní výkon svých počítačů pro detekci a~analýzu exoplanet. Úspěšnost při řešení jednotlivých typů zadaných úloh je popsána v~tabulce níže. Kompletní přehled výsledků dosažených při verifikaci výsledků pak v~příloze D.
+
 {
-\tab[2]{Validace aplikace}{
+\tab[2]{Validace výsledků aplikace}{
 	\begin{tabular}{|p{0.3\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|}
 		\hline	
 		\rowcolor{lightgray}
-		Kategorie & Pokusů & Úspěšnost \\	
+		Kategorie & Pokusů & Přesnost \\	
 		\hline	
 		Klasifikace hvězd & 200 & 98,28 \% \\
 		\hline
 		Detekce tranzitů exoplanet & 30 & 86,31 \% \\
 		\hline
-		Výpočet vlastností planet & 30 & 92,36 \% \\
+		Výpočet průměrů planet & 30 & 92,36 \% \\
+		\hline
+		Výpočet period planet & 30 & 92,36 \% \\
+		\hline
+		Výpočet hmotností planet & 30 & 92,36 \% \\
 		\hline
 	\end{tabular}
 }
@@ -1387,7 +1393,7 @@ Potenciálními zlepšeními aplikace do budoucna by mohly být např.:
 \begin{itemize}
 \item \textbf{Větší granularita úloh}: Analýza položky z~datasetu se světelnými křivkami trvá na průměrném osobním počítači řádově jednotky minut. V~případě, kdy uživatel násilně ukončí aplikaci uprostřed takového výpočtu by bylo vhodné nepřijít o~dosud vypočítaná data a~v průběhu samotného výpočtu je ukládat i~na server, aby ve výpočtech mohl případně pokračovat jiný uživatel. Na druhé straně, příliš velká granularita by naopak způsobila zbytečně velké množství přenesených dat přes síť.
 
-\item \textbf{Další metody}: Aplikace v~současné době detekuje exoplanety pouze na základě tranzitní metody. Pro zvýšení četnosti objevů a~zpřesnění vypočítaných veličin by tento proces bylo vhodné doplnit i~dalšími metodami. U~většiny ostatních metod však nebyly autorem nalezeny dotatečně velké a~volně přístupné datasety.
+\item \textbf{Další metody}: Aplikace v~současné době detekuje exoplanety pouze na základě tranzitní metody. Pro zvýšení četnosti objevů a~zpřesnění vypočítaných veličin by tento proces bylo vhodné doplnit i~dalšími metodami. U~většiny ostatních metod však nebyly autorem nalezeny dostatečně velké a~volně přístupné datasety.
 \end{itemize}
 
 
@@ -1469,6 +1475,8 @@ TODO: Verifikace výsledků.
 
 \noindent Příloha~C~~~~Dokumentace REST API \dotfill \pageref{priloha_c}
 
+\noindent Příloha~D~~~~Verifikace výsledků \dotfill \pageref{priloha_d}
+
 \section*{Příloha~A -- Architektura neuron. sítě}\label{priloha_a}
 \includegraphics[width=\linewidth]{img/lc_cnn.png}
 
@@ -1478,4 +1486,98 @@ TODO: Verifikace výsledků.
 \section*{Příloha~C -- Dokumentace REST API}\label{priloha_c}
 \includegraphics[width=\linewidth]{img/api_docs.png}
 
+\section*{Příloha~D -- Verifikace výsledků}\label{priloha_d}
+\begin{table}[!ht]
+	\def\arraystretch{1.2}
+	\setlength{\tabcolsep}{1pt}
+	\begin{tabularx}{\textwidth}{|p{50pt}|X|X|X|X|X|X|X|X|X|X|X|X|}
+		\hline
+		\rowcolor{lightgray}
+		 & \multicolumn{3}{|l|}{Existuje} & \multicolumn{3}{|l|}{Perioda oběhu [$T_\oplus$]} & \multicolumn{3}{|l|}{Rov. poloměr [$r_\oplus$]} & \multicolumn{3}{|l|}{Hmotnost [$m_\oplus$]} \\	
+		\hline	
+		\rowcolor{lightgray}
+		Planeta & Vlastní & NASA & Chyba & Vlastní & NASA & Chyba & Vlastní & NASA & Chyba & Vlastní & NASA & Chyba \\
+		\hline	
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline	
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline		
+		& & & & & & & & & & & & \\
+		\hline	
+	\end{tabularx}
+\end{table}
 \end{document}

@@ -374,7 +374,7 @@ const strings = {
                 {
                     icon: 'Download.svg',
                     download: 'https://www.google.com',
-                    title: 'Stáhněte si klientský program (16,8 kiB)'
+                    title: 'Stáhněte si program'
                 },
                 {
                     icon: 'Run.png',
