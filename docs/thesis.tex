@@ -1366,10 +1366,10 @@ TODO: Fotka klientské aplikace.
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
 
-V~rámci diplomové práce byla vytvořena trojice aplikací, webová, klientská a~serverová, s~jejich využitím jsou uživatelé schopni poskytnout výpočetní výkon svých počítačů pro detekci a~analýzu exoplanet. Úspěšnost při řešení jednotlivých typů zadaných úloh je popsána v~tabulce níže. Kompletní přehled výsledků dosažených při verifikaci výsledků pak v~příloze D.
+V~rámci této diplomové práce byla vytvořena trojice aplikací~--~webová, klientská a~serverová~--~ s~jejichž využitím jsou uživatelé schopni poskytovat výpočetní výkon svých počítačů pro detekci a~analýzu exoplanet. Úspěšnost při řešení jednotlivých typů úloh je popsána níže. Kompletní výsledky dosažené při verifikaci aplikace pak v~příloze D.
 
 {
-\tab[2]{Validace výsledků aplikace}{
+\tab[2]{Verifikace výsledků aplikace}{
 	\begin{tabular}{|p{0.3\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|}
 		\hline	
 		\rowcolor{lightgray}
@@ -1388,16 +1388,17 @@ V~rámci diplomové práce byla vytvořena trojice aplikací, webová, klientsk�
 	\end{tabular}
 }
 
-Potenciálními zlepšeními aplikace do budoucna by mohly být např.:
+Pro zahájení hledání exoplanet je po uživateli vyžadována registrace. Ta je možná buď přes email nebo přes některé ze sociálních sítí. Poté je uživateli umožněno stáhnutí klientské aplikace a~zahájení hledání. Další aktivita ze strany uživatele již není třeba.
 
-\begin{itemize}
-\item \textbf{Větší granularita úloh}: Analýza položky z~datasetu se světelnými křivkami trvá na průměrném osobním počítači řádově jednotky minut. V~případě, kdy uživatel násilně ukončí aplikaci uprostřed takového výpočtu by bylo vhodné nepřijít o~dosud vypočítaná data a~v průběhu samotného výpočtu je ukládat i~na server, aby ve výpočtech mohl případně pokračovat jiný uživatel. Na druhé straně, příliš velká granularita by naopak způsobila zbytečně velké množství přenesených dat přes síť.
+V~případě zájmu je ovšem uživateli umožněno z~webové aplikace procházet všechna zveřejněná data, jež jsou výsledkem onoho distribuovaného hledání exoplanet. Webová aplikace je doplněna o grafy, tabulky a statistiky o~planetách, datasetech či uživatelích. Není však řešena podpora pro tablety a~mobily (resp. responzivita).
 
-\item \textbf{Další metody}: Aplikace v~současné době detekuje exoplanety pouze na základě tranzitní metody. Pro zvýšení četnosti objevů a~zpřesnění vypočítaných veličin by tento proces bylo vhodné doplnit i~dalšími metodami. U~většiny ostatních metod však nebyly autorem nalezeny dostatečně velké a~volně přístupné datasety.
-\end{itemize}
+Klientská aplikace je malý spustitelný soubor dostupný ke stažení z~prostředí webové aplikace. Po jeho spuštění dojde ke spárování s~uživatelem a~k~zahájení výpočtů. Program je k~dostání jako \code{exe} nebo \code{sh} (je tedy dostupný pro Windows a~pro Linux).
+
+Aplikace v~současné době detekuje exoplanety pouze na základě tranzitní metody. Pro zvýšení četnosti objevů a~zpřesnění vypočítaných veličin by tento proces bylo vhodné doplnit i~dalšími metodami. U~většiny ostatních metod však nebyly autorem nalezeny dostatečně velké a~volně přístupné datasety.
+
+Dalším zlepšením do budoucna by mohlo být zvýšení granularita úloh. Analýza položky z~datasetu se světelnými křivkami trvá na průměrném osobním počítači řádově jednotky minut. V~případě, kdy uživatel násilně ukončí aplikaci uprostřed výpočtu by bylo vhodné nepřijít o~dosud vypočítaná data a~v průběhu samotného výpočtu je ukládat i~na server, aby ve výpočtech mohl případně pokračovat jiný uživatel. Na druhé straně, příliš velká granularita by naopak způsobila zbytečně velké množství přenesených dat přes síť.
 
 
-TODO: Verifikace výsledků.
 
 \addcontentsline{toc}{section}{Použitá literatura}
 \begin{thebibliography}{99}	% parametr určuje nejširší položku
