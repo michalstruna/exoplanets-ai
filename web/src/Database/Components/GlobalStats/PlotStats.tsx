@@ -28,6 +28,10 @@ const PlotStats = ({ value }: Props) => {
     const strings = useStrings()
     const { smax_mass, type_count, distance_count } = value
 
+    if (!smax_mass || !type_count || !distance_count) {
+        return null
+    }
+
     return (
         <>
             <div>
