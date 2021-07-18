@@ -407,4 +407,3 @@ message_dao = Dao(Message, [
 ])
 
 # TODO: Star aliases.
-# TODO: Star metalicity?

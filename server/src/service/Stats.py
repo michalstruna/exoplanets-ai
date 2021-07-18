@@ -84,11 +84,13 @@ class GlobalStatsService(Service):
         self.dao.update({"date": time.day()}, updated, upsert=True, with_return=False)
 
     def get_data_done(self):
-        return self.dataset_dao.aggregate([
+        result = self.dataset_dao.aggregate([
             {"$match": {"type": {"$in": ["TARGET_PIXEL"]}}},
             {"$group": {"_id": "", "n_items": {"$sum": {"$size": "$items"}}, "size": {"$sum": "$size"}}},
             {"$project": {"done": {"$subtract": [1, {"$divide": ["$n_items", "$size"]}]}}}
-        ])[0]["done"] * 100
+        ])
+
+        return result[0]["done"] * 100 if len(result) > 0 else 100
 
     def update_planet_ranks(self):
         latest = self.get_planet_rank("distance")

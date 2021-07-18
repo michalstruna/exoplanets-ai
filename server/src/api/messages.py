@@ -1,9 +1,8 @@
-from flask_restx import fields, Resource
-from flask_restx._http import HTTPStatus
+from flask_restx import fields
 
 from api.users import user
 from service.Message import MessageService
-from utils.http import Api, Response
+from utils.http import Api
 from constants.Message import MessageTag
 from constants.User import EndpointAuth, UserRole
 
