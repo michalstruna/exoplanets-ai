@@ -1110,7 +1110,7 @@ Na základě povrchové teploty a~absolutní hvězdné velikosti (magnitudy) lze
 
 Zatímco spektrální třída hvězdy je jednoznačně dána dle povrchové teploty hvězdy, třídy svítivosti nejsou lehce separovatelné, a~proto je vhodné pro její rozpoznání použít umělou neuronovou síť. Zdrojový kód pro vytvoření, natrénování a~otestování této sítě je umístěn v~Jupyter Notebooku \code{data/lum\_class/lum\_class.ipynb}. Výstupem sítě je vektor o~8 prvcích, ve kterém největší hodnota značí příslušnost hvězdy do dané kategorie. Např. vektor na výstupu \break\code{(0, 0, 0, 0, 0, 1, 0, 0)} znamená 6. kategorii, tedy \textit{V} (trpaslík).
 
-\img[2]{Klasifikace hvězdy~--~trénovací množina (vlevo) a~HR diagram (vpravo)}{img/hr_diagram.png}
+\img[2]{Klasifikace hvězdy~--~trénovací množina a~HR diagram}{img/hr_diagram.png}
 \footnotetext[2]{Graf trénovací množiny vytvořen autorem, HR diagram převzat z~Wikimedia Commons~--~public domain.}
 
 \lstinputlisting[caption={Použití sítě pro klasifikaci hvězdy}]{codes/nn_stellar.txt}
