@@ -77,7 +77,7 @@ class PlotService:
             max_val = max(vals)
 
             for i, value in enumerate(vals):
-                is_in_bar = value / max_val > 0.9
+                is_in_bar = value / max_val > 0.9 if max_val > 0 else True
                 y = value - (max_val / 10) if is_in_bar else value + (max_val / 30)
 
                 plt.text(i, y, str(value), color="#EEE", fontsize=25, horizontalalignment="center") 

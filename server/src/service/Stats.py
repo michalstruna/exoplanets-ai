@@ -43,7 +43,7 @@ class GlobalStatsService(Service):
         self.file_service.save(sc, self.file_service.Type.STATS, "SmaxMass") 
 
         planet_types = PlanetType.values()
-        hist, xmin2, xmax2, ymin2, ymax2 = self.plot_service.hist(["mercury", "jupiter"], planet_types, color="#383", return_range=True)
+        hist, xmin2, xmax2, ymin2, ymax2 = self.plot_service.hist(props["type"], planet_types, color="#383", return_range=True)
         self.file_service.save(hist, self.file_service.Type.STATS, "TypeCount", self.file_service.ContentType.SVG)
 
         hist, xmin3, xmax3, ymin3, ymax3 = self.plot_service.hist(props["distance"], [0, 50, 200, 500, 2000, 10e10], return_range=True)
