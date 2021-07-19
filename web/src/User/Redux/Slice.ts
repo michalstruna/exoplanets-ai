@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 
 import { Cookie } from '../../Native'
-import { Cursor, Redux, Sort, Value } from '../../Data'
+import { Cursor, Redux, Sort, Value, SegmentData } from '../../Data'
 import {
     Credentials,
     EditedUser,
@@ -14,7 +14,6 @@ import {
     User
 } from '../types'
 import { Requests, Socket } from '../../Async'
-import { SegmentData } from '../../Database/types'
 import { Action } from '../../Data/Utils/Redux'
 import { MessageSelection } from '..'
 

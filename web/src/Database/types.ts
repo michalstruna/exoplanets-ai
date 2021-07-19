@@ -125,11 +125,6 @@ export type Dataset = LogObject & StatsObject & DatasetNew & {
     size: number
 }
 
-export type SegmentData<T> = {
-    content: T[]
-    count: number
-}
-
 export type DatasetSelection<T> = Record<string, string[]>
 
 export type Constellation = {

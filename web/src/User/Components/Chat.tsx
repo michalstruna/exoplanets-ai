@@ -2,18 +2,17 @@ import React from 'react'
 import Styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { UseFormReturn } from 'react-hook-form'
+import { pascalCase } from 'change-case'
 
 import { Color, Duration, fadeIn, image, opacityHover, size } from '../../Style'
 import { Field, Form } from '../../Form'
 import { Message } from '../types'
-import { AsyncData, useActions, useStrings } from '../../Data'
+import { AsyncData, useActions, useStrings, SegmentData } from '../../Data'
 import { Async } from '../../Async'
 import { addMessage, MessageSelection, useIdentity, setMessageSelection, UserName, MessageTag } from '..'
-import { SegmentData } from '../../Database/types'
 import { Dates } from '../../Native'
 import { Console, IconText } from '../../Layout'
 import TimeAgo from '../../Native/Components/TimeAgo'
-import { pascalCase } from 'change-case'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
 

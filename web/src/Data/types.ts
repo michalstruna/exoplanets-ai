@@ -49,6 +49,11 @@ export type Sort = {
     level: number
 }
 
+export type SegmentData<T> = {
+    content: T[]
+    count: number
+}
+
 export type Segment = {
     index: number
     size: number
