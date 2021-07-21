@@ -28,7 +28,8 @@
 \def\suffixZadani{.png}		% doplní se ke každému jménu souboru zadání
 \def\datumOdevzdaniPrace{9.\,5.\,2021}
 
-\long\def\textPodekovani{...}
+\long\def\textPodekovani{Rád bych tímto poděkoval vedoucí této práce, Ing. Monice Borkovcové Ph.D., za přínosné rady při vypracovávání a~snahu dovést tuto práci do úspěšného konce. Velký dík patří i~mé rodině, která mě už od dětství podporovala v~astronomii a~bez které bych se k~tomuto tématu nejspíš nedostal.
+}
 
 
 \long\def\anotace{
@@ -1119,7 +1120,7 @@ Zatímco spektrální třída hvězdy je jednoznačně dána dle povrchové tepl
 
 V~momentě, kdy je nalezena periodická složka ve světelné křivce hvězdy, je třeba ověřit, zda se jedná o~tranzit obíhající exoplanety nebo o~jiný jev. To je opět problém vhodný pro neuronovou síť.
 
-Síť na vstupu přijme globální a~lokální pohled na potenciální tranzit. Výstupem sítě je číslo z~intervalu od 0 do 1, přičemž čím větší číslo je, tím s~větší jistotou síť považuje vstup za skutečný tranzit planety. Kompletní zdrojový kód sítě se nachází v~Jupyter Notebooku \code{data/transit/transit.ipynb}. Architektura sítě popsána v~příloze A.
+Síť na vstupu přijme globální a~lokální pohled na potenciální tranzit. Výstupem sítě je číslo z~intervalu od 0 do 1, přičemž čím větší číslo je, tím s~větší jistotou síť považuje vstup za skutečný tranzit planety. Kompletní zdrojový kód sítě se nachází v~Jupyter Notebooku \code{data/transit\_nn/transit\_nn.ipynb}. Architektura sítě popsána v~příloze A.
 
 \img[1]{Část trénovací množiny pro detekci tranzitů exoplanet}{img/train_set.png}
 \data{1}{nasadata}
@@ -1560,7 +1561,7 @@ Dalším zlepšením do budoucna by mohlo být zvýšení granularity úloh. Ana
 \begin{table}[!ht]
 	\def\arraystretch{1.2}
 	\setlength{\tabcolsep}{1pt}
-	\begin{tabularx}{\textwidth}{|p{50pt}|X|X|X|X|X|X|X|X|X|X|X|}
+	\begin{tabularx}{\textwidth}{|p{50pt}|X|p{50pt}|X|p{50pt}|X|p{50pt}|X|p{50pt}|X|p{50pt}|X|}
 		\hline
 		\rowcolor{lightgray}
 		\multicolumn{10}{|c|}{\textbf{Negativní}} \\
@@ -1568,29 +1569,29 @@ Dalším zlepšením do budoucna by mohlo být zvýšení granularity úloh. Ana
 		\rowcolor{lightgray}
 		KIC & Detekce & KIC & Detekce & KIC & Detekce & KIC & Detekce & KIC & Detekce \\	
 		\hline
-		& & & & & & & & & \\
+		100000925 & \cellcolor{lightgreen} Ne & 100000926 & \cellcolor{lightgreen} Ne & 100000927 & \cellcolor{lightgreen} Ne & 100000928 & \cellcolor{lightgreen} Ne & 100000929 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		100000930 & \cellcolor{lightgreen} Ne & 100000931 & \cellcolor{lightgreen} Ne & 100000932 & \cellcolor{lightgreen} Ne & 100000933 & \cellcolor{lightgreen} Ne & 100000934 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		100000935 & \cellcolor{lightgreen} Ne & 100000936 & \cellcolor{lightgreen} Ne & 100000937 & \cellcolor{lightgreen} Ne & 100000938 & \cellcolor{lightgreen} Ne & 100000939 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		100000940 & \cellcolor{lightgreen} Ne & 100000941 & \cellcolor{lightgreen} Ne & 100000942 & \cellcolor{lightgreen} Ne & 100000943 & \cellcolor{lightgreen} Ne & 100000944 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		100000945 & \cellcolor{lightgreen} Ne & 100000946 & \cellcolor{lightgreen} Ne & 100000947 & \cellcolor{lightgreen} Ne & 100000948 & \cellcolor{lightgreen} Ne & 100000949 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		100000950 & \cellcolor{lightgreen} Ne & 100000951 & \cellcolor{lightgreen} Ne & 100000952 & \cellcolor{lightgreen} Ne & 100000953 & \cellcolor{lightgreen} Ne & 100000954 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		100000955 & \cellcolor{lightgreen} Ne & 100000956 & \cellcolor{lightgreen} Ne & 100000957 & \cellcolor{lightgreen} Ne & 100000958 & \cellcolor{lightgreen} Ne & 100000959 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		100000960 & \cellcolor{lightgreen} Ne & 100000961 & \cellcolor{lightgreen} Ne & 100000962 & \cellcolor{lightgreen} Ne & 100000963 & \cellcolor{lightgreen} Ne & 100000964 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		4928826 & \cellcolor{lightgreen} Ne & 4928862 & \cellcolor{lightgreen} Ne & 4928898 & \cellcolor{lightgreen} Ne & 4932320 & \cellcolor{lightgreen} Ne & 4936238 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		4936281 & \cellcolor{lightgreen} Ne & 4936287 & \cellcolor{lightgreen} Ne & 4940980 & \cellcolor{lightgreen} Ne & 4940999 & \cellcolor{lightgreen} Ne & 4941156 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		4929214 & \cellcolor{lightgreen} Ne & 4929259 & \cellcolor{lightgreen} Ne & 4929301 & \cellcolor{lightgreen} Ne & 4929426 & \cellcolor{lightgreen} Ne & 4929449 & \cellcolor{lightgreen} Ne \\
 		\hline
-		& & & & & & & & & \\
+		8396995 & \cellcolor{lightgreen} Ne & 8397017 & \cellcolor{lightgreen} Ne & 8397026 & \cellcolor{lightgreen} Ne & 8397068 & \cellcolor{lightgreen} Ne & 8397111 & \cellcolor{lightgreen} Ne \\
 		\hline
 	\end{tabularx}
 \end{table}
