@@ -231,7 +231,7 @@ class Sockets(metaclass=Singleton):
 
         ms = time.now() - task["meta"]["created"]
 
-        dataset = self.dataset_service.update(task["dataset_id"], {})#{"pop__items": -1})  # TODO: Pop item.
+        dataset = self.dataset_service.update(task["dataset_id"], {"pop__items": -1})
         light_curve = task["solution"]["light_curve"]
         stars, planets = 0, 0
 

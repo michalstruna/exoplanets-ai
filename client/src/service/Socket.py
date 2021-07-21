@@ -50,7 +50,7 @@ def run(task):
             gv, gv_norm = lc_service.get_gv(original_lc, pdg, True)
             lv, lv_norm = lc_service.get_lv(original_lc, pdg, True)
 
-            if True:#lc_service.is_planet(gv_norm, lv_norm):
+            if lc_service.is_planet(gv_norm, lv_norm):
                 log(LogType.PLANET_FOUND, round(per.value, 2))
 
                 transits.append({

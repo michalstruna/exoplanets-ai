@@ -19,15 +19,9 @@ class LcService:
         return size
 
     def tps_to_lc(self, tps):
-        lcs = []
-        target = None
-
-        for tp in tps:
-            if target is None or target == tp.targetid:
-                lcs.append(tp.to_lightcurve(aperture_mask=tp.pipeline_mask))
-                target = tp.targetid
-
-        return lk.LightCurveCollection(lcs).stitch().flatten(window_length=501).remove_outliers()
+        lcc = map(lambda tp: tp.to_lightcurve(aperture_mask=tp.pipeline_mask).flatten(window_length=201), tps)
+        lcc = lk.LightCurveCollection(lcc)
+        return lcc.stitch().remove_outliers(sigma_upper=3, sigma_lower=20)
 
     def get_pdg(self, lc, max_period, min_period=0.5, num=100000):
         return lc.to_periodogram(method="bls", period=np.linspace(min_period, max_period, num))
@@ -36,10 +30,10 @@ class LcService:
         return self._get_view(lc, pdg, 2001, norm)
 
     def get_lv(self, lc, pdg, norm=False):
-        return self._get_view(lc, pdg, 201, norm, 4)
+        return self._get_view(lc, pdg, 201, norm, pdg.period_at_max_power.value)
 
     def _get_view(self, lc, pdg, bins, return_norm, phase=None):
-        folded = lc.fold(pdg.period_at_max_power, t0=pdg.transit_time_at_max_power)
+        folded = lc.fold(pdg.period_at_max_power, pdg.transit_time_at_max_power)
 
         if phase:
             fractional_duration =  pdg.duration_at_max_power / pdg.period_at_max_power
@@ -47,6 +41,9 @@ class LcService:
             folded = folded[phase_mask]
 
         view = folded.bin(bins=bins)
+
+        if np.isnan(view.flux.value).any():
+            view.flux.value[np.isnan(view.flux.value)] = 0#np.nanmin(view.flux.value)
 
         if return_norm:
             norm = view.copy()
