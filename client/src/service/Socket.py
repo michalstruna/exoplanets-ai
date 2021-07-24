@@ -7,6 +7,7 @@ from service.Device import DeviceService
 from constants.Process import ProcessState, TaskType, LogType
 from service.Astro import LcService
 from service.Plot import PlotService
+from constants import Config
 
 sio = socketio.Client()
 
@@ -99,7 +100,7 @@ def run(task):
 
 
 @sio.event
-def pause():  # TODO: Remove, pause is not needed.
+def pause():
     print("=== PAUSE ===")
 
 
@@ -109,7 +110,7 @@ def terminate():
     sio.disconnect()
     sys.exit()
 
-sio.connect("http://localhost:5000")  # TODO: Config.
+sio.connect(Config.SERVER_URL)
 
 sio.emit("client_connect", {
     "name": device.get_host(),
