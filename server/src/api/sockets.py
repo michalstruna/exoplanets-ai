@@ -220,6 +220,10 @@ class Sockets(metaclass=Singleton):
         """
         Finish task by client.  # TODO: Another task types?
         """
+        if "solution" not in task:
+            dataset = self.dataset_service.update(task["dataset_id"], {"pop__items": -1})  # TODO: Error message?
+            return
+
         lc_plot = self.file_service.save(task["solution"]["light_curve"]["plot"], FileService.Type.LC)
         task["solution"]["light_curve"]["plot"] = lc_plot
 

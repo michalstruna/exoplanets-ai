@@ -57,9 +57,9 @@ const PlanetTable = ({ data, refMap, ...props }: Props) => {
                 <td>{planets.surfaceGravity}</td>
                 <td>{Value.Planet.props(data, 'surface_gravity', { refMap, unit: <Fraction top='m' bottom={<>s<sup>2</sup></>} />, isEstimate: props => props.processed })}</td>
                 <td>{planets.eccentricity}</td>
-                <td>{Value.Planet.props(data, 'eccentricity', { refMap, format: Numbers.format })}</td>
-                <td>???</td>
-                <td>???</td>
+                <td>{Value.Planet.props(data, '' as any, { refMap, format: Numbers.format })}</td>
+                <td></td>
+                <td></td>
             </tr>
             </tbody>
         </Root>

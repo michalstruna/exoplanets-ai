@@ -1300,19 +1300,42 @@ V~rámci projektu nebyly vytvořeny kompletní testy zcela pokrývající všech
 
 Domovská stránka nabízí přehled globálních statistik jako např. počet objevených exoplanet, registrovaných dobrovolníků nebo množství zpracovaných dat. Dále se zde nachází žebříčky exoplanet dle různých kritérií (nejbližší exoplanety, exoplanety nejpodobnější Zemi, ...) a~stejně tak i žebříčky dobrovolníků (dle výpočetního času, počtu objevených planet, ...).
 
-\img[1]{Stránka Přehled}{img/overview_page.png}
+\img{Stránka Přehled}{img/overview_page.png}
+
+\clearpage
 
 \subsection{Databáze}
 
 Všechna veřejně dostupná data (hvězdy, exoplanety, datasety, ...) lze procházet na této stránce. Samozřejmostí je stránkování, řazení dle libovolného údaje i~filtrování dle libovolného údaje nebo relace (rovná se, je menší, obsahuje, ...). Administrátoři mají navíc možnost některé položky přidávat, upravovat či mazat.
 
-\img[1]{Stránka Databáze}{img/db_page.png}
+\img{Stránka Databáze}{img/db_page.png}
+
+\wrapimg{Formulář pro nový dataset}{img/new_dataset.png}{r}{11}{0.6}
+
+Přidávání hvězd a~planet do databáze se neprovádí manuálně, nýbrž prostřednictvím datasetů. Jednotlivé typy datasetů jsou popsány v~kapitole 5.6. Každý typ datasetu má svou vlastní podobu formuláře, ve kterém je možné definovat přístup k~jednotlivým položkám datasetu.
+
+\clearpage
 
 \subsection{Detail systému}
 
-Tato stránka shrnuje shrnuty všechny známé informace o~vybraném systému. Kromě hodnot veličin hvězdy a~případných planet jsou zde zaznamenána všechna pozorování, vizuální porovnání velikostí a~vzdáleností oproti sluneční soustavě, seznam referencí a~v~neposlední řadě také interaktivní 3D model systému.
+Tato stránka shrnuje všechny známé informace o~systému. Kromě hodnot veličin hvězdy a~případných planet jsou zde zaznamenána všechna pozorování, vizuální porovnání velikostí a~vzdáleností, seznam referencí a~také interaktivní mapa oblohy.
 
 \img{Stránka Detail systému}{img/system_page.png}
+
+U~každé z~objevených planet v~systému je kromě tabulky zobrazen i~lokální a~globální pohld na tranzit.
+
+\img{Detail planety}{img/planet_detail.png}
+
+
+Komponenta pro vizuální porovnání velikostí planet a~hvězd zobrazuje jednak vybraný planetární systém a~jednak naši sluneční soustavu. Velikosi hvězd i~planet jsou v~realistickém poměru. Vzdálenosti jsou však kvůli enormním velikostem z~tohoto diagramu vypuštěny.
+
+\img{Provnání velikostí}{img/size.png}
+
+Komponnta pro vizuální porovnání vzdálenosti planet na druhou stranu zanedbává velikosti a~v~realistickém měřítku zobrazuje pouze vzdálenosti. Pro porovnání je zde opět sluneční soustava. Kromě toho se zde nachází i~vyznačení tzv. zóny života. To je vzdálenost od hvězdy, ve které je vhodná rovnovážná teplota pro existenci vody v~kapalném stavu.
+
+\img{Provnání vzdáleností}{img/distance.png}
+
+\clearpage
 
 \subsection{Objevování exoplanet}
 
@@ -1341,7 +1364,7 @@ Kromě toho může každý uživatel do svého profilu vyplnit i~některé osobn
 \clearpage
 
 {
-\tab[2]{Autentizační komponenty}{
+\tab{Autentizační komponenty}{
 	\begin{tabular}{|p{0.3\textwidth}|p{0.15\textwidth}|p{0.5\textwidth}|}
 		\hline	
 		\rowcolor{lightgray}
@@ -1358,11 +1381,7 @@ Kromě toho může každý uživatel do svého profilu vyplnit i~některé osobn
 	\end{tabular}
 }
 
-\img[1]{Profil a editace uživatele}{img/user.png}
-
-TODO: Fotka klientské aplikace.
-
-\img[1]{Ukázka běžící klientské aplikace}{img/client_terminal.png}
+\img{Profil a editace uživatele}{img/user.png}
 
 \clearpage\pagestyle{plain}\phantomsection\addcontentsline{toc}{section}{Závěr}
 \section*{Závěr}
@@ -1378,13 +1397,15 @@ V~rámci této diplomové práce byla vytvořena trojice aplikací~--~webová, k
 		\hline	
 		Klasifikace hvězd & 130 & 97,69 \% \\
 		\hline
-		Detekce tranzitů exoplanet & 30 & 86,31 \% \\
+		Pozitivní tranzity & 60 & 88 \% \\
 		\hline
-		Výpočet průměrů planet & 30 & 92,36 \% \\
+		Negativní tranzity & 22 & 100 \% \\
 		\hline
-		Výpočet period planet & 30 & 92,36 \% \\
+		Výpočet period planet & 30 & 100 \% \\
 		\hline
-		Výpočet hmotností planet & 30 & 92,36 \% \\
+		Výpočet průměrů planet & 30 & 93,06 \% \\
+		\hline
+		Výpočet hmotností planet & 30 & 39.57 \% \\
 		\hline
 	\end{tabular}
 }
@@ -1492,67 +1513,67 @@ Dalším zlepšením do budoucna by mohlo být zvýšení granularity úloh. Ana
 \begin{table}[!ht]
 	\def\arraystretch{1.2}
 	\setlength{\tabcolsep}{1pt}
-	\begin{tabularx}{\textwidth}{|p{50pt}|X|X|X|X|X|X|X|X|X|X|X|X|}
+	\begin{tabularx}{\textwidth}{|p{60pt}|X|X|X|X|X|X|X|X|X|X|X|X|}
 		\hline
 		\rowcolor{lightgray}
 		\multicolumn{11}{|c|}{\textbf{Pozitivní}} \\
 		\hline
 		\rowcolor{lightgray}
-		& & \multicolumn{3}{|l|}{Perioda oběhu [$T_\oplus$]} & \multicolumn{3}{|l|}{Rov. poloměr [$r_\oplus$]} & \multicolumn{3}{|l|}{Hmotnost [$m_\oplus$]} \\	
+		& & \multicolumn{3}{|l|}{Perioda oběhu [d]} & \multicolumn{3}{|l|}{Rov. poloměr [$r_\oplus$]} & \multicolumn{3}{|l|}{Hmotnost [$m_\oplus$]} \\	
 		\hline	
 		\rowcolor{lightgray}
-		Hvězda & Detekce & Vlastní & NASA & Chyba & Vlastní & NASA & Chyba & Vlastní & NASA & Chyba \\
+		Planeta & Detekce & Vlastní & NASA & Chyba & Vlastní & NASA & Chyba & Vlastní & NASA & Chyba \\
 		\hline	
-		Kepler 128 & & & & & & & & & & \\	
+		Kepler-39 b & \cellcolor{lightgreen} Ano & 21.087 & 21.087 & \cellcolor{lightgreen} 0 & 14.8 & 14.77 & \cellcolor{lightgreen} 0.0020 & 447 & 5688 & \cellcolor{lightred} 0.9214  \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-40 b & \cellcolor{lightgreen} Ano & 6.873 & 6.873 & \cellcolor{lightgreen} 0 & 13.802 & 13.8 & \cellcolor{lightgreen} 0.0001 & 379.5 & 674 & \cellcolor{lightorange} 0.4369 \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-41 b & \cellcolor{lightgreen} Ano & 1.856 & 1.856 & \cellcolor{lightgreen} 0 & 8.609 & 10.24 & \cellcolor{lightorange} 0.1593 & 136.9 & 174.8 & \cellcolor{lightorange} 0.2168 \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-43 b & \cellcolor{lightgreen} Ano & 3.024 & 3.024 & \cellcolor{lightgreen} 0 & 12.21 & 12.5 & \cellcolor{lightgreen} 0.023 & 282.3 & 998 & \cellcolor{lightred} 0.7171 \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-45 b & \cellcolor{lightgreen} Ano & 2.455 & 2.455 & \cellcolor{lightgreen} 0 & 10.853 & 11.03 & \cellcolor{lightgreen} 0.0163 & 212.17 & 150.5 & \cellcolor{lightorange} 0.4147 \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-63 b & \cellcolor{lightgreen} Ano & 9.434 & 9.434 & \cellcolor{lightgreen} 0 & 5.64 & 6.11 & \cellcolor{lightgreen} 0.0777 & 203 & 120 & \cellcolor{lightred} 0.6917 \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-66 b & \cellcolor{lightgreen} Ano & 17.816 & 17.816 & \cellcolor{lightgreen} 0 & 2.389 & 2.81 & \cellcolor{lightorange} 0.1498 & 14.16 & & \\
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-69 b & \cellcolor{lightgreen} Ano & 13.722 & 13.722 & \cellcolor{lightgreen} 0 & 2.165 & 2.28 & \cellcolor{lightgreen} 0.0504 & 10.43 &  & \\		
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-69 c & \cellcolor{lightred} Ne & & 242.467 & & & 1.74 & & & & \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-74 b & \cellcolor{lightgreen} Ano & 7.341 & 7.341 & \cellcolor{lightgreen} 0 & 14.1 & 14.31 & \cellcolor{lightgreen} 0.014 & 396 & 216 & \cellcolor{lightred} 0.8333 \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-75 b & \cellcolor{lightgreen} Ano & 8.887 & 8.887 & \cellcolor{lightgreen} 0 & 9.48 & 10.82 & \cellcolor{lightorange} 0.1238 & 167 & 3146 & \cellcolor{lightred} 0.9440 \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-76 b & \cellcolor{lightgreen} Ano & 1.545 & 1.545 & \cellcolor{lightgreen} 0 & 9.74 & 13.67 & \cellcolor{lightorange} 0.2875 & 176 & 636 & \cellcolor{lightred} 0.7232 \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-77 b & \cellcolor{lightgreen} Ano & 3.579 & 3.579 & \cellcolor{lightgreen} 0 & 10.719 & 10.761 & \cellcolor{lightgreen} 0.0039 & 206 & 225 & \cellcolor{lightgreen} 0.0844 \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-78 b & \cellcolor{lightgreen} Ano & 0.355 & 0.355 & \cellcolor{lightgreen} 0 & 1.315 & 1.2 & \cellcolor{lightgreen} 0.0958 & 2.85 & 1.96 & \cellcolor{lightorange} 0.4541 \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-79 b & \cellcolor{lightred} Ne & & 13.485 & & 3.47 & & & 10.9 & & \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-79 c & \cellcolor{lightred} Ne & & 27.402 & & 3.72 & & & 12.5 & & \\	
 		\hline	
-		& & & & & & & & & & \\	
+		Kepler-79 d & \cellcolor{lightgreen} Ano & 52.09 & 52.09 & \cellcolor{lightgreen} 0 & 7.244 & 7.239 & \cellcolor{lightgreen} 0.0007 & 96.3 & & \\	
 		\hline	
-		& & & & & & & & & & \\	
-		\hline	
-		& & & & & & & & & & \\	
-		\hline	
-		& & & & & & & & & & \\	
-		\hline	
-		& & & & & & & & & & \\	
-		\hline	
-		& & & & & & & & & & \\	
-		\hline	
-		& & & & & & & & & & \\	
-		\hline	
-		& & & & & & & & & & \\	
-		\hline	
-		& & & & & & & & & & \\	
+		Kepler-80 b & \cellcolor{lightgreen} Ano & 7.053 & 7.053 & \cellcolor{lightgreen} 0 & 2.07 & 2.21 & \cellcolor{lightgreen} 0.0676 & 9.1 & 6.94 & \cellcolor{lightorange} 0.3112 \\	
 		\hline
+		Kepler-91 b & \cellcolor{lightgreen} Ano & 6.25 & 6.25 & \cellcolor{lightgreen} 0 & 13.9 & 14.5 & \cellcolor{lightgreen} 0.0414 & 385 & 241 & \cellcolor{lightred} 0.5975 \\	
+		\hline
+		Kepler-95 b & \cellcolor{lightgreen} Ano & 11.523 & 11.523 & \cellcolor{lightgreen} 0 & 3.22 & 3.13 & \cellcolor{lightgreen} 0.0288 & 35.6 & & \\	
+		\hline		
+		Kepler-96 b & \cellcolor{lightgreen} Ano & 16.238 & 16.238 & \cellcolor{lightgreen} 0 & 2.55 & 2.55 & \cellcolor{lightgreen} 0 & 17.4 & 8.46 & \cellcolor{lightred} 1.0567 \\	
+		\hline	
+		Kepler-98 b & \cellcolor{lightgreen} Ano & 1.542 & 1.542 & \cellcolor{lightgreen} 0 & 1.59 & 1.82 & \cellcolor{lightorange} 0.1264 & 3.99 & 3.55 & \cellcolor{lightorange} 0.1103 \\	
+		\hline
+		Kepler-99 b & \cellcolor{lightgreen} Ano & 4.604 & 4.604 & \cellcolor{lightgreen} 0 & 1.48 & 1.48 & \cellcolor{lightgreen} 0 & 3.21 & 1.88 & \cellcolor{lightred} 0.7074 \\	
+		\hline		
+		Kepler-425 b & \cellcolor{lightgreen} Ano & 3.797 & 3.797 & \cellcolor{lightgreen} 0 & 9.48 & 9.84 & \cellcolor{lightgreen} 0.0366 & 167 & 79.45 & \cellcolor{lightred} 1.1019 \\	
+		\hline	
+		Kepler-426 b & \cellcolor{lightgreen} Ano & 3.218 & 3.218 & \cellcolor{lightgreen} 0 & 9.52 & 12.22 & \cellcolor{lightorange} 0.2209 & 169 & 108 & \cellcolor{lightred} 0.5648 \\	
+		\hline	
 	\end{tabularx}
 \end{table}
 
