@@ -4,7 +4,7 @@ import Query from '../../Routing/Constants/Query'
 import { Validator } from '../../Native'
 import { Urls } from '../../Routing'
 import { AsyncData } from '../types'
-import { SegmentData } from '../../Database/types'
+import { SegmentData } from '../../Data/types'
 
 export const async = <T>(payload: T | null = null) => ({ pending: false, payload, error: null })
 export const empty = <T>(value: any = undefined) => value as T

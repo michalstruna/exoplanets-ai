@@ -1,12 +1,14 @@
 tps = lc_service.download_tps(task["item"])  # Download target pixel.
 lc = lc_service.tps_to_lc(tps)  # Convert target pixel to light curve.
-pd, peaks = lc_service.get_pd(lc)  # Find periods using periodogram.
-transits = []  # List of all found transits.
+transits = []
 
-for peak in peaks:  # For each peak from periodogram.
-    item = get_planet_transit(lc, peak)
+for max_per in LcService.PERIODS:
+    pdg = lc_service.get_pdg(lc)  # Get periodogram.
+    per, t0 = pdg.period_at_max_power, pdg.transit_time_at_max_power
+    lc = lc[~pdg.get_transit_mask(per, t0, dur)]
+    gv, lv = lc_service.get_views(lc, pdg)  # Get global and local view.
 
-    if is_planet_transit(item):  # Check if it is planet's transit.
-        transits.append(item)  # Add transit to solution.
+    if lc_service.is_planet(gv, lv):  # Detect transit using NN.
+        transits.append(lc_service.get_transit(pdg, gv, lv))
 
 submit({"solution": {"transits": transits}})  # Submit solution.

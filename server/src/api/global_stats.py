@@ -36,8 +36,8 @@ axis = api.ns.model("ChartAxis", {
     "min": fields.Float(description="Min value in graph along this axis."),
     "max": fields.Float(description="Max value in graph along this axis."),
     "log": fields.Boolean(description="Axis has log scale."),
-    "ticks": fields.List(fields.String),
-    "vals": fields.List(fields.Float)
+    "ticks": fields.List(fields.String, default=[]),
+    "vals": fields.List(fields.Float, default=[])
 })
 
 color_axis = api.ns.model("ChartColorAxis", {

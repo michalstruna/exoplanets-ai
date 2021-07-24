@@ -170,7 +170,7 @@ const SystemView = ({ ...props }: Props) => {
                             [
                                 {
                                     name: 'Kepler-10',
-                                    size: 162147,
+                                    size: 268147,
                                     image: 'https://www.clker.com/cliparts/W/i/K/w/1/D/glossy-orange-circle-icon-md.png'
                                 },
                                 ...system.payload!.planets.map((planet: PlanetData) => ({

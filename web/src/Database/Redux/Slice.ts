@@ -1,7 +1,7 @@
 import { Query } from '../../Routing'
-import { Redux,  FilterData, Sort, Segment, Cursor, ItemId } from '../../Data'
+import { Redux,  FilterData, Sort, Segment, Cursor, ItemId, SegmentData } from '../../Data'
 import { Requests } from '../../Async'
-import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, SegmentData, DatasetSelection, SystemData, Constellation } from '../types'
+import { Dataset, StarData, PlanetData, DatasetNew, DatasetUpdated, DatasetSelection, SystemData, Constellation } from '../types'
 import { AggregatedStats, GlobalAggregatedStats, PlanetRanks, PlotStats } from '../../Stats'
 
 const levels = [{ columns: new Array(10).fill(null) }, { columns: new Array(10).fill(null) }] // TODO: Store columns in store?

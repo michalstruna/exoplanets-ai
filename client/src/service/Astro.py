@@ -1,18 +1,19 @@
 import lightkurve as lk
 import numpy as np
-import math
 import os
 from tensorflow.keras.models import load_model
 
-
-# TODO: Replace nan.
-
 class LcService:
 
-    PERIODS = (10, 50, 250)
+    LV_SIZE = 201
+    GV_SIZE = 2001
+    MAX_PERIODS = {"MIN": 25, 25: 100, 100: 250, 250: 300, 300: 300, "MAX": 300}
 
     def download_tps(self, star_name, mission="Kepler", exptime="long"):
-        return lk.search_targetpixelfile(star_name, mission="Kepler", exptime=exptime).download_all()
+        try:
+            return lk.search_targetpixelfile(star_name, mission=mission, exptime=exptime).download_all()
+        except:
+            return None
 
     def get_tps_size(self, tps):
         size = 0
@@ -23,59 +24,57 @@ class LcService:
         return size
 
     def tps_to_lc(self, tps):
-        lcs = []
-        target = None
+        lcc = map(lambda tp: tp.to_lightcurve(aperture_mask=tp.pipeline_mask).flatten(window_length=101), tps)
+        lcc = lk.LightCurveCollection(lcc)
+        return lcc.stitch().remove_outliers(sigma_upper=3, sigma_lower=20)
 
-        for tp in tps:
-            if target is None or target == tp.targetid:
-                lcs.append(tp.to_lightcurve(aperture_mask=tp.pipeline_mask))
-                target = tp.targetid
+    def get_pdg(self, lc, max_period, min_period=0.5, num=100000, exclude_periods=[]):
+        period = np.linspace(min_period, max_period, num)
 
-        return lk.LightCurveCollection(lcs).stitch().flatten(window_length=501).remove_outliers()
+        for per in exclude_periods:
+            minimum = min(per * 0.9, per - 1)
+            maximum = max(per * 1.1, per + 1)
+            period = period[~((period > minimum) & (period < maximum))]
 
-    def get_pd(self, lc):
-        pd = lc.to_periodogram(method="bls", period=np.arange(0.5, 150, 0.001))  # TODO: 0.001
-        med = np.median(pd.power)
-        return pd, self.get_peaks(pd.power, around=int(pd.power.shape[0] / 20), minimum=med)
-
-    def get_peaks(self, values, minimum=-math.inf, maximum=math.inf, around=1):
-        peaks = []
-
-        for i in range(0, values.shape[0]):
-            before_around = values[max(0, i - around):i]
-            after_around = values[i + 1:min(i + around + 1, values.shape[0] - 1)]
-            before_max = np.max(before_around) if before_around.shape[0] > 0 else -math.inf
-            after_max = np.max(after_around) if after_around.shape[0] > 0 else -math.inf
-
-            if values[i] >= minimum and values[i] <= maximum and values[i] > before_max and values[i] >= after_max:
-                peaks.append(i)
-
-        return peaks
+        return lc.to_periodogram(method="bls", period=period, frequency_factor=500)
 
     def get_gv(self, lc, pdg, norm=False):
-        per, t0 = pdg.period_at_max_power, pdg.transit_time_at_max_power
-        folded = lc.fold(per, t0=t0)
-        gv = folded.bin(bins=2001)
-
-        if norm:
-            gv = gv.normalize() - 1
-            gv = (gv / np.abs(gv.flux.min())) * 2.0 + 1
-
-        return gv
+        return self._get_view(lc, pdg, LcService.GV_SIZE, norm)
 
     def get_lv(self, lc, pdg, norm=False):
-        per, t0, dur = pdg.period_at_max_power, pdg.transit_time_at_max_power, pdg.duration_at_max_power
-        fractional_duration = dur / per
-        folded = lc.fold(per, t0=t0)
-        phase_mask = (folded.phase.value > -4 * fractional_duration) & (folded.phase.value < 4 * fractional_duration)
-        lc_zoom = folded[phase_mask]
-        lv = lc_zoom.bin(bins=201)
+        return self._get_view(lc, pdg, LcService.LV_SIZE, norm, pdg.period_at_max_power.value)
 
-        if norm:
-            lv = lv.normalize() - 1
-            lv = (lv / np.abs(lv.flux.min())) * 2.0 + 1
-            
-        return lv
+    def replace_nans(self, x):
+        last = np.nanmedian(x) if np.isnan(x[0]) else x[0]
+        delta_max = ((np.nanmax(x) - np.nanmin(x)) / 20)
+
+        for i in range(len(x)):
+            if np.isnan(x[i]):
+                x[i] = last + delta_max * np.random.rand()
+            else:
+                last = x[i]
+
+    def _get_view(self, lc, pdg, bins, return_norm, phase=None):
+        folded = lc.fold(pdg.period_at_max_power, pdg.transit_time_at_max_power)
+
+        if phase:
+            fractional_duration =  pdg.duration_at_max_power / pdg.period_at_max_power
+            phase_mask = (folded.phase.value > -phase * fractional_duration) & (folded.phase.value < phase * fractional_duration)
+            folded = folded[phase_mask]
+
+        view = folded.bin(bins=bins)
+        self.replace_nans(view.flux.value)
+        self.replace_nans(view.flux_err.value)
+        view = lk.LightCurve(time=np.resize(view.time.value, bins), flux=np.resize(view.flux.value, bins), flux_err=np.resize(view.flux_err.value, bins))
+        view = view.remove_nans()
+
+        if return_norm:
+            norm = view.copy()
+            norm = norm.normalize() - 1
+            norm = (norm / np.abs(norm.flux.min())) * 2.0 + 1
+            return view, norm
+
+        return view
 
     def is_planet(self, gv, lv):
         model = load_model(os.path.join(os.path.dirname(__file__), "../data/transit.h5"))
@@ -84,3 +83,6 @@ class LcService:
     def _to_cnn(self, lc):
         flux = lc.flux.reshape((*lc.flux.shape, 1))
         return np.array([flux])
+
+    def shorten(self, lc, days):
+        return lc[lc.time - lc.time[0] < days].remove_nans()

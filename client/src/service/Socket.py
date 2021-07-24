@@ -7,6 +7,7 @@ from service.Device import DeviceService
 from constants.Process import ProcessState, TaskType, LogType
 from service.Astro import LcService
 from service.Plot import PlotService
+from constants import Config
 
 sio = socketio.Client()
 
@@ -30,32 +31,37 @@ def connected():
 
 @sio.event
 def run(task):
-    # TODO: remove_outliers - upper lower
-    print("=== RUN ===")
-
+    print("=== RUN ===", task)
     if task["type"] == TaskType.TARGET_PIXEL.value:
         log(LogType.DOWNLOAD_TP, task["item"])
         tps = lc_service.download_tps(task["item"])
+
+        if not tps:
+            submit(task)
+            return
+
         task["meta"]["size"] = lc_service.get_tps_size(tps)
         lc = lc_service.tps_to_lc(tps)
         original_lc = lc.copy()
-        short_lc = lc[lc.time - lc.time[0] < 100].remove_nans()
+        short_lc = lc_service.shorten(original_lc, 100)
         log(LogType.ANALYZE_LC, task["item"])
 
-        transits = []
+        transits, periods = [], []
+        max_per, planet_found = LcService.MAX_PERIODS["MIN"], False
 
-        for max_per in LcService.PERIODS:
-            pdg = lc.to_periodogram("bls", period=np.linspace(0.5, max_per, 100000))
+        while max_per < LcService.MAX_PERIODS["MAX"] or planet_found:
+            pdg = lc_service.get_pdg(lc, max_per, exclude_periods=periods)
             per, t0, dur, dep = pdg.period_at_max_power, pdg.transit_time_at_max_power, pdg.duration_at_max_power, pdg.depth_at_max_power
-            mask = pdg.get_transit_mask(period=per, transit_time=t0, duration=dur)
-            lc = lc[~mask]
-            gv_norm = lc_service.get_gv(original_lc, pdg, norm=True)
-            lv_norm = lc_service.get_lv(original_lc, pdg, norm=True)
-
-            if True:#lc_service.is_planet(gv_norm, lv_norm):
+            periods.append(per.value)
+            gv, gv_norm = lc_service.get_gv(lc, pdg, True)
+            lv, lv_norm = lc_service.get_lv(lc, pdg, True)
+            planet_found = lc_service.is_planet(gv_norm, lv_norm)
+            max_per = LcService.MAX_PERIODS[max_per]
+            
+            if planet_found:
+                mask = pdg.get_transit_mask(period=per, transit_time=t0, duration=dur)
+                lc = lc[~mask]
                 log(LogType.PLANET_FOUND, round(per.value, 2))
-                gv = lc_service.get_gv(original_lc, pdg)
-                lv = lc_service.get_lv(original_lc, pdg)
 
                 transits.append({
                     "period": per.value,
@@ -70,7 +76,7 @@ def run(task):
                         "plot": plot.plot_lc(gv.time.value, gv.flux.value, size=15, alpha=0.7),
                         "min_flux": np.round(np.min(gv.flux.value), 4),
                         "max_flux": np.round(np.max(gv.flux.value), 4)
-                    },
+                    }
                 })
             else:
                 log(LogType.FALSE_POSITIVE, round(per.value, 2))
@@ -94,7 +100,7 @@ def run(task):
 
 
 @sio.event
-def pause():  # TODO: Remove, pause is not needed.
+def pause():
     print("=== PAUSE ===")
 
 
@@ -104,7 +110,7 @@ def terminate():
     sio.disconnect()
     sys.exit()
 
-sio.connect("http://localhost:5000")  # TODO: Config.
+sio.connect(Config.SERVER_URL)
 
 sio.emit("client_connect", {
     "name": device.get_host(),

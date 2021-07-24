@@ -59,7 +59,7 @@ def test_google_login(client):
     pass
 
 
-def test_get(client):  # TODO: Add Facebook and Google users.
+def test_get(client):
     Res.list(client.get("/api/users"), [])  # There is no user.
 
     Res.invalid(client.post("/api/users/sign-up", json=Creator.local_credentials(5, new=True, username="invalid")))  # Invalid username."""
@@ -157,7 +157,7 @@ def test_sort(client):
     Res.list(client.get("/api/users?sort=birth,desc"), [usr4, usr3, usr2, usr1])
 
     Res.list(client.get("/api/users?sort=planets_diff,desc"), [usr1, usr2, usr4, usr3])
-    Res.list(client.get("/api/users?sort=planets_diff,asc"), [usr3, usr4, usr2, usr1])  # TODO: Fix order.
+    Res.list(client.get("/api/users?sort=planets_diff,asc"), [usr3, usr4, usr2, usr1])
     Res.list(client.get("/api/users?sort=items_diff,desc"), [usr2, usr1, usr4, usr3])
     Res.list(client.get("/api/users?sort=items_diff,asc"), [usr3, usr4, usr1, usr2])
     Res.list(client.get("/api/users?sort=time_diff,desc"), [usr4, usr3, usr1, usr2])
@@ -204,18 +204,5 @@ def test_edit_local_user(client):
 
     Res.item(client.post("/api/users/login", json=cr2), usr2)  # User 2 still can log in with old credentials.
 
-
-def test_edit_fb_user(client):
-    pass
-
-
-def test_edit_google_user(client):
-    pass
-
-
 def test_admin_edit(client):
     pass
-
-
-def test_rank(client):
-    pass  # TODO

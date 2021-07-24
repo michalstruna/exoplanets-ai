@@ -2,6 +2,7 @@ import pandas as pd
 from mongoengine.errors import DoesNotExist
 import re
 
+from utils.native import Dict
 from .Base import Service
 from .Star import StarService
 from constants.Dataset import DatasetType, DatasetFields
@@ -178,9 +179,5 @@ class DatasetService(Service):
 
     def reset(self, id):
         dataset = self.get_by_id(id)
-
-        for key in ["_id", "index"]:
-            del dataset[key]
-
-        self.delete(id)  # TODO: Transation?
-        self.add(dataset)
+        self.delete(id)  # TODO: Transaction?
+        self.add(Dict.exclude_keys(dataset, "_id", "index"))
