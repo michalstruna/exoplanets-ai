@@ -319,7 +319,7 @@ Vše, co potřebujeme, je dostatečně velký dataset s~planetami, u~kterých ji
 \begin{itemize}
 \item Vygenerovat novou „umělou“ planetu, jejíž vlastnosti jsou realistické (odpovídají náhodným rozdělením planet v~trénovací množině),
 
-\item Nebo užitečnější, na základě známých veličin planety odhadnout veličinu neznámou.
+\item Nebo na základě známých veličin planety odhadnout veličinu neznámou.
 \end{itemize}
 
 Právě druhý ze zmíněných typů úloh můžeme použít pro výpočet hmotnosti. Např. na základě poloměru, periody a rovnovážné teploty planety, které jsou tranzitní metodou lehce spočitatelné, můžeme odhadnout chybějící hmotnost planety.~\cite{nnmass}
@@ -1132,11 +1132,20 @@ K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~ní�
 
 \lstinputlisting[caption={Připojení k databázi.}]{codes/db_conn.txt}
 
+Dokumentová databáze byla zvolena kvůli možnosti snadno vytvářet zanořené dokumenty, což je pro potřeby aplikace důležité. Zároveň však došlo k~zanedbání některých dobrých praktik ve prospěch výkonu. Bez těchto ústupů by vyhledávání v~databázi obsahující stovky tisíc položek trvalo příliš dlouho, protože by během prohledávání bylo nutno propojovat kolekce mezi sebou.
+
+\begin{itemize}
+	\item U~hvězd a~planet nejsou datasety uvedeny jako referenční hodnoty (cizí klíče v~SQL databázi), ale jako textové řetězce. Vzniká tak duplicita, kterou je nutno udržovat konzistentní na úrovní aplikace.
+	\item Planety nemají vlastní kolekci, ale jsou vnořenými dokumenty u~hvězd.
+\end{itemize}
+
 \subsection{Datasety}
 
 Většina dat se do databáze nevkládá manuálně, jelikož je třeba pracovat se stovkami tisíc datových položkek. Namísto toho administrátor pouze definuje přístupový bod k~nějakému datasetu dostupnému přes webové rozhraní a~následně dojde k~automatickému zpracování datasetu a~všech položek v~něm. Některé typy datasetů jsou určeny k~jednorázovému uložení do databáze a~není nutno je nijak dál zpracovávat. Zpracování jiných je naopak výpočetně náročné a~připojené klientské aplikace tak činí postupně položku po položce. Jednotlivé typy datasetů jsou popsány níže.
 
 \subsubsection{Target pixel files}
+
+TPF popsaný v~kapitole 1.1.1 je nejčastěji dostupný v~souborech s~příponou fits. Tyto soubory jsou združovány do datasetů a~datasety zase do archivů. Příkladem takového archivu může být \textit{Mikulski Archive for Space Telescopes}, ze kterého aplikace prostřednictvím lighkurve TPF získává.
 
 \subsubsection{Hvězdy}
 
@@ -1302,6 +1311,12 @@ Domovská stránka nabízí přehled globálních statistik jako např. počet o
 
 \img{Stránka Přehled}{img/overview_page.png}
 
+\wrapimg{Statistiky}{img/global_stats.png}{c}{6}{0.7}
+
+
+V~rámci aplikace jsou sbírany všemožné statistiky v~rámci jednotlivých položek (např. dle datasetu či uživatele). Mimo to zde ale na přehledové stránce lze vidět i~statistiky globální. U~všech ze zobrazených statistik lze vidět jednak aktuální hodnotu a~pak také změnu za poslední týden. Statistiky jsou vždy aktuální (necachují se) a~přesto je zajištěna efektivní práce s nimi.
+
+
 \clearpage
 
 \subsection{Databáze}
@@ -1397,18 +1412,21 @@ V~rámci této diplomové práce byla vytvořena trojice aplikací~--~webová, k
 		\hline	
 		Klasifikace hvězd & 130 & 97,69 \% \\
 		\hline
-		Pozitivní tranzity & 60 & 88 \% \\
+		Pozitivní tranzity & 22 & 88 \% \\
 		\hline
-		Negativní tranzity & 22 & 100 \% \\
+		Negativní tranzity & 60 & 100 \% \\
 		\hline
-		Výpočet period planet & 30 & 100 \% \\
+		Výpočet period planet & 22 & 100 \% \\
 		\hline
-		Výpočet průměrů planet & 30 & 93,06 \% \\
+		Výpočet průměrů planet & 22 & 93,06 \% \\
 		\hline
-		Výpočet hmotností planet & 30 & 39.57 \% \\
+		Výpočet hmotností planet & 18 & 39.57 \% \\
 		\hline
 	\end{tabular}
 }
+
+Aplikace je velice odolná vůči falešně pozitivním tranzitům (žádný takový nebyl zaznamenán). Avšak objevilo se několik falešně negativních tranzitů, zejména pokud jde o~víceplanetární systémy, tam je nejčastěji detekován pouze nejsilnější tranzit. Výpočet period oběhů a~průměrů planet je taktéž na velice slušné úrovni. Hmotnost planet ovšem nelze z~tranzitní metody vypočítat. V~rámci apliakce docházelo pouze k~jednoduchému odhadu hmotnosti na základě velikosti planety.
+
 
 Pro zahájení hledání exoplanet je po uživateli vyžadována registrace. Ta je možná buď přes email nebo přes některé ze sociálních sítí. Poté je uživateli umožněno stáhnutí klientské aplikace a~zahájení hledání. Další aktivita ze strany uživatele již není třeba.
 
@@ -1419,6 +1437,8 @@ Klientská aplikace je malý spustitelný soubor dostupný ke stažení z~prost�
 Aplikace v~současné době detekuje exoplanety pouze na základě tranzitní metody. Pro zvýšení četnosti objevů a~zpřesnění vypočítaných veličin by tento proces bylo vhodné doplnit i~dalšími metodami. U~většiny ostatních metod však nebyly autorem nalezeny dostatečně velké a~volně přístupné datasety.
 
 Dalším zlepšením do budoucna by mohlo být zvýšení granularity úloh. Analýza položky z~datasetu se světelnými křivkami trvá na průměrném osobním počítači řádově jednotky minut. V~případě, kdy uživatel násilně ukončí aplikaci uprostřed výpočtu by bylo vhodné nepřijít o~dosud vypočítaná data a~v průběhu samotného výpočtu je ukládat i~na server, aby ve výpočtech mohl případně pokračovat jiný uživatel. Na druhé straně, příliš velká granularita by naopak způsobila zbytečně velké množství přenesených dat přes síť.
+
+V~neposlední řadě by také mohlo dojít ke zlepšení odhadu hmotností exoplanet. K~tomu by bylo možno použít techniku popsanou v~kapitole 1.1.5 využívající umělou neuronovou síť. Odhad hmotnost planety na základě více veličin by mohl být spolehlivější, než-li odhad pouze na základě velikosti.
 
 
 
