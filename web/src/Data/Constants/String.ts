@@ -74,9 +74,8 @@ const strings = {
         types: {
             [DatasetType.STAR_PROPERTIES]: { [CS]: 'Hvězdy', [EN]: 'Stars' },
             [DatasetType.PLANET_PROPERTIES]: { [CS]: 'Planety', [EN]: 'Planets' },
-            [DatasetType.LIGHT_CURVE]: { [CS]: 'Světelné křivky', [EN]: 'Light curves' },
             [DatasetType.TARGET_PIXEL]: 'Target pixel',
-            [DatasetType.RADIAL_VELOCITY]: { [CS]: 'Radiální rychlosti', [EN]: 'Radial velocity' }
+            [DatasetType.SYSTEM_NAMES]: { [CS]: 'Názvy systémů', [EN]: 'System names' }
         },
         priorities: {
             [DatasetPriority.LOWEST]: { [CS]: 'Nejnižší', [EN]: 'Lowest' },
@@ -256,7 +255,8 @@ const strings = {
         localView: { [CS]: 'Lokální pohled', [EN]: 'Local view' },
         globalView: { [CS]: 'Globální pohled', [EN]: 'Global view' },
         nObservations: { [CS]: 'Počet pozorování', [EN]: 'Number of observations' },
-        length: { [CS]: 'Délka', [EN]: 'Length' }
+        length: { [CS]: 'Délka', [EN]: 'Length' },
+        ...new Array(6).fill(null).reduce((obj, _, i) => ({ ...obj, [`name${i + 1}`]: { [CS]: `Název ${i + 1}`, [EN]: `Name ${i + 1}` } }), {})
     },
 
     stats: {

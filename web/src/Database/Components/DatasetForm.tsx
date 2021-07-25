@@ -25,9 +25,8 @@ const Root = Styled.div`
 const datasetTypeToEntity: Record<DatasetType, string> = {
     [DatasetType.STAR_PROPERTIES]: 'stars',
     [DatasetType.TARGET_PIXEL]: 'tp',
-    [DatasetType.LIGHT_CURVE]: 'lc',
     [DatasetType.PLANET_PROPERTIES]: 'planets',
-    [DatasetType.RADIAL_VELOCITY]: 'rv'
+    [DatasetType.SYSTEM_NAMES]: 'system'
 }
 
 const defaultValues: DatasetNew = { fields: {}, item_getter: '', items_getter: '', name: '', type: DatasetType.STAR_PROPERTIES, priority: DatasetPriority.NORMAL }
@@ -53,6 +52,8 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
     }
 
     const datasetType = values.type as DatasetType
+
+    console.log(globalStrings[datasetTypeToEntity[datasetType]])
 
     return (
         <Root {...props}>
