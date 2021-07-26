@@ -4,7 +4,7 @@ from enum import Enum
 class DatasetType(Enum):
     STAR_PROPERTIES = "STAR_PROPERTIES"
     TARGET_PIXEL = "TARGET_PIXEL"
-    LIGHT_CURVE = "LIGHT_CURVE"
+    SYSTEM_NAMES = "SYSTEM_NAMES"
 
 
 class DatasetFields(Enum):
@@ -21,6 +21,14 @@ class DatasetFields(Enum):
     }
     TARGET_PIXEL = {
         "name": {"type": str}
+    }
+    SYSTEM_NAMES = {
+        "name1": {"type": str},
+        "name2": {"type": str},
+        "name3": {"type": str},
+        "name4": {"type": str},
+        "name5": {"type": str},
+        "name6": {"type": str}
     }
 
 

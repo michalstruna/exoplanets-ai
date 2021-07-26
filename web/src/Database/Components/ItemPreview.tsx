@@ -111,7 +111,7 @@ export const Star = ({ item, withLink, withImage, ...props }: SpecificProps<Star
         return (
             <ItemPreview
                 {...props}
-                title={item.light_curves[0]?.name}
+                title={Value.Star.name(item)}
                 subtitle={(
                     <Colored color={spectralClassColor.default}>
                         {strings.unknownType + ' ' + strings.unknownSize.toLowerCase()}

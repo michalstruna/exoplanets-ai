@@ -100,8 +100,8 @@ const UseTableColumns = (): Structure => {
                     levels: [
                         {
                             columns: Col.list<StarData>([
-                                { name: 'type', format: (val, item) => <Properties item={item} render={(name, type) => <ItemImage image={`Database/Star/${type.spectral_class || 'Unknown'}.svg`} large={true} />} />, width: '5rem', headerIcon: false },
-                                { name: 'name', format: (val, item) => <Properties item={item} render={name => <Detail pathname={`${Url.SYSTEM}/${Value.Star.name(item)}`} title={name} subtitle={<BodyType body={item} />} />} />, width: 1.5, headerIcon: false },
+                                { name: 'type', format: (val, item) => <ItemImage image={`Database/Star/${Value.Star.prop(item, 'type')?.spectral_class || 'Unknown'}.svg`} large={true} />, width: '5rem', headerIcon: false },
+                                { name: 'name', format: (val, item) => <Detail pathname={`${Url.SYSTEM}/${Value.Star.name(item)}`} title={Value.Star.name(item)} subtitle={<BodyType body={item} />} />, width: 1.5, headerIcon: false },
                                 { name: 'diameter', unit: '☉', multi: 'properties' },
                                 { name: 'mass', unit: '☉', multi: 'properties' },
                                 { name: 'density', unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/>, multi: 'properties' },

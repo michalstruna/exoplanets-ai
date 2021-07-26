@@ -21,8 +21,7 @@ export interface PlanetTransit {
     global_view: View
 }
 
-export interface PlanetProperties {
-    name: string
+export interface PlanetProperties extends DatasetItem {
     diameter?: number
     distance?: number
     mass?: number
@@ -35,7 +34,6 @@ export interface PlanetProperties {
     surface_gravity?: number
     type: PlanetType
     transit?: PlanetTransit
-    dataset: string
     processed: boolean
     life_conditions?: LifeType
 }
@@ -50,8 +48,7 @@ export interface RankedPlanetData extends PlanetData {
     value: number
 }
 
-export interface StarProperties {
-    name: string
+export interface StarProperties extends DatasetItem {
     mass?: number
     diameter?: number
     density?: number
@@ -68,7 +65,6 @@ export interface StarProperties {
     }
     planets?: PlanetData[]
     distance?: number
-    dataset: string
     age?: number
     dec?: number
     ra?: number
@@ -76,8 +72,7 @@ export interface StarProperties {
     life_zone?: LifeZone
 }
 
-export interface LightCurveData {
-    name: string
+export interface LightCurveData extends DatasetItem {
     plot: string
     min_time: number
     max_time: number
@@ -85,7 +80,10 @@ export interface LightCurveData {
     max_flux: number
     n_observations: number
     n_days: number
-    dataset: string
+}
+
+export interface Aliases extends DatasetItem {
+
 }
 
 export interface LifeZone {
@@ -93,18 +91,20 @@ export interface LifeZone {
     max_radius?: number
 }
 
+export interface DatasetItem {
+    name: string
+    dataset: string
+}
+
 export interface StarData {
     _id: string
     properties: StarProperties[]
     light_curves: LightCurveData[]
     planets: PlanetData[]
+    aliases: Aliases[]
 }
 
 export interface SystemData extends StarData {
-    datasets: Dataset[]
-}
-
-export interface StarDetailData extends StarData {
     datasets: Dataset[]
 }
 

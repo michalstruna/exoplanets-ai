@@ -100,7 +100,7 @@ const SystemView = ({ ...props }: Props) => {
         <Async
             data={[system, () => getSystem(systemName), [systemName]]}
             success={() => (
-                <Root {...props}>
+                <Root {...props} key={system.payload!._id}>
                     <SystemContent system={system.payload!} />
                     <Main>
                         <FlexLine>
@@ -220,28 +220,7 @@ const SystemView = ({ ...props }: Props) => {
                             Aktivity
                         </Subtitle>
                         <Actions>
-                            <tbody>
-                            <tr>
-                                <th>Datum</th>
-                                <th>Uživatel</th>
-                                <th>Akce</th>
-                                <th colSpan={2}>Zdroj</th>
-                            </tr>
-                            <tr>
-                                <td>12. 9. 2020 9.38:25</td>
-                                <td>Michal</td>
-                                <td>Přidány planety (1)</td>
-                                <td colSpan={2}>Dataset Kepler mission</td>
-                            </tr>
-                            {new Array(100).fill(0).map((v, i) => (
-                                <tr key={i}>
-                                    <td>12. 9. 2020 9.38:25</td>
-                                    <td>Michal</td>
-                                    <td>Editace</td>
-                                    <td colSpan={2}><i>Manuální</i></td>
-                                </tr>
-                            ))}
-                            </tbody>
+                            No data.
                         </Actions>
                     </Main>
                 </Root>

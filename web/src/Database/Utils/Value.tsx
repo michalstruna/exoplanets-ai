@@ -1,7 +1,7 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 
-import { LightCurveData, PlanetData, PlanetProperties, StarData, StarProperties } from '../types'
+import { DatasetItem, PlanetData, PlanetProperties, StarData, StarProperties } from '../types'
 import { Numbers } from '../../Native'
 import Ref from '../Components/Ref'
 
@@ -61,24 +61,12 @@ export const Planet = {
 
 export const Star = {
     name: (star: StarData): string | null => {
-        for (const property of star.properties) {
-            if (property.name) {
-                return property.name
-            }
-        }
-
-        for (const light_curve of star.light_curves) {
-            if (light_curve.name) {
-                return light_curve.name
-            }
-        }
-
-        return null
+        return [...star.properties, ...star.light_curves, ...star.aliases][0].name
     },
 
-    names: (star: StarData, renderer: PropRenderer<string, StarProperties | LightCurveData>): any[] => {
-        const items = [...star.properties, ...star.light_curves]
-        const unique = [...new Set(items.map((item: StarProperties | LightCurveData) => item.name)) as any]
+    names: (star: StarData, renderer: PropRenderer<string, DatasetItem>): any[] => {
+        const items = [...star.properties, ...star.light_curves, ...star.aliases]
+        const unique = [...new Set(items.map((item: DatasetItem) => item.name)) as any]
         return unique.map((name, i) => renderer(name, i, unique[i]))
     },
 

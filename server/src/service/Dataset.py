@@ -28,15 +28,21 @@ class DatasetService(Service):
         self.update_meta(dataset)
         items = self.standardize_dataset(dataset, items)
         items = items.where(pd.notnull(items), None)
-        dataset["items"] = items["name"].tolist()
+
+        if "name" in items:
+            dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
             stats["data"], stats["items"] = items.memory_usage().sum(), len(items)
             items["dataset"] = dataset["name"]
             stars = self.star_service.complete_stars(items.to_dict("records"))
             global_stats["stars"] = self.star_service.upsert_all_by_name(stars).upserted_count
-        else:
-            pass
+        elif dataset["type"] == DatasetType.SYSTEM_NAMES.name:
+            stats["data"], stats["items"] = items.memory_usage().sum(), len(items)
+            items["names"] = items.values.tolist()
+            items = items[["names"]]
+            items["dataset"] = dataset["name"]
+            global_stats["stars"] = self.star_service.upsert_all_aliases(items.to_dict("records")).upserted_count
 
         stats["time"] = time.now() - stats["time"]  # Update local and global stats.
         dataset["stats"] = [{"date": time.day(), **stats}]
@@ -174,6 +180,8 @@ class DatasetService(Service):
     def delete(self, id):
         dataset = self.get_by_id(id)
         self.star_service.delete_array_items("properties", "dataset", dataset["name"])
+        self.star_service.delete_array_items("light_curves", "dataset", dataset["name"])
+        self.star_service.delete_array_items("aliases", "dataset", dataset["name"])
         self.star_service.delete_empty()
         return super().delete(id)
 

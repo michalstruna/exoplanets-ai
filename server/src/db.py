@@ -304,18 +304,28 @@ class LightCurve(EmbeddedDocument):
     n_days = FloatField(required=True)
 
 
+class Alias(EmbeddedDocument):
+    name = StringField(required=True)
+    dataset = StringField(required=True)
+
+
 class Star(Document):  # TODO: BaseDocument - _cls is not working.
     properties = EmbeddedDocumentListField(StarProperties, default=[])
     light_curves = EmbeddedDocumentListField(LightCurve, default=[])
     planets = EmbeddedDocumentListField(Planet, default=[])
+    aliases = EmbeddedDocumentListField(Alias, default=[])
 
     meta = {
-        "indexes": ["properties.name", "planets.properties.name", "light_curves.name"]
+        "indexes": ["properties.name", "planets.properties.name", "light_curves.name", "aliases.name"]
     }
 
 
 star_dao = Dao(Star, [
-    {"$addFields": {"datasets": {"$add": [{"$size": "$properties"}]}}}
+    {"$addFields": {"datasets": {"$add": [
+        {"$size": {"$ifNull": ["$properties", []]}},
+        {"$size": {"$ifNull": ["$light_curves", []]}},
+        {"$size": {"$ifNull": ["$names", []]}}
+    ]}}}
 ])
 
 
