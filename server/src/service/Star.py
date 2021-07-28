@@ -4,14 +4,14 @@ import numbers
 import numpy as np
 
 from constants.Star import SpectralClass, SpectralSubclass, LuminosityClass
+from constants.Physics import Star
 from .Base import Service
 import db
 from .Constellation import ConstellationService
 from service.AI import NN
 from utils.native import Dict
 
-spectral_temperatures = [50000, 30000, 11000, 7500, 6000, 5000, 3500, 3000]
-
+spectral_temperatures = Star.SPECTRAL_TEMPERATURES.value
 
 class StarService(Service):
 
@@ -85,7 +85,7 @@ class StarService(Service):
         for star in stars:
             star = self.dao.collection(properties=[star])
             star.validate()
-            star = star.to_mongo()  # TODO: Remove?
+            star = star.to_mongo()
 
             operations.append(UpdateOne(
                 self.get_filter_by_name(star["properties"][0]["name"]),
@@ -93,7 +93,7 @@ class StarService(Service):
                 upsert=True
             ))
 
-        return db.star_dao.collection._get_collection().bulk_write(operations, ordered=False)
+        return self.dao.bulk(operations)
 
     def upsert_all_aliases(self, aliases):
         operations = []
@@ -109,7 +109,7 @@ class StarService(Service):
                 upsert=True
             ))
 
-        return db.star_dao.collection._get_collection().bulk_write(operations, ordered=False)
+        return self.dao.bulk(operations)
 
     def complete_star(self, star, with_constellation=True):
         result = {**star}
@@ -165,7 +165,7 @@ class StarService(Service):
 
     def get_luminosity(self, star):
         if Dict.is_set(star, "surface_temperature", "diameter"):
-            return (star["diameter"] ** 2) * (round(star["surface_temperature"] / 5780) ** 4)  # TODO: Constants.
+            return (star["diameter"] ** 2) * (round(star["surface_temperature"] / Star.SUN_TEMPERATURE.value) ** 4)
 
     def get_spectral_class(self, star):
         if Dict.is_set(star, "surface_temperature"):

@@ -30,11 +30,11 @@ const slice = Redux.slice(
     },
     ({ async, set }) => ({
         setFilter: set<FilterData>('filter', {
-            /*syncObject: () => ({ // TODO: Validate filter.
+            syncObject: () => ({ // TODO: Validate filter.
                 attribute: [Query.FILTER_ATTRIBUTE, () => true, []],
                 relation: [Query.FILTER_RELATION, () => true, []],
                 value: [Query.FILTER_VALUE, () => true, []]
-            })*/
+            })
         }),
         setSegment: set<Segment>('segment', {
             syncObject: () => ({

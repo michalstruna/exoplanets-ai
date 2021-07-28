@@ -149,7 +149,6 @@ class PlanetService(Service):
             {"$unwind": "$planets"},
             {"$unwind": "$planets.properties"},
             {"$project": projection}
-            # TODO: Filter null?
         ])
 
         for planet in planets:

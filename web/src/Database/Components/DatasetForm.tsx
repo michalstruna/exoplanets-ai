@@ -41,7 +41,14 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
 
     const handleSubmit = async (values: DatasetNew, form: UseFormReturn<DatasetNew>) => {
         const { type, ...updateValues } = values
-        let action = await (dataset ? actions.updateDataset([dataset._id, updateValues]) : actions.addDataset(values))
+
+        for (const key in updateValues.fields) {
+            if (!updateValues.fields[key]) {
+                delete updateValues.fields[key]
+            }
+        }
+
+        let action = await (dataset ? actions.updateDataset([dataset._id, updateValues]) : actions.addDataset({ type, ...updateValues }))
 
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, { type: action.payload.message })
@@ -52,8 +59,6 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
     }
 
     const datasetType = values.type as DatasetType
-
-    console.log(globalStrings[datasetTypeToEntity[datasetType]])
 
     return (
         <Root {...props}>
