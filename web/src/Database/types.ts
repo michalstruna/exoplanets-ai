@@ -13,7 +13,7 @@ interface View {
     max_flux: number
 }
 
-export interface PlanetTransit {
+export interface Transit {
     depth: number
     duration: number
     period: number
@@ -21,21 +21,26 @@ export interface PlanetTransit {
     global_view: View
 }
 
+export interface Orbit {
+    period?: number
+    inclination?: number
+    eccentricity?: number
+    semi_major_axis?: number
+    veocity?: number
+}
+
 export interface PlanetProperties extends DatasetItem {
     diameter?: number
     distance?: number
     mass?: number
-    orbital_period?: number
-    semi_major_axis?: number
-    orbital_velocity?: number
-    eccentricity?: number
     density?: number
     surface_temperature?: number
     surface_gravity?: number
     type: PlanetType
-    transit?: PlanetTransit
+    transit?: Transit
     processed: boolean
     life_conditions?: LifeType
+    orbit: Orbit
 }
 
 export interface PlanetData {

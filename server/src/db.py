@@ -262,6 +262,15 @@ class Discovery(EmbeddedDocument):
     author = StringField()
     date = LongField(required=True)
 
+
+class Orbit(EmbeddedDocument):
+    period = FloatField(min_value=0)
+    eccentricity = FloatField(min_value=0)
+    inclination = FloatField(min_value=0)
+    velocity = FloatField(min_value=0)
+    semi_major_axis = FloatField(min_value=0)
+
+
 class PlanetProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50)
     type = StringField(enum=PlanetType.values())
@@ -269,13 +278,11 @@ class PlanetProperties(EmbeddedDocument):
     distance = FloatField(min_value=0)
     mass = FloatField(min_value=0)
     density = FloatField(min_value=0)
-    semi_major_axis = FloatField(min_value=0)
-    orbital_velocity = FloatField(min_value=0)
-    orbital_period = FloatField(min_value=0)
     surface_gravity = FloatField(min_value=0)
     surface_temperature = FloatField(min_value=0)
     life_conditions = StringField(enum=LifeType.values())
     transit = EmbeddedDocumentField(Transit)
+    orbit = EmbeddedDocumentField(Orbit, required=True)
     dataset = ReferenceField(Dataset, required=True)
     processed = BooleanField()
     discovery = EmbeddedDocumentField(Discovery)

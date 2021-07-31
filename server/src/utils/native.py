@@ -9,16 +9,6 @@ class Dict:
         return True
 
     @staticmethod
-    def include_keys(dict, *keys):
-        result = {}
-
-        for key in keys:
-            if key in dict:
-                result[key] = dict[key]
-
-        return result
-
-    @staticmethod
     def exclude_keys(dict, *keys):
         result = {**dict}
 
@@ -27,3 +17,36 @@ class Dict:
                 del result[key]
 
         return result
+
+    @staticmethod
+    def by_key(dict, key):
+        keys = key.split(".")
+        result = dict
+
+        for key in keys:
+            if Dict.is_set(result, key):
+                result = result[key]
+            else:
+                return None
+
+        return result
+
+    @staticmethod
+    def val(item, prop, key="properties", zeros=False):
+        items = Dict.by_key(item, key)
+
+        if not items:
+            return None
+
+        for props in items:
+            if Dict.is_set(props, prop, zeros=zeros):
+                return props[prop]
+
+    @staticmethod
+    def vals(item, props, key="properties", zeros=False):
+        result = []
+
+        for prop in props:
+            result.append(Dict.val(item, prop, key, zeros))
+
+        return tuple(result)

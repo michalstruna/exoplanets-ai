@@ -54,26 +54,6 @@ const Subsubtitle = Styled(MinorSectionTitle)`
     }
 `
 
-const Actions = Styled(PlainTable)`
-    overflow-y: scroll;
-    margin: 0;
-    max-height: 20rem;
-    max-width: 60rem;
-    
-    th, td {
-        padding: 0.25rem 0.5rem;
-    }
-
-    td {
-        background-color: transparent !important;
-        text-align: left !important;
-    }
-    
-    tr:nth-of-type(2n) {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-`
-
 const SystemView = ({ ...props }: Props) => {
 
     const systemName = useRouter<any>().match.params.system
@@ -199,7 +179,7 @@ const SystemView = ({ ...props }: Props) => {
                                 { name: 'Kepler-10', distance: 0, size: 0.005 },
                                 ...system.payload!.planets.map((planet: PlanetData) => ({
                                     name: planet.properties[0].name,
-                                    distance: planet.properties[0].semi_major_axis!
+                                    distance: planet.properties[0].orbit.semi_major_axis!
                                 }))
                             ]
                         ]} lifeZones={[
@@ -216,12 +196,6 @@ const SystemView = ({ ...props }: Props) => {
                             Reference
                         </Subtitle>
                         <References items={system.payload!.datasets} />
-                        <Subtitle>
-                            Aktivity
-                        </Subtitle>
-                        <Actions>
-                            No data.
-                        </Actions>
                     </Main>
                 </Root>
             )}

@@ -18,7 +18,10 @@ def map_props(prop):
     if prop.startswith("planet_"):
         prop = prop[7:]
 
-        if prop in ["diameter", "mass", "density", "surface_temperature", "semi_major_axis", "orbital_period", "transit_depth", "surface_gravity", "orbital_velocity", "dataset"]:
+        if prop in ["period", "velocity", "semi_major_axis", "inclination", "eccentricity"]:
+            return f"planets.priperties.orbit.{prop}", float
+
+        if prop in ["diameter", "mass", "density", "surface_temperature", "transit_depth", "surface_gravity", "dataset"]:
             return f"planets.properties.{prop}", float
 
         if prop in ["life_conditions", "status", "type"]:
