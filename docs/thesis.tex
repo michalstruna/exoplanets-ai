@@ -1128,7 +1128,7 @@ Síť na vstupu přijme globální a~lokální pohled na potenciální tranzit. 
 
 \subsection{Databáze}
 
-K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~níž se na straně serveru přistupuje skrze ODM \textit{MongoEngine}. Než dojde k~samotnému připojení, je třeba nadefinovat podobu databáze a~validační pravidla jednotlivých kolekcí, tak, jak je to ukázáno v~kapitole 4.2.5.
+K~ukládání persistentních dat je využita databáze \textit{MongoDB}, k~níž se na straně serveru přistupuje skrze ODM \textit{MongoEngine}. Než dojde k~samotnému připojení, je třeba nadefinovat podobu databáze a~validační pravidla jednotlivých kolekcí, tak, jak je to ukázáno v~kapitole 4.2.5. Kompletní schéma databáze je umístěno v~příloze B.
 
 \lstinputlisting[caption={Připojení k databázi.}]{codes/db_conn.txt}
 
@@ -1314,7 +1314,7 @@ Domovská stránka nabízí přehled globálních statistik jako např. počet o
 \wrapimg{Statistiky}{img/global_stats.png}{c}{6}{0.7}
 
 
-V~rámci aplikace jsou sbírany všemožné statistiky v~rámci jednotlivých položek (např. dle datasetu či uživatele). Mimo to zde ale na přehledové stránce lze vidět i~statistiky globální. U~všech ze zobrazených statistik lze vidět jednak aktuální hodnotu a~pak také změnu za poslední týden. Statistiky jsou vždy aktuální (necachují se) a~přesto je zajištěna efektivní práce s nimi.
+V~rámci aplikace jsou sbírány všemožné statistiky v~rámci jednotlivých položek (např. dle datasetu či uživatele). Mimo to zde ale na přehledové stránce lze vidět i~statistiky globální. U~všech ze zobrazených statistik lze vidět jednak aktuální hodnotu a~pak také změnu za poslední týden. Statistiky jsou vždy aktuální (necachují se) a~přesto je zajištěna efektivní práce s nimi.
 
 
 \clearpage
@@ -1337,7 +1337,7 @@ Tato stránka shrnuje všechny známé informace o~systému. Kromě hodnot veli�
 
 \img{Stránka Detail systému}{img/system_page.png}
 
-U~každé z~objevených planet v~systému je kromě tabulky zobrazen i~lokální a~globální pohld na tranzit.
+U~každé z~objevených planet v~systému je kromě tabulky zobrazen i~lokální a~globální pohled na tranzit.
 
 \img{Detail planety}{img/planet_detail.png}
 
@@ -1372,7 +1372,7 @@ V~horní části je umístěn odkaz pro stažení klientské aplikace jakožto i
 
 \wrapimg{Přihlašovací formulář}{img/auth.png}{r}{11}{0.45}
 
-Komponenty řešící autentizaci uživatele nevyžadují samostatnou stránku, ale jsou kdykoliv dostupné v~pravém horním rohu aplikace, kde je lze kliknutím na tlačítko rozbalit. Vždy jsou viditelné pouze ty komponenty, které daná uživatelská role vyžaduje. Jejich kompletní výčet je uveden v~tabulce 13.
+Komponenty řešící autentizaci uživatele nevyžadují samostatnou stránku, ale jsou kdykoliv dostupné v~pravém horním rohu aplikace, kde je lze kliknutím na tlačítko rozbalit. Vždy jsou viditelné pouze ty komponenty, které daná uživatelská role vyžaduje. Jejich kompletní výčet je uveden v~tabulce 15.
 
 Kromě toho může každý uživatel do svého profilu vyplnit i~některé osobní údaje, na jejichž základě lze vybudovat statistiku porovnávající působení uživatelů v~aplikaci na základě jejich věku, pohlaví či země.
 
@@ -1425,7 +1425,7 @@ V~rámci této diplomové práce byla vytvořena trojice aplikací~--~webová, k
 	\end{tabular}
 }
 
-Aplikace je velice odolná vůči falešně pozitivním tranzitům (žádný takový nebyl zaznamenán). Avšak objevilo se několik falešně negativních tranzitů, zejména pokud jde o~víceplanetární systémy, tam je nejčastěji detekován pouze nejsilnější tranzit. Výpočet period oběhů a~průměrů planet je taktéž na velice slušné úrovni. Hmotnost planet ovšem nelze z~tranzitní metody vypočítat. V~rámci apliakce docházelo pouze k~jednoduchému odhadu hmotnosti na základě velikosti planety.
+Aplikace je velice odolná vůči falešně pozitivním tranzitům (žádný takový nebyl zaznamenán). Avšak objevilo se několik falešně negativních tranzitů, zejména pokud jde o~víceplanetární systémy, tam je nejčastěji detekován pouze nejsilnější tranzit. Výpočet period oběhů a~průměrů planet je taktéž na velice slušné úrovni. Hmotnost planet ovšem nelze z~tranzitní metody vypočítat. V~rámci aplikace docházelo pouze k~jednoduchému odhadu hmotnosti na základě velikosti planety.
 
 
 Pro zahájení hledání exoplanet je po uživateli vyžadována registrace. Ta je možná buď přes email nebo přes některé ze sociálních sítí. Poté je uživateli umožněno stáhnutí klientské aplikace a~zahájení hledání. Další aktivita ze strany uživatele již není třeba.
