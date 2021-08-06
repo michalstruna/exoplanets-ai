@@ -112,7 +112,7 @@ const SystemView = ({ ...props }: Props) => {
                                         </FlexLine>
                                         <PlanetTable data={planet} />
                                         {Value.Planet.props(planet, 'transit', {
-                                            refMap, render: (val, ref) => (
+                                            refMap, render: (val, ref) => val.period && (
                                                 <FlexLine>
                                                     <Curve data={val?.local_view as any} type={Curve.LV} width={390} height={200} title={<>{strings.localView} {ref}</>} />
                                                     <Curve data={val?.global_view as any} type={Curve.GV} width={390} height={200} title={<>{strings.globalView} {ref}</>} />
@@ -189,9 +189,6 @@ const SystemView = ({ ...props }: Props) => {
                                 to: system.payload!.properties[0] ? system.payload!.properties[0].life_zone?.max_radius || 0 : 0
                             }
                         ]} /> 
-                        <Subsubtitle>
-                            Interaktivní model
-                        </Subsubtitle>
                         <Subtitle>
                             Reference
                         </Subtitle>

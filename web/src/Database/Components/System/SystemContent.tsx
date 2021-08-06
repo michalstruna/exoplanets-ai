@@ -32,8 +32,7 @@ const SystemContent = ({ system, ...props }: Props) => {
             {
                 name: '', text: strings.visualization, children: [
                     { name: '', text: strings.sizes },
-                    { name: '', text: strings.distances },
-                    { name: '', text: strings.model }
+                    { name: '', text: strings.distances }
                 ]
             },
             { name: '', text: strings.references },

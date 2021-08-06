@@ -248,7 +248,6 @@ const strings = {
         visualization: { [CS]: 'Vizualizace', [EN]: 'Visualization' },
         sizes: { [CS]: 'Velikosti', [EN]: 'Sizes' },
         distances: { [CS]: 'Vzdálenosti', [EN]: 'Distances' },
-        model: { [CS]: 'Interaktivní model', [EN]: 'Interactive model' },
         references: { [CS]: 'Reference', [EN]: 'References' },
         matter: { [CS]: 'Hmota', [EN]: 'Matter' },
         orbit: { [CS]: 'Dráha', [EN]: 'Orbit' },

@@ -49,7 +49,7 @@ const PlanetTable = ({ data, refMap, ...props }: Props) => {
                 <td>{planets.density}</td>
                 <td>{Value.Planet.props(data, 'density', { refMap, unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>} />, isEstimate: props => props.processed })}</td>
                 <td>{planets.velocity}</td>
-                <td>{Value.Planet.props(data, ['orbit', 'veocity'], { refMap, unit: <Fraction top='km' bottom='s' /> })}</td>
+                <td>{Value.Planet.props(data, ['orbit', 'velocity'], { refMap, unit: <Fraction top='km' bottom='s' /> })}</td>
                 <td>{planets.status}</td>
                 <td>{planets.statuses[data.status]}</td>
             </tr>

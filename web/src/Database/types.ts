@@ -26,7 +26,7 @@ export interface Orbit {
     inclination?: number
     eccentricity?: number
     semi_major_axis?: number
-    veocity?: number
+    velocity?: number
 }
 
 export interface PlanetProperties extends DatasetItem {
