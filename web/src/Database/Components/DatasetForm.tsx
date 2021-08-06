@@ -103,6 +103,7 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
                             type={Field.Type.TEXT}
                             label={globalStrings[datasetTypeToEntity[datasetType]][camelCase(field)]} />
                     ))}
+                    {new Array(3 - Object.values(DatasetFields[datasetType]).length % 3).fill(null).map((_, i) => <div key={i} />)}
                 </FormGroup>
                 <SubmitButton />
             </Form>

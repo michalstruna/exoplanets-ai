@@ -2,8 +2,9 @@ import pandas as pd
 from mongoengine.errors import DoesNotExist
 import re
 import numpy as np
+from service.Planet import PlanetService
 
-from utils.native import Dict
+from utils.native import Dict, Func
 from .Base import Service
 from .Star import StarService
 from constants.Dataset import DatasetType, DatasetFields
@@ -20,16 +21,17 @@ class DatasetService(Service):
     def __init__(self):
         super().__init__(db.dataset_dao)
         self.star_service = StarService()
+        self.planet_service = PlanetService()
         self.stats_service = GlobalStatsService()
         self.message_service = MessageService()
 
+    #@Func.exception
     def add(self, dataset):
         stats, global_stats = {"time": time.now()}, {}
         items = pd.read_csv(dataset["items_getter"])
-        dataset["size"] = len(items.index)
         self.update_meta(dataset)
         items = self.standardize_dataset(dataset, items)
-        items = items.where(pd.notnull(items), None)
+        items = items.where(pd.notnull(items), None).drop_duplicates(subset=["name"])
 
         if "name" in items:
             dataset["items"] = items["name"].tolist()
@@ -39,6 +41,11 @@ class DatasetService(Service):
             items["dataset"] = dataset["name"]
             stars = self.star_service.complete_stars(items.to_dict("records"))
             global_stats["stars"] = self.star_service.upsert_all_by_name(stars).upserted_count
+        elif dataset["type"] == DatasetType.PLANET_PROPERTIES.name:
+            stats["data"], stats["items"] = items.memory_usage().sum(), len(items)
+            items["dataset"] = dataset["name"]
+            planets = self.planet_service.complete_all(items.to_dict("records"), from_flat=True, full=False)
+            self.planet_service.upsert_all_by_name(planets)
         elif dataset["type"] == DatasetType.SYSTEM_NAMES.name:
             stats["data"], stats["items"] = items.memory_usage().sum(), len(items)
             items["names"] = items.stack().groupby(level=0).apply(list).tolist()
@@ -46,6 +53,7 @@ class DatasetService(Service):
             items["dataset"] = dataset["name"]
             self.star_service.upsert_all_aliases(items.to_dict("records"))
 
+        dataset["size"] = len(items.index)
         stats["time"] = time.now() - stats["time"]  # Update local and global stats.
         dataset["stats"] = [{"date": time.day(), **stats}]
         result = self.dao.add(dataset)

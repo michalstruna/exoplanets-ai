@@ -1,3 +1,16 @@
+import traceback
+class Func:
+
+    @staticmethod
+    def exception(func):
+        def wrapper(*args, **kwargs):
+            try:
+                func(*args, **kwargs)
+            except:
+                traceback.print_exc()
+
+        return wrapper
+
 class Dict:
 
     @staticmethod
@@ -33,7 +46,7 @@ class Dict:
 
     @staticmethod
     def val(item, prop, key="properties", zeros=False):
-        items = Dict.by_key(item, key)
+        items = Dict.by_key(item, key) if key else [item]
 
         if not items:
             return None

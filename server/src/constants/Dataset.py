@@ -3,6 +3,7 @@ from enum import Enum
 
 class DatasetType(Enum):
     STAR_PROPERTIES = "STAR_PROPERTIES"
+    PLANET_PROPERTIES = "PLANET_PROPERTIES"
     TARGET_PIXEL = "TARGET_PIXEL"
     SYSTEM_NAMES = "SYSTEM_NAMES"
 
@@ -18,6 +19,19 @@ class DatasetFields(Enum):
         "apparent_magnitude": {"type": float},
         "distance": {"type": float},
         "metallicity": {"type": float}
+    }
+    PLANET_PROPERTIES = {
+        "name": {"type": str},
+        "diameter": {"type": float},
+        "mass": {"type": float},
+        "period": {"type": float},
+        "semi_major_axis": {"type": float},
+        "eccentricity": {"type": float},
+        "inclination": {"type": float},
+        "surface_temperature": {"type": float},
+        "distance": {"type": float},
+        "author": {"type": str},
+        "date": {"type": str}
     }
     TARGET_PIXEL = {
         "name": {"type": str}

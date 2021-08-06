@@ -120,6 +120,7 @@ const UseTableColumns = (): Structure => {
                                         <div>
                                             <MultiValue items={item.properties} property='dataset' formatter={val => <IconText text={val} icon='/img/Database/Dataset/StarProperties.svg' />} />
                                             <MultiValue items={item.light_curves} property='dataset' formatter={val => <IconText text={val} icon='/img/Database/Dataset/TargetPixel.svg' />} />
+                                            <MultiValue items={item.aliases} property='dataset' formatter={val => <IconText text={val} icon='/img/Database/Dataset/PlanetProperties.svg' />} />
                                         </div>
                                     ), width: 1.5 }
                             ], {
@@ -146,7 +147,7 @@ const UseTableColumns = (): Structure => {
                                 { name: 'surface_temperature', unit: '°C', multi: 'properties' },
                                 { name: 'orbit.semi_major_axis', unit: 'au', multi: 'properties' },
                                 { name: 'orbit.period', format: val => Dates.formatDistance(strings, Dates.daysToMs(val), 0, Dates.Format.EXACT), multi: 'properties' },
-                                { name: 'transit_depth', format: (_, planet) => planet.properties[0]?.transit?.local_view && <Curve data={planet.properties[0].transit.local_view as any} simple={true} type={Curve.LV} />, title: <Colored color='#AFA'>{strings.planets.transit}</Colored>, width: '20rem' },
+                                { name: 'transit_depth', format: (_, planet) => planet.properties[0]?.transit?.period && <Curve data={planet.properties[0].transit.local_view as any} simple={true} type={Curve.LV} />, title: <Colored color='#AFA'>{strings.planets.transit}</Colored>, width: '20rem' },
                                 { name: 'life_conditions', format: val => strings.planets.lifeConditionsTypes[val], styleMap: lifeTypeStyle, multi: 'properties' },
                                 { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
                                 { name: 'orbit.eccentricity', format: Numbers.format, multi: 'properties' },

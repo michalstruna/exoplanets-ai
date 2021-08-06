@@ -1,4 +1,4 @@
-from pymongo import UpdateOne, operations
+from pymongo import UpdateOne
 import math
 import numbers
 import numpy as np
@@ -79,6 +79,7 @@ class StarService(Service):
 
         return result
 
+
     def upsert_all_by_name(self, stars):
         operations = []
 
@@ -89,7 +90,7 @@ class StarService(Service):
 
             operations.append(UpdateOne(
                 self.get_filter_by_name(star["properties"][0]["name"]),
-                {"$push": {"properties": {"$each": star["properties"]}}},
+                {"$push": {"properties": star["properties"][0]}},
                 upsert=True
             ))
 

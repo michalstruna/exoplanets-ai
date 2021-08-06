@@ -252,11 +252,11 @@ class View(EmbeddedDocument):
 
 
 class Transit(EmbeddedDocument):
-    period = FloatField(min_value=0, required=True)
-    duration = FloatField(min_value=0, required=True)
-    depth = FloatField(min_value=0, max_value=1, required=True)
-    local_view = EmbeddedDocumentField(View, required=True)
-    global_view = EmbeddedDocumentField(View, required=True)
+    period = FloatField(min_value=0)
+    duration = FloatField(min_value=0)
+    depth = FloatField(min_value=0, max_value=1)
+    local_view = EmbeddedDocumentField(View)
+    global_view = EmbeddedDocumentField(View)
 
 class Discovery(EmbeddedDocument):
     author = StringField()
@@ -282,7 +282,7 @@ class PlanetProperties(EmbeddedDocument):
     surface_temperature = FloatField(min_value=0)
     life_conditions = StringField(enum=LifeType.values())
     transit = EmbeddedDocumentField(Transit)
-    orbit = EmbeddedDocumentField(Orbit, required=True)
+    orbit = EmbeddedDocumentField(Orbit)
     dataset = ReferenceField(Dataset, required=True)
     processed = BooleanField()
     discovery = EmbeddedDocumentField(Discovery)
@@ -290,8 +290,8 @@ class PlanetProperties(EmbeddedDocument):
 
 class Planet(EmbeddedDocument):
     _id = ObjectIdField(required=True, default=lambda: ObjectId())
-    properties = ListField(EmbeddedDocumentField(PlanetProperties, required=True), required=True, default=[])
-    status = StringField(required=True, enum=PlanetStatus.values())
+    properties = ListField(EmbeddedDocumentField(PlanetProperties), default=[])
+    status = StringField(required=True, enum=PlanetStatus.values(), default=PlanetStatus.CONFIRMED.value)
 
 
 planet_dao = Dao(Planet, [{"$addFields": {"datasets": {"$size": "$properties"}}}])
@@ -312,7 +312,6 @@ class LightCurve(EmbeddedDocument):
 class Alias(EmbeddedDocument):
     name = StringField(required=True)
     dataset = StringField(required=True)
-
 
 class Star(Document): 
     properties = EmbeddedDocumentListField(StarProperties, default=[])

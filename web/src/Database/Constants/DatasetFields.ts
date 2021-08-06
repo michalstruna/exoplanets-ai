@@ -32,6 +32,7 @@ export default {
         eccentricity: 'eccentricity',
         inclination: 'inclination',
         surface_temperature: 'surface_temperature',
+        distance: 'distance',
         discovery_author: 'discovery_author',
         discovery_date: 'discovery_date'
     }

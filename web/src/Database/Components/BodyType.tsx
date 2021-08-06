@@ -4,6 +4,7 @@ import { image, size } from '../../Style'
 import { PlanetData, StarData } from '../types'
 import { useStrings } from '../../Data'
 import SpectralClass from '../Constants/SpectralClass'
+import { Value } from '..'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
     body: StarData | PlanetData
@@ -45,7 +46,7 @@ const BodyType = ({ body, withImage, ...props }: Props) => {
             )
         }
 
-        const type = body.properties[0].type
+        const type = Value.Star.prop(body, 'type') || {}
 
         return (
             <Root style={{ color: spectralClassColor[type.spectral_class || 'default'] }}>

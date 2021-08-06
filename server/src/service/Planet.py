@@ -1,9 +1,13 @@
 from astropy import units as u
 from astropy import constants as c
 import math
+from numpy.core.numeric import full
+
+from pymongo.operations import UpdateOne
 
 from constants.Planet import PlanetType, LifeType
 from .Base import Service
+from service.Star import StarService
 import db
 from utils.native import Dict
 
@@ -11,47 +15,88 @@ class PlanetService(Service):
 
     def __init__(self):
         super().__init__(db.star_dao)
+        self.star_service = StarService()
 
     def add(self, star_id, planet, with_return=True):
         return self.dao.update_by_id(star_id, {
             "push__planets": planet
         })
 
-    def complete_planet(self, st, pl):
+    def upsert_all_by_name(self, planets):
+        operations = []
+
+        for planet in planets:
+            star = db.star_dao.collection(planets=[{"properties": [planet]}])
+            star.validate()
+            star = star.to_mongo()
+
+            operations.append(UpdateOne(
+                self.star_service.get_filter_by_name(planet["name"]),
+                {"$push": {"planets": star["planets"][0], "aliases": {"name": planet["name"], "dataset": planet["dataset"]}}},
+                upsert=True
+            ))
+
+        return db.star_dao.bulk(operations)
+
+    def complete_all(self, planets, from_flat=False, full=False):
+        result = []
+
+        for planet in planets:
+            if from_flat:
+                orbit_keys = ["period", "semi_major_axis", "eccentricity", "inclination", "velocity"]
+                per, smax, ecc, inc, vel = Dict.vals(planet, orbit_keys, "", True)
+                planet = { **planet, "orbit": { "period": per, "semi_major_axis": smax, "eccentricity": ecc, "inclination": inc, "velocity": vel } }
+                planet = Dict.exclude_keys(planet, *orbit_keys)
+
+            pl = self.complete_planet(None, planet, full=full)
+
+            result.append(pl)
+
+        return result
+
+    def complete_planet(self, st, pl, full=True):
         for prop in ["transit", "orbit"]:  # Ensure nested data existence.
             if not Dict.is_set(pl, prop):
                 pl[prop] = {}
 
         orbit, transit = pl["orbit"], pl["transit"]
+        st_dist, st_mass, st_diameter, st_lum, st_life_zone = Dict.vals(st, ["distance", "mass", "diameter", "luminosity", "life_zone"]) if st else None, None, None, None, None
 
-        if Dict.is_set(transit, "period"):
-            orbit["period"] = transit["period"]
+        if full:
+            if Dict.is_set(transit, "period"):
+                orbit["period"] = transit["period"]
 
-        st_dist, st_mass, st_diameter, st_lum, st_life_zone = Dict.vals(st, ["distance", "mass", "diameter", "luminosity", "life_zone"])
-        pl["distance"] = st_dist
+            if st_dist:
+                pl["distance"] = st_dist
 
-        if Dict.is_set(orbit, "period") and st_mass:
-            orbit["semi_major_axis"] = self.get_semi_major_axis(orbit["period"], st_mass)
+            if Dict.is_set(orbit, "period") and st_mass:
+                orbit["semi_major_axis"] = self.get_semi_major_axis(orbit["period"], st_mass)
 
+            if st_diameter and Dict.is_set(transit, "depth"):
+                pl["diameter"] = self.get_radius(st_diameter, transit["depth"])
+
+            if Dict.is_set(pl, "diameter"):
+                pl["type"] = self.get_type(pl["diameter"])
+                pl["mass"] = self.get_mass(pl["diameter"])
+
+            if st_lum and Dict.is_set(pl["orbit"], "semi_major_axis"):
+                pl["surface_temperature"] = self.get_temperature(st_lum, pl["orbit"]["semi_major_axis"])
+
+            if st_life_zone:
+                pl["life_conditions"] = self.get_life_conditions(st_life_zone, pl["orbit"]["semi_major_axis"], pl["type"])
+
+        else:
+            if Dict.is_set(pl, "diameter"):
+                pl["type"] = self.get_type(pl["diameter"])
+        
         if Dict.is_set(orbit, "period", "semi_major_axis"):  # TODO: Eccentricity?
             orbit["velocity"] = self.get_orbital_velocity(orbit["period"], orbit["semi_major_axis"])
 
-        if st_diameter and Dict.is_set(transit, "depth"):
-            pl["diameter"] = self.get_radius(st_diameter, transit["depth"])
-
-        if Dict.is_set(pl, "diameter"):
-            pl["type"] = self.get_type(pl["diameter"])
-            pl["mass"] = self.get_mass(pl["diameter"])
-
+        
         if Dict.is_set(pl, "diameter", "mass"):
             pl["density"] = self.get_density(pl["diameter"], pl["mass"])
             pl["surface_gravity"] = self.get_surface_gravity(pl["diameter"], pl["mass"])
 
-        if st_lum and Dict.is_set(pl["orbit"], "semi_major_axis"):
-            pl["surface_temperature"] = self.get_temperature(st_lum, pl["orbit"]["semi_major_axis"])
-
-        if st_life_zone:
-            pl["life_conditions"] = self.get_life_conditions(st_life_zone, pl["orbit"]["semi_major_axis"], pl["type"])
 
         return pl
 
