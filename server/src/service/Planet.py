@@ -127,8 +127,8 @@ class PlanetService(Service):
             return PlanetType.MERCURY.value
         elif pl_rad < 1.2:
             return PlanetType.EARTH.value
-        elif pl_rad < 2:
-            return PlanetType.EARTH.value
+        elif pl_rad < 2.5:
+            return PlanetType.SUPEREARTH.value
         elif pl_rad < 5:
             return PlanetType.NEPTUNE.value
         else:
