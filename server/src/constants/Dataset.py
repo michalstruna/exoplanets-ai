@@ -22,6 +22,7 @@ class DatasetFields(Enum):
     }
     PLANET_PROPERTIES = {
         "name": {"type": str},
+        "hostname": {"type": str},
         "diameter": {"type": float},
         "mass": {"type": float},
         "period": {"type": float},
@@ -29,9 +30,7 @@ class DatasetFields(Enum):
         "eccentricity": {"type": float},
         "inclination": {"type": float},
         "surface_temperature": {"type": float},
-        "distance": {"type": float},
-        "author": {"type": str},
-        "date": {"type": str}
+        "distance": {"type": float}
     }
     TARGET_PIXEL = {
         "name": {"type": str}

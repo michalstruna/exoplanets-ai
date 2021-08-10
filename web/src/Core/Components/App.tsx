@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import useRouter from 'use-react-router'
 
 import GlobalStyle from './GlobalStyle'
 import { useElement, Validator } from '../../Native'
@@ -29,6 +30,7 @@ const App = ({ children }: Props) => {
     const identity = useIdentity()
     const messageSelection = useSelector(state => state.user.messageSelection)
     const actions = useActions({ getMessages })
+    const { location } = useRouter()
 
     React.useEffect(() => {
         Sockets.init(identity.payload)
@@ -38,6 +40,12 @@ const App = ({ children }: Props) => {
     React.useEffect(() => { // On change tag, fetch chat messages.
         actions.getMessages({ segment: { index: 0, size: 50 }, filter: mapMessFilter[messageSelection] })
     }, [messageSelection, actions])
+
+    React.useEffect(() => {
+        const container = document.querySelector<HTMLElement>('#app')
+        const offsetTop = location.hash ? document.querySelector<HTMLElement>(location.hash)?.offsetTop : 0
+        container!.scrollTop = offsetTop || 0
+    }, [location.hash])
 
     return (
         <>

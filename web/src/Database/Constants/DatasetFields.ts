@@ -25,6 +25,7 @@ export default {
     },
     [DatasetType.PLANET_PROPERTIES]: {
         name: 'name',
+        hostname: 'hostname',
         diameter: 'diameter',
         mass: 'mass',
         period: 'period',
@@ -32,8 +33,6 @@ export default {
         eccentricity: 'eccentricity',
         inclination: 'inclination',
         surface_temperature: 'surface_temperature',
-        distance: 'distance',
-        discovery_author: 'discovery_author',
-        discovery_date: 'discovery_date'
+        distance: 'distance'
     }
 } as Record<DatasetType, any>

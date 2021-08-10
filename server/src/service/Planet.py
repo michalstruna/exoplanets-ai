@@ -18,21 +18,37 @@ class PlanetService(Service):
         self.star_service = StarService()
 
     def add(self, star_id, planet, with_return=True):
+        star = self.star_service.get_by_id(star_id)
+        planets = self.get_merged_planets(star["planets"] if "planets" in star else [], planet)
+
         return self.dao.update_by_id(star_id, {
-            "push__planets": planet
+            "set__planets": planets
         })
+
+    def get_merged_planets(planets, planet):
+        for pl in planets:
+            per = pl["properties"][0]["orbit"]["period"]
+            max_diff = per * 0.1
+
+            if abs(planet["properties"][0]["orbit"]["period"] - per) < max_diff:
+                pl["properties"].append(planet["properties"][0])
+                break
+
+        return planets
 
     def upsert_all_by_name(self, planets):
         operations = []
 
         for planet in planets:
+            hostname = planet["hostname"]
+            del planet["hostname"]
             star = db.star_dao.collection(planets=[{"properties": [planet]}])
             star.validate()
             star = star.to_mongo()
 
             operations.append(UpdateOne(
-                self.star_service.get_filter_by_name(planet["name"]),
-                {"$push": {"planets": star["planets"][0], "aliases": {"name": planet["name"], "dataset": planet["dataset"]}}},
+                self.star_service.get_filter_by_name(hostname),
+                {"$push": {"planets": star["planets"][0], "aliases": {"name": hostname, "dataset": planet["dataset"]}}},
                 upsert=True
             ))
 
@@ -60,7 +76,7 @@ class PlanetService(Service):
                 pl[prop] = {}
 
         orbit, transit = pl["orbit"], pl["transit"]
-        st_dist, st_mass, st_diameter, st_lum, st_life_zone = Dict.vals(st, ["distance", "mass", "diameter", "luminosity", "life_zone"]) if st else None, None, None, None, None
+        st_dist, st_mass, st_diameter, st_lum, st_life_zone = Dict.vals(st, ["distance", "mass", "diameter", "luminosity", "life_zone"]) if st else (None, None, None, None, None)
 
         if full:
             if Dict.is_set(transit, "period"):

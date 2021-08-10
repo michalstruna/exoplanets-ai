@@ -190,6 +190,7 @@ const strings = {
     planets: {
         // Properties
         name: { [CS]: 'Název', [EN]: 'Name' },
+        hostname: 'Host',
         type: { [CS]: 'Typ', [EN]: 'Type' },
         diameter: { [CS]: 'Průměr', [EN]: 'Diatemer' },
         mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },

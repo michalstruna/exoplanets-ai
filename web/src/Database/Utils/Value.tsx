@@ -58,12 +58,17 @@ const propGetter = <Item extends { properties: Values[] }, Values extends any>()
 
 export const Planet = {
     prop: propGetter<PlanetData, PlanetProperties>(),
-    props: propsGetter<PlanetData, PlanetProperties>()
+    props: propsGetter<PlanetData, PlanetProperties>(),
+
+    names: (planet: PlanetData, renderer: PropRenderer<string, DatasetItem>): any[] => {
+        const items = [...planet.properties]
+        const unique = [...new Set(items.map((item: DatasetItem) => item.name)) as any]
+        return unique.map((name, i) => renderer(name, i, unique[i]))
+    },
 }
 
 export const Star = {
     name: (star: StarData): string | null => {
-        console.log(star)
         return [...star.properties, ...star.light_curves, ...star.aliases][0].name
     },
 

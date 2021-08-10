@@ -62,4 +62,4 @@ class Dict:
         for prop in props:
             result.append(Dict.val(item, prop, key, zeros))
 
-        return tuple(result)
+        return result

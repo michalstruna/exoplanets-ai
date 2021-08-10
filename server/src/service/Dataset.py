@@ -4,7 +4,7 @@ import re
 import numpy as np
 from service.Planet import PlanetService
 
-from utils.native import Dict, Func
+from utils.native import Dict
 from .Base import Service
 from .Star import StarService
 from constants.Dataset import DatasetType, DatasetFields
@@ -25,13 +25,19 @@ class DatasetService(Service):
         self.stats_service = GlobalStatsService()
         self.message_service = MessageService()
 
-    #@Func.exception
+    @staticmethod
+    def get_unique_fields(type):
+        if type == DatasetType.PLANET_PROPERTIES.value:
+            return ["hostname", "name"]
+
+        return ["name"]
+
     def add(self, dataset):
         stats, global_stats = {"time": time.now()}, {}
         items = pd.read_csv(dataset["items_getter"])
         self.update_meta(dataset)
         items = self.standardize_dataset(dataset, items)
-        items = items.where(pd.notnull(items), None).drop_duplicates(subset=["name"])
+        items = items.where(pd.notnull(items), None).drop_duplicates(subset=self.get_unique_fields(dataset["type"]))
 
         if "name" in items:
             dataset["items"] = items["name"].tolist()
@@ -43,7 +49,7 @@ class DatasetService(Service):
             global_stats["stars"] = self.star_service.upsert_all_by_name(stars).upserted_count
         elif dataset["type"] == DatasetType.PLANET_PROPERTIES.name:
             stats["data"], stats["items"] = items.memory_usage().sum(), len(items)
-            items["dataset"] = dataset["name"]
+            items["name"], items["dataset"] = items["hostname"] + " " + items["name"], dataset["name"]
             planets = self.planet_service.complete_all(items.to_dict("records"), from_flat=True, full=False)
             self.planet_service.upsert_all_by_name(planets)
         elif dataset["type"] == DatasetType.SYSTEM_NAMES.name:

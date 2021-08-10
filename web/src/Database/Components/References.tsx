@@ -50,7 +50,7 @@ const References = ({ items, ...props }: Props) => {
 
                 return (
                     <li key={i} data-active={refId === i + 1 || undefined} id={`ref${i + 1}`}>
-                        NASA. (2019). {item.name}. [{item.type} dataset]. Retrieved from <RefLink pathname={url}>{url}</RefLink>.
+                        NASA. (2021). {item.name}. [{item.type} dataset]. Retrieved from <RefLink pathname={url}>{url}</RefLink>.
                     </li>
                 )
             })}

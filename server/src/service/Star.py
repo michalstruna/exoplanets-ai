@@ -28,6 +28,13 @@ class StarService(Service):
     def get_filter_by_name(self, name):
         return {"$or": [{"properties.name": name}, {"light_curves.name": name}, {"aliases.name": name}]}
 
+    def get_name(self, star):
+        for prop in ["properties", "light_curves", "aliases"]:
+            if Dict.is_set(star, prop):
+                for item in star[prop]:
+                    if Dict.is_set(item, "name"):
+                        return item["name"]
+
     def get_by_name(self, name):
         return self.dao.get(self.get_filter_by_name(name))
 

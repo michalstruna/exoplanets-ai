@@ -108,9 +108,9 @@ const SystemView = ({ ...props }: Props) => {
                                     <React.Fragment key={i}>
                                         <FlexLine>
                                             <PlanetPreview item={planet} titleComponent={Subsubtitle} />
-                                            <Tags items={Value.Star.names(system.payload!, name => ({ text: name }))} />
+                                            <Tags items={Value.Planet.names(planet, (name => ({ text: name })))} />
                                         </FlexLine>
-                                        <PlanetTable data={planet} />
+                                        <PlanetTable data={planet} refMap={refMap} />
                                         {Value.Planet.props(planet, 'transit', {
                                             refMap, render: (val, ref) => val.period && (
                                                 <FlexLine>
