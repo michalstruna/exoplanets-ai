@@ -19,12 +19,13 @@ class PlanetService(Service):
 
     def add(self, star_id, planet, with_return=True):
         star = self.star_service.get_by_id(star_id)
-        planets = self.get_merged_planets(star["planets"] if "planets" in star else [], planet)
+        planets = PlanetService.get_merged_planets(star["planets"] if "planets" in star else [], planet)
 
         return self.dao.update_by_id(star_id, {
             "set__planets": planets
         })
 
+    @staticmethod
     def get_merged_planets(planets, planet):
         for pl in planets:
             per = pl["properties"][0]["orbit"]["period"]
@@ -32,9 +33,9 @@ class PlanetService(Service):
 
             if abs(planet["properties"][0]["orbit"]["period"] - per) < max_diff:
                 pl["properties"].append(planet["properties"][0])
-                break
+                return planets
 
-        return planets
+        return [*planets, planet]
 
     def upsert_all_by_name(self, planets):
         operations = []

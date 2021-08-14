@@ -35,6 +35,7 @@ class LcService:
             minimum = min(per * 0.9, per - 1)
             maximum = max(per * 1.1, per + 1)
             period = period[~((period > minimum) & (period < maximum))]
+            period = period[~((period > minimum * 2) & (period < maximum * 2))]
 
         return lc.to_periodogram(method="bls", period=period, frequency_factor=500)
 
@@ -44,16 +45,6 @@ class LcService:
     def get_lv(self, lc, pdg, norm=False):
         return self._get_view(lc, pdg, LcService.LV_SIZE, norm, pdg.period_at_max_power.value)
 
-    def replace_nans(self, x):
-        last = np.nanmedian(x) if np.isnan(x[0]) else x[0]
-        delta_max = ((np.nanmax(x) - np.nanmin(x)) / 20)
-
-        for i in range(len(x)):
-            if np.isnan(x[i]):
-                x[i] = last + delta_max * np.random.rand()
-            else:
-                last = x[i]
-
     def _get_view(self, lc, pdg, bins, return_norm, phase=None):
         folded = lc.fold(pdg.period_at_max_power, pdg.transit_time_at_max_power)
 
@@ -62,19 +53,39 @@ class LcService:
             phase_mask = (folded.phase.value > -phase * fractional_duration) & (folded.phase.value < phase * fractional_duration)
             folded = folded[phase_mask]
 
-        view = folded.bin(bins=bins)
-        self.replace_nans(view.flux.value)
-        self.replace_nans(view.flux_err.value)
+        view = self.replace_nans(folded.bin(bins=bins))
         view = lk.LightCurve(time=np.resize(view.time.value, bins), flux=np.resize(view.flux.value, bins), flux_err=np.resize(view.flux_err.value, bins))
-        view = view.remove_nans()
 
         if return_norm:
             norm = view.copy()
             norm = norm.normalize() - 1
             norm = (norm / np.abs(norm.flux.min())) * 2.0 + 1
+
             return view, norm
 
         return view
+
+    def replace_nans(self, lc):
+        flux = lc.flux.value
+
+        last = np.nanmedian(flux) if np.isnan(flux[0]) else flux[0]
+        delta_max = ((np.nanmax(flux) - np.nanmin(flux)) / 20)
+
+        for i in range(len(flux)):
+            if np.isnan(flux[i]):
+                flux[i] = last + delta_max * np.random.rand()
+            else:
+                last = flux[i]
+
+        np.nan_to_num(lc.flux_err.value, copy=False, nan=0, posinf=0, neginf=0)
+
+        return lc
+
+    def _replace_nans2(self, lc):
+        median = np.nanmedian(lc.flux.value)
+        np.nan_to_num(lc.flux.value, copy=False, nan=median, posinf=median, neginf=median)
+        np.nan_to_num(lc.flux_err.value, copy=False, nan=0, posinf=0, neginf=0)
+        return lc
 
     def is_planet(self, gv, lv):
         model = load_model(os.path.join(os.path.dirname(__file__), "../data/transit.h5"))

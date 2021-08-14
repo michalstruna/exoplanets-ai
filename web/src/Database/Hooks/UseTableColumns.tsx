@@ -139,15 +139,18 @@ const UseTableColumns = (): Structure => {
                         },
                         {
                             columns: Col.list<PlanetData>([
-                                { name: 'type', format: (val, item) => item.properties && item.properties[0] && <ItemImage image={`Database/Planet/${pascalCase(item.properties[0].type || 'Unknown')}.png`} />, width: '5rem', headerIcon: false },
-                                { name: 'name', format: (val, item) => item.properties && item.properties[0] && <Detail pathname='/abc' title={item.properties[0].name} subtitle={strings.planets.types[item.properties[0].type] || strings.planets.unknownType} />, width: 1.5, headerIcon: false },
+                                { name: 'type', format: (val, item) => <ItemImage image={`Database/Planet/${pascalCase(Value.Planet.prop(item, 'type') || 'Unknown')}.png`} />, width: '5rem', headerIcon: false },
+                                { name: 'name', format: (val, item) => <Detail pathname='/abc' title={Value.Planet.prop(item, 'name')} subtitle={strings.planets.types[Value.Planet.prop(item, 'type')] || strings.planets.unknownType} />, width: 1.5, headerIcon: false },
                                 { name: 'diameter', unit: '⊕', multi: 'properties' },
                                 { name: 'mass', unit: '⊕', multi: 'properties' },
                                 { name: 'density', unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/>, multi: 'properties' },
                                 { name: 'surface_temperature', unit: '°C', multi: 'properties' },
                                 { name: 'orbit.semi_major_axis', unit: 'au', multi: 'properties' },
                                 { name: 'orbit.period', format: val => Dates.formatDistance(strings, Dates.daysToMs(val), 0, Dates.Format.EXACT), multi: 'properties' },
-                                { name: 'transit_depth', format: (_, planet) => planet.properties[0]?.transit?.period && <Curve data={planet.properties[0].transit.local_view as any} simple={true} type={Curve.LV} />, title: <Colored color='#AFA'>{strings.planets.transit}</Colored>, width: '20rem' },
+                                { name: 'transit_depth', format: (_, planet) => {
+                                    const transit = planet.properties.find(p => p.transit?.period)?.transit!
+                                    return transit.period && <Curve data={transit.local_view as any} simple={true} type={Curve.LV} />
+                                }, title: <Colored color='#AFA'>{strings.planets.transit}</Colored>, width: '20rem' },
                                 { name: 'life_conditions', format: val => strings.planets.lifeConditionsTypes[val], styleMap: lifeTypeStyle, multi: 'properties' },
                                 { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
                                 { name: 'orbit.eccentricity', format: Numbers.format, multi: 'properties' },

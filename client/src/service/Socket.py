@@ -60,7 +60,7 @@ def run(task):
             
             if planet_found:
                 mask = pdg.get_transit_mask(period=per, transit_time=t0, duration=dur)
-                lc = lc[~mask]
+                lc = lc[~mask].remove_nans()
                 log(LogType.PLANET_FOUND, round(per.value, 2))
 
                 transits.append({
