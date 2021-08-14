@@ -14,5 +14,25 @@ export default {
     },
     [DatasetType.TARGET_PIXEL]: {
         name: 'name'
+    },
+    [DatasetType.SYSTEM_NAMES]: {
+        name1: 'name1',
+        name2: 'name2',
+        name3: 'name3',
+        name4: 'name4',
+        name5: 'name5',
+        name6: 'name6'
+    },
+    [DatasetType.PLANET_PROPERTIES]: {
+        name: 'name',
+        hostname: 'hostname',
+        diameter: 'diameter',
+        mass: 'mass',
+        period: 'period',
+        semi_major_axis: 'semi_major_axis',
+        eccentricity: 'eccentricity',
+        inclination: 'inclination',
+        surface_temperature: 'surface_temperature',
+        distance: 'distance'
     }
 } as Record<DatasetType, any>

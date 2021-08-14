@@ -13,7 +13,7 @@ interface View {
     max_flux: number
 }
 
-export interface PlanetTransit {
+export interface Transit {
     depth: number
     duration: number
     period: number
@@ -21,23 +21,26 @@ export interface PlanetTransit {
     global_view: View
 }
 
-export interface PlanetProperties {
-    name: string
+export interface Orbit {
+    period?: number
+    inclination?: number
+    eccentricity?: number
+    semi_major_axis?: number
+    velocity?: number
+}
+
+export interface PlanetProperties extends DatasetItem {
     diameter?: number
     distance?: number
     mass?: number
-    orbital_period?: number
-    semi_major_axis?: number
-    orbital_velocity?: number
-    eccentricity?: number
     density?: number
     surface_temperature?: number
     surface_gravity?: number
     type: PlanetType
-    transit?: PlanetTransit
-    dataset: string
+    transit?: Transit
     processed: boolean
     life_conditions?: LifeType
+    orbit: Orbit
 }
 
 export interface PlanetData {
@@ -50,8 +53,7 @@ export interface RankedPlanetData extends PlanetData {
     value: number
 }
 
-export interface StarProperties {
-    name: string
+export interface StarProperties extends DatasetItem {
     mass?: number
     diameter?: number
     density?: number
@@ -68,7 +70,6 @@ export interface StarProperties {
     }
     planets?: PlanetData[]
     distance?: number
-    dataset: string
     age?: number
     dec?: number
     ra?: number
@@ -76,8 +77,7 @@ export interface StarProperties {
     life_zone?: LifeZone
 }
 
-export interface LightCurveData {
-    name: string
+export interface LightCurveData extends DatasetItem {
     plot: string
     min_time: number
     max_time: number
@@ -85,7 +85,10 @@ export interface LightCurveData {
     max_flux: number
     n_observations: number
     n_days: number
-    dataset: string
+}
+
+export interface Aliases extends DatasetItem {
+
 }
 
 export interface LifeZone {
@@ -93,18 +96,20 @@ export interface LifeZone {
     max_radius?: number
 }
 
+export interface DatasetItem {
+    name: string
+    dataset: string
+}
+
 export interface StarData {
     _id: string
     properties: StarProperties[]
     light_curves: LightCurveData[]
     planets: PlanetData[]
+    aliases: Aliases[]
 }
 
 export interface SystemData extends StarData {
-    datasets: Dataset[]
-}
-
-export interface StarDetailData extends StarData {
     datasets: Dataset[]
 }
 

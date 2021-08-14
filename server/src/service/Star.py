@@ -4,14 +4,14 @@ import numbers
 import numpy as np
 
 from constants.Star import SpectralClass, SpectralSubclass, LuminosityClass
+from constants.Physics import Star
 from .Base import Service
 import db
 from .Constellation import ConstellationService
 from service.AI import NN
 from utils.native import Dict
 
-spectral_temperatures = [50000, 30000, 11000, 7500, 6000, 5000, 3500, 3000]
-
+spectral_temperatures = Star.SPECTRAL_TEMPERATURES.value
 
 class StarService(Service):
 
@@ -26,7 +26,14 @@ class StarService(Service):
         return [{"$sort": sort}]
 
     def get_filter_by_name(self, name):
-        return {"$or": [{"properties.name": name}, {"light_curves.name": name}]}
+        return {"$or": [{"properties.name": name}, {"light_curves.name": name}, {"aliases.name": name}]}
+
+    def get_name(self, star):
+        for prop in ["properties", "light_curves", "aliases"]:
+            if Dict.is_set(star, prop):
+                for item in star[prop]:
+                    if Dict.is_set(item, "name"):
+                        return item["name"]
 
     def get_by_name(self, name):
         return self.dao.get(self.get_filter_by_name(name))
@@ -34,17 +41,22 @@ class StarService(Service):
     def get_dataset_names(self, star):
         result = set()
 
-        for props in star["properties"]:
-            result.add(props["dataset"])
+        if "properties" in star:
+            for props in star["properties"]:
+                result.add(props["dataset"])
 
-        if "light_curves" in star:  # TODO: Remove.
+        if "light_curves" in star: 
             for lc in star["light_curves"]:
                 result.add(lc["dataset"])
 
-        if "planets" in star:  # TODO: Remove.
+        if "planets" in star:
             for planet in star["planets"]:
                 for props in planet["properties"]:
                     result.add(props["dataset"])
+
+        if "aliases" in star:
+            for alias in star["aliases"]:
+                result.add(alias["dataset"])
 
         return list(result)
 
@@ -74,23 +86,38 @@ class StarService(Service):
 
         return result
 
+
     def upsert_all_by_name(self, stars):
         operations = []
 
         for star in stars:
             star = self.dao.collection(properties=[star])
             star.validate()
-            star = star.to_mongo()  # TODO: Remove?
+            star = star.to_mongo()
 
             operations.append(UpdateOne(
                 self.get_filter_by_name(star["properties"][0]["name"]),
-                {"$push": {"properties": {"$each": star["properties"]}}},
+                {"$push": {"properties": star["properties"][0]}},
                 upsert=True
             ))
 
-        result = db.star_dao.collection._get_collection().bulk_write(operations, ordered=False)
+        return self.dao.bulk(operations)
 
-        return result
+    def upsert_all_aliases(self, aliases):
+        operations = []
+
+        for alias in aliases:
+            star = self.dao.collection(aliases=list(map(lambda name: {"name": name, "dataset": alias["dataset"]}, alias["names"])))
+            star.validate()
+            star = star.to_mongo()
+
+            operations.append(UpdateOne(
+                self.get_filter_by_name({"$in": alias["names"]}),
+                {"$push": {"aliases": {"$each": star["aliases"]}}},
+                upsert=True
+            ))
+
+        return self.dao.bulk(operations)
 
     def complete_star(self, star, with_constellation=True):
         result = {**star}
@@ -146,7 +173,7 @@ class StarService(Service):
 
     def get_luminosity(self, star):
         if Dict.is_set(star, "surface_temperature", "diameter"):
-            return (star["diameter"] ** 2) * (round(star["surface_temperature"] / 5780) ** 4)  # TODO: Constants.
+            return (star["diameter"] ** 2) * (round(star["surface_temperature"] / Star.SUN_TEMPERATURE.value) ** 4)
 
     def get_spectral_class(self, star):
         if Dict.is_set(star, "surface_temperature"):
@@ -194,7 +221,7 @@ class StarService(Service):
             return round(star["apparent_magnitude"] + 5 * (1 - math.log10(star["distance"])), 2)
 
     def delete_empty(self):
-        self.dao.delete({"__raw__": {"$expr": {"$eq": [{"$add": [{"$size": {"$ifNull": ["$properties", []]}}, {"$size": {"$ifNull": ["$light_curves", []]}}]}, 0]}}})
+        self.dao.delete({"__raw__": {"$expr": {"$eq": [{"$add": [{"$size": {"$ifNull": ["$properties", []]}}, {"$size": {"$ifNull": ["$light_curves", []]}}, {"$size": {"$ifNull": ["$aliases", []]}}]}, 0]}}})
 
     def delete_selection(self, id, selection):
         star = self.get_by_id(id)

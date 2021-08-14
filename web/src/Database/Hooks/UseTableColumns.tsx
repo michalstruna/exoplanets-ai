@@ -100,8 +100,8 @@ const UseTableColumns = (): Structure => {
                     levels: [
                         {
                             columns: Col.list<StarData>([
-                                { name: 'type', format: (val, item) => <Properties item={item} render={(name, type) => <ItemImage image={`Database/Star/${type.spectral_class || 'Unknown'}.svg`} large={true} />} />, width: '5rem', headerIcon: false },
-                                { name: 'name', format: (val, item) => <Properties item={item} render={name => <Detail pathname={`${Url.SYSTEM}/${Value.Star.name(item)}`} title={name} subtitle={<BodyType body={item} />} />} />, width: 1.5, headerIcon: false },
+                                { name: 'type', format: (val, item) => <ItemImage image={`Database/Star/${Value.Star.prop(item, 'type')?.spectral_class || 'Unknown'}.svg`} large={true} />, width: '5rem', headerIcon: false },
+                                { name: 'name', format: (val, item) => <Detail pathname={`${Url.SYSTEM}/${Value.Star.name(item)}`} title={Value.Star.name(item)} subtitle={<BodyType body={item} />} />, width: 1.5, headerIcon: false },
                                 { name: 'diameter', unit: '☉', multi: 'properties' },
                                 { name: 'mass', unit: '☉', multi: 'properties' },
                                 { name: 'density', unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/>, multi: 'properties' },
@@ -120,6 +120,7 @@ const UseTableColumns = (): Structure => {
                                         <div>
                                             <MultiValue items={item.properties} property='dataset' formatter={val => <IconText text={val} icon='/img/Database/Dataset/StarProperties.svg' />} />
                                             <MultiValue items={item.light_curves} property='dataset' formatter={val => <IconText text={val} icon='/img/Database/Dataset/TargetPixel.svg' />} />
+                                            <MultiValue items={item.aliases} property='dataset' formatter={val => <IconText text={val} icon='/img/Database/Dataset/PlanetProperties.svg' />} />
                                         </div>
                                     ), width: 1.5 }
                             ], {
@@ -138,21 +139,24 @@ const UseTableColumns = (): Structure => {
                         },
                         {
                             columns: Col.list<PlanetData>([
-                                { name: 'type', format: (val, item) => item.properties && item.properties[0] && <ItemImage image={`Database/Planet/${pascalCase(item.properties[0].type || 'Unknown')}.png`} />, width: '5rem', headerIcon: false },
-                                { name: 'name', format: (val, item) => item.properties && item.properties[0] && <Detail pathname='/abc' title={item.properties[0].name} subtitle={strings.planets.types[item.properties[0].type] || strings.planets.unknownType} />, width: 1.5, headerIcon: false },
+                                { name: 'type', format: (val, item) => <ItemImage image={`Database/Planet/${pascalCase(Value.Planet.prop(item, 'type') || 'Unknown')}.png`} />, width: '5rem', headerIcon: false },
+                                { name: 'name', format: (val, item) => <Detail pathname='/abc' title={Value.Planet.prop(item, 'name')} subtitle={strings.planets.types[Value.Planet.prop(item, 'type')] || strings.planets.unknownType} />, width: 1.5, headerIcon: false },
                                 { name: 'diameter', unit: '⊕', multi: 'properties' },
                                 { name: 'mass', unit: '⊕', multi: 'properties' },
                                 { name: 'density', unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/>, multi: 'properties' },
                                 { name: 'surface_temperature', unit: '°C', multi: 'properties' },
-                                { name: 'semi_major_axis', unit: 'au', multi: 'properties' },
-                                { name: 'orbital_period', format: val => Dates.formatDistance(strings, Dates.daysToMs(val), 0, Dates.Format.EXACT), multi: 'properties' },
-                                { name: 'transit_depth', format: (_, planet) => planet.properties[0]?.transit?.local_view && <Curve data={planet.properties[0].transit.local_view as any} simple={true} type={Curve.LV} />, title: <Colored color='#AFA'>{strings.planets.transit}</Colored>, width: '20rem' },
+                                { name: 'orbit.semi_major_axis', unit: 'au', multi: 'properties' },
+                                { name: 'orbit.period', format: val => Dates.formatDistance(strings, Dates.daysToMs(val), 0, Dates.Format.EXACT), multi: 'properties' },
+                                { name: 'transit_depth', format: (_, planet) => {
+                                    const transit = planet.properties.find(p => p.transit?.period)?.transit!
+                                    return transit.period && <Curve data={transit.local_view as any} simple={true} type={Curve.LV} />
+                                }, title: <Colored color='#AFA'>{strings.planets.transit}</Colored>, width: '20rem' },
                                 { name: 'life_conditions', format: val => strings.planets.lifeConditionsTypes[val], styleMap: lifeTypeStyle, multi: 'properties' },
                                 { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },
-                                { name: 'orbital_velocity', unit: <Fraction top='km' bottom='s' />, multi: 'properties' },
-                                { name: 'stat   us', format: value => strings.planets.statuses[value], styleMap: planetStatusStyle },
-                                { name: 'todo' },
-                                { name: 'todo' },
+                                { name: 'orbit.eccentricity', format: Numbers.format, multi: 'properties' },
+                                { name: 'orbit.inclination', unit: '°', multi: 'properties' },
+                                { name: 'orbit.velocity', unit: <Fraction top='km' bottom='s' />, multi: 'properties' },
+                                { name: 'status', format: value => strings.planets.statuses[value], styleMap: planetStatusStyle },
                                 { name: 'todo' },
                                 { name: 'dataset', format: (val, planet, i) => <IconText text={val} icon={`/img/Database/Dataset/${(planet as any).processed ? 'TargetPixel' : 'PlanetProperties'}.svg`} />, width: 1.5, multi: 'properties' }
                             ], {
@@ -205,8 +209,8 @@ const UseTableColumns = (): Structure => {
                                 { name: 'density', unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/>, multi: 'properties' },
                                 { name: 'surface_temperature', unit: '°C', multi: 'properties' },
                                 { name: 'semi_major_axis', unit: 'au', multi: 'properties' },
-                                { name: 'orbital_period', format: val => Dates.formatDistance(strings, Dates.daysToMs(val), 0, Dates.Format.EXACT), multi: 'properties' },
-                                { name: 'orbital_velocity', unit: <Fraction top='km' bottom='s' />, multi: 'properties' },
+                                { name: 'period', format: val => Dates.formatDistance(strings, Dates.daysToMs(val), 0, Dates.Format.EXACT), multi: 'properties' },
+                                { name: 'velocity', unit: <Fraction top='km' bottom='s' />, multi: 'properties' },
                                 { name: 'transit_depth', format: (_, planet) => planet.properties[0]?.transit?.local_view && <Curve data={planet.properties[0].transit.local_view as any} simple={true} type={Curve.LV} />, title: <Colored color='#AFA'>{strings.planets.transit}</Colored>, width: '20rem' },
                                 { name: 'life_conditions', format: val => strings.planets.lifeConditionsTypes[val], styleMap: lifeTypeStyle, multi: 'properties' },
                                 { name: 'surface_gravity', unit: <Fraction top='m' bottom={<>s<sup>2</sup></>}/>, multi: 'properties' },

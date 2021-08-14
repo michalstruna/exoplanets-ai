@@ -71,9 +71,7 @@ class Dao:
         return items[0]
 
     def get_count(self, operations, filter={}):
-        pipeline = [*operations, {"$match": filter}, {"$count": "count"}]  # TODO: Use self.aggregate.
-        result = list(self.collection.objects.aggregate(pipeline, allowDiskUse=True))
-        #result = self.aggregate(operations + [{"$count": "count"}], filter)
+        result = self.aggregate([*operations, {"$match": filter}, {"$count": "count"}])
         return result[0]["count"] if result else 0
 
     def add(self, item, with_return=True):
@@ -82,8 +80,8 @@ class Dao:
         if with_return:
             return self.get_by_id(item.to_mongo()["_id"])
 
-    def add_all(self):
-        pass  # TODO
+    def bulk(self, operations, ordered=False):
+        return self.collection._get_collection().bulk_write(operations, ordered=ordered)
 
     def update_by_id(self, id, item, with_return=True):
         for key in ["_id", "created", "modified"]:
@@ -93,7 +91,7 @@ class Dao:
         self.collection.objects(id=Dao.id(id)).update_one(**self.modified(item))
 
         if with_return:
-            return self.get_by_id(id)  # TODO: Test.
+            return self.get_by_id(id) 
 
     def update(self, filter, item, with_return=True, upsert=False):
         self.collection.objects(**filter).update_one(**self.modified(item), upsert=upsert)
@@ -254,15 +252,24 @@ class View(EmbeddedDocument):
 
 
 class Transit(EmbeddedDocument):
-    period = FloatField(min_value=0, required=True)
-    duration = FloatField(min_value=0, required=True)
-    depth = FloatField(min_value=0, max_value=1, required=True)
-    local_view = EmbeddedDocumentField(View, required=True)
-    global_view = EmbeddedDocumentField(View, required=True)
+    period = FloatField(min_value=0)
+    duration = FloatField(min_value=0)
+    depth = FloatField(min_value=0, max_value=1)
+    local_view = EmbeddedDocumentField(View)
+    global_view = EmbeddedDocumentField(View)
 
 class Discovery(EmbeddedDocument):
     author = StringField()
     date = LongField(required=True)
+
+
+class Orbit(EmbeddedDocument):
+    period = FloatField(min_value=0)
+    eccentricity = FloatField(min_value=0)
+    inclination = FloatField(min_value=0)
+    velocity = FloatField(min_value=0)
+    semi_major_axis = FloatField(min_value=0)
+
 
 class PlanetProperties(EmbeddedDocument):
     name = StringField(required=True, max_length=50)
@@ -271,22 +278,20 @@ class PlanetProperties(EmbeddedDocument):
     distance = FloatField(min_value=0)
     mass = FloatField(min_value=0)
     density = FloatField(min_value=0)
-    semi_major_axis = FloatField(min_value=0)
-    orbital_velocity = FloatField(min_value=0)
-    orbital_period = FloatField(min_value=0)
     surface_gravity = FloatField(min_value=0)
     surface_temperature = FloatField(min_value=0)
-    life_conditions = StringField(enum=LifeType.values())  # TODO: DB table LiveType?
+    life_conditions = StringField(enum=LifeType.values())
     transit = EmbeddedDocumentField(Transit)
-    dataset = ReferenceField(Dataset, required=True)  # TODO: Surface gravity.
+    orbit = EmbeddedDocumentField(Orbit)
+    dataset = ReferenceField(Dataset, required=True)
     processed = BooleanField()
     discovery = EmbeddedDocumentField(Discovery)
 
 
 class Planet(EmbeddedDocument):
     _id = ObjectIdField(required=True, default=lambda: ObjectId())
-    properties = ListField(EmbeddedDocumentField(PlanetProperties, required=True), required=True, default=[])
-    status = StringField(required=True, enum=PlanetStatus.values())
+    properties = ListField(EmbeddedDocumentField(PlanetProperties), default=[])
+    status = StringField(required=True, enum=PlanetStatus.values(), default=PlanetStatus.CONFIRMED.value)
 
 
 planet_dao = Dao(Planet, [{"$addFields": {"datasets": {"$size": "$properties"}}}])
@@ -304,18 +309,27 @@ class LightCurve(EmbeddedDocument):
     n_days = FloatField(required=True)
 
 
-class Star(Document):  # TODO: BaseDocument - _cls is not working.
+class Alias(EmbeddedDocument):
+    name = StringField(required=True)
+    dataset = StringField(required=True)
+
+class Star(Document): 
     properties = EmbeddedDocumentListField(StarProperties, default=[])
     light_curves = EmbeddedDocumentListField(LightCurve, default=[])
     planets = EmbeddedDocumentListField(Planet, default=[])
+    aliases = EmbeddedDocumentListField(Alias, default=[])
 
     meta = {
-        "indexes": ["properties.name", "planets.properties.name", "light_curves.name"]
+        "indexes": ["properties.name", "planets.properties.name", "light_curves.name", "aliases.name"]
     }
 
 
 star_dao = Dao(Star, [
-    {"$addFields": {"datasets": {"$add": [{"$size": "$properties"}]}}}
+    {"$addFields": {"datasets": {"$add": [
+        {"$size": {"$ifNull": ["$properties", []]}},
+        {"$size": {"$ifNull": ["$light_curves", []]}},
+        {"$size": {"$ifNull": ["$names", []]}}
+    ]}}}
 ])
 
 
@@ -405,5 +419,3 @@ message_dao = Dao(Message, [
     {"$project": {"user_id": 0}},
     *aggregate_stats_pipeline(field="user.stats")
 ])
-
-# TODO: Star aliases.

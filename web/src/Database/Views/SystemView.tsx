@@ -54,26 +54,6 @@ const Subsubtitle = Styled(MinorSectionTitle)`
     }
 `
 
-const Actions = Styled(PlainTable)`
-    overflow-y: scroll;
-    margin: 0;
-    max-height: 20rem;
-    max-width: 60rem;
-    
-    th, td {
-        padding: 0.25rem 0.5rem;
-    }
-
-    td {
-        background-color: transparent !important;
-        text-align: left !important;
-    }
-    
-    tr:nth-of-type(2n) {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-`
-
 const SystemView = ({ ...props }: Props) => {
 
     const systemName = useRouter<any>().match.params.system
@@ -100,7 +80,7 @@ const SystemView = ({ ...props }: Props) => {
         <Async
             data={[system, () => getSystem(systemName), [systemName]]}
             success={() => (
-                <Root {...props}>
+                <Root {...props} key={system.payload!._id}>
                     <SystemContent system={system.payload!} />
                     <Main>
                         <FlexLine>
@@ -128,11 +108,11 @@ const SystemView = ({ ...props }: Props) => {
                                     <React.Fragment key={i}>
                                         <FlexLine>
                                             <PlanetPreview item={planet} titleComponent={Subsubtitle} />
-                                            <Tags items={Value.Star.names(system.payload!, name => ({ text: name }))} />
+                                            <Tags items={Value.Planet.names(planet, (name => ({ text: name })))} />
                                         </FlexLine>
-                                        <PlanetTable data={planet} />
+                                        <PlanetTable data={planet} refMap={refMap} />
                                         {Value.Planet.props(planet, 'transit', {
-                                            refMap, render: (val, ref) => (
+                                            refMap, render: (val, ref) => val.period && (
                                                 <FlexLine>
                                                     <Curve data={val?.local_view as any} type={Curve.LV} width={390} height={200} title={<>{strings.localView} {ref}</>} />
                                                     <Curve data={val?.global_view as any} type={Curve.GV} width={390} height={200} title={<>{strings.globalView} {ref}</>} />
@@ -199,7 +179,7 @@ const SystemView = ({ ...props }: Props) => {
                                 { name: 'Kepler-10', distance: 0, size: 0.005 },
                                 ...system.payload!.planets.map((planet: PlanetData) => ({
                                     name: planet.properties[0].name,
-                                    distance: planet.properties[0].semi_major_axis!
+                                    distance: planet.properties[0].orbit.semi_major_axis!
                                 }))
                             ]
                         ]} lifeZones={[
@@ -209,40 +189,10 @@ const SystemView = ({ ...props }: Props) => {
                                 to: system.payload!.properties[0] ? system.payload!.properties[0].life_zone?.max_radius || 0 : 0
                             }
                         ]} /> 
-                        <Subsubtitle>
-                            Interaktivní model
-                        </Subsubtitle>
                         <Subtitle>
                             Reference
                         </Subtitle>
                         <References items={system.payload!.datasets} />
-                        <Subtitle>
-                            Aktivity
-                        </Subtitle>
-                        <Actions>
-                            <tbody>
-                            <tr>
-                                <th>Datum</th>
-                                <th>Uživatel</th>
-                                <th>Akce</th>
-                                <th colSpan={2}>Zdroj</th>
-                            </tr>
-                            <tr>
-                                <td>12. 9. 2020 9.38:25</td>
-                                <td>Michal</td>
-                                <td>Přidány planety (1)</td>
-                                <td colSpan={2}>Dataset Kepler mission</td>
-                            </tr>
-                            {new Array(100).fill(0).map((v, i) => (
-                                <tr key={i}>
-                                    <td>12. 9. 2020 9.38:25</td>
-                                    <td>Michal</td>
-                                    <td>Editace</td>
-                                    <td colSpan={2}><i>Manuální</i></td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </Actions>
                     </Main>
                 </Root>
             )}

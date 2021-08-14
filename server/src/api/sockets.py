@@ -247,7 +247,8 @@ class Sockets(metaclass=Singleton):
             stars += 1
 
         for transit in task["solution"]["transits"]:
-            properties = self.planet_service.complete_planet(star, {"name": "KIC a", "transit": transit, "dataset": dataset["name"], "processed": True})
+            name = self.star_service.get_name(star) + f" #{len(star['planets']) if 'planets' in star else 1}"
+            properties = self.planet_service.complete_planet(star, {"name": name, "transit": transit, "dataset": dataset["name"], "processed": True})
             planet = {"properties": [properties], "status": PlanetStatus.CANDIDATE.value}
             planet = self.planet_service.add(star["_id"], planet)
 

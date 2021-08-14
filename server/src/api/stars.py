@@ -18,7 +18,10 @@ def map_props(prop):
     if prop.startswith("planet_"):
         prop = prop[7:]
 
-        if prop in ["diameter", "mass", "density", "surface_temperature", "semi_major_axis", "orbital_period", "transit_depth", "surface_gravity", "orbital_velocity", "dataset"]:
+        if prop in ["period", "velocity", "semi_major_axis", "inclination", "eccentricity"]:
+            return f"planets.priperties.orbit.{prop}", float
+
+        if prop in ["diameter", "mass", "density", "surface_temperature", "transit_depth", "surface_gravity", "dataset"]:
             return f"planets.properties.{prop}", float
 
         if prop in ["life_conditions", "status", "type"]:
@@ -28,7 +31,7 @@ def map_props(prop):
             return f"properties.type.{prop}", str
 
         if prop == "name":
-            return [f"properties.{prop}", f"light_curves.{prop}"], str
+            return [f"properties.{prop}", f"light_curves.{prop}", f"aliases.{prop}"], str
 
         if prop in ["type", "dataset"]:
             return f"properties.{prop}", str
@@ -85,11 +88,17 @@ light_curve = api.ns.model("LightCurve", {
     "dataset": fields.String(required=True, max_length=50, description="Name of dataset from which light curve originates."),
 })
 
+alias = api.ns.model("Alias", {
+    "name": fields.String(required=True, max_length=50, description="Name of star within dataset."),
+    "dataset": fields.String(required=True, max_length=50, description="Name of dataset from which alias originates."),
+})
+
 star = api.ns.model("Star", {
     "_id": fields.String(requred=True, description="Star unique identifier."),
     "properties": fields.List(fields.Nested(star_properties), required=True, default=[]),
     "light_curves": fields.List(fields.Nested(light_curve), required=True, default=[]),
     "planets": fields.List(fields.Nested(planet), default=[]),
+    "aliases": fields.List(fields.Nested(alias), default=[]),
     "index": fields.Integer(min=1)
 })
 

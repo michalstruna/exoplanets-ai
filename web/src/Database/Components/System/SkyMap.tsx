@@ -55,37 +55,39 @@ const SkyMap = ({ target, ...props }: Props) => {
     const cons = useSelector(state => state.database.constellations)
 
     React.useEffect(() => {
-        if (!cons.payload) {
-            return
-        }
-
-        var aladin = A.aladin('#aladin-lite', {
-            survey: 'P/DSS2/color',
-            fov: 0.1,
-            target,
-            showZoomControl: false,
-            showLayersControl: false
-        })
-
-        const constellations = A.graphicOverlay({ lineWidth: 1, color: '#FFF' })
-        aladin.addOverlay(constellations)
-
-        const constellationLabels = A.catalog({ name: 'Labels', shape: renderLabel })
-        aladin.addCatalog(constellationLabels)
-
-        for (const con of cons.payload) {
-            for (const line of con.shape) {
-                constellations.add(A.polyline(line))
+        setTimeout(() => {
+            if (!cons.payload) {
+                return
             }
 
-            var label = A.source(con.center[0], con.center[1], { name: con.name })
-            constellationLabels.addSources([label])
-        }
+            const aladin = A.aladin('#aladin-lite', {
+                survey: 'P/DSS2/color',
+                fov: 0.1,
+                target,
+                showZoomControl: false,
+                showLayersControl: false
+            })
+    
+            const constellations = A.graphicOverlay({ lineWidth: 1, color: '#FFF' })
+            aladin.addOverlay(constellations)
+    
+            const constellationLabels = A.catalog({ name: 'Labels', shape: renderLabel })
+            aladin.addCatalog(constellationLabels)
+    
+            for (const con of cons.payload) {
+                for (const line of con.shape) {
+                    constellations.add(A.polyline(line))
+                }
+    
+                var label = A.source(con.center[0], con.center[1], { name: con.name })
+                constellationLabels.addSources([label])
+            }
+        }, 100)
     }, [target, cons])
 
     return (
         <Async
-            data={[cons, getConstellations]}
+            data={[[cons, getConstellations, [target]]]}
             success={() => <Root {...props} id='aladin-lite' />} />
     )
 

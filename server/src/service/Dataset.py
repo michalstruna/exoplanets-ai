@@ -1,6 +1,8 @@
 import pandas as pd
 from mongoengine.errors import DoesNotExist
 import re
+import numpy as np
+from service.Planet import PlanetService
 
 from utils.native import Dict
 from .Base import Service
@@ -12,32 +14,52 @@ from .Stats import GlobalStatsService
 from service.Message import MessageService
 from constants.Message import MessageTag
 
+FIELD_OPERATORS = "*\-+/"
 
 class DatasetService(Service):
 
     def __init__(self):
         super().__init__(db.dataset_dao)
         self.star_service = StarService()
+        self.planet_service = PlanetService()
         self.stats_service = GlobalStatsService()
         self.message_service = MessageService()
+
+    @staticmethod
+    def get_unique_fields(type):
+        if type == DatasetType.PLANET_PROPERTIES.value:
+            return ["hostname", "name"]
+
+        return ["name"]
 
     def add(self, dataset):
         stats, global_stats = {"time": time.now()}, {}
         items = pd.read_csv(dataset["items_getter"])
-        dataset["size"] = len(items.index)
         self.update_meta(dataset)
         items = self.standardize_dataset(dataset, items)
-        items = items.where(pd.notnull(items), None)
-        dataset["items"] = items["name"].tolist()
+        items = items.where(pd.notnull(items), None).drop_duplicates(subset=self.get_unique_fields(dataset["type"]))
+
+        if "name" in items:
+            dataset["items"] = items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
             stats["data"], stats["items"] = items.memory_usage().sum(), len(items)
             items["dataset"] = dataset["name"]
             stars = self.star_service.complete_stars(items.to_dict("records"))
             global_stats["stars"] = self.star_service.upsert_all_by_name(stars).upserted_count
-        else:
-            pass
+        elif dataset["type"] == DatasetType.PLANET_PROPERTIES.name:
+            stats["data"], stats["items"] = items.memory_usage().sum(), len(items)
+            items["name"], items["dataset"] = items["hostname"] + " " + items["name"], dataset["name"]
+            planets = self.planet_service.complete_all(items.to_dict("records"), from_flat=True, full=False)
+            self.planet_service.upsert_all_by_name(planets)
+        elif dataset["type"] == DatasetType.SYSTEM_NAMES.name:
+            stats["data"], stats["items"] = items.memory_usage().sum(), len(items)
+            items["names"] = items.stack().groupby(level=0).apply(list).tolist()
+            items = items[["names"]]
+            items["dataset"] = dataset["name"]
+            self.star_service.upsert_all_aliases(items.to_dict("records"))
 
+        dataset["size"] = len(items.index)
         stats["time"] = time.now() - stats["time"]  # Update local and global stats.
         dataset["stats"] = [{"date": time.day(), **stats}]
         result = self.dao.add(dataset)
@@ -100,9 +122,11 @@ class DatasetService(Service):
             return None
 
         prefix, body, suffix = re.split("{|}", mask)
+        prefix, rem_prefix = prefix.split("||") if "||" in prefix else (prefix, "")
+        suffix, rem_suffix = suffix.split("||") if "||" in suffix else (suffix, "")
 
         name, ops_str = "", ""
-        search = re.search("[*\-+/]", body)
+        search = re.search(f"[{FIELD_OPERATORS}]", body)
         operands, operators, ops = [], [], []
 
         if search:
@@ -115,12 +139,12 @@ class DatasetService(Service):
         if ops_str:
             operators = re.split("[0-9]+", ops_str)
             operators.pop()
-            operands = re.split("[*\-+/]", ops_str)[1:]
+            operands = re.split(f"[{FIELD_OPERATORS}]", ops_str)[1:]
 
         for i in range(len(operands)):
             ops.append([operators[i], float(operands[i])])
 
-        return {"prefix": prefix, "name": name, "ops": ops, "suffix": suffix}
+        return {"prefix": prefix, "rem_prefix": rem_prefix, "name": name, "ops": ops, "suffix": suffix, "rem_suffix": rem_suffix}
 
     def get_field_value(self, source, field_name, dataset):
         field_meta = dataset["fields_meta"][field_name]
@@ -128,12 +152,14 @@ class DatasetService(Service):
         if not field_meta:
             return None
 
+        na_vals = pd.isna(source[field_name])
         val = source[field_name].astype(str)
+        val = val.str.replace(f"(^{field_meta['rem_prefix']})|({field_meta['rem_suffix']}$)", "", regex=True)
 
         if field_meta["ops"]:
-            val = val.astype(float)
-
             for op in field_meta["ops"]:
+                val = val.astype(float)
+
                 if op[0] == "+":
                     val += op[1]
                 elif op[0] == "*":
@@ -143,10 +169,12 @@ class DatasetService(Service):
                 elif op[0] == "/":
                     val /= op[1]
 
-            val = val.astype(str)
+            val = val.replace(np.nan, '', regex=True).astype(str)
 
         field_type = DatasetFields[dataset["type"]].value[field_name]["type"]
-        return field_meta["prefix"] + val + field_meta["suffix"] if field_type == str else val.astype(field_type)
+        result = field_meta["prefix"] + val + field_meta["suffix"] if field_type == str else val.astype(field_type)
+        result[na_vals] = None
+        return result
 
     def fields_to_fields_map(self, dataset):
         fields, meta = dataset["fields"], dataset["fields_meta"]
@@ -174,6 +202,8 @@ class DatasetService(Service):
     def delete(self, id):
         dataset = self.get_by_id(id)
         self.star_service.delete_array_items("properties", "dataset", dataset["name"])
+        self.star_service.delete_array_items("light_curves", "dataset", dataset["name"])
+        self.star_service.delete_array_items("aliases", "dataset", dataset["name"])
         self.star_service.delete_empty()
         return super().delete(id)
 

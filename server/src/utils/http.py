@@ -176,14 +176,14 @@ class Request:
             if rel not in Relation._value2member_map_:
                 raise Exception(f"'{rel}' is not valid relation.")
             
-            final_prop, type = map_props(prop) if map_props else prop, str
+            final_prop, type = map_props(prop) if map_props else (prop, str)
 
             if not final_prop:
                 raise Exception(f"Items are not filerable by '{prop}' prop.")
 
             return [final_prop, rel, type(val) if val != "" and isinstance(val, str) else ("" if type == str else 0)]
-
         filter = list(map(parse_filter_item, filter))
+
         rules = []
 
         for prop, rel, val in filter:

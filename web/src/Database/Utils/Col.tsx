@@ -1,6 +1,7 @@
 import React from 'react'
 import Styled from 'styled-components'
 import { camelCase, pascalCase } from 'change-case'
+import Nested from 'nested-property'
 
 import { Numbers } from '../../Native'
 import ItemControls from '../Components/ItemControls'
@@ -41,8 +42,8 @@ const N_LINES = 3
 
 export const MultiValue = ({ items, property, formatter = val => val }: { items: any[], property: string, formatter?: (val: any, i: any, item: any) => any }) => items ? (
     <div>
-        {items.slice(0, N_LINES).filter(item => !!item[property]).map((item, i) => <div
-            title={'Dataset: ' + item.dataset}>{formatter(item[property], item, i)}</div>)}
+        {items.slice(0, N_LINES).filter(item => !!Nested.get(item, property)).map((item, i) => <div
+            title={'Dataset: ' + item.dataset}>{formatter(Nested.get(item, property), item, i)}</div>)}
             {items.length > N_LINES && (
                 <Note>A další {items.length - N_LINES}...</Note>
             )}
@@ -61,6 +62,8 @@ export const list = <T extends any>(cols: ColOptions<any, T>[], options: ColOpti
      */
     const col = ({ format, multi, name, title, styleMap, icon, headerIcon, unit, ...props }: ColOptions<any, T>) => {
         let formatter: any = unit ? ((val: number) => <>{Numbers.format(val)} {unit}</>) : format ? format : (val: T) => val
+        const names = name?.split('.') ?? []
+        const propName = names[names.length - 1]
 
         if (styleMap) {
             let f = formatter
@@ -73,11 +76,11 @@ export const list = <T extends any>(cols: ColOptions<any, T>[], options: ColOpti
         }
 
         return {
-            name,
-            title: title || options.strings[camelCase(name || '')],
+            name: names[0],
+            title: title || options.strings[camelCase(propName || '')],
             accessor: multi ? (item: any) => <MultiValue items={item[multi]} property={name!} formatter={formatter} /> : (item: any, i: number) => formatter(item[name!], item, i),
-            headerIcon: headerIcon !== false && name ? `/img/Database/Table/${pascalCase(name)}.svg` : undefined,
-            icon: icon && name ? `/img/Database/Table/${pascalCase(name)}.svg` : undefined,
+            headerIcon: headerIcon !== false && names[0] ? `/img/Database/Table/${pascalCase(propName)}.svg` : undefined,
+            icon: icon && propName ? `/img/Database/Table/${pascalCase(propName)}.svg` : undefined,
             ...props
         }
     }

@@ -13,7 +13,10 @@ def map_props(prop):
     if prop in ["type", "name", "life_conditions", "semi_major_axis", "transit_depth", "distance"]:
         return f"properties.{prop}", str
 
-    if prop in ["diameter", "mass", "density", "semi_major_axis", "distance", "orbital_period", "orbital_velocity", "surface_temperature"]:
+    if prop in ["semi_major_axis", "period", "velocity", "inclination", "eccentricity"]:
+        return f"properties.orbit.{prop}", float
+
+    if prop in ["diameter", "mass", "density", "distance", "surface_temperature"]:
         return f"properties.{prop}", float
 
 
@@ -33,22 +36,29 @@ transit = api.ns.model("Transit", {
     "global_view": fields.Nested(view)
 })
 
+orbit = api.ns.model("Orbit", {
+    "period": fields.Float(min=0, description="Orbital period [Earth days]."),
+    "velocity": fields.Float(min=0, description="Average orbital velocity around star."),
+    "period": fields.Float(min=0, description="Orbital period [Earth days]."),
+    "semi_major_axis": fields.Float(min=0, description="Semi-major axis of planet orbit [au]."),
+    "eccentricity": fields.Float(min=0, description="Eccentricity of planet orbit."),
+    "inclination": fields.Float(min=0, description="Inclination of planet orbit [°]."),
+})
+
 planet_properties = api.ns.model("PlanetProperties", {
     "name": fields.String(required=True, description="Name of planet."),
     "type": fields.String(required=True, enum=PlanetType.values(), description=f"Type of planet."),
     "diameter": fields.Float(min=0, description="Diameter of planet [Earth diameters]."),
     "mass": fields.Float(min=0, description="Mass of planet [Earth masses]."),
     "density": fields.Float(min=0, description="Density of planet [Earth density]."),
-    "orbital_period": fields.Float(min=0, description="Orbital period [Earth days]."),
-    "orbital_velocity": fields.Float(min=0, description="Average orbital velocity around star."),
     "surface_temperature": fields.Integer(description="Estimated surface temperature [°C]."),
     "surface_gravity": fields.Float(description="Surface gravity [m/s^2]."),
-    "semi_major_axis": fields.Float(min=0, description="Semi-major axis of planet orbit [au]."),
     "life_conditions": fields.String(description="Planet's life conditions."),
     "distance": fields.Float(min=0, description="Distance of planet from Earth [ly]."),
     "dataset": fields.String(required=True, max_length=50, description="Name of dataset from which properties originate."),
     "processed": fields.Boolean(description="Properties comes from processed dataset, not plain dataset."),
-    "transit": fields.Nested(transit, default=None, description="Transit of planet's host star.")
+    "transit": fields.Nested(transit, default=None, description="Transit of planet."),
+    "orbit": fields.Nested(orbit, default=None, description="Orbit of planet.")
 })
 
 planet = api.ns.model("Planet", {

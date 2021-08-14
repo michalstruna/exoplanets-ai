@@ -1,7 +1,7 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 
-import { LightCurveData, PlanetData, PlanetProperties, StarData, StarProperties } from '../types'
+import { DatasetItem, PlanetData, PlanetProperties, StarData, StarProperties } from '../types'
 import { Numbers } from '../../Native'
 import Ref from '../Components/Ref'
 
@@ -15,12 +15,14 @@ type PropsOptions = {
     isEstimate?: (props: any) => boolean
 }
 
-const propsGetter = <Item extends { properties: Values[] }, Values extends StarProperties | PlanetProperties>() => (star: Item, name: keyof Values, options?: PropsOptions): React.ReactNode | null => {
+const propsGetter = <Item extends { properties: Values[] }, Values extends StarProperties | PlanetProperties>() => <NestedCategory extends keyof Values>(star: Item, name: keyof Values | [NestedCategory, keyof Values[NestedCategory]], options?: PropsOptions): React.ReactNode | null => {
     const cache: Record<string, [any, (string | undefined)[], React.ReactNode]> = {}
 
     for (const props of star.properties) {
         const refId = props.dataset
-        const rawValue = props[name] !== null && props[name] !== undefined ? (options?.format ? options.format(props[name]) : props[name]) : null
+        const val = Array.isArray(name) ? props[name[0]][name[1]] : props[name]
+
+        const rawValue = val !== null && val !== undefined ? (options?.format ? options.format(val) : val) : null
         const value = options?.unit ? <>{Numbers.format(rawValue as number)}{options.unit === '°' ? '' : ' '}{options.unit}</> : rawValue
         const json = rawValue !== null && rawValue !== undefined ? (value && (value as any).$$typeof ? renderToString(value as any) : JSON.stringify(value)) : null
 
@@ -56,29 +58,23 @@ const propGetter = <Item extends { properties: Values[] }, Values extends any>()
 
 export const Planet = {
     prop: propGetter<PlanetData, PlanetProperties>(),
-    props: propsGetter<PlanetData, PlanetProperties>()
+    props: propsGetter<PlanetData, PlanetProperties>(),
+
+    names: (planet: PlanetData, renderer: PropRenderer<string, DatasetItem>): any[] => {
+        const items = [...planet.properties]
+        const unique = [...new Set(items.map((item: DatasetItem) => item.name)) as any]
+        return unique.map((name, i) => renderer(name, i, unique[i]))
+    },
 }
 
 export const Star = {
     name: (star: StarData): string | null => {
-        for (const property of star.properties) {
-            if (property.name) {
-                return property.name
-            }
-        }
-
-        for (const light_curve of star.light_curves) {
-            if (light_curve.name) {
-                return light_curve.name
-            }
-        }
-
-        return null
+        return [...star.properties, ...star.light_curves, ...star.aliases][0].name
     },
 
-    names: (star: StarData, renderer: PropRenderer<string, StarProperties | LightCurveData>): any[] => {
-        const items = [...star.properties, ...star.light_curves]
-        const unique = [...new Set(items.map((item: StarProperties | LightCurveData) => item.name)) as any]
+    names: (star: StarData, renderer: PropRenderer<string, DatasetItem>): any[] => {
+        const items = [...star.properties, ...star.light_curves, ...star.aliases]
+        const unique = [...new Set(items.map((item: DatasetItem) => item.name)) as any]
         return unique.map((name, i) => renderer(name, i, unique[i]))
     },
 

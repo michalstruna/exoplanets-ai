@@ -111,7 +111,7 @@ export const Star = ({ item, withLink, withImage, ...props }: SpecificProps<Star
         return (
             <ItemPreview
                 {...props}
-                title={item.light_curves[0]?.name}
+                title={Value.Star.name(item)}
                 subtitle={(
                     <Colored color={spectralClassColor.default}>
                         {strings.unknownType + ' ' + strings.unknownSize.toLowerCase()}
@@ -167,7 +167,7 @@ export const Planet = ({ item, withLink, withImage, ...props }: SpecificProps<Pl
     return (
         <ItemPreview
             {...props}
-            title={Value.Star.name(item as any)}
+            title={Value.Planet.prop(item, 'name')}
             subtitle={strings.types[type] || strings.unknownType}
             image={`Database/Planet/${pascalCase(type || 'unknown')}.png`}
             large={false} />

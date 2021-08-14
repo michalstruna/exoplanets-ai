@@ -30,7 +30,7 @@ def create_app(config_name=None):
         db.drop_database(app.config["DATABASE_NAME"])
 
     api.init_app(app, doc="/api-docs")
-    socketio = SocketIO(app, cors_allowed_origins="*")  # TODO: Allow only exoplanets-ai.
+    socketio = SocketIO(app, cors_allowed_origins="*")
     Sockets(socketio)
 
     return app, api, socketio

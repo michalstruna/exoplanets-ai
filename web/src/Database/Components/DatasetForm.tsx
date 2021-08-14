@@ -25,9 +25,8 @@ const Root = Styled.div`
 const datasetTypeToEntity: Record<DatasetType, string> = {
     [DatasetType.STAR_PROPERTIES]: 'stars',
     [DatasetType.TARGET_PIXEL]: 'tp',
-    [DatasetType.LIGHT_CURVE]: 'lc',
     [DatasetType.PLANET_PROPERTIES]: 'planets',
-    [DatasetType.RADIAL_VELOCITY]: 'rv'
+    [DatasetType.SYSTEM_NAMES]: 'system'
 }
 
 const defaultValues: DatasetNew = { fields: {}, item_getter: '', items_getter: '', name: '', type: DatasetType.STAR_PROPERTIES, priority: DatasetPriority.NORMAL }
@@ -42,7 +41,14 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
 
     const handleSubmit = async (values: DatasetNew, form: UseFormReturn<DatasetNew>) => {
         const { type, ...updateValues } = values
-        let action = await (dataset ? actions.updateDataset([dataset._id, updateValues]) : actions.addDataset(values))
+
+        for (const key in updateValues.fields) {
+            if (!updateValues.fields[key]) {
+                delete updateValues.fields[key]
+            }
+        }
+
+        let action = await (dataset ? actions.updateDataset([dataset._id, updateValues]) : actions.addDataset({ type, ...updateValues }))
 
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, { type: action.payload.message })
@@ -97,6 +103,7 @@ const DatasetForm = ({ dataset, ...props }: Props) => {
                             type={Field.Type.TEXT}
                             label={globalStrings[datasetTypeToEntity[datasetType]][camelCase(field)]} />
                     ))}
+                    {new Array(3 - Object.values(DatasetFields[datasetType]).length % 3).fill(null).map((_, i) => <div key={i} />)}
                 </FormGroup>
                 <SubmitButton />
             </Form>

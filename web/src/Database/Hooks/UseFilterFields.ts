@@ -53,11 +53,11 @@ const useFilterFields = (): TextEnumValue[] => {
                         ['density', Number, 'km/m^3'],
                         ['surface_temperature', Number, '°C'],
                         ['semi_major_axis', Number, 'au'],
-                        ['orbital_period', Number, 'd'],
+                        ['period', Number, 'd'],
                         ['transit_depth', Number],
                         ['life_conditions', Object.values(LifeType).map(value => ({ text: strings.planets.lifeConditionsTypes[value], value }))],
                         ['surface_gravity', Number, 'm/s^2'],
-                        ['orbital_velocity', Number, 'km/s'],
+                        ['velocity', Number, 'km/s'],
                     ], { namePrefix: 'planet_' })
                 ]
             case DbTable.STARS:
@@ -89,11 +89,11 @@ const useFilterFields = (): TextEnumValue[] => {
                     ['density', Number, 'km/m^3'],
                     ['surface_temperature', Number, '°C'],
                     ['semi_major_axis', Number, 'au'],
-                    ['orbital_period', Number, 'd'],
+                    ['period', Number, 'd'],
                     ['transit_depth', Number],
                     ['life_conditions', Object.values(LifeType).map(value => ({ text: strings.planets.lifeConditionsTypes[value], value }))],
                     ['surface_gravity', Number, 'm/s^2'],
-                    ['orbital_velocity', Number, 'km/s'],
+                    ['velocity', Number, 'km/s'],
                     ['distance', Number, 'ly'],
                     ['ra', Number],
                     ['dec', Number],

@@ -28,7 +28,7 @@ const GoogleLogin = ({ ...props }: Props) => {
     }
 
     const handleFail = (x: any) => {
-        console.log(222, x)
+
     }
 
     return (

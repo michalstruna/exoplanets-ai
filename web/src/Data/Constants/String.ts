@@ -74,9 +74,8 @@ const strings = {
         types: {
             [DatasetType.STAR_PROPERTIES]: { [CS]: 'Hvězdy', [EN]: 'Stars' },
             [DatasetType.PLANET_PROPERTIES]: { [CS]: 'Planety', [EN]: 'Planets' },
-            [DatasetType.LIGHT_CURVE]: { [CS]: 'Světelné křivky', [EN]: 'Light curves' },
             [DatasetType.TARGET_PIXEL]: 'Target pixel',
-            [DatasetType.RADIAL_VELOCITY]: { [CS]: 'Radiální rychlosti', [EN]: 'Radial velocity' }
+            [DatasetType.SYSTEM_NAMES]: { [CS]: 'Názvy systémů', [EN]: 'System names' }
         },
         priorities: {
             [DatasetPriority.LOWEST]: { [CS]: 'Nejnižší', [EN]: 'Lowest' },
@@ -191,6 +190,7 @@ const strings = {
     planets: {
         // Properties
         name: { [CS]: 'Název', [EN]: 'Name' },
+        hostname: 'Host',
         type: { [CS]: 'Typ', [EN]: 'Type' },
         diameter: { [CS]: 'Průměr', [EN]: 'Diatemer' },
         mass: { [CS]: 'Hmotnost', [EN]: 'Mass' },
@@ -199,18 +199,20 @@ const strings = {
         semiMajorAxis: { [CS]: 'Velká poloosa', [EN]: 'Semi-major axis' },
         transit: { [CS]: 'Tranzit', [EN]: 'Transit' },
         transitDepth: { [CS]: 'Hloubka transitu', [EN]: 'Transit depth' },
-        orbitalPeriod: { [CS]: 'Perioda', [EN]: 'Period' },
-        orbitalVelocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
+        period: { [CS]: 'Perioda', [EN]: 'Period' },
+        velocity: { [CS]: 'Rychlost', [EN]: 'Velocity' },
         lifeConditions: { [CS]: 'Život', [EN]: 'Life' },
         planet: { [CS]: 'Planeta', [EN]: 'Planet' },
         status: 'Status',
         eccentricity: { [CS]: 'Excentricita', [EN]: 'Eccentricity' },
+        inclination: { [CS]: 'Inklinace', [EN]: 'Inclination' },
         surfaceGravity: { [CS]: 'Gravitace', [EN]: 'Gravity' },
         dataset: { [CS]: 'Datasety', [EN]: 'Datasets' },
         ra: { [CS]: 'Rektascenze', [EN]: 'Right ascension' },
         dec: { [CS]: 'Deklinace', [EN]: 'Declination' },
         distance: { [CS]: 'Vzdálenost', [EN]: 'Distance' },
-        discovery: { [CS]: 'Objevení', [EN]: 'Discovery' },
+        discoveryDate: { [CS]: 'Objevení', [EN]: 'Discovery' },
+        discoveryAuthor: { [CS]: 'Autor', [EN]: 'Author' },
 
         unknownType: { [CS]: 'Neznámý typ', [EN]: 'Unknown type' },
 
@@ -247,16 +249,15 @@ const strings = {
         visualization: { [CS]: 'Vizualizace', [EN]: 'Visualization' },
         sizes: { [CS]: 'Velikosti', [EN]: 'Sizes' },
         distances: { [CS]: 'Vzdálenosti', [EN]: 'Distances' },
-        model: { [CS]: 'Interaktivní model', [EN]: 'Interactive model' },
         references: { [CS]: 'Reference', [EN]: 'References' },
-        activities: { [CS]: 'Aktivity', [EN]: 'Activities' },
         matter: { [CS]: 'Hmota', [EN]: 'Matter' },
         orbit: { [CS]: 'Dráha', [EN]: 'Orbit' },
         other: { [CS]: 'Ostatní', [EN]: 'Other' },
         localView: { [CS]: 'Lokální pohled', [EN]: 'Local view' },
         globalView: { [CS]: 'Globální pohled', [EN]: 'Global view' },
         nObservations: { [CS]: 'Počet pozorování', [EN]: 'Number of observations' },
-        length: { [CS]: 'Délka', [EN]: 'Length' }
+        length: { [CS]: 'Délka', [EN]: 'Length' },
+        ...new Array(6).fill(null).reduce((obj, _, i) => ({ ...obj, [`name${i + 1}`]: { [CS]: `Název ${i + 1}`, [EN]: `Name ${i + 1}` } }), {})
     },
 
     stats: {
