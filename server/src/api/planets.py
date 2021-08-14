@@ -119,7 +119,7 @@ class Transit(Resource):
     @api.ns.expect(transit_views)
     def post(self):
         views = request.get_json()
-        return Response.post(lambda: planet_service.is_planet(views["global_view"], views["local_view"]))
+        return Response.post(lambda: {"is_planet": planet_service.is_planet(views["global_view"], views["local_view"])})
 
 
 api.init(full_model=planet, new_model=planet_properties, service=planet_service, model_name="Planet", map_props=map_props)

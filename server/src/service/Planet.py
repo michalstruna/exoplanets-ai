@@ -225,4 +225,4 @@ class PlanetService(Service):
             lc = lc.reshape((*lc.shape, 1))
             return np.array([lc])
 
-        return NN.predict(NN.instance.TRANSIT, [to_cnn(gv), to_cnn(lv)]) > 0.5
+        return NN.predict(NN.instance.TRANSIT, [to_cnn(lv), to_cnn(gv)])[0] > 0.5

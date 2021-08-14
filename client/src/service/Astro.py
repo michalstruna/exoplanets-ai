@@ -86,8 +86,9 @@ class LcService:
 
     def is_planet(self, gv, lv):
         try:
-            views = {"local_view": list(lv.flux.value), "global_view": list(gv.flux.value)}
-            return requests.post(f"{Config.SERVER_URL}/api/planets/transit", views)
+            views = {"local_view": list(np.round(lv.flux.value, 5)), "global_view": list(np.round(gv.flux.value, 5))}
+            result = requests.post(f"{Config.SERVER_URL}/api/planets/transit", json=views)
+            return result.json()["is_planet"]
         except:
             return False
 
