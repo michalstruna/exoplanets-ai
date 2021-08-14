@@ -213,7 +213,7 @@ class StarService(Service):
             if cls is None or mag is None or bv is None:
                 return None
 
-            return LuminosityClass.values()[NN.predict_class(NN.instance.LUM_CLASS, [bv, star["absolute_magnitude"]])]
+            return LuminosityClass.values()[NN.predict_class(NN.instance.LUM_CLASS, np.array([bv, star["absolute_magnitude"]]))]
 
 
     def get_absolute_magnitude(self, star):
