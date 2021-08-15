@@ -1,7 +1,7 @@
 from astropy import units as u
 from astropy import constants as c
 import math
-from numpy.core.numeric import full
+import numpy as np
 
 from pymongo.operations import UpdateOne
 
@@ -10,6 +10,7 @@ from .Base import Service
 from service.Star import StarService
 import db
 from utils.native import Dict
+from service.AI import NN
 
 class PlanetService(Service):
 
@@ -217,3 +218,11 @@ class PlanetService(Service):
                     result[prop].append(planet[prop])
             
         return result
+
+    def is_planet(self, gv, lv):
+        def to_cnn(lc):
+            lc = np.array(lc)
+            lc = lc.reshape((*lc.shape, 1))
+            return np.array([lc])
+
+        return NN.predict(NN.instance.TRANSIT, [to_cnn(lv), to_cnn(gv)])[0] > 0.5

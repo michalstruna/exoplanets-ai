@@ -1,7 +1,7 @@
 from mongoengine.errors import ValidationError, NotUniqueError, DoesNotExist
 from bson.errors import InvalidId
 from flask_restx.reqparse import RequestParser
-from flask_restx import Namespace, Resource, fields, abort, resource
+from flask_restx import Namespace, Resource, fields, abort
 from flask import request
 from flask_restx._http import HTTPStatus
 from flask_jwt_extended import jwt_required

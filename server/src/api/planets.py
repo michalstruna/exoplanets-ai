@@ -1,9 +1,11 @@
 from flask_restx import fields, Resource
-from service.Stats import GlobalStatsService
+from flask_restx._http import HTTPStatus
+from flask import request
 
-from utils.http import Api
+from utils.http import Api, Response
 from service.Planet import PlanetService
 from constants.Planet import PlanetType, PlanetStatus
+from service.Stats import GlobalStatsService
 
 
 def map_props(prop):
@@ -78,6 +80,15 @@ planet_ranks = api.ns.model("PlanetRanks", {
     "latest": fields.List(fields.Nested(ranked_planet))
 })
 
+transit_views = api.ns.model("TransitViews", {
+    "local_view": fields.List(fields.Float(required=True)),
+    "global_view": fields.List(fields.Float(required=True))
+})
+
+transit_classification = api.ns.model("TransitClassification", {
+    "is_planet": fields.Boolean(required=True)
+})
+
 planet_service = PlanetService()
 stats_service = GlobalStatsService()
 
@@ -100,6 +111,15 @@ class PlanetRanks(Resource):
         return stats_service.get_planet_ranks()
 
 
+@api.ns.route("/transit")
+class Transit(Resource):
+
+    @api.ns.marshal_with(transit_classification, description="Transit classification.")
+    @api.ns.response(HTTPStatus.BAD_REQUEST, f"Transit view is invalid.")
+    @api.ns.expect(transit_views)
+    def post(self):
+        views = request.get_json()
+        return Response.post(lambda: {"is_planet": planet_service.is_planet(views["global_view"], views["local_view"])})
 
 
 api.init(full_model=planet, new_model=planet_properties, service=planet_service, model_name="Planet", map_props=map_props)

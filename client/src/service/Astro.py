@@ -1,7 +1,8 @@
 import lightkurve as lk
 import numpy as np
-import os
-from tensorflow.keras.models import load_model
+import requests
+
+from constants import Config
 
 class LcService:
 
@@ -81,19 +82,13 @@ class LcService:
 
         return lc
 
-    def _replace_nans2(self, lc):
-        median = np.nanmedian(lc.flux.value)
-        np.nan_to_num(lc.flux.value, copy=False, nan=median, posinf=median, neginf=median)
-        np.nan_to_num(lc.flux_err.value, copy=False, nan=0, posinf=0, neginf=0)
-        return lc
-
     def is_planet(self, gv, lv):
-        model = load_model(os.path.join(os.path.dirname(__file__), "../data/transit.h5"))
-        return model.predict([self._to_cnn(lv), self._to_cnn(gv)]) > 0.5
-
-    def _to_cnn(self, lc):
-        flux = lc.flux.reshape((*lc.flux.shape, 1))
-        return np.array([flux])
+        try:
+            views = {"local_view": list(np.round(lv.flux.value, 5)), "global_view": list(np.round(gv.flux.value, 5))}
+            result = requests.post(f"{Config.SERVER_URL}/api/planets/transit", json=views)
+            return result.json()["is_planet"]
+        except:
+            return False
 
     def shorten(self, lc, days):
         return lc[lc.time - lc.time[0] < days].remove_nans()
