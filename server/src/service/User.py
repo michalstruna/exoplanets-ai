@@ -121,4 +121,10 @@ class UserService(Service):
 
         return super().update(id, item, with_return)
 
+    def forgotten_password(self, email):
+        pass
+
+    def reset_password(self, password, token):
+        pass
+
 
