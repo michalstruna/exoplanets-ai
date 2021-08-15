@@ -1,7 +1,5 @@
 import lightkurve as lk
 import numpy as np
-import os
-from tensorflow.keras.models import load_model
 import requests
 
 from constants import Config
@@ -91,10 +89,6 @@ class LcService:
             return result.json()["is_planet"]
         except:
             return False
-
-    def _to_cnn(self, lc):
-        flux = lc.flux.reshape((*lc.flux.shape, 1))
-        return np.array([flux])
 
     def shorten(self, lc, days):
         return lc[lc.time - lc.time[0] < days].remove_nans()
