@@ -204,6 +204,8 @@ class StarService(Service):
 
             return -3.684 * np.log10(t) + 14.551 if t < 9641 else 0.344 * np.log10(t) ** 2 - 3.402 * np.log10(t) + 8.037
 
+    LUM_CLASS_VALS = LuminosityClass.values()
+
     def get_luminosity_class(self, star):
         if Dict.is_set(star, "type"):
             bv = self.get_bv_index(star)
@@ -213,7 +215,7 @@ class StarService(Service):
             if cls is None or mag is None or bv is None:
                 return None
 
-            return LuminosityClass.values()[NN.predict_class(NN.instance.LUM_CLASS, np.array([bv, star["absolute_magnitude"]]))]
+            return StarService.LUM_CLASS_VALS[NN.predict_class(NN.instance.LUM_CLASS, np.array([[bv, star["absolute_magnitude"]]]))]
 
 
     def get_absolute_magnitude(self, star):

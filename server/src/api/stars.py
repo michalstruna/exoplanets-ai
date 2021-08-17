@@ -33,6 +33,9 @@ def map_props(prop):
         if prop == "name":
             return [f"properties.{prop}", f"light_curves.{prop}", f"aliases.{prop}"], str
 
+        if prop == "planets":
+            return "n_planets", float
+
         if prop in ["type", "dataset"]:
             return f"properties.{prop}", str
 

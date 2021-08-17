@@ -4,7 +4,7 @@ import re
 import numpy as np
 from service.Planet import PlanetService
 
-from utils.native import Dict
+from utils.native import Dict, Func
 from .Base import Service
 from .Star import StarService
 from constants.Dataset import DatasetType, DatasetFields
@@ -26,18 +26,27 @@ class DatasetService(Service):
         self.message_service = MessageService()
 
     @staticmethod
-    def get_unique_fields(type):
+    def get_unique_fields(type, items):
+        result = ["name"]
+
         if type == DatasetType.PLANET_PROPERTIES.value:
-            return ["hostname", "name"]
+            result = ["hostname", "name"]
+        elif type == DatasetType.SYSTEM_NAMES.value:
+            result = list(map(lambda i: f"name{i + 1}", range(6)))
 
-        return ["name"]
+        return list(filter(lambda col: col in items, result))
 
+    @Func.exception
     def add(self, dataset):
         stats, global_stats = {"time": time.now()}, {}
         items = pd.read_csv(dataset["items_getter"])
         self.update_meta(dataset)
+
+        if dataset["type"] == DatasetType.SYSTEM_NAMES.name:
+            dataset["fields"] = Dict.exclude_keys(dataset["fields"], "name")
+
         items = self.standardize_dataset(dataset, items)
-        items = items.where(pd.notnull(items), None).drop_duplicates(subset=self.get_unique_fields(dataset["type"]))
+        items = items.where(pd.notnull(items), None).drop_duplicates(subset=self.get_unique_fields(dataset["type"], items))
 
         if "name" in items:
             dataset["items"] = items["name"].tolist()
@@ -67,6 +76,9 @@ class DatasetService(Service):
         self.message_service.add({"text": dataset["name"], "tag": MessageTag.NEW_DATASET.value})
 
         self.star_service.delete_empty()
+
+        if dataset["type"] == DatasetType.PLANET_PROPERTIES.value:
+            self.stats_service.update_planets()
 
         return result
 

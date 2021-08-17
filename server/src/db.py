@@ -329,7 +329,7 @@ star_dao = Dao(Star, [
         {"$size": {"$ifNull": ["$properties", []]}},
         {"$size": {"$ifNull": ["$light_curves", []]}},
         {"$size": {"$ifNull": ["$names", []]}}
-    ]}}}
+    ]}, "n_planets": {"$size": {"$ifNull": ["$planets", []]}}}}
 ])
 
 
