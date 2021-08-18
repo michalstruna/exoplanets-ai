@@ -112,7 +112,7 @@ V~projektu jsou využity některé techniky spadající pod umělou inteligenci,
 
 \section{Hledání exoplanet}
 
-Pouhým zkoumáním planet v~naší sluneční soustavě jsme omezeni na velice specifické podmínky existující v~okolí našeho Slunce. Pro hlubší pochopení fungování planetárních systémů je nutné rozšířit oblast zájmu i~na planety v~okolí jiných hvězd~--~tzv. exoplanety. Je možno se tak přiblížit odpovědím na otázky jako „Jak vzácné jsou podmínky pro život ve vesmíru?“ nebo „Jak vznikla a~jak se vyvíjela naše planeta?“~\cite{exoplanets}
+Pouhým zkoumáním planet v~naší sluneční soustavě jsme omezeni na velice specifické podmínky existující v~okolí našeho Slunce. Pro hlubší pochopení fungování planetárních systémů je nutné rozšířit oblast zájmu i~na planety v~okolí jiných hvězd~--~tzv. exoplanety. Je tak možno se přiblížit odpovědím na otázky jako „Jak vzácné jsou podmínky pro život ve vesmíru?“ nebo „Jak vznikla a~jak se vyvíjela naše planeta?“~\cite{exoplanets}
 
 Na počátku 90. let minulého století byla objevena první exoplaneta v~okolí pulsaru a~v~roce 1995 první exoplaneta v~okolí hvězdy podobné Slunci. Od té doby frekvence objevů planet v~průměru neustále stoupá.~\cite{exoplanets,nasadata}
 
@@ -193,7 +193,7 @@ TPF obsahuje část oblohy o velikosti několika pixelů, na které se v původn
 
 \subsubsection{Světelná křivka hvězdy}
 
-Po složení všech TPF do časové řady a~vypočítání jejich jasu dostaneme světelnou křivku. Na obrázku~5 je světelná křivka hvězdy Kepler-13 očištěná od dlouhodobého trendu, šumu a~extrémních hodnot. Křivka vykazuje velice výraznou periodickou složku s~periodou 1,763~dne. Ve většině případů ale vliv planety není takto výrazný a~detekovat planetu je obtížnější.
+Po složení všech TPF do časové řady a~vypočítání jejich jasu vznikne světelná křivka. Na obrázku~5 je světelná křivka hvězdy Kepler-13 očištěná od dlouhodobého trendu, šumu a~extrémních hodnot. Křivka vykazuje velice výraznou periodickou složku s~periodou 1,763~dne. Ve většině případů ale vliv planety není takto výrazný a~detekovat planetu je obtížnější.
 
 \img[1]{Světelná křivka soustavy Kepler-13}{img/light_curve.png}
 \data{1}{nasadata}
@@ -280,13 +280,13 @@ Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ so
 
 \subsubsection{Výpočet vlastností planety}
 
-Velkou poloosu dráhy planety lze vypočítat, pokud známe hmotnost hvězdy a periodu oběhu z~třetího Keplerova zákona.~\cite{transitprops}
+Velkou poloosu dráhy planety lze vypočítat s~využitím hmotnosti hvězdy a~periodu oběhu z~třetího Keplerova zákona.~\cite{transitprops}
 
 \formula{Výpočet velké poloosy dráhy planety}{a = \sqrt[3]{\frac{GMP^2}{4\pi^2}}}{
 \begin{tabular}{llll}a = velká poloosa & G = gravitační konstanta & M = hmotnost hvězdy & P = perioda oběhu planety\end{tabular}
 }
 
-Ze světelné křivky a~poloměru hvězdy lze vypočítat poloměr tranzitující planety po vyjádření z~následující rovnice~\cite{transit,transitprops}:
+Ze světelné křivky a~poloměru hvězdy je možno vypočítat poloměr tranzitující planety po vyjádření z~následující rovnice~\cite{transit,transitprops}:
 
 \formula{Výpočet poloměru planety} {\frac{r^2}{R^2} = \frac{\Delta F}{F}}{
 \begin{tabular}{llll}
@@ -294,7 +294,7 @@ Ze světelné křivky a~poloměru hvězdy lze vypočítat poloměr tranzitujíc�
 \end{tabular}
 }
 
-Dále je možno odhadnout i~průměrnou rychlost pohybu planety po oběžné dráze. Skutečná průměrná rychlost však může být jiná, protože se nepočítá s excentricitou dráhy~\cite{transitprops}:
+Dále lze odhadnout i~průměrnou rychlost pohybu planety po oběžné dráze. Skutečná průměrná rychlost však může být jiná, protože se nepočítá s excentricitou dráhy~\cite{transitprops}:
 
 \formula{Odhad průměrné rychlosti oběhu planety}{v \approx \frac{2\pi a}{T}}{
 \begin{tabular}{lll}
@@ -314,7 +314,7 @@ Další z~důležitých charakteristik orbity je inklinace (sklon), která nám 
 
 Tranzitní metoda nenabízí analytický způsob výpočtu hmotnosti exoplanety. Na základě již známých dat lze pozorovat korelaci mezi různými veličinami. Např. čím je planeta větší, tím pravděpodobněji bude i~hmotnější. Není to však pravidlem. Jistější je spoléhat se na korelaci mezi více veličinami. Nalézt vztahy ve vícerozměrných datech však nemusí být vždy jednoduché. A~zde nachází uplatnění umělá neuronová síť, která je mimo jiné určena pro hledání právě takovýchto vztahů.~\cite{nnmass}
 
-Vše, co potřebujeme, je dostatečně velký dataset s~planetami, u~kterých již známe všechny potřebné veličiny. Na těchto datech proběhne trénování neuronové sítě, která se naučí hustotu rozdělení pravděpodobností hodnot výše zmíněných veličin. S~takto naučenou sítí lze dále provádět 2~typy úloh:
+Vše, co je třeba, je dostatečně velký dataset s~planetami, u~kterých jsou známy všechny potřebné veličiny. Na těchto datech proběhne trénování neuronové sítě, která se naučí hustotu rozdělení pravděpodobností hodnot výše zmíněných veličin. S~takto naučenou sítí lze dále provádět 2~typy úloh:
 
 \begin{itemize}
 \item Vygenerovat novou „umělou“ planetu, jejíž vlastnosti jsou realistické (odpovídají náhodným rozdělením planet v~trénovací množině),
@@ -431,18 +431,18 @@ Největším problémem je zpravidla vliv atmosféry~--~chvění obrazu v~důsle
 \vspace{-10pt}
 \subsection{Gravitační mikročočky}
 
-Světlo má obvykle tendenci se pohybovat prázdným prostorem po přímé trajektorii. Avšak dle obecné teorie relativity, hmotná tělesa zakřivují časoprostor kolem sebe. V~blízkosti takových těles tak tuto přímou trajektorii vnímáme jako zakřivenou.~\cite{methods}
+Světlo má obvykle tendenci se pohybovat prázdným prostorem po přímé trajektorii. Avšak dle obecné teorie relativity, hmotná tělesa zakřivují časoprostor kolem sebe. V~blízkosti takových těles je tato přímá trajektorie zakřivená.~\cite{methods}
 
 \img[2]{Princip gravitační čočky}{img/lens.png}
 
 {\setstretch{0.8}\footnotetext[2]{Vytvořeno autorem, fotografie gravitační čočky převzata od NASA (\url{https://apod.nasa.gov/apod/image/1112/lensshoe_hubble_3235.jpg}), oříznuto a~zdeformováno}}
 
-V~případě, kdy se nějaké hmotné těleso (např. galaxie) nachází mezi pozorovatelem a~zdrojem světla (např. jinou galaxií), mluvíme o~tzv. gravitační čočce~--~zdroj světla bude viděn vícekrát na různých místech, nebo bude naopak zdeformován.~\cite{methods}
+V~případě, kdy se nějaké hmotné těleso (např. galaxie) nachází mezi pozorovatelem a~zdrojem světla (např. jinou galaxií), jedná se o~tzv. gravitační čočce~--~zdroj světla bude viděn vícekrát na různých místech, nebo bude naopak zdeformován.~\cite{methods}
 
 \img[1]{Ilustrace gravitační mikročočky OGLE 2003-BLG-235}{img/lens_plot.png}
 \data{1}{nasadata}
 
-Pokud je čočkujícím tělesem pouze hvězda, jedná se o~gravitační mikročočku. V~tomto případě dochází často ke splynutí čočky a~skrytého tělesa do jednoho útvaru se zvýšeným jasem. A~zde nachází uplatnění metoda pro hledání exoplanet. Za předpokladu, že čočkujícím tělesem je hvězda s~obíhající exoplanetou, budeme pozorovat pozvolné zvyšování jasu způsobené hvězdou a~zároveň v~nějakém krátkém časovém intervalu strmý nárůst jasu způsobený exoplanetou.~\cite{methods}
+Pokud je čočkujícím tělesem pouze hvězda, jedná se o~gravitační mikročočku. V~tomto případě dochází často ke splynutí čočky a~skrytého tělesa do jednoho útvaru se zvýšeným jasem. A~zde nachází uplatnění metoda pro hledání exoplanet. Za předpokladu, že čočkujícím tělesem je hvězda s~obíhající exoplanetou, lze pozorovat pozvolné zvyšování jasu způsobené hvězdou a~zároveň v~nějakém krátkém časovém intervalu strmý nárůst jasu způsobený exoplanetou.~\cite{methods}
 
 \subsection{Časování pulsarů}
 
@@ -477,7 +477,7 @@ Nechť $p = \{a, e, i, \Omega, \omega, M, m\}$ je uspořádaná množina obsahuj
 
 \formula{Funkce vyjadřující přesnost modelu vůči realitě při počítání TTV}{F = \left[\sum_{i = 1}^N(t_{obs, i} - t_{com, i})^2\right]^{-1}\vspace{5pt}}{}
 
-Jinými slovy, hledáme, jaké parametry planet a~hvězdy povedou k~nejmenšímu rozdílu mezi napozorovanými a~vypočítanými časy tranzitů planety. Čím vyšší je výsledek této funkce, tím přesnější řešení jsme nalezli. Optimální řešení by znamenalo, že jsme zvolili $p_t$, $p_p$ a~$M_s$ naprosto shodné s~realitou a~platilo by, že $F\to\infty$.
+Jinými slovy, hledáme, jaké parametry planet a~hvězdy povedou k~nejmenšímu rozdílu mezi napozorovanými a~vypočítanými časy tranzitů planety. Čím vyšší je výsledek této funkce, o~tím přesnější řešení se jedná. Optimální řešení by znamenalo, že jsme zvolili $p_t$, $p_p$ a~$M_s$ naprosto shodné s~realitou a~platilo by, že $F\to\infty$.
 
 Kvůli velkému množství vícerozměrných parametrů je nutné pro tento problém použít stochastický optimalizační algoritmus, jenž sice nezajistí přesné analytické řešení, avšak i~přesto umožní nalézt řešení velice blízké tomu optimálnímu. Jedním z~takových algoritmů je genetický algoritmus blíže popsaný v~kapitole 3.1.~\cite{ttv}
 
@@ -492,9 +492,9 @@ Jedince definujeme jako $x = \{p_t, p_p, M_s\}$, přičemž první generaci $K$ 
 \end{tabular}
 }
 
-Kde $r_i = (x_i, y_i, z_i)$, jsme schopni pomocí fitness funkce vypočítat kvalitu každého z~jedinců v~populaci. Následně náhodně, avšak v~souladu s~přirozeným výběrem s~přihlédnutím na fitness vybereme dvojici jedinců, na něž bude aplikována operace křížení, jejímž výsledkem budou 2 potomci.~\cite{ttv}
+Kde $r_i = (x_i, y_i, z_i)$, lze pomocí fitness funkce vypočítat kvalitu každého z~jedinců v~populaci. Následně náhodně, avšak v~souladu s~přirozeným výběrem s~přihlédnutím na fitness vybereme dvojici jedinců, na něž bude aplikována operace křížení, jejímž výsledkem budou 2 potomci.~\cite{ttv}
 
-Tímto způsobem pokračujeme dále, abychom získali populaci potomků, kteří také mohou mít nenulovou pravděpodobnost mutace. Z~populace rodičů a~potomků vhodně vybereme $K$ jedinců, kteří se stanou 2.~generací. Běh algoritmu bude pokračovat dokud nejlepší jedinec poslední generace nebude představovat dostatečně dobré řešení TTV.
+Tímto způsobem se pokračuje dále pro získání celé populace potomků, kteří navíc mohou mít nenulovou pravděpodobnost mutace. Z~populace rodičů a~potomků vhodně vybereme $K$ jedinců, kteří se stanou 2.~generací. Běh algoritmu bude pokračovat dokud nejlepší jedinec poslední generace nebude představovat dostatečně dobré řešení TTV.
 
 \img[1]{Princip časování tranzitů}{img/illustration_ttv.pdf}
 \drawgimp
@@ -546,7 +546,7 @@ Jednotlivé neurony se umisťují do vrstev a~vrstvy pak tvoří neuronovou sí�
 
 \subsubsection{Vstupy neuronu}
 
-Každý neuron může mít jeden nebo více vstupů. I~když vstupy nemusí být nutně číselné, my to v~této práci budeme předpokládat. Vstupy mohou být dvojího druhu:
+Každý neuron může mít jeden nebo více vstupů. I~když vstupy nemusí být nutně číselné, v~této práci to bude předpokládáno. Vstupy mohou být dvojího druhu:
 
 \begin{itemize}
 \item Výstup jiného neuronu,
@@ -650,7 +650,7 @@ Zásadní myšlenkou počítačového vidění je nesnažit se rozpoznávat cel�
 \img[2]{Vztah mezi počítačovým viděním, strojovým učením a~konvoluční sítí}{img/vision.png}
 \draw[2]
 
-My se zde budeme zabývat pouze konvoluční neuronovou sítí (CNN). Tu lze chápat jako klasickou FFNN, jejíž vstupy jsou ovšem nejdříve modifikovány tak, aby z~nich byly vyextrahovány výše zmíněné vlastnosti. Tato extrakce je prováděna pomocí konvoluční vrstvy, jejíž způsob fungování je detailněji popsán v~kapitole 2.3.2.
+Zde bude probrána pouze konvoluční neuronová síť (CNN). Tu lze chápat jako klasickou FFNN, jejíž vstupy jsou ovšem nejdříve modifikovány tak, aby z~nich byly vyextrahovány výše zmíněné vlastnosti. Tato extrakce je prováděna pomocí konvoluční vrstvy, jejíž způsob fungování je detailněji popsán v~kapitole 2.3.2.
 
 Dále je třeba brát v~úvahu velikost obrázku. Full HD obrázek (1~920~*~1~080) se skládá z~více jak 2~milionů pixelů. V~případě RGB obrázku se množství informací zvýší až na 6~milionů (3~složky pro každý pixel). Posílat takové množství hodnot do FFNN, která se skládá z~plně propojených vrstev, kde jsou neurony v sousedních vrstvách propojeny způsobem „každý z~každým“, by bylo problematické. Z~tohoto důvodu existuje tzv. pooling vrstva popsaná v~kapitole 2.3.3, která umožňuje zmenšit velikost vstupu a~přitom zachovat vzory charakteristické pro vstup.
 
@@ -734,7 +734,7 @@ Vrstva Max-Pooling si klade za cíl zmenšit velikost vstupu a~zároveň zachova
 \img[1]{Příklad operace Max-Pooling}{img/max_pooling}
 \draw
 
-Na obrázku 36 je ukázána aplikace operace Max-Pooling na vstup, který byl výstupem v~minulé kapitole~--~\textit{feature map} ukazující umístění diagonál v~původním obrázku. Jak je vidět, velikost struktury se zmenšila na čtvrtinu, a~přesto v~ní zůstaly všechny důležité informace. V~pravém dolním i~horním rohu máme stále vysoké číselné hodnoty indikující přítomnost diagonály.
+Na obrázku 36 je ukázána aplikace operace Max-Pooling na vstup, který byl výstupem v~minulé kapitole~--~\textit{feature map} ukazující umístění diagonál v~původním obrázku. Jak je vidět, velikost struktury se zmenšila na čtvrtinu, a~přesto v~ní zůstaly všechny důležité informace. V~pravém dolním i~horním rohu jsou stále vysoké číselné hodnoty indikující přítomnost diagonály.
 
 {
 \tab[2]{Parametry vrstvy Max-Pooling}{
@@ -891,20 +891,20 @@ Základem tohoto algoritmu je populace jedinců. Každý jedinec v~populaci pře
 \img[1]{Někteří z~vygenerovaných jedinců GA pro TSP}{img/tsp_init.pdf}
 \draw
 
-Na počátku běhu algoritmu dojde k~náhodnému vygenerování K~jedinců~--~ti budou tvořit populaci první generace. Počet jedinců K~v populaci volíme na základě složitosti řešeného problému. Čím vyšší je K, tím déle bude zpravidla běh algoritmu trvat, avšak tím slabilnější bude a~tím spíše najde lepší řešení.~\cite{ttv, tsp}
+Na počátku běhu algoritmu dojde k~náhodnému vygenerování K~jedinců~--~ti budou tvořit populaci první generace. Počet jedinců K~v populaci je volen na základě složitosti řešeného problému. Čím vyšší je K, tím déle bude zpravidla běh algoritmu trvat, avšak tím slabilnější bude a~tím spíše najde lepší řešení.~\cite{ttv, tsp}
 
 Přestože každý z~jedinců představuje potenciální řešení problému, nejspíše žádné z~nich nebude dostatečně dobré, protože všechna byla pouze vygenerována náhodně. Na obrázku 41 jsou 3~z~vygenerovaných jedinců, kteří v~řešeném TSP urazí 13,1~km, 12,6~km a~12,5~km, což je pro daný počet měst poměrně hodně.
 
 
 \subsubsection{Selekce}
 
-Přirozený výběr je založen na skutečnosti, že úspěšnější (silnější) jedinci mají vyšší pravděpodobnost předat své geny a~rozmnožit se. Abychom tento koncept mohli napodobit i~v~genetickém algoritmu, potřebujeme definovat funkci $F$, která dokáže posoudit kvalitu jedince~--~tzv. fitness.~\cite{tsp}
+Přirozený výběr je založen na skutečnosti, že úspěšnější (silnější) jedinci mají vyšší pravděpodobnost předat své geny a~rozmnožit se. Pro napodobení tohoto konceptu v~genetickém algoritmu je třeba definovat funkci $F$, která dokáže posoudit kvalitu jedince~--~tzv. fitness.~\cite{tsp}
 
 Podoba této funkce je silně závislá na řešeném problému. V~případě TSP jí může být např. převrácená hodnota délky cesty, kterou jedinec urazí. Čím kratší cesta, tím vyšší fitness jedince a~tím vyšší pravděpodobnost na předání genů do další generace.
 
 \subsubsection{Křížení}
 
-Poté, co jsme vybrali jedince k~předání genů (rodiče) může proběhnout jejich zkřížení. To spočívá v~prostém zkombinování genů obou rodičů. Způsob tohoto kombinování opět závisí na typu řešeného problému. Je třeba zajistit, aby výsledkem křížení byl vždy platný jedinec, popř. neplatné jedince dodatečně opravit.~\cite{tsp}
+Poté, co byli vybráni jedinci k~předání genů (rodiče) může proběhnout jejich zkřížení. To spočívá v~prostém zkombinování genů obou rodičů. Způsob tohoto kombinování opět závisí na typu řešeného problému. Je třeba zajistit, aby výsledkem křížení byl vždy platný jedinec, popř. neplatné jedince dodatečně opravit.~\cite{tsp}
 
 \img[1]{Příklad křížení jedinců GA pro TSP}{img/crossover.pdf}
 \draw
