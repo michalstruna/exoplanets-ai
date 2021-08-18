@@ -28,7 +28,7 @@
 \def\suffixZadani{.png}		% doplní se ke každému jménu souboru zadání
 \def\datumOdevzdaniPrace{9.\,5.\,2021}
 
-\long\def\textPodekovani{Rád bych tímto poděkoval vedoucí této práce, Ing. Monice Borkovcové Ph.D., za přínosné rady při vypracovávání a~snahu dovést tuto práci do úspěšného konce. Velký dík patří i~mé rodině, která mě už od dětství podporovala v~astronomii a~bez které bych se k~tomuto tématu nejspíš nedostal.
+\long\def\textPodekovani{Tímto děkuji vedoucí této práce, Ing. Monice Borkovcové Ph.D., za přínosné rady při vypracovávání, ochotu a~snahu dovést tuto práci do úspěšného konce. Velký dík patří i~mé rodině, která mě už od dětství podporovala v~astronomii a~bez které bych se k~tomuto tématu nejspíš nedostal.
 }
 
 
@@ -48,7 +48,7 @@ The diploma thesis deals in the theoretical part with individual methods of dete
 
 \begin{document}
 
-\deskpage
+%\deskpage
 \mainpage
 \assignment
 \statement
@@ -452,7 +452,7 @@ Vedle toho, pulsar podél své magnetické osy emituje silný elektromagnetický
 
 Pokud je v~těchto pulzech zpozorována nepravidelnost, může to znamenat, že pulsar mění svou vzdálenost od Země. Jinými slovy, stejně jako v~případě metody radiálních rychlostí, pulsar společně s~dalším tělesem (např. planetou) obíhá kolem společného těžiště.~\cite{methods}
 
-Nutno podotknout, že nás nezajímá rychlost pulzaru tak, jako u metody radiálních rychlostí. Nepravidelnosti pulzů jsou způsobeny pouze polohou pulsaru, nikoliv jeho rychlostí. Pulzy (elektromagnetické záření) se ve vakuu pohybují vždy konstantní rychlostí bez ohledu na rychlost pulzaru samotného (rychlosti se nesčítají).
+Nutno podotknout, že stěžejní veličinou není rychlost pulzaru tak, jako u metody radiálních rychlostí. Nepravidelnosti pulzů jsou způsobeny pouze polohou pulsaru, nikoliv jeho rychlostí. Pulzy (elektromagnetické záření) se ve vakuu pohybují vždy konstantní rychlostí bez ohledu na rychlost pulzaru samotného (rychlosti se nesčítají).
 
 \img[1]{Ilustrace pulsaru s obíhající planetou}{img/pulsar_timing.png}
 \drawgimp
@@ -861,7 +861,7 @@ Přičemž slabou umělou inteligenci lze dále dělit např. na:
 \item \textbf{Evoluční výpočty}~-~podoblast AI napodobující biologické procesy. Často se jedná o~metaheuristické optimalizační techniky, které kromě povahy řešeného problému nepotřebují žádné další informace a řešení (byť ne vždy optimální) najdou samy.~\cite{ai}
 
 \begin{itemize}
-\item \textbf{Evoluční algoritmy}~--~snaží o~napodobení evoluce a~vychází z pravidla přežití nejsilnějšího. Často se zde vyskytují pojmy jako generace, přirozený výběr, dědičnost nebo křížení. Spadá sem např. genetický algoritmus nebo algoritmus diferenciální evoluce.
+\item \textbf{Evoluční algoritmy}~--~snaží o~napodobení evoluce a~vychází z pravidla přežití nejsilnějšího (nejpřizpůsobivějšího). Často se zde vyskytují pojmy jako generace, přirozený výběr, dědičnost nebo křížení. Spadá sem např. genetický algoritmus nebo algoritmus diferenciální evoluce.
 
 \item \textbf{Inteligence hejna}~--~simulace sociální inteligence v~nějaké množině převážně jednoduchých a~decentralizovaných jedinců. Patří sem např. optimalizace hejnem částic vycházející z~chování hejna ptáků nebo optimalizace mravenčí kolonií, jež se inspirovala mravenci a~jejich komunikací pomocí feromonů.
 
@@ -869,7 +869,7 @@ Přičemž slabou umělou inteligenci lze dále dělit např. na:
 
 \item \textbf{Expertní systémy}~--~systémy řešící nenumerické problémy umožňující poskytovat expertní rady a~doporučení v~konkrétních situacích. K~tomu využívají bázi znalostí, v~níž mají uloženy všechny známé informace o~problému.
 
-\item \textbf{Fuzzy systémy}~--~systémy založené na fuzzy logice. Ta narozdíl od té výrokové nepracuje s~binárními hodnotami (pravda, nepravda), ale pravdivost tvrzení lze vyjádřit jakoukoliv hodnotou z~intervalu $\left<0; 1\right>$. Fuzzy (mlhavá, nejasná) není exaktní a~jednoznačná a~více se tak blíží té lidské.~\cite{ai}
+\item \textbf{Fuzzy systémy}~--~systémy založené na fuzzy logice. Ta narozdíl od té výrokové nepracuje s~binárními hodnotami (pravda, nepravda), ale pravdivost tvrzení lze vyjádřit jakoukoliv hodnotou z~intervalu $\left<0; 1\right>$. Fuzzy (mlhavá, nejasná) není exaktní a~jednoznačná a~více se tak blíží lidskému chápání světa.~\cite{ai}
 
 \end{itemize}
 
@@ -909,7 +909,7 @@ Poté, co byli vybráni jedinci k~předání genů (rodiče) může proběhnout 
 \img[1]{Příklad křížení jedinců GA pro TSP}{img/crossover.pdf}
 \draw
 
-Na obrázku 42 je uveden příklad křížení jedinců při řešení TSP. První způsob křížení vytvoří potomka tak, že první polovinu genů vezme z~prvního rodiče a~druhou polovinů genů z~druhého rodiče. Tímto způsobem však může vzniknout jedinec, který některá města navštíví vícekrát a~některá ani jednou. Ten však nepředstavuje platné řešení problému, protože TSP vyžaduje, aby všechna města byla navštívena.
+Na obrázku 42 je uveden příklad křížení jedinců při řešení TSP. První způsob křížení vytvoří potomka tak, že první polovinu genů vezme z~prvního rodiče a~druhou polovinů genů z~druhého rodiče. Tímto způsobem však může vzniknout jedinec, který některá města navštíví vícekrát a~jiná ani jednou. Ten však nepředstavuje platné řešení problému, protože TSP vyžaduje, aby všechna města byla navštívena.
 
 Druhý ze způsobů křížení vezme polovinu genů z~prvního rodiče a~k~nim připojí chybějící geny z~druhého rodiče. Tímto způsobem tak vznikne vždy platný potomek.
 
@@ -917,7 +917,7 @@ Křížení je opakováno dokud není vytvořeno K~potomků tvořících další
 
 \subsubsection{Mutace}
 
-Nyní, když máme další generaci jedinců, je vhodné zajistit vyšší rozmanitost populace. Toho lze docílit tak, že každý jedinec má určitou pravděpodobnost, že zmutuje~--~dojde k~náhodné modifikaci jeho genů.~\cite{tsp}
+Nyní, když existuje další generace jedinců, je vhodné zajistit vyšší rozmanitost populace. Toho lze docílit nenulovou šancí každého jedince pro mutaci~--~dojde k~náhodné modifikaci jeho genů.~\cite{tsp}
 
 \img[1]{Příklad mutace jedince GA pro TSP}{img/mutate.pdf}
 
@@ -1245,11 +1245,11 @@ Běžící aplikace je dostupná na adrese \url{https://exoplanets.now.sh}, doku
 	\end{tabular}
 }
 
-Po nainstalování závislostí je třeba přejít v~kořenovém adresáři do podadresáře \code{scripts} a~v~něm spustit soubor \code{build.sh} (Linux), popř. \code{build.bat} (Windows), čímž dojde k~sestavení serveru, webové i~klientské aplikace.
+Po nainstalování závislostí je nutno přejít v~kořenovém adresáři do podadresáře \code{scripts} a~v~něm spustit soubor \code{build.sh} (Linux), čímž dojde k~sestavení serveru, webové i~klientské aplikace. Pro sestavení na jiných operačních systémech lze manuálně použít analogické příkazy pro specifický OS, jako v uvedeném skriptu pro Linux.
 
 \lstinputlisting[caption={Sestavení a spuštění aplikace (Linux).}]{codes/build.txt}
 
-Sestavená klientská aplikace je v~adresáři \code{client/build}, webová aplikace v~\code{web/build}. Lze ji umístit na  vlastní webový server s~přístupovým bodem \code{index.html} nebo ji spustit v~předpřipraveném webovém serveru pomocí skriptu \code{run.sh}, resp. \code{run.bat}.
+Sestavená klientská aplikace je v~adresáři \code{client/build}, webová aplikace v~\code{web/build}. Lze ji umístit na  vlastní webový server s~přístupovým bodem \code{index.html} nebo ji spustit v~předpřipraveném webovém serveru pomocí skriptu \code{run.sh}.
 
 {
 \tab{Výchozí adresy komponent po spuštění}{
