@@ -71,7 +71,8 @@ planet = api.ns.model("Planet", {
 })
 
 ranked_planet = api.ns.inherit("RankedPlanet", planet, {
-    "value": fields.Float()
+    "value": fields.Float(),
+    "distance": fields.Float()
 })
 
 planet_ranks = api.ns.model("PlanetRanks", {

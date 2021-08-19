@@ -211,15 +211,20 @@ class DatasetService(Service):
 
         return super().update(id, item, with_return)
 
-    def delete(self, id):
+    def delete(self, id, with_planets=False):
         dataset = self.get_by_id(id)
         self.star_service.delete_array_items("properties", "dataset", dataset["name"])
         self.star_service.delete_array_items("light_curves", "dataset", dataset["name"])
         self.star_service.delete_array_items("aliases", "dataset", dataset["name"])
+
+        if with_planets:
+            self.star_service.delete_array_items("planets.$[].properties", "dataset", dataset["name"])
+            self.planet_service.delete_empty()
+
         self.star_service.delete_empty()
         return super().delete(id)
 
     def reset(self, id):
         dataset = self.get_by_id(id)
-        self.delete(id)  # TODO: Transaction?
+        self.delete(id, dataset["type"] == DatasetType.PLANET_PROPERTIES.value)  # TODO: Transaction?
         self.add(Dict.exclude_keys(dataset, "_id", "index"))
