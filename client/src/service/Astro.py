@@ -14,6 +14,8 @@ class LcService:
         try:
             return lk.search_targetpixelfile(star_name, mission=mission, exptime=exptime).download_all()
         except:
+            import traceback
+            traceback.print_exc()
             return None
 
     def get_tps_size(self, tps):

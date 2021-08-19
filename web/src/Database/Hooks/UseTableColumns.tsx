@@ -140,7 +140,7 @@ const UseTableColumns = (): Structure => {
                         {
                             columns: Col.list<PlanetData>([
                                 { name: 'type', format: (val, item) => <ItemImage image={`Database/Planet/${pascalCase(Value.Planet.prop(item, 'type') || 'Unknown')}.png`} />, width: '5rem', headerIcon: false },
-                                { name: 'name', format: (val, item) => <Detail pathname='/abc' title={Value.Planet.prop(item, 'name')} subtitle={strings.planets.types[Value.Planet.prop(item, 'type')] || strings.planets.unknownType} />, width: 1.5, headerIcon: false },
+                                { name: 'name', format: (val, item) => <Detail pathname='' title={Value.Planet.prop(item, 'name')} subtitle={strings.planets.types[Value.Planet.prop(item, 'type')] || strings.planets.unknownType} />, width: 1.5, headerIcon: false },
                                 { name: 'diameter', unit: '⊕', multi: 'properties' },
                                 { name: 'mass', unit: '⊕', multi: 'properties' },
                                 { name: 'density', unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/>, multi: 'properties' },
@@ -162,7 +162,7 @@ const UseTableColumns = (): Structure => {
                             ], {
                                 strings: planets,
                                 indexColumnName: 'index',
-                                renderRemove: item => <b>123456789</b>,
+                                //renderRemove: item => <b>123456789</b>,
                                 onRemove: () => null
                             }),
                             accessor: (star: StarData) => star.planets
@@ -222,8 +222,8 @@ const UseTableColumns = (): Structure => {
                     levels: [
                         {
                             columns: Col.list<PlanetData>([
-                                { name: 'type', format: (val, item) => <ItemImage image={`Database/Planet/${pascalCase(Value.Planet.prop(item, 'type') || 'Unknown')}.png`} />, width: '5rem', headerIcon: false },
-                                { name: 'name', format: (val, item) => <Detail pathname='/abc' title={Value.Planet.prop(item, 'name')} subtitle={strings.planets.types[Value.Planet.prop(item, 'type')] || strings.planets.unknownType} />, width: 1.5, headerIcon: false },
+                                { name: 'type', format: (val, item) => <ItemImage large={true} image={`Database/Planet/${pascalCase(Value.Planet.prop(item, 'type') || 'Unknown')}.png`} />, width: '5rem', headerIcon: false },
+                                { name: 'name', format: (val, item) => <Detail pathname='' title={Value.Planet.prop(item, 'name')} subtitle={strings.planets.types[Value.Planet.prop(item, 'type')] || strings.planets.unknownType} />, width: 1.5, headerIcon: false },
                                 { name: 'diameter', unit: '⊕', multi: 'properties' },
                                 { name: 'mass', unit: '⊕', multi: 'properties' },
                                 { name: 'density', unit: <Fraction top='kg' bottom={<>m<sup>3</sup></>}/>, multi: 'properties' },
@@ -243,7 +243,9 @@ const UseTableColumns = (): Structure => {
                                 { name: 'todo' },
                                 { name: 'dataset', format: (val, planet, i) => <IconText text={val} icon={`/img/Database/Dataset/${(planet as any).processed ? 'TargetPixel' : 'PlanetProperties'}.svg`} />, width: 1.5, multi: 'properties' }
                                 ], {
-                                strings: planets
+                                strings: planets,
+                                indexColumnName: 'index',
+                                onRemove: () => null
                             })
                         }
                     ],

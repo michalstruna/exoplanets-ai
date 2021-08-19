@@ -4,6 +4,7 @@ import Styled from 'styled-components'
 import { Color, size } from '../../Style'
 import { PlotStat } from '../types'
 import { Numbers } from '../../Native'
+import { Config } from '../../Async'
 
 type TickFormatter = (tick: string | number) => React.ReactNode
 
@@ -255,7 +256,7 @@ const ImagePlot = ({ data, x, y, overlay, ...props }: Props) => {
                                 {new Array(yTicks.length).fill(null).map((_, i) => <HLine key={i} />)}
                             </HGrid>
                         )}
-                        <Image src={`http://localhost:5000/public/stats/${data.image}?t=${new Date().getTime()}`} />
+                        <Image src={`${Config.serverUrl}/public/stats/${data.image}?t=${new Date().getTime()}`} />
                     </Plot>
                     {xAxis}
                 </Vertical>
