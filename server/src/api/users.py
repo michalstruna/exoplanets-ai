@@ -73,6 +73,15 @@ external_credentials = api.ns.model("ExternalCredentials", {
     "token": fields.String(required=True, max_length=200, description="Authentication token from external service like Facebook or Google.")
 })
 
+email_credentials = api.ns.model("EmailCredentials", {
+    "username": fields.String(required=True, max_length=200, description="Login username (probably email)."),
+})
+
+token_password_credentials = api.ns.model("TokenPasswordCredentials", {
+    "token": fields.String(required=True, description="Authentication token."),
+    "password": fields.String(required=True, max_length=200, description="New password of user.")
+})
+
 user_service = UserService()
 
 
@@ -95,6 +104,28 @@ class Login(Resource):
     @api.ns.expect(local_login_credentials)
     def post(self):
         return Response.get(lambda: user_service.local_login(request.get_json()))
+
+
+@api.ns.route("/password/forgotten")
+class ForgottenPassword(Resource):
+
+    @api.ns.response(HTTPStatus.NO_CONTENT, "Successfully sent reset password email (if exists).")
+    @api.ns.response(HTTPStatus.BAD_REQUEST, "Invalid email.")
+    @api.ns.expect(email_credentials)
+    def post(self):
+        return Response.post(lambda: user_service.forgotten_password(request.get_json()["email"]))
+
+
+@api.ns.route("/password/reset")
+class ResetPassword(Resource):
+
+    @api.ns.response(HTTPStatus.NO_CONTENT, "Successfully reset password.")
+    @api.ns.response(HTTPStatus.BAD_REQUEST, "Invalid password.")
+    @api.ns.response(HTTPStatus.UNAUTHORIZED, "Invalid token.")
+    @api.ns.expect(token_password_credentials)
+    def post(self):
+        data = request.get_json()
+        return Response.post(lambda: user_service.reset_password(data["password"], data["token"]))
 
 
 @api.ns.route("/login/facebook")

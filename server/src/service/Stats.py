@@ -38,7 +38,12 @@ class GlobalStatsService(Service):
         self.update_planet_ranks()
 
     def update_planet_plots(self):
-        props = self.planet_service.get_properties_list(["mass", "semi_major_axis", "type"], ["distance"])
+        props = {
+            **self.planet_service.get_properties_list(["mass"], [], ["semi_major_axis"]),
+            **self.planet_service.get_properties_list(["type"]),
+            **self.planet_service.get_properties_list([], ["distance"])
+        }
+
         sc, xmin1, xmax1, ymin1, ymax1 = self.plot_service.main_scatter(props["semi_major_axis"], props["mass"], return_range=True)
         self.file_service.save(sc, self.file_service.Type.STATS, "SmaxMass") 
 
@@ -87,15 +92,15 @@ class GlobalStatsService(Service):
         result = self.dataset_dao.aggregate([
             {"$match": {"type": {"$in": ["TARGET_PIXEL"]}}},
             {"$group": {"_id": "", "n_items": {"$sum": {"$size": "$items"}}, "size": {"$sum": "$size"}}},
-            {"$project": {"done": {"$subtract": [1, {"$divide": ["$n_items", "$size"]}]}}}
+            {"$project": {"done": {"$subtract": [1, {"$cond": [{"$eq": ["$size", 0]}, 0, {"$divide": ["$n_items", "$size"]}]}]}}}
         ])
 
         return result[0]["done"] * 100 if len(result) > 0 else 100
 
     def update_planet_ranks(self):
-        latest = self.get_planet_rank("distance")
-        similar = self.get_planet_rank("distance")
-        nearest = self.get_planet_rank("distance")
+        latest = self.get_planet_rank("$planets.properties.discovery.date")
+        similar = self.get_planet_rank({"$map": {"input": "$planets.properties", "in": {"$subtract": [1, '$$this.diameter']}}}, "min", {"properties.type": {"$in": [PlanetType.EARTH.value, PlanetType.SUPEREARTH.value, PlanetType.MERCURY.value]}})
+        nearest = self.get_planet_rank("$properties.distance")
 
         self.store_service.update(Store.PLANET_RANKS, {
             PlanetRanks.LATEST.value: latest,
@@ -103,11 +108,13 @@ class GlobalStatsService(Service):
             PlanetRanks.NEAREST.value: nearest
         })
 
-    def get_planet_rank(self, name):
+    def get_planet_rank(self, name, operation="first", filter={}):
         return self.star_dao.aggregate([
             {"$unwind": "$planets"},
-            {"$project": {"value": {"$first": f"$properties.{name}"}, "planets": 1}},
+            {"$project": {"value": {f"${operation}": name}, "planets": 1, "distance": {"$first": "$properties.distance"}}},
             {"$replaceRoot": {"newRoot": {"$mergeObjects": ["$$ROOT", "$planets"]}}},
             {"$project": {"planets": 0}},
-            {"$sort": {"value": 1}}
+            {'$match': {'value': {'$gt': 0}, **filter}},
+            {"$sort": {"value": 1}},
+            {"$limit": 6}
         ])

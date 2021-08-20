@@ -1,4 +1,5 @@
 import traceback
+
 class Func:
 
     @staticmethod
@@ -6,8 +7,9 @@ class Func:
         def wrapper(*args, **kwargs):
             try:
                 func(*args, **kwargs)
-            except:
+            except Exception as e:
                 traceback.print_exc()
+                raise e
 
         return wrapper
 

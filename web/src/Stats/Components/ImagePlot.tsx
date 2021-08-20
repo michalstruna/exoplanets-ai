@@ -4,6 +4,7 @@ import Styled from 'styled-components'
 import { Color, size } from '../../Style'
 import { PlotStat } from '../types'
 import { Numbers } from '../../Native'
+import { Config } from '../../Async'
 
 type TickFormatter = (tick: string | number) => React.ReactNode
 
@@ -199,8 +200,8 @@ const range = (min: number, max: number, count: number, log: boolean = false): n
 
 const ImagePlot = ({ data, x, y, overlay, ...props }: Props) => {
 
-    const xTicks = data.x.ticks || range(data.x.min!, data.x.max!, x?.nTicks ?? 8, data.x.log)
-    const yTicks = data.y.ticks || range(data.y.max!, data.y.min!, y?.nTicks ?? 6, data.y.log)
+    const xTicks = data.x.ticks && data.x.ticks.length ? data.x.ticks! : range(data.x.min!, data.x.max!, x?.nTicks ?? 8, data.x.log)
+    const yTicks = data.y.ticks && data.y.ticks.length ? data.y.ticks! : range(data.y.max!, data.y.min!, y?.nTicks ?? 6, data.y.log)
 
     if (x) {
         x.log = data.x.log
@@ -255,7 +256,7 @@ const ImagePlot = ({ data, x, y, overlay, ...props }: Props) => {
                                 {new Array(yTicks.length).fill(null).map((_, i) => <HLine key={i} />)}
                             </HGrid>
                         )}
-                        <Image src={`http://localhost:5000/public/stats/${data.image}?t=${new Date().getTime()}`} />
+                        <Image src={`${Config.serverUrl}/public/stats/${data.image}?t=${new Date().getTime()}`} />
                     </Plot>
                     {xAxis}
                 </Vertical>

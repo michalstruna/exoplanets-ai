@@ -17,8 +17,8 @@ export const push = (location: Target): void => {
  * Replace last URL by new URL in browser history.
  * @param location Target location.
  */
-export const replace = (location: Target): void => {
-    History.replace(merge(location))
+export const replace = (location: Target, partial = true): void => {
+    History.replace(partial ? merge(location) : location)
 }
 
 /**

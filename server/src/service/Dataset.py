@@ -15,6 +15,7 @@ from service.Message import MessageService
 from constants.Message import MessageTag
 
 FIELD_OPERATORS = "*\-+/"
+ONE_USE_DATASETS = [DatasetType.PLANET_PROPERTIES.value, DatasetType.STAR_PROPERTIES.value, DatasetType.SYSTEM_NAMES.value]
 
 class DatasetService(Service):
 
@@ -26,21 +27,29 @@ class DatasetService(Service):
         self.message_service = MessageService()
 
     @staticmethod
-    def get_unique_fields(type):
-        if type == DatasetType.PLANET_PROPERTIES.value:
-            return ["hostname", "name"]
+    def get_unique_fields(type, items):
+        result = ["name"]
 
-        return ["name"]
+        if type == DatasetType.PLANET_PROPERTIES.value:
+            result = ["hostname", "name"]
+        elif type == DatasetType.SYSTEM_NAMES.value:
+            result = list(map(lambda i: f"name{i + 1}", range(6)))
+
+        return list(filter(lambda col: col in items, result))
 
     def add(self, dataset):
         stats, global_stats = {"time": time.now()}, {}
         items = pd.read_csv(dataset["items_getter"])
         self.update_meta(dataset)
+
+        if dataset["type"] == DatasetType.SYSTEM_NAMES.name:
+            dataset["fields"] = Dict.exclude_keys(dataset["fields"], "name")
+
         items = self.standardize_dataset(dataset, items)
-        items = items.where(pd.notnull(items), None).drop_duplicates(subset=self.get_unique_fields(dataset["type"]))
+        items = items.where(pd.notnull(items), None).drop_duplicates(subset=self.get_unique_fields(dataset["type"], items))
 
         if "name" in items:
-            dataset["items"] = items["name"].tolist()
+            dataset["items"] = [] if dataset["type"] in ONE_USE_DATASETS else items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
             stats["data"], stats["items"] = items.memory_usage().sum(), len(items)
@@ -67,6 +76,9 @@ class DatasetService(Service):
         self.message_service.add({"text": dataset["name"], "tag": MessageTag.NEW_DATASET.value})
 
         self.star_service.delete_empty()
+
+        if dataset["type"] == DatasetType.PLANET_PROPERTIES.value:
+            self.stats_service.update_planets()
 
         return result
 
@@ -199,15 +211,20 @@ class DatasetService(Service):
 
         return super().update(id, item, with_return)
 
-    def delete(self, id):
+    def delete(self, id, with_planets=False):
         dataset = self.get_by_id(id)
         self.star_service.delete_array_items("properties", "dataset", dataset["name"])
         self.star_service.delete_array_items("light_curves", "dataset", dataset["name"])
         self.star_service.delete_array_items("aliases", "dataset", dataset["name"])
+
+        if with_planets:
+            self.star_service.delete_array_items("planets.$[].properties", "dataset", dataset["name"])
+            self.planet_service.delete_empty()
+
         self.star_service.delete_empty()
         return super().delete(id)
 
     def reset(self, id):
         dataset = self.get_by_id(id)
-        self.delete(id)  # TODO: Transaction?
+        self.delete(id, dataset["type"] == DatasetType.PLANET_PROPERTIES.value)  # TODO: Transaction?
         self.add(Dict.exclude_keys(dataset, "_id", "index"))

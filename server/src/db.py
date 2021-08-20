@@ -180,7 +180,7 @@ class BaseDocument(Document):
 class LogDocument(BaseDocument):
     meta = {"allow_inheritance": True, "abstract": True}
 
-    created = LongField(required=True)
+    created = LongField(required=True, default=time.now)
     modified = LongField(required=True)
 
 
@@ -260,7 +260,7 @@ class Transit(EmbeddedDocument):
 
 class Discovery(EmbeddedDocument):
     author = StringField()
-    date = LongField(required=True)
+    date = LongField(required=True, default=time.now)
 
 
 class Orbit(EmbeddedDocument):
@@ -272,7 +272,7 @@ class Orbit(EmbeddedDocument):
 
 
 class PlanetProperties(EmbeddedDocument):
-    name = StringField(required=True, max_length=50)
+    name = StringField(required=True, max_length=100)
     type = StringField(enum=PlanetType.values())
     diameter = FloatField(min_value=0)
     distance = FloatField(min_value=0)
@@ -329,7 +329,7 @@ star_dao = Dao(Star, [
         {"$size": {"$ifNull": ["$properties", []]}},
         {"$size": {"$ifNull": ["$light_curves", []]}},
         {"$size": {"$ifNull": ["$names", []]}}
-    ]}}}
+    ]}, "n_planets": {"$size": {"$ifNull": ["$planets", []]}}}}
 ])
 
 

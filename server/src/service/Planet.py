@@ -11,6 +11,7 @@ from service.Star import StarService
 import db
 from utils.native import Dict
 from service.AI import NN
+from utils.time import now
 
 class PlanetService(Service):
 
@@ -56,6 +57,9 @@ class PlanetService(Service):
 
         return db.star_dao.bulk(operations)
 
+    def delete_empty(self):
+        self.delete_array_items("planets", "properties", {"$size": 0})
+
     def complete_all(self, planets, from_flat=False, full=False):
         result = []
 
@@ -63,7 +67,7 @@ class PlanetService(Service):
             if from_flat:
                 orbit_keys = ["period", "semi_major_axis", "eccentricity", "inclination", "velocity"]
                 per, smax, ecc, inc, vel = Dict.vals(planet, orbit_keys, "", True)
-                planet = { **planet, "orbit": { "period": per, "semi_major_axis": smax, "eccentricity": ecc, "inclination": inc, "velocity": vel } }
+                planet = { **planet, "orbit": { "period": per, "semi_major_axis": smax, "eccentricity": ecc, "inclination": inc, "velocity": vel }, "discovery": {"date": now()} }
                 planet = Dict.exclude_keys(planet, *orbit_keys)
 
             pl = self.complete_planet(None, planet, full=full)
@@ -194,12 +198,16 @@ class PlanetService(Service):
 
         return LifeType.PROMISING.value
 
-    def get_properties_list(self, props, star_props=[]):
+    def get_properties_list(self, props=[], star_props=[], orbit_props=[]):
         projection = {}
         result = {}
 
         for prop in props:
             projection[prop] = f"$planets.properties.{prop}"
+            result[prop] = []
+
+        for prop in orbit_props:
+            projection[prop] = f"$planets.properties.orbit.{prop}"
             result[prop] = []
 
         for prop in star_props:
@@ -213,9 +221,11 @@ class PlanetService(Service):
         ])
 
         for planet in planets:
-            for prop in [*props, *star_props]:
-                if prop in planet:
-                    result[prop].append(planet[prop])
+            if not Dict.is_set(planet, *props, *star_props, *orbit_props):
+                continue
+
+            for prop in [*props, *star_props, *orbit_props]:
+                result[prop].append(planet[prop])
             
         return result
 

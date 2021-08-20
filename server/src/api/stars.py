@@ -19,12 +19,12 @@ def map_props(prop):
         prop = prop[7:]
 
         if prop in ["period", "velocity", "semi_major_axis", "inclination", "eccentricity"]:
-            return f"planets.priperties.orbit.{prop}", float
+            return f"planets.properties.orbit.{prop}", float
 
         if prop in ["diameter", "mass", "density", "surface_temperature", "transit_depth", "surface_gravity", "dataset"]:
             return f"planets.properties.{prop}", float
 
-        if prop in ["life_conditions", "status", "type"]:
+        if prop in ["life_conditions", "status", "type", "name"]:
             return f"planets.properties.{prop}", str
     else:
         if prop in ["spectral_class", "luminosity_class"]:
@@ -32,6 +32,9 @@ def map_props(prop):
 
         if prop == "name":
             return [f"properties.{prop}", f"light_curves.{prop}", f"aliases.{prop}"], str
+
+        if prop == "planets":
+            return "n_planets", float
 
         if prop in ["type", "dataset"]:
             return f"properties.{prop}", str

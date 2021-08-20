@@ -50,6 +50,7 @@ export interface PlanetData {
 }
 
 export interface RankedPlanetData extends PlanetData {
+    distance: number
     value: number
 }
 

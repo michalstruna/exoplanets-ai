@@ -28,7 +28,7 @@
 \def\suffixZadani{.png}		% doplní se ke každému jménu souboru zadání
 \def\datumOdevzdaniPrace{9.\,5.\,2021}
 
-\long\def\textPodekovani{Rád bych tímto poděkoval vedoucí této práce, Ing. Monice Borkovcové Ph.D., za přínosné rady při vypracovávání a~snahu dovést tuto práci do úspěšného konce. Velký dík patří i~mé rodině, která mě už od dětství podporovala v~astronomii a~bez které bych se k~tomuto tématu nejspíš nedostal.
+\long\def\textPodekovani{Tímto děkuji vedoucí této práce, Ing. Monice Borkovcové Ph.D., za přínosné rady při vypracovávání, ochotu a~snahu dovést tuto práci do úspěšného konce. Velký dík patří i~mé rodině, která mě už od dětství podporovala v~astronomii a~bez které bych se k~tomuto tématu nejspíš nedostal.
 }
 
 
@@ -48,7 +48,7 @@ The diploma thesis deals in the theoretical part with individual methods of dete
 
 \begin{document}
 
-\deskpage
+%\deskpage
 \mainpage
 \assignment
 \statement
@@ -112,14 +112,14 @@ V~projektu jsou využity některé techniky spadající pod umělou inteligenci,
 
 \section{Hledání exoplanet}
 
-Pouhým zkoumáním planet v~naší sluneční soustavě se omezujeme na velice specifické podmínky existující v~okolí našeho Slunce. Pro hlubší pochopení fungování planetárních systémů je nutné rozšířit oblast zájmu i~na planety v~okolí jiných hvězd~--~tzv. exoplanety. Můžeme se tak přiblížit odpovědím na otázky jako „Jak vzácné jsou podmínky pro život ve vesmíru?“ nebo „Jak vznikla a~jak se vyvíjela naše planeta?“~\cite{exoplanets}
+Pouhým zkoumáním planet v~naší sluneční soustavě jsme omezeni na velice specifické podmínky existující v~okolí našeho Slunce. Pro hlubší pochopení fungování planetárních systémů je nutné rozšířit oblast zájmu i~na planety v~okolí jiných hvězd~--~tzv. exoplanety. Je tak možno se přiblížit odpovědím na otázky jako „Jak vzácné jsou podmínky pro život ve vesmíru?“ nebo „Jak vznikla a~jak se vyvíjela naše planeta?“~\cite{exoplanets}
 
 Na počátku 90. let minulého století byla objevena první exoplaneta v~okolí pulsaru a~v~roce 1995 první exoplaneta v~okolí hvězdy podobné Slunci. Od té doby frekvence objevů planet v~průměru neustále stoupá.~\cite{exoplanets,nasadata}
 
 \img[1]{Četnost objevů exoplanet v~jednotlivých letech}{img/count_by_year.png}
 \data{1}{nasadata}
 
-Cestovat k~jiným hvězdám a~posílat sondy k~exoplanetám je však naprosto mimo možnosti naší současné technologie. Dokonce i~přímé pozorování exoplanet teleskopem je ve většině případů nemožné. Téměř veškeré objevy se tak provádí skrze nepřímé metody. Ty využívají skutečnosti, že i~když není možné spatřit exoplanetu samotnou, je možné detekovat její působení na své okolí (např. na mateřskou hvězdu).
+Cestovat k~jiným hvězdám a~posílat sondy k~exoplanetám je však naprosto mimo možnosti naší současné technologie. Dokonce i~přímé pozorování exoplanet teleskopem je ve většině případů nemožné. Téměř veškeré objevy jsou prováděny skrze nepřímé metody. Ty využívají skutečnosti, že i~když není možné spatřit exoplanetu samotnou, je možné detekovat její působení na své okolí (např. na mateřskou hvězdu).
 
 Jednotlivé metody budou popsány v~následujících podkapitolách. Zdaleka nejvýznamnější je tranzitní metoda, kterou byla objevena většina exoplanet. Velké množství planet bylo objeveno taktéž metodou radiálních rychlostí.~\cite{nasadata}
 
@@ -132,7 +132,7 @@ Dá se říci, že každá metoda je vhodnější pro objevování různých typ
 
 \newpage
 
-Na základě známých charakteristik můžeme jednotlivé planety zařadit do jedné z~následujících kategorií:
+Na základě známých charakteristik lze jednotlivé planety zařadit do jedné z~následujících kategorií:
 
 {
 \tab[1]{Známé typy exoplanet}{
@@ -193,7 +193,7 @@ TPF obsahuje část oblohy o velikosti několika pixelů, na které se v původn
 
 \subsubsection{Světelná křivka hvězdy}
 
-Po složení všech TPF do časové řady a~vypočítání jejich jasu dostaneme světelnou křivku. Na obrázku~5 je světelná křivka hvězdy Kepler-13 očištěná od dlouhodobého trendu, šumu a~extrémních hodnot. Křivka vykazuje velice výraznou periodickou složku s~periodou 1,763~dne. Ve většině případů ale vliv planety není takto výrazný a~detekovat planetu je obtížnější.
+Po složení všech TPF do časové řady a~vypočítání jejich jasu vznikne světelná křivka. Na obrázku~5 je světelná křivka hvězdy Kepler-13 očištěná od dlouhodobého trendu, šumu a~extrémních hodnot. Křivka vykazuje velice výraznou periodickou složku s~periodou 1,763~dne. Ve většině případů ale vliv planety není takto výrazný a~detekovat planetu je obtížnější.
 
 \img[1]{Světelná křivka soustavy Kepler-13}{img/light_curve.png}
 \data{1}{nasadata}
@@ -280,13 +280,13 @@ Fixní počet bodů lze zajistit nahrazením každých $\frac{\alpha}{\beta}$ so
 
 \subsubsection{Výpočet vlastností planety}
 
-Velkou poloosu dráhy planety lze vypočítat, pokud známe hmotnost hvězdy a periodu oběhu z~třetího Keplerova zákona.~\cite{transitprops}
+Velkou poloosu dráhy planety lze vypočítat s~využitím hmotnosti hvězdy a~periodu oběhu z~třetího Keplerova zákona.~\cite{transitprops}
 
 \formula{Výpočet velké poloosy dráhy planety}{a = \sqrt[3]{\frac{GMP^2}{4\pi^2}}}{
 \begin{tabular}{llll}a = velká poloosa & G = gravitační konstanta & M = hmotnost hvězdy & P = perioda oběhu planety\end{tabular}
 }
 
-Ze světelné křivky a~poloměru hvězdy lze vypočítat poloměr tranzitující planety po vyjádření z~následující rovnice~\cite{transit,transitprops}:
+Ze světelné křivky a~poloměru hvězdy je možno vypočítat poloměr tranzitující planety po vyjádření z~následující rovnice~\cite{transit,transitprops}:
 
 \formula{Výpočet poloměru planety} {\frac{r^2}{R^2} = \frac{\Delta F}{F}}{
 \begin{tabular}{llll}
@@ -294,7 +294,7 @@ Ze světelné křivky a~poloměru hvězdy lze vypočítat poloměr tranzitujíc�
 \end{tabular}
 }
 
-Dále je možno odhadnout i~průměrnou rychlost pohybu planety po oběžné dráze. Skutečná průměrná rychlost však může být jiná, protože se nepočítá s excentricitou dráhy~\cite{transitprops}:
+Dále lze odhadnout i~průměrnou rychlost pohybu planety po oběžné dráze. Skutečná průměrná rychlost však může být jiná, protože se nepočítá s excentricitou dráhy~\cite{transitprops}:
 
 \formula{Odhad průměrné rychlosti oběhu planety}{v \approx \frac{2\pi a}{T}}{
 \begin{tabular}{lll}
@@ -314,7 +314,7 @@ Další z~důležitých charakteristik orbity je inklinace (sklon), která nám 
 
 Tranzitní metoda nenabízí analytický způsob výpočtu hmotnosti exoplanety. Na základě již známých dat lze pozorovat korelaci mezi různými veličinami. Např. čím je planeta větší, tím pravděpodobněji bude i~hmotnější. Není to však pravidlem. Jistější je spoléhat se na korelaci mezi více veličinami. Nalézt vztahy ve vícerozměrných datech však nemusí být vždy jednoduché. A~zde nachází uplatnění umělá neuronová síť, která je mimo jiné určena pro hledání právě takovýchto vztahů.~\cite{nnmass}
 
-Vše, co potřebujeme, je dostatečně velký dataset s~planetami, u~kterých již známe všechny potřebné veličiny. Na těchto datech proběhne trénování neuronové sítě, která se naučí hustotu rozdělení pravděpodobností hodnot výše zmíněných veličin. S~takto naučenou sítí lze dále provádět 2~typy úloh:
+Vše, co je třeba, je dostatečně velký dataset s~planetami, u~kterých jsou známy všechny potřebné veličiny. Na těchto datech proběhne trénování neuronové sítě, která se naučí hustotu rozdělení pravděpodobností hodnot výše zmíněných veličin. S~takto naučenou sítí lze dále provádět 2~typy úloh:
 
 \begin{itemize}
 \item Vygenerovat novou „umělou“ planetu, jejíž vlastnosti jsou realistické (odpovídají náhodným rozdělením planet v~trénovací množině),
@@ -322,7 +322,7 @@ Vše, co potřebujeme, je dostatečně velký dataset s~planetami, u~kterých ji
 \item Nebo na základě známých veličin planety odhadnout veličinu neznámou.
 \end{itemize}
 
-Právě druhý ze zmíněných typů úloh můžeme použít pro výpočet hmotnosti. Např. na základě poloměru, periody a rovnovážné teploty planety, které jsou tranzitní metodou lehce spočitatelné, můžeme odhadnout chybějící hmotnost planety.~\cite{nnmass}
+Právě druhý ze zmíněných typů úloh lze použít pro výpočet hmotnosti. Např. na základě poloměru, periody a rovnovážné teploty planety, které jsou tranzitní metodou lehce spočitatelné, je možno odhadnout chybějící hmotnost planety.~\cite{nnmass}
 
 \clearpage
 \subsection{Metoda radiálních rychlostí}
@@ -334,7 +334,7 @@ Pokud se zdroj elektromagnetického záření (hvězda) přibližuje vůči pozo
 \img[1]{Metoda radiálních vzdáleností}{img/radial_velocity.png}
 \drawgimp
 
-Příčinou červeného/modrého posuvu je v~tomto případě Dopplerův jev, který lze uplatnit i pro jiné druhy vlnění, než to elektromagnetické~--~zvuk. Pokud se k~nám zdroj zvuku přibližuje (např. siréna na jedoucím autě), zvuk zpravidla vnímáme vyšším tónem, protože má menší vlnovou délku (vyšší frekvenci). Při vzdalování zdroje má zvuk větší vlnovou délku a je vnímán hlubším tónem.~\cite{radialvelocity} Periodicky se opakující změny ve vlnové délce záření hvězdy tak mohou být důsledkem existence tělesa v této soustavě.~\cite{methods}
+Příčinou červeného/modrého posuvu je v~tomto případě Dopplerův jev, který lze uplatnit i pro jiné druhy vlnění, než to elektromagnetické~--~zvuk. Pokud se k~nám zdroj zvuku přibližuje (např. siréna na jedoucím autě), zvuk má zpravidla vyšším tón, protože má menší vlnovou délku (vyšší frekvenci). Při vzdalování zdroje má zvuk větší vlnovou délku a je naopak vnímán hlubším tónem.~\cite{radialvelocity} Periodicky se opakující změny ve vlnové délce záření hvězdy tak mohou být důsledkem existence tělesa v této soustavě.~\cite{methods}
 
 \subsubsection{Výpočet radiální rychlosti hvězdy}
 
@@ -431,28 +431,28 @@ Největším problémem je zpravidla vliv atmosféry~--~chvění obrazu v~důsle
 \vspace{-10pt}
 \subsection{Gravitační mikročočky}
 
-Světlo má obvykle tendenci se pohybovat prázdným prostorem po přímé trajektorii. Avšak dle obecné teorie relativity, hmotná tělesa zakřivují časoprostor kolem sebe. V~blízkosti takových těles tak tuto přímou trajektorii vnímáme jako zakřivenou.~\cite{methods}
+Světlo má obvykle tendenci se pohybovat prázdným prostorem po přímé trajektorii. Avšak dle obecné teorie relativity, hmotná tělesa zakřivují časoprostor kolem sebe. V~blízkosti takových těles je tato přímá trajektorie zakřivená.~\cite{methods}
 
 \img[2]{Princip gravitační čočky}{img/lens.png}
 
 {\setstretch{0.8}\footnotetext[2]{Vytvořeno autorem, fotografie gravitační čočky převzata od NASA (\url{https://apod.nasa.gov/apod/image/1112/lensshoe_hubble_3235.jpg}), oříznuto a~zdeformováno}}
 
-V~případě, kdy se nějaké hmotné těleso (např. galaxie) nachází mezi pozorovatelem a~zdrojem světla (např. jinou galaxií), mluvíme o~tzv. gravitační čočce~--~zdroj světla bude viděn vícekrát na různých místech, nebo bude naopak zdeformován.~\cite{methods}
+V~případě, kdy se nějaké hmotné těleso (např. galaxie) nachází mezi pozorovatelem a~zdrojem světla (např. jinou galaxií), jedná se o~tzv. gravitační čočce~--~zdroj světla bude viděn vícekrát na různých místech, nebo bude naopak zdeformován.~\cite{methods}
 
 \img[1]{Ilustrace gravitační mikročočky OGLE 2003-BLG-235}{img/lens_plot.png}
 \data{1}{nasadata}
 
-Pokud je čočkujícím tělesem pouze hvězda, jedná se o~gravitační mikročočku. V~tomto případě dochází často ke splynutí čočky a~skrytého tělesa do jednoho útvaru se zvýšeným jasem. A~zde nachází uplatnění metoda pro hledání exoplanet. Za předpokladu, že čočkujícím tělesem je hvězda s~obíhající exoplanetou, budeme pozorovat pozvolné zvyšování jasu způsobené hvězdou a~zároveň v~nějakém krátkém časovém intervalu strmý nárůst jasu způsobený exoplanetou.~\cite{methods}
+Pokud je čočkujícím tělesem pouze hvězda, jedná se o~gravitační mikročočku. V~tomto případě dochází často ke splynutí čočky a~skrytého tělesa do jednoho útvaru se zvýšeným jasem. A~zde nachází uplatnění metoda pro hledání exoplanet. Za předpokladu, že čočkujícím tělesem je hvězda s~obíhající exoplanetou, lze pozorovat pozvolné zvyšování jasu způsobené hvězdou a~zároveň v~nějakém krátkém časovém intervalu strmý nárůst jasu způsobený exoplanetou.~\cite{methods}
 
 \subsection{Časování pulsarů}
 
 Pulsary jsou rychle rotující neutronové hvězdy~--~pozůstatky po zhrouceném jádře hmotných hvězd. Během procesu hroucení hvězda zmenšuje svůj poloměr a~pro zachování momentu hybnosti zvyšuje svou rotační rychlost.~\cite{methods}
 
-Vedle toho, pulsar podél své magnetické osy emituje silný elektromagnetický paprsek. V~případě, kdy je magnetická osa pulsaru natočena k~Zemi (paprsek směřuje k~Zemi), můžeme zpozorovat náhlý nárůst jasu hvězdy. Tyto pulzy je pak možné sledovat ve velice pravidelných intervalech (často řádově jednotky milisekund až sekund).~\cite{methods}
+Vedle toho, pulsar podél své magnetické osy emituje silný elektromagnetický paprsek. V~případě, kdy je magnetická osa pulsaru natočena k~Zemi (paprsek směřuje k~Zemi), je možno zpozorovat náhlý nárůst jasu hvězdy. Tyto pulzy je pak možné sledovat ve velice pravidelných intervalech (často řádově jednotky milisekund až sekund).~\cite{methods}
 
 Pokud je v~těchto pulzech zpozorována nepravidelnost, může to znamenat, že pulsar mění svou vzdálenost od Země. Jinými slovy, stejně jako v~případě metody radiálních rychlostí, pulsar společně s~dalším tělesem (např. planetou) obíhá kolem společného těžiště.~\cite{methods}
 
-Nutno podotknout, že nás nezajímá rychlost pulzaru tak, jako u metody radiálních rychlostí. Nepravidelnosti pulzů jsou způsobeny pouze polohou pulsaru, nikoliv jeho rychlostí. Pulzy (elektromagnetické záření) se ve vakuu pohybují vždy konstantní rychlostí bez ohledu na rychlost pulzaru samotného (rychlosti se nesčítají).
+Nutno podotknout, že stěžejní veličinou není rychlost pulzaru tak, jako u metody radiálních rychlostí. Nepravidelnosti pulzů jsou způsobeny pouze polohou pulsaru, nikoliv jeho rychlostí. Pulzy (elektromagnetické záření) se ve vakuu pohybují vždy konstantní rychlostí bez ohledu na rychlost pulzaru samotného (rychlosti se nesčítají).
 
 \img[1]{Ilustrace pulsaru s obíhající planetou}{img/pulsar_timing.png}
 \drawgimp
@@ -465,7 +465,7 @@ Nutno podotknout, že nás nezajímá rychlost pulzaru tak, jako u metody radiá
 
 V~kapitole 1.1 byla popsána tranzitní metoda zkoumajíc pravidelné poklesy v~jasu hvězdy. Někdy ale tyto poklesy nemusí být zcela pravidelné a~v~jejich periodách mohou být mírné odchylky (TTV~--~transit time variation). Ty mohou být způsobeny další exoplanetou v~systému, která může nebo nemusí sama tranzitovat přes hvězdu, přesto však stále gravitačně ovlivňuje zbytek soustavy.~\cite{ttv}
 
-Situaci můžeme chápat jako problém n těles, případně ji zjednodušit na problém 3 těles za předpokladu, že v~soustavě jsou pouze 3~nezanedbatelně hmotná tělesa:
+Situaci lze chápat jako problém n těles, případně ji zjednodušit na problém 3 těles za předpokladu, že v~soustavě jsou pouze 3~nezanedbatelně hmotná tělesa:
 
 \begin{itemize}
 \item Hvězda,
@@ -473,11 +473,11 @@ Situaci můžeme chápat jako problém n těles, případně ji zjednodušit na 
 \item Planeta způsobující nepravidelnosti.
 \end{itemize}
 
-Nechť $p = \{a, e, i, \Omega, \omega, M, m\}$ je uspořádaná množina obsahující elementy dráhy exoplanety (velkou poloosu, excentricitu, inklinaci, délku vzestupného úhlu, argument šířky pericentra, střední anomálii) a~hmotnost exoplanety. Vzhledem k~tranzitující planetě budeme tuto množinu označovat jako $p_t$ a~vzhledem k~planetě způsobující nepravidelnosti jako $p_p$. Další důležitou veličinou je hmotnost hvězdy $M_s$. Z~těchto údajů jsme schopni spočítat časy tranzitů $t_{com}$ tranzitující planety. Jestliže máme k~dispozici i~skutečné naměřené časy tranzitů s~nepravidelnostmi $t_{obs}$, můžeme problém řešit jako hledání maxima funkce $F[t_{com}(p_t, p_p, M_s), t_{obs}]$ definované jako~\cite{ttv}:
+Nechť $p = \{a, e, i, \Omega, \omega, M, m\}$ je uspořádaná množina obsahující elementy dráhy exoplanety (velkou poloosu, excentricitu, inklinaci, délku vzestupného úhlu, argument šířky pericentra, střední anomálii) a~hmotnost exoplanety. Vzhledem k~tranzitující planetě budeme tuto množinu označovat jako $p_t$ a~vzhledem k~planetě způsobující nepravidelnosti jako $p_p$. Další důležitou veličinou je hmotnost hvězdy $M_s$. Z~těchto údajů jsme schopni spočítat časy tranzitů $t_{com}$ tranzitující planety. Jestliže máme k~dispozici i~skutečné naměřené časy tranzitů s~nepravidelnostmi $t_{obs}$, lze problém řešit jako hledání maxima funkce $F[t_{com}(p_t, p_p, M_s), t_{obs}]$ definované jako~\cite{ttv}:
 
 \formula{Funkce vyjadřující přesnost modelu vůči realitě při počítání TTV}{F = \left[\sum_{i = 1}^N(t_{obs, i} - t_{com, i})^2\right]^{-1}\vspace{5pt}}{}
 
-Jinými slovy, hledáme, jaké parametry planet a~hvězdy povedou k~nejmenšímu rozdílu mezi napozorovanými a~vypočítanými časy tranzitů planety. Čím vyšší je výsledek této funkce, tím přesnější řešení jsme nalezli. Optimální řešení by znamenalo, že jsme zvolili $p_t$, $p_p$ a~$M_s$ naprosto shodné s~realitou a~platilo by, že $F\to\infty$.
+Jinými slovy, hledáme, jaké parametry planet a~hvězdy povedou k~nejmenšímu rozdílu mezi napozorovanými a~vypočítanými časy tranzitů planety. Čím vyšší je výsledek této funkce, o~tím přesnější řešení se jedná. Optimální řešení by znamenalo, že jsme zvolili $p_t$, $p_p$ a~$M_s$ naprosto shodné s~realitou a~platilo by, že $F\to\infty$.
 
 Kvůli velkému množství vícerozměrných parametrů je nutné pro tento problém použít stochastický optimalizační algoritmus, jenž sice nezajistí přesné analytické řešení, avšak i~přesto umožní nalézt řešení velice blízké tomu optimálnímu. Jedním z~takových algoritmů je genetický algoritmus blíže popsaný v~kapitole 3.1.~\cite{ttv}
 
@@ -492,9 +492,9 @@ Jedince definujeme jako $x = \{p_t, p_p, M_s\}$, přičemž první generaci $K$ 
 \end{tabular}
 }
 
-Kde $r_i = (x_i, y_i, z_i)$, jsme schopni pomocí fitness funkce vypočítat kvalitu každého z~jedinců v~populaci. Následně náhodně, avšak v~souladu s~přirozeným výběrem s~přihlédnutím na fitness vybereme dvojici jedinců, na něž bude aplikována operace křížení, jejímž výsledkem budou 2 potomci.~\cite{ttv}
+Kde $r_i = (x_i, y_i, z_i)$, lze pomocí fitness funkce vypočítat kvalitu každého z~jedinců v~populaci. Následně náhodně, avšak v~souladu s~přirozeným výběrem s~přihlédnutím na fitness vybereme dvojici jedinců, na něž bude aplikována operace křížení, jejímž výsledkem budou 2 potomci.~\cite{ttv}
 
-Tímto způsobem pokračujeme dále, abychom získali populaci potomků, kteří také mohou mít nenulovou pravděpodobnost mutace. Z~populace rodičů a~potomků vhodně vybereme $K$ jedinců, kteří se stanou 2.~generací. Běh algoritmu bude pokračovat dokud nejlepší jedinec poslední generace nebude představovat dostatečně dobré řešení TTV.
+Tímto způsobem se pokračuje dále pro získání celé populace potomků, kteří navíc mohou mít nenulovou pravděpodobnost mutace. Z~populace rodičů a~potomků vhodně vybereme $K$ jedinců, kteří se stanou 2.~generací. Běh algoritmu bude pokračovat dokud nejlepší jedinec poslední generace nebude představovat dostatečně dobré řešení TTV.
 
 \img[1]{Princip časování tranzitů}{img/illustration_ttv.pdf}
 \drawgimp
@@ -546,14 +546,14 @@ Jednotlivé neurony se umisťují do vrstev a~vrstvy pak tvoří neuronovou sí�
 
 \subsubsection{Vstupy neuronu}
 
-Každý neuron může mít jeden nebo více vstupů. I~když vstupy nemusí být nutně číselné, my to v~této práci budeme předpokládat. Vstupy mohou být dvojího druhu:
+Každý neuron může mít jeden nebo více vstupů. I~když vstupy nemusí být nutně číselné, v~této práci to bude předpokládáno. Vstupy mohou být dvojího druhu:
 
 \begin{itemize}
 \item Výstup jiného neuronu,
 \item Vstup z~vnějšího prostředí (např. od uživatele).
 \end{itemize}
 
-Všechny vstupy neuronu můžeme reprezentovat vektorem $X = [{x_1, x_2, ..., x_R}]$. Hodnoty v~$X$~pak mohou být v:
+Všechny vstupy neuronu je možno reprezentovat vektorem $X = [{x_1, x_2, ..., x_R}]$. Hodnoty v~$X$~pak mohou být v:
 
 \begin{itemize}
 \item \textbf{Kvantitativní} formě, kdy vstup vyjadřuje \textit{ano} nebo \textit{ne} a~nabývá tak binárních hodnot (např. 0 nebo 1),
@@ -650,7 +650,7 @@ Zásadní myšlenkou počítačového vidění je nesnažit se rozpoznávat cel�
 \img[2]{Vztah mezi počítačovým viděním, strojovým učením a~konvoluční sítí}{img/vision.png}
 \draw[2]
 
-My se zde budeme zabývat pouze konvoluční neuronovou sítí (CNN). Tu můžeme chápat jako klasickou FFNN, jejíž vstupy jsou ovšem nejdříve modifikovány tak, aby z~nich byly vyextrahovány výše zmíněné vlastnosti. Tato extrakce je prováděna pomocí konvoluční vrstvy, jejíž způsob fungování je detailněji popsán v~kapitole 2.3.2.
+Zde bude probrána pouze konvoluční neuronová síť (CNN). Tu lze chápat jako klasickou FFNN, jejíž vstupy jsou ovšem nejdříve modifikovány tak, aby z~nich byly vyextrahovány výše zmíněné vlastnosti. Tato extrakce je prováděna pomocí konvoluční vrstvy, jejíž způsob fungování je detailněji popsán v~kapitole 2.3.2.
 
 Dále je třeba brát v~úvahu velikost obrázku. Full HD obrázek (1~920~*~1~080) se skládá z~více jak 2~milionů pixelů. V~případě RGB obrázku se množství informací zvýší až na 6~milionů (3~složky pro každý pixel). Posílat takové množství hodnot do FFNN, která se skládá z~plně propojených vrstev, kde jsou neurony v sousedních vrstvách propojeny způsobem „každý z~každým“, by bylo problematické. Z~tohoto důvodu existuje tzv. pooling vrstva popsaná v~kapitole 2.3.3, která umožňuje zmenšit velikost vstupu a~přitom zachovat vzory charakteristické pro vstup.
 
@@ -682,7 +682,7 @@ Počet neuronů se volí dle řešeného problému. Pokud bude počet neuronů p
 
 \subsubsection{Konvoluční vrstva}
 
-Konvoluční vrstva sestává z~filtrů, které jsou aplikovány na vstup a~provádí operaci „konvoluce“. Filtrem můžeme chápat vzor, jenž je vyhledáván ve vstupu a~který zastupuje nějakou vlastnost vstupního objektu (např. obrázku).
+Konvoluční vrstva sestává z~filtrů, které jsou aplikovány na vstup a~provádí operaci „konvoluce“. Filtrem lze chápat vzor, jenž je vyhledáván ve vstupu a~který zastupuje nějakou vlastnost vstupního objektu (např. obrázku).
 
 \vspace{-10pt}
 \img[2]{Postupné posouvání konvolučního filtru přes vstup}{img/stride.png}
@@ -734,7 +734,7 @@ Vrstva Max-Pooling si klade za cíl zmenšit velikost vstupu a~zároveň zachova
 \img[1]{Příklad operace Max-Pooling}{img/max_pooling}
 \draw
 
-Na obrázku 36 je ukázána aplikace operace Max-Pooling na vstup, který byl výstupem v~minulé kapitole~--~\textit{feature map} ukazující umístění diagonál v~původním obrázku. Jak je vidět, velikost struktury se zmenšila na čtvrtinu, a~přesto v~ní zůstaly všechny důležité informace. V~pravém dolním i~horním rohu máme stále vysoké číselné hodnoty indikující přítomnost diagonály.
+Na obrázku 36 je ukázána aplikace operace Max-Pooling na vstup, který byl výstupem v~minulé kapitole~--~\textit{feature map} ukazující umístění diagonál v~původním obrázku. Jak je vidět, velikost struktury se zmenšila na čtvrtinu, a~přesto v~ní zůstaly všechny důležité informace. V~pravém dolním i~horním rohu jsou stále vysoké číselné hodnoty indikující přítomnost diagonály.
 
 {
 \tab[2]{Parametry vrstvy Max-Pooling}{
@@ -861,7 +861,7 @@ Přičemž slabou umělou inteligenci lze dále dělit např. na:
 \item \textbf{Evoluční výpočty}~-~podoblast AI napodobující biologické procesy. Často se jedná o~metaheuristické optimalizační techniky, které kromě povahy řešeného problému nepotřebují žádné další informace a řešení (byť ne vždy optimální) najdou samy.~\cite{ai}
 
 \begin{itemize}
-\item \textbf{Evoluční algoritmy}~--~snaží o~napodobení evoluce a~vychází z pravidla přežití nejsilnějšího. Často se zde vyskytují pojmy jako generace, přirozený výběr, dědičnost nebo křížení. Spadá sem např. genetický algoritmus nebo algoritmus diferenciální evoluce.
+\item \textbf{Evoluční algoritmy}~--~snaží o~napodobení evoluce a~vychází z pravidla přežití nejsilnějšího (nejpřizpůsobivějšího). Často se zde vyskytují pojmy jako generace, přirozený výběr, dědičnost nebo křížení. Spadá sem např. genetický algoritmus nebo algoritmus diferenciální evoluce.
 
 \item \textbf{Inteligence hejna}~--~simulace sociální inteligence v~nějaké množině převážně jednoduchých a~decentralizovaných jedinců. Patří sem např. optimalizace hejnem částic vycházející z~chování hejna ptáků nebo optimalizace mravenčí kolonií, jež se inspirovala mravenci a~jejich komunikací pomocí feromonů.
 
@@ -869,7 +869,7 @@ Přičemž slabou umělou inteligenci lze dále dělit např. na:
 
 \item \textbf{Expertní systémy}~--~systémy řešící nenumerické problémy umožňující poskytovat expertní rady a~doporučení v~konkrétních situacích. K~tomu využívají bázi znalostí, v~níž mají uloženy všechny známé informace o~problému.
 
-\item \textbf{Fuzzy systémy}~--~systémy založené na fuzzy logice. Ta narozdíl od té výrokové nepracuje s~binárními hodnotami (pravda, nepravda), ale pravdivost tvrzení lze vyjádřit jakoukoliv hodnotou z~intervalu $\left<0; 1\right>$. Fuzzy (mlhavá, nejasná) není exaktní a~jednoznačná a~více se tak blíží té lidské.~\cite{ai}
+\item \textbf{Fuzzy systémy}~--~systémy založené na fuzzy logice. Ta narozdíl od té výrokové nepracuje s~binárními hodnotami (pravda, nepravda), ale pravdivost tvrzení lze vyjádřit jakoukoliv hodnotou z~intervalu $\left<0; 1\right>$. Fuzzy (mlhavá, nejasná) není exaktní a~jednoznačná a~více se tak blíží lidskému chápání světa.~\cite{ai}
 
 \end{itemize}
 
@@ -878,7 +878,7 @@ Přičemž slabou umělou inteligenci lze dále dělit např. na:
 
 \subsection{Genetický algoritmus}
 
-Genetický algoritmus (GA) je metaheuristický postup inspirovaný evolučními pravidly, která můžeme vidět v~přírodě kolem nás. Obvykle se používá pro řešení optimalizačních problémů, pro něž neexistuje alternativní použitelný analytický postup.~\cite{ttv, tsp}
+Genetický algoritmus (GA) je metaheuristický postup inspirovaný evolučními pravidly, která je možno vidět v~přírodě kolem nás. Obvykle se používá pro řešení optimalizačních problémů, pro něž neexistuje alternativní použitelný analytický postup.~\cite{ttv, tsp}
 
 Jako příklad lze uvést Problém obchodního cestujícího (Traveling salesman problem~--~TSP) patřící mezi NP-těžké úlohy: \textit{„Existuje n měst propojených přímými cestami. Úkolem je navštívit všechna tato města, vrátit se do města počátečního a~přitom urazit co nejkratší vzdálenost.“} Se vzrůstajícím $n$~začne počet možných cest rychle narůstat a~hledat z~nich tu nejkratší exaktními postupy nebo dokonce hrubou silou se tak stane časově neúnosným.~\cite{tsp}
 
@@ -891,25 +891,25 @@ Základem tohoto algoritmu je populace jedinců. Každý jedinec v~populaci pře
 \img[1]{Někteří z~vygenerovaných jedinců GA pro TSP}{img/tsp_init.pdf}
 \draw
 
-Na počátku běhu algoritmu dojde k~náhodnému vygenerování K~jedinců~--~ti budou tvořit populaci první generace. Počet jedinců K~v populaci volíme na základě složitosti řešeného problému. Čím vyšší je K, tím déle bude zpravidla běh algoritmu trvat, avšak tím slabilnější bude a~tím spíše najde lepší řešení.~\cite{ttv, tsp}
+Na počátku běhu algoritmu dojde k~náhodnému vygenerování K~jedinců~--~ti budou tvořit populaci první generace. Počet jedinců K~v populaci je volen na základě složitosti řešeného problému. Čím vyšší je K, tím déle bude zpravidla běh algoritmu trvat, avšak tím slabilnější bude a~tím spíše najde lepší řešení.~\cite{ttv, tsp}
 
 Přestože každý z~jedinců představuje potenciální řešení problému, nejspíše žádné z~nich nebude dostatečně dobré, protože všechna byla pouze vygenerována náhodně. Na obrázku 41 jsou 3~z~vygenerovaných jedinců, kteří v~řešeném TSP urazí 13,1~km, 12,6~km a~12,5~km, což je pro daný počet měst poměrně hodně.
 
 
 \subsubsection{Selekce}
 
-Přirozený výběr je založen na skutečnosti, že úspěšnější (silnější) jedinci mají vyšší pravděpodobnost předat své geny a~rozmnožit se. Abychom tento koncept mohli napodobit i~v~genetickém algoritmu, potřebujeme definovat funkci $F$, která dokáže posoudit kvalitu jedince~--~tzv. fitness.~\cite{tsp}
+Přirozený výběr je založen na skutečnosti, že úspěšnější (silnější) jedinci mají vyšší pravděpodobnost předat své geny a~rozmnožit se. Pro napodobení tohoto konceptu v~genetickém algoritmu je třeba definovat funkci $F$, která dokáže posoudit kvalitu jedince~--~tzv. fitness.~\cite{tsp}
 
 Podoba této funkce je silně závislá na řešeném problému. V~případě TSP jí může být např. převrácená hodnota délky cesty, kterou jedinec urazí. Čím kratší cesta, tím vyšší fitness jedince a~tím vyšší pravděpodobnost na předání genů do další generace.
 
 \subsubsection{Křížení}
 
-Poté, co jsme vybrali jedince k~předání genů (rodiče) může proběhnout jejich zkřížení. To spočívá v~prostém zkombinování genů obou rodičů. Způsob tohoto kombinování opět závisí na typu řešeného problému. Je třeba zajistit, aby výsledkem křížení byl vždy platný jedinec, popř. neplatné jedince dodatečně opravit.~\cite{tsp}
+Poté, co byli vybráni jedinci k~předání genů (rodiče) může proběhnout jejich zkřížení. To spočívá v~prostém zkombinování genů obou rodičů. Způsob tohoto kombinování opět závisí na typu řešeného problému. Je třeba zajistit, aby výsledkem křížení byl vždy platný jedinec, popř. neplatné jedince dodatečně opravit.~\cite{tsp}
 
 \img[1]{Příklad křížení jedinců GA pro TSP}{img/crossover.pdf}
 \draw
 
-Na obrázku 42 je uveden příklad křížení jedinců při řešení TSP. První způsob křížení vytvoří potomka tak, že první polovinu genů vezme z~prvního rodiče a~druhou polovinů genů z~druhého rodiče. Tímto způsobem však může vzniknout jedinec, který některá města navštíví vícekrát a~některá ani jednou. Ten však nepředstavuje platné řešení problému, protože TSP vyžaduje, aby všechna města byla navštívena.
+Na obrázku 42 je uveden příklad křížení jedinců při řešení TSP. První způsob křížení vytvoří potomka tak, že první polovinu genů vezme z~prvního rodiče a~druhou polovinů genů z~druhého rodiče. Tímto způsobem však může vzniknout jedinec, který některá města navštíví vícekrát a~jiná ani jednou. Ten však nepředstavuje platné řešení problému, protože TSP vyžaduje, aby všechna města byla navštívena.
 
 Druhý ze způsobů křížení vezme polovinu genů z~prvního rodiče a~k~nim připojí chybějící geny z~druhého rodiče. Tímto způsobem tak vznikne vždy platný potomek.
 
@@ -917,7 +917,7 @@ Křížení je opakováno dokud není vytvořeno K~potomků tvořících další
 
 \subsubsection{Mutace}
 
-Nyní, když máme další generaci jedinců, je vhodné zajistit vyšší rozmanitost populace. Toho lze docílit tak, že každý jedinec má určitou pravděpodobnost, že zmutuje~--~dojde k~náhodné modifikaci jeho genů.~\cite{tsp}
+Nyní, když existuje další generace jedinců, je vhodné zajistit vyšší rozmanitost populace. Toho lze docílit nenulovou šancí každého jedince pro mutaci~--~dojde k~náhodné modifikaci jeho genů.~\cite{tsp}
 
 \img[1]{Příklad mutace jedince GA pro TSP}{img/mutate.pdf}
 
@@ -1245,11 +1245,11 @@ Běžící aplikace je dostupná na adrese \url{https://exoplanets.now.sh}, doku
 	\end{tabular}
 }
 
-Po nainstalování závislostí můžeme přejít v~kořenovém adresáři do podadresáře \code{scripts} a~v~něm spustit soubor \code{build.sh} (Linux), popř. \code{build.bat} (Windows), čímž dojde k~sestavení serveru, webové i~klientské aplikace.
+Po nainstalování závislostí je nutno přejít v~kořenovém adresáři do podadresáře \code{scripts} a~v~něm spustit soubor \code{build.sh} (Linux), čímž dojde k~sestavení serveru, webové i~klientské aplikace. Pro sestavení na jiných operačních systémech lze manuálně použít analogické příkazy pro specifický OS, jako v uvedeném skriptu pro Linux.
 
 \lstinputlisting[caption={Sestavení a spuštění aplikace (Linux).}]{codes/build.txt}
 
-Sestavená klientská aplikace je v~adresáři \code{client/build}, webová aplikace v~\code{web/build}. Lze ji umístit na  vlastní webový server s~přístupovým bodem \code{index.html} nebo ji spustit v~předpřipraveném webovém serveru pomocí skriptu \code{run.sh}, resp. \code{run.bat}.
+Sestavená klientská aplikace je v~adresáři \code{client/build}, webová aplikace v~\code{web/build}. Lze ji umístit na  vlastní webový server s~přístupovým bodem \code{index.html} nebo ji spustit v~předpřipraveném webovém serveru pomocí skriptu \code{run.sh}.
 
 {
 \tab{Výchozí adresy komponent po spuštění}{
@@ -1271,21 +1271,21 @@ Sestavená klientská aplikace je v~adresáři \code{client/build}, webová apli
 
 \subsubsection{Konfigurace}
 
-Pokud není výchozí konfigurace vyhovující, můžeme před sestavením některé parametry serveru změnit v~souboru \code{server/config/base.cfg}.
+Pokud není výchozí konfigurace vyhovující, je možno před sestavením některé parametry serveru změnit v~souboru \code{server/config/base.cfg}.
 
 \lstinputlisting[caption={Výchozí konfigurace serveru.}]{codes/default_server_config.txt}
 
 \vspace{-10pt}
 
-Jestliže chceme mít více oddělených konfigurací pro různé režimy, můžeme vytvořit vlastní konfigurační soubory ve tvaru \code{server/config/mode\_name.cfg}. Pro využití této konfigurace je pak třeba před spuštěním serveru nastavit proměnnou prostředí \code{ENV} na příslušnou hodnotu.
+Jestliže je třeba více oddělených konfigurací pro různé režimy, lze vytvořit vlastní konfigurační soubory ve tvaru \code{server/config/mode\_name.cfg}. Pro využití této konfigurace je pak třeba před spuštěním serveru nastavit proměnnou prostředí \code{ENV} na příslušnou hodnotu.
 
 \lstinputlisting[caption={Spuštění a sestavení aplikace s~vlastní konfigurací (Linux).}]{codes/run_custom_config.txt}
 
-V~souboru \code{web/src/Async/Constants/Config.ts} také můžeme upravit adresu serveru, se kterým bude komunikovat webová aplikace.
+V~souboru \code{web/src/Async/Constants/Config.ts} je také možno upravit adresu serveru, se kterým bude komunikovat webová aplikace.
 
 \lstinputlisting[caption={Výchozí konfigurace webové aplikace.}]{codes/default_web_config.txt}
 
-Stejným způsobem můžeme upravit i~konfiguraci \code{client/constants/config.py} pro klientskou aplikaci. Pokud zmíněné skripty nechceme aplikovat na všechny části projektu (server, web i~klient), ale pouze na některé, můžeme je specifikovat pomocí argumentů.
+Stejným způsobem lze upravit i~konfiguraci \code{client/constants/config.py} pro klientskou aplikaci. Specifikováním příslušných argumentů je možno sestavení aplikovat pouze na některé části projektu a~ne na všechny zároveň (server, web i~klient).
 
 \lstinputlisting[caption={Argumenty spouštěcích skriptů (Linux).}]{codes/script_args.txt}
 
@@ -1293,7 +1293,7 @@ Stejným způsobem můžeme upravit i~konfiguraci \code{client/constants/config.
 
 \subsubsection{Vývoj}
 
-Postup výše nám umožní jednorázově sestavit a~spustit aplikaci. Pokud však chceme aplikaci dále vyvíjet, je vhodné ji spustit ve vývojovém režimu. To zajistí výpis chyb do konzole, restart serveru při změně kódu a~oddělenou databázi od produkčních dat.
+Postup výše nám umožní jednorázově sestavit a~spustit aplikaci. Pokud je však třeba aplikaci dále vyvíjet, je vhodné ji spustit ve vývojovém režimu. To zajistí výpis chyb do konzole, restart serveru při změně kódu a~oddělenou databázi od produkčních dat.
 
 \lstinputlisting[caption={Spuštění v~režimu pro vývoj (Linux).}]{codes/run_dev.txt}
 

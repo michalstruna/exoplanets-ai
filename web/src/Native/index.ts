@@ -6,6 +6,7 @@ import * as Validator from './Utils/Validator'
 import * as Objects from './Utils/Objects'
 import * as Dates from './Utils/Dates'
 import * as Strings from './Utils/Strings'
+import * as Platform from './Utils/Platform'
 
 
 export { default as Cookie } from './Constants/Cookie'
@@ -15,4 +16,4 @@ export { default as useDrag } from './Hooks/UseDrag'
 export { default as useElement } from './Hooks/UseElement'
 export { default as TimeAgo } from './Components/TimeAgo'
 
-export { Arrays, Numbers, Validator, Dates, Strings, Objects }
+export { Arrays, Numbers, Validator, Dates, Strings, Objects, Platform }

@@ -16,7 +16,7 @@ def map_props(prop):
     if prop in ["type", "name", "priority", "items_getter", "item_getter"]:
         return prop, str
 
-    if prop in [""]:
+    if prop in ["planets", "data", "time", "items"]:
         return f"stats.{prop}", int
 
     if prop in ["size", "priority", "created", "modified", "time"]:

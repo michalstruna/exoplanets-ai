@@ -282,7 +282,8 @@ const UserForm = ({ user, toggle, ...props }: Props) => {
             values.avatar = avatar
         }
 
-        const action = await actions.edit([user._id, values])
+        const { personal, avatar: av } = values
+        const action = await actions.edit([user._id, { personal, avatar: av }])
 
         if (action.error) {
             form.setError(Form.GLOBAL_ERROR, strings.error)

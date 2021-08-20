@@ -77,7 +77,7 @@ const LoginForm = ({ handleSignUp, handleResetPassword, ...props }: Props) => {
 
     return (
         <Root{...props}>
-            <Form onSubmit={handleSubmit} defaultValues={{ email: '', password: '' }} buttons={[
+            <Form onSubmit={handleSubmit} defaultValues={{ username: '', password: '' }} buttons={[
                 [handleSignUp, strings.signUp],
                 [handleResetPassword, strings.resetPassword]
             ]}>
@@ -89,7 +89,7 @@ const LoginForm = ({ handleSignUp, handleResetPassword, ...props }: Props) => {
                     {strings.or}
                 </HorizontalTextLine>
                 <Field
-                    name='email'
+                    name='username'
                     type={Field.Type.EMAIL}
                     label={strings.email}
                     required={strings.missingEmail}

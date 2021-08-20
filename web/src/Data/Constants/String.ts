@@ -1,6 +1,6 @@
 import Language from './Language'
 import Url from '../../Routing/Constants/Url'
-import { Validator } from '../../Native'
+import { Platform, Validator } from '../../Native'
 import ProcessState from '../../Discovery/Constants/ProcessState'
 import DatasetType from '../../Database/Constants/DatasetType'
 import LifeType from '../../Database/Constants/LifeType'
@@ -11,6 +11,7 @@ import LuminosityClass from '../../Database/Constants/LuminosityClass'
 import PlanetStatus from '../../Database/Constants/PlanetStatus'
 import { MessageSelection, MessageTag, Sex, UserRole } from '../../User'
 import ProcessLogType from '../../Discovery/Constants/ProcessLogType'
+import { Config } from '../../Async'
 
 const CS = Language.CS
 const EN = Language.EN
@@ -374,7 +375,7 @@ const strings = {
             steps: [
                 {
                     icon: 'Download.svg',
-                    download: 'https://www.google.com',
+                    download: `${Config.serverUrl}/public/client/${Platform.IS_WINDOWS ? '' : 'exoplanets-linux'}`,
                     title: 'Stáhněte si program'
                 },
                 {

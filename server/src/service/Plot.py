@@ -50,7 +50,7 @@ class PlotService:
         return self._plot(
             figsize, return_range, plt.scatter,
             dict(x=semaxes, y=masses, c="#EEE", s=size, alpha=alpha),
-            format="png"
+            format="png", xscale="log", yscale="log"
         )
 
     def pie(self, values, width=1, colors=["#A55", "#5A5"], figsize=SQUARE):

@@ -13,6 +13,7 @@ from constants.User import EndpointAuth, UserRole
 from utils.exceptions import BadCredentials, Invalid
 from service.Security import SecurityService
 from utils.patterns import cond_dec
+from utils.native import Dict
 
 
 security_service = SecurityService()
@@ -162,7 +163,7 @@ class Request:
             for prop in final_prop:
                 result[prop] = 1 if order == "asc" else -1
 
-        return result
+        return Dict.exclude_keys(result, "aliases.name", "light_curves.name")
 
     @staticmethod
     def parse_filter(filter, map_props=None):

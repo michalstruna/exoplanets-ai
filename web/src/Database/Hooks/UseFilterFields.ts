@@ -37,7 +37,7 @@ const useFilterFields = (): TextEnumValue[] => {
                         ['distance', Number, 'ly'],
                         ['luminosity', Number, '☉'],
                         ['transit_depth', Number],
-                        ['strings.planets', Number],
+                        ['planets', Number],
                         ['surface_gravity', Number, 'm/s^2'],
                         ['absolute_magnitude', Number],
                         ['apparent_magnitude', Number],
