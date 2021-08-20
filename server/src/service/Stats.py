@@ -87,7 +87,7 @@ class GlobalStatsService(Service):
         result = self.dataset_dao.aggregate([
             {"$match": {"type": {"$in": ["TARGET_PIXEL"]}}},
             {"$group": {"_id": "", "n_items": {"$sum": {"$size": "$items"}}, "size": {"$sum": "$size"}}},
-            {"$project": {"done": {"$subtract": [1, {"$divide": ["$n_items", "$size"]}]}}}
+            {"$project": {"done": {"$subtract": [1, {"$cond": [{"$eq": ["$size", 0]}, 0, {"$divide": ["$n_items", "$size"]}]}]}}}
         ])
 
         return result[0]["done"] * 100 if len(result) > 0 else 100

@@ -94,6 +94,7 @@ planet_service = PlanetService()
 stats_service = GlobalStatsService()
 
 
+"""
 @api.ns.route("/<string:planet_id>/merge/<string:target_id>")
 class MergePlanets(Resource):
 
@@ -103,6 +104,8 @@ class MergePlanets(Resource):
     @api.ns.response(409, "Specified planets are not around same star.")
     def put(self):
         pass
+"""
+
 
 @api.ns.route("/ranks")
 class PlanetRanks(Resource):
