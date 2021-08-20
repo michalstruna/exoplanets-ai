@@ -76,7 +76,7 @@ const LoginForm = ({ handleLogin, ...props }: Props) => {
 
     return (
         <Root{...props}>
-            <Form onSubmit={handleSubmit} defaultValues={{ email: '', password: '', name: '' }} buttons={[
+            <Form onSubmit={handleSubmit} defaultValues={{ username: '', password: '', name: '' }} buttons={[
                 [handleLogin, strings.signUpToLogin]
             ]}>
                 <External>

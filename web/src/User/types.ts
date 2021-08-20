@@ -41,7 +41,7 @@ export type Identity = User & {
 }
 
 export type Credentials = {
-    email: string,
+    username: string,
     password: string
 }
 
