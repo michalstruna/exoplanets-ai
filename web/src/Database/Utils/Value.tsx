@@ -69,7 +69,7 @@ export const Planet = {
 
 export const Star = {
     name: (star: StarData): string | null => {
-        return [...star.properties, ...star.light_curves, ...star.aliases][0].name
+        return ([...star.properties, ...star.light_curves, ...star.aliases][0] || {}).name || ''
     },
 
     names: (star: StarData, renderer: PropRenderer<string, DatasetItem>): any[] => {

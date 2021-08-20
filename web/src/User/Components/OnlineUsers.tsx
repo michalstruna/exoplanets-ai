@@ -62,7 +62,7 @@ const OnlineUsers = ({ ...props }: Props) => {
                         ), width: '6rem' },
                     { accessor: (user: OnlineUser) => {
                             const country = user.personal.country ? (Countries as any).countryCode(user.personal.country) : null
-                            return country.emoji + ' ' + country.code
+                            return country ? country.emoji + ' ' + country.code : ''
                         }, width: '5rem' },
                     { accessor: (user: OnlineUser) => {
                         return (

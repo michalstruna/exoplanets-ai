@@ -76,7 +76,7 @@ export const list = <T extends any>(cols: ColOptions<any, T>[], options: ColOpti
         }
 
         return {
-            name: names[0],
+            name: propName,
             title: title || options.strings[camelCase(propName || '')],
             accessor: multi ? (item: any) => <MultiValue items={item[multi]} property={name!} formatter={formatter} /> : (item: any, i: number) => formatter(item[name!], item, i),
             headerIcon: headerIcon !== false && names[0] ? `/img/Database/Table/${pascalCase(propName)}.svg` : undefined,

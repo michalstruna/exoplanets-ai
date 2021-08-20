@@ -5,7 +5,7 @@ import { Paginator, Filter, useActions, useStrings } from '../../Data'
 import { setSegment, setFilter } from '../Redux/Slice'
 import { useCursor, useFilterFields, useItems, useTable } from '..'
 import DbTable from '../Constants/DbTable'
-import { Urls } from '../../Routing'
+import { Query, Urls } from '../../Routing'
 import { Field, FieldType, Form } from '../../Form'
 
 interface Props extends React.ComponentPropsWithRef<'div'> {
@@ -63,9 +63,9 @@ const DatabaseSelector = ({ ...props }: Props) => {
                 <Field
                     name='table'
                     type={FieldType.SELECT}
-                    onChange={e => Urls.replace({ pathname: e.target.value })}
+                    onChange={e => Urls.replace({ pathname: e.target.value, query: { [Query.FILTER_ATTRIBUTE]: null, [Query.SORT_COLUMN]: null } }, false)}
                     label={strings.database.select}
-                    options={Object.values(DbTable).map(table => ({ text: strings.database.tables[table], value: table }))} />
+                    options={Object.values(DbTable).filter(v => v !== DbTable.PLANETS).map(table => ({ text: strings.database.tables[table], value: table }))} />
             </Select>
             <FilterForm
                 attributes={filterFields}

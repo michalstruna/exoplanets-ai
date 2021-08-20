@@ -38,7 +38,12 @@ class GlobalStatsService(Service):
         self.update_planet_ranks()
 
     def update_planet_plots(self):
-        props = self.planet_service.get_properties_list(["mass", "type"], ["distance"], ["semi_major_axis"])
+        props = {
+            **self.planet_service.get_properties_list(["mass"], [], ["semi_major_axis"]),
+            **self.planet_service.get_properties_list(["type"]),
+            **self.planet_service.get_properties_list([], ["distance"])
+        }
+
         sc, xmin1, xmax1, ymin1, ymax1 = self.plot_service.main_scatter(props["semi_major_axis"], props["mass"], return_range=True)
         self.file_service.save(sc, self.file_service.Type.STATS, "SmaxMass") 
 

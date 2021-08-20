@@ -1,6 +1,7 @@
 from abc import ABC
 from bson.objectid import ObjectId
 from mongoengine import DoesNotExist
+from numpy.core.records import array
 
 from utils import time
 
@@ -41,7 +42,7 @@ class Service(ABC):
         )
 
     def delete_array_items(self, array_name, field_name, field_value):
-        self.dao.collection._get_collection().update_many({}, {"$pull": {array_name: {field_name: field_value}}})
+        self.dao.collection._get_collection().update_many({array_name: {"$ne": None}}, {"$pull": {array_name: {field_name: field_value}}})
 
     def check_selection(self, item, selection):
         result = {}

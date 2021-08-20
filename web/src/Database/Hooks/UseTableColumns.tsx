@@ -257,7 +257,7 @@ const UseTableColumns = (): Structure => {
                     levels: [
                         {
                             columns: Col.list<Dataset>([
-                                { name: 'type', format: val => <ItemImage image={`Database/Dataset/${pascalCase(val)}.svg`} />, width: '4rem', headerIcon: false },
+                                { name: 'type', format: val => <ItemImage image={`Database/Dataset/${pascalCase(val || '')}.svg`} />, width: '4rem', headerIcon: false },
                                 { name: 'name', format: (val, item) => <Detail title={val} subtitle={strings.datasets.types[item.type]} />, width: 1.5, headerIcon: false },
 
                                 { name: 'planets', format: (val, item) => <Diff {...item.stats.planets} /> },

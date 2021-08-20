@@ -4,7 +4,7 @@ import re
 import numpy as np
 from service.Planet import PlanetService
 
-from utils.native import Dict, Func
+from utils.native import Dict
 from .Base import Service
 from .Star import StarService
 from constants.Dataset import DatasetType, DatasetFields
@@ -15,6 +15,7 @@ from service.Message import MessageService
 from constants.Message import MessageTag
 
 FIELD_OPERATORS = "*\-+/"
+ONE_USE_DATASETS = [DatasetType.PLANET_PROPERTIES.value, DatasetType.STAR_PROPERTIES.value, DatasetType.SYSTEM_NAMES.value]
 
 class DatasetService(Service):
 
@@ -36,7 +37,6 @@ class DatasetService(Service):
 
         return list(filter(lambda col: col in items, result))
 
-    @Func.exception
     def add(self, dataset):
         stats, global_stats = {"time": time.now()}, {}
         items = pd.read_csv(dataset["items_getter"])
@@ -49,7 +49,7 @@ class DatasetService(Service):
         items = items.where(pd.notnull(items), None).drop_duplicates(subset=self.get_unique_fields(dataset["type"], items))
 
         if "name" in items:
-            dataset["items"] = items["name"].tolist()
+            dataset["items"] = [] if dataset["type"] in ONE_USE_DATASETS else items["name"].tolist()
 
         if dataset["type"] == DatasetType.STAR_PROPERTIES.name:
             stats["data"], stats["items"] = items.memory_usage().sum(), len(items)

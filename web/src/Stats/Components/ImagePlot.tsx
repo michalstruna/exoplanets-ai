@@ -200,8 +200,8 @@ const range = (min: number, max: number, count: number, log: boolean = false): n
 
 const ImagePlot = ({ data, x, y, overlay, ...props }: Props) => {
 
-    const xTicks = data.x.ticks || range(data.x.min!, data.x.max!, x?.nTicks ?? 8, data.x.log)
-    const yTicks = data.y.ticks || range(data.y.max!, data.y.min!, y?.nTicks ?? 6, data.y.log)
+    const xTicks = data.x.ticks && data.x.ticks.length ? data.x.ticks! : range(data.x.min!, data.x.max!, x?.nTicks ?? 8, data.x.log)
+    const yTicks = data.y.ticks && data.y.ticks.length ? data.y.ticks! : range(data.y.max!, data.y.min!, y?.nTicks ?? 6, data.y.log)
 
     if (x) {
         x.log = data.x.log
