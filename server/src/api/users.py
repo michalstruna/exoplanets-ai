@@ -103,7 +103,7 @@ class Login(Resource):
     @api.ns.response(HTTPStatus.BAD_REQUEST, "Invalid credentials.")
     @api.ns.expect(local_login_credentials)
     def post(self):
-        return Response.get(lambda: user_service.local_login(request.get_json()))
+        return Response.post(lambda: user_service.local_login(request.get_json()))
 
 
 @api.ns.route("/password/forgotten")
