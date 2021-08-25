@@ -1,0 +1,6 @@
+{
+    "scripts": {
+      "heroku-prebuild": "cd scripts && ./build.sh --server",
+      "start": "cd scripts && ./server-run.sh"
+    }
+}
